@@ -1,3 +1,6 @@
+![CodeWizard](https://github.com/user-attachments/assets/1454ecb4-7e87-41e7-888f-b79565d2b843)
+
+
 It's not a virus, I promise. It does create and run .bat files, but it's seriously not a virus. Qt (c++) just sucks.
 
 CodeWizard is a custom Code Editor / IDE designed by Adam Mather. The main point behind CodeWizard is an editor like Python's IDLE but with a better dark mode. That was seriously the whole motivation behind the project. As I continued I decided to support more languages than just Python, mainly because I prefer the interface and philosophy to modern (better) IDEs (think VSCode, etc).
