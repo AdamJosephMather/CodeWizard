@@ -1,4 +1,4 @@
-![CodeWizard](https://github.com/user-attachments/assets/1454ecb4-7e87-41e7-888f-b79565d2b843)
+![Artboard 1@5x](https://github.com/user-attachments/assets/d007d8a2-101f-4d35-a691-aac32ce1ae5b)
 
 
 It's not a virus, I promise. It does create and run .bat files, but it's seriously not a virus. Qt (c++) just sucks.
