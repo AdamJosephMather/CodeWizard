@@ -41,7 +41,7 @@ LanguageServerClient::LanguageServerClient(const QString &serverPath, QTextEdit 
     connect(&serverProcess, &QProcess::errorOccurred, this, &LanguageServerClient::onServerErrorOccurred);
     connect(&serverProcess, &QProcess::finished, this, &LanguageServerClient::onServerFinished);
 
-    serverProcess.start("cmd", QStringList() << "/c" << serverPath);
+    serverProcess.start("cmd", QStringList() << "/k" << serverPath); // to send /k
 
     if (!serverProcess.waitForStarted()) {
         qWarning() << "Failed to start language server at:" << serverPath;
@@ -132,10 +132,7 @@ void LanguageServerClient::initialize(const QString &rootUri)
 
     sendMessage(message);
 
-    qDebug() << "Sent Message";
-
     if (failedToStart){
-        qDebug() << "Failed to start not looping";
         QMessageBox newWarningBox;
         newWarningBox.setIcon(QMessageBox::Warning);
         newWarningBox.setText("Failed to start LSP - Ensure it's accessible via the command given.");
@@ -148,7 +145,6 @@ void LanguageServerClient::initialize(const QString &rootUri)
     initializeLoop.exec();
 
     if (failedToStart){
-        qDebug() << "Failed to start exited loop";
         QMessageBox newWarningBox;
         newWarningBox.setIcon(QMessageBox::Warning);
         newWarningBox.setText("Failed to start LSP - Ensure it's accessible via the command given.");
@@ -158,9 +154,6 @@ void LanguageServerClient::initialize(const QString &rootUri)
         return;
     }
 
-    qDebug() << "Out of Initialization Routine";
-
-    // Send initialized notification only after we've received the initialize response
     QJsonObject initializedMessage {
         {"jsonrpc", "2.0"},
         {"method", "initialized"},
@@ -421,7 +414,6 @@ QJsonArray LanguageServerClient::filterDiagnostics(const QJsonArray &diagnostics
 
     return filteredDiagnostics;
 }
-
 
 void LanguageServerClient::requestGotoDefinition(int line, int character)
 {

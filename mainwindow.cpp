@@ -3893,10 +3893,8 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
-    qDebug() << "Key release event" << event->modifiers();
     if(event->key() == Qt::Key_Control)
     {
-        qDebug() << "Ctrl up now";
         ctrlDown = false;
     }
 }
