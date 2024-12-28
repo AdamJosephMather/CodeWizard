@@ -1,0 +1,26 @@
+# ninja log v6
+57	445	7567183810946573	CodeWizard_autogen/timestamp	e9cc069727de01a0
+1137	1449	7566719409212026	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Debug/CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp	828a73f2a5f5deb8
+57	445	7567183810946573	CodeWizard_autogen/mocs_compilation.cpp	e9cc069727de01a0
+1137	1449	7566719409212026	CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp	828a73f2a5f5deb8
+1484	5423	7566719409673031	CMakeFiles/CodeWizard.dir/CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp.obj	e0d1a728151b85a1
+57	445	7567183810946573	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Debug/CodeWizard_autogen/timestamp	e9cc069727de01a0
+57	445	7567183810946573	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Debug/CodeWizard_autogen/mocs_compilation.cpp	e9cc069727de01a0
+1426	6718	7567168235348380	CMakeFiles/CodeWizard.dir/mytextedit.cpp.obj	8b1a5f3a77c99d0e
+1475	5427	7566719409587783	CMakeFiles/CodeWizard.dir/language.cpp.obj	cf183ae1953a93fc
+1414	6712	7567168235228388	CMakeFiles/CodeWizard.dir/main.cpp.obj	c357a6ef7e05700f
+1470	6025	7566719409544717	CMakeFiles/CodeWizard.dir/codehighlighter.cpp.obj	578a37b78fa10507
+1432	8654	7567168235408437	CMakeFiles/CodeWizard.dir/languageserverclient.cpp.obj	6b80f494aeb6e762
+1408	8538	7567168235168386	CMakeFiles/CodeWizard.dir/CodeWizard_autogen/mocs_compilation.cpp.obj	87606d77f4772fc6
+447	19844	7567183814841778	CMakeFiles/CodeWizard.dir/mainwindow.cpp.obj	d74aefbcfbc45dda
+19844	23837	7567184008776258	CodeWizard.exe	570820a5a468a66e
+78	1726	7570187308971414	CodeWizard_autogen/timestamp	348b1bffa9e84136
+78	1726	7570187308971414	CodeWizard_autogen/mocs_compilation.cpp	348b1bffa9e84136
+78	1726	7570187308971414	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Debug/CodeWizard_autogen/timestamp	348b1bffa9e84136
+78	1726	7570187308971414	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Debug/CodeWizard_autogen/mocs_compilation.cpp	348b1bffa9e84136
+1728	1829	7570187311015849	CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp	c4b48e5c8e924a0
+1728	1829	7570187311015849	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Debug/CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp	c4b48e5c8e924a0
+1837	8420	7570187312104384	CMakeFiles/CodeWizard.dir/main.cpp.obj	c357a6ef7e05700f
+1852	8450	7570187312259640	CMakeFiles/CodeWizard.dir/mytextedit.cpp.obj	8b1a5f3a77c99d0e
+1829	10325	7570187312030758	CMakeFiles/CodeWizard.dir/CodeWizard_autogen/mocs_compilation.cpp.obj	87606d77f4772fc6
+1860	10690	7570187312329812	CMakeFiles/CodeWizard.dir/languageserverclient.cpp.obj	6b80f494aeb6e762

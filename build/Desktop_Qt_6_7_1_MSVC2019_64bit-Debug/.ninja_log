@@ -1,0 +1,16 @@
+# ninja log v5
+158	1945	7568857471375014	CMakeFiles/CodeWizard.dir/languageserverclient.cpp.obj	176c160ceb0e7e49
+391	586	7568820389893195	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp	82f9d8080052be3d
+235	5093	7568859063179892	CMakeFiles/CodeWizard.dir/mainwindow.cpp.obj	5326d59c7c24d376
+36	225	7568858954554257	CodeWizard_autogen/mocs_compilation.cpp	dfe706b93f32eacb
+36	225	7568858954554257	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/CodeWizard_autogen/timestamp	dfe706b93f32eacb
+590	1994	7568820404022870	CMakeFiles/CodeWizard.dir/main.cpp.obj	d965fcf51baa029e
+586	2461	7568820408681369	CMakeFiles/CodeWizard.dir/CodeWizard_autogen/mocs_compilation.cpp.obj	b95108cac1cddfa5
+5093	5330	7568859065208860	CodeWizard.exe	93d68f23ab05345a
+36	225	7568858954554257	CodeWizard_autogen/timestamp	dfe706b93f32eacb
+391	586	7568820389893195	CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp	82f9d8080052be3d
+597	2009	7568820404153006	CMakeFiles/CodeWizard.dir/codehighlighter.cpp.obj	a4c6f646f51386d3
+36	225	7568858954554257	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/CodeWizard_autogen/mocs_compilation.cpp	dfe706b93f32eacb
+606	1352	7568820397544420	CMakeFiles/CodeWizard.dir/CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp.obj	6d5ae562df681fad
+600	1831	7568820402370958	CMakeFiles/CodeWizard.dir/language.cpp.obj	5f7bd636f0cb07f6
+595	1919	7568820403267937	CMakeFiles/CodeWizard.dir/mytextedit.cpp.obj	60947b3bdabf7ac3

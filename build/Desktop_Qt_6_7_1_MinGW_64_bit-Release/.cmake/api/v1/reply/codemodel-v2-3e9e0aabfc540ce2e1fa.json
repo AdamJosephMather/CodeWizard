@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Release-d0dde754b42a626758fe.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "CodeWizard",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "CodeWizard::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CodeWizard-Release-b0bbaff87265fa994beb.json",
+					"name" : "CodeWizard",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "CodeWizard_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CodeWizard_autogen-Release-6a5693e78f1eda1bd993.json",
+					"name" : "CodeWizard_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "CodeWizard_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CodeWizard_autogen_timestamp_deps-Release-7b5b3ac3c848fc4bf17e.json",
+					"name" : "CodeWizard_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release",
+		"source" : "C:/Users/adamj/Documents/QtProjects/CodeWizard"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

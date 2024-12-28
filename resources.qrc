@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/fonts">
+        <file>fonts/Courier_New.ttf</file>
+        <file>fonts/DroidSansMono.ttf</file>
+        <file>fonts/Monaco.ttf</file>
+        <file>fonts/Monospace.ttf</file>
+        <file>fonts/Courier_Prime.ttf</file>
+        <file>fonts/SourceCodePro-Regular.ttf</file>
+        <file>fonts/UbuntuMono-R.ttf</file>
+    </qresource>
+</RCC>

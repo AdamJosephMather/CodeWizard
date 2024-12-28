@@ -1,0 +1,14 @@
+1. Put app.ico in directory.
+
+2. Create app.rc in same directory with one line:
+IDI_ICON1               ICON        DISCARDABLE            "app.ico"
+
+3. Run command (Warning: it's app.o, not app.res, how it is mentioned in other manuals!)
+windres app.rc -o app.o
+
+4. add_executable(app
+  ...
+  app.o
+)
+
+5. Proofit!
