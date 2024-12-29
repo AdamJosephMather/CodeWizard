@@ -1,0 +1,21 @@
+[submodule "extern/tree-sitter"]
+	path = extern/tree-sitter
+	url = https://github.com/tree-sitter/tree-sitter.git
+[submodule "extern/tree-sitter-parsers/tree-sitter-cpp"]
+	path = extern/tree-sitter-parsers/tree-sitter-cpp
+	url = https://github.com/tree-sitter/tree-sitter-cpp.git
+[submodule "extern/tree-sitter-parsers/tree-sitter-python"]
+	path = extern/tree-sitter-parsers/tree-sitter-python
+	url = https://github.com/tree-sitter/tree-sitter-python.git
+[submodule "extern/tree-sitter-parsers/tree-sitter-rust"]
+	path = extern/tree-sitter-parsers/tree-sitter-rust
+	url = https://github.com/tree-sitter/tree-sitter-rust.git
+[submodule "extern/tree-sitter-parsers/tree-sitter-javascript"]
+	path = extern/tree-sitter-parsers/tree-sitter-javascript
+	url = https://github.com/tree-sitter/tree-sitter-javascript.git
+[submodule "extern/tree-sitter-parsers/tree-sitter-typescript"]
+	path = extern/tree-sitter-parsers/tree-sitter-typescript
+	url = https://github.com/tree-sitter/tree-sitter-typescript.git
+[submodule "extern/tree-sitter-parsers/tree-sitter-html"]
+	path = extern/tree-sitter-parsers/tree-sitter-html
+	url = https://github.com/tree-sitter/tree-sitter-html.git

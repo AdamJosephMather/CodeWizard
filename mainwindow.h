@@ -4,6 +4,8 @@
 #include <QListWidgetItem>
 #include <QMainWindow>
 
+#include <tree_sitter/api.h>
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -22,6 +24,7 @@ public:
 
 
 private slots:
+    void printTree(TSNode node, int depth = 0);
     void onOpenInExplorer();
     void onCopyPath();
     void onOpenOutside();

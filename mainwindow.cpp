@@ -5,7 +5,6 @@
 #include <QMessageBox>
 #include <QTextEdit>
 #include <QKeyEvent>
-#include <map>
 #include <algorithm>
 #include <QRegularExpression>
 #include <QScrollBar>
@@ -22,6 +21,13 @@
 #include <QtWidgets>
 #include <QTextCursor>
 #include <QRegularExpression>
+#include <tree_sitter/api.h>
+
+extern "C" {
+    TSLanguage* tree_sitter_cpp(void);
+}
+
+TSParser *parser = ts_parser_new();
 
 QString updateSyntaxAdd = "";
 
@@ -265,6 +271,25 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    ts_parser_set_language(parser, tree_sitter_cpp());
+    const char *source_code = "int main() { return 0; }";
+    TSTree *tree = ts_parser_parse_string(
+        parser,
+        nullptr,  // Optional: previous tree to update
+        source_code,
+        strlen(source_code)
+    );
+
+    TSNode rootNode = ts_tree_root_node(tree);
+
+    // Print the syntax tree
+    qDebug() << "Syntax Tree:";
+    printTree(rootNode);
+
+    // Clean up
+    ts_tree_delete(tree);
+    ts_parser_delete(parser);
+
     ui->setupUi(this);
 
     setWindowTitle(windowName);
@@ -2265,6 +2290,29 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
     }
 }
 
+void MainWindow::printTree(TSNode node, int depth) {
+    // Indent based on depth
+    QString indent = QString(depth * 2, ' ');
+
+    // Get the node type and text range
+    const char* nodeType = ts_node_type(node);
+    uint32_t startByte = ts_node_start_byte(node);
+    uint32_t endByte = ts_node_end_byte(node);
+    bool isNamed = ts_node_is_named(node);
+
+    // Log the current node
+    qDebug().noquote() << indent
+                       << (isNamed ? "[Named]" : "[Anonymous]")
+                       << "Type:" << nodeType
+                       << "Range:" << startByte << "-" << endByte;
+
+    // Recursively log all child nodes
+    uint32_t childCount = ts_node_child_count(node);
+    for (uint32_t i = 0; i < childCount; i++) {
+        printTree(ts_node_child(node, i), depth + 1);
+    }
+}
+
 void MainWindow::mouseClicked(){
     if (ctrlDown) {
         gotoDefinitionActionTriggered();
@@ -2492,8 +2540,6 @@ void MainWindow::gotoDefinitionActionTriggered(){
 
 void MainWindow::handleMouseMoved(QPoint pos)
 {
-    // if (!hoverBox->isHidden()){
-
     QPoint difference = pos - mousePos;
 
     if (qAbs(difference.x()) < 20 && qAbs(difference.y()) < 20){
@@ -2501,7 +2547,6 @@ void MainWindow::handleMouseMoved(QPoint pos)
     }
 
     expectedHoverInfoId = -1;
-    // }
 
     mousePos = pos;
     hoverBox->hide();
@@ -2529,7 +2574,6 @@ void MainWindow::handleMouseMoved(QPoint pos)
     suggestedPosition = textEdit->mapToParent(cursorRect.bottomLeft() + QPoint(offsetX, offsetY));
 
     // here we determine if it's over a diagnostic to check out - otherwise we request the help of the LSP for info
-
 
     int line = cursor.blockNumber(); // 0 based
     int column = cursor.columnNumber();

@@ -410,6 +410,7 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateConfigVersionImpl.cmake \
 	C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateTargets.cmake \
 	C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateVersionlessTargets.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCInformation.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCXXInformation.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCheckCompilerFlagCommonPatterns.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake \
@@ -420,11 +421,13 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeRCInformation.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeSystemSpecificInformation.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeSystemSpecificInitialize.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCSourceCompiles.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXCompilerFlag.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXSourceCompiles.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckIncludeFileCXX.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckIncludeFile.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckLibraryExists.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/CMakeCommonCompilerMacros.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/GNU-C.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/GNU-CXX.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/GNU.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindPackageHandleStandardArgs.cmake \
@@ -435,6 +438,8 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Internal/CheckFlagCommonConfig.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-GNU-C-ABI.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-GNU-C.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX-ABI.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-GNU.cmake \
@@ -643,12 +648,14 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/wchar.h \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/CMakeLists.txt \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/.qtc/package-manager/auto-setup.cmake \
+	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/3.29.3/CMakeCCompiler.cmake \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/3.29.3/CMakeCXXCompiler.cmake \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/3.29.3/CMakeRCCompiler.cmake \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/3.29.3/CMakeSystem.cmake \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/moc_predefs.h \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/codehighlighter.cpp \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/codehighlighter.h \
+	C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include/tree_sitter/api.h \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/language.cpp \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/language.h \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/languageserverclient.cpp \

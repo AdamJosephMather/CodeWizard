@@ -12,6 +12,180 @@
 # =============================================================================
 
 #############################################
+# Rule for compiling C files.
+
+rule C_COMPILER__tree-sitter-cpp_unscanned_Release
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}C:\Qt\Tools\mingw1120_64\bin\gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__tree-sitter-cpp_unscanned_Release
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}C:\Qt\Tools\mingw1120_64\bin\g++.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX static library.
+
+rule CXX_STATIC_LIBRARY_LINKER__tree-sitter-cpp_Release
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\Qt\Tools\CMake_64\bin\cmake.exe -E rm -f $TARGET_FILE && C:\Qt\Tools\mingw1120_64\bin\ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Qt\Tools\mingw1120_64\bin\ranlib.exe $TARGET_FILE && $POST_BUILD"
+  description = Linking CXX static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER__tree-sitter-python_unscanned_Release
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}C:\Qt\Tools\mingw1120_64\bin\gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__tree-sitter-python_unscanned_Release
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}C:\Qt\Tools\mingw1120_64\bin\g++.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX static library.
+
+rule CXX_STATIC_LIBRARY_LINKER__tree-sitter-python_Release
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\Qt\Tools\CMake_64\bin\cmake.exe -E rm -f $TARGET_FILE && C:\Qt\Tools\mingw1120_64\bin\ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Qt\Tools\mingw1120_64\bin\ranlib.exe $TARGET_FILE && $POST_BUILD"
+  description = Linking CXX static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER__tree-sitter-rust_unscanned_Release
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}C:\Qt\Tools\mingw1120_64\bin\gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__tree-sitter-rust_unscanned_Release
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}C:\Qt\Tools\mingw1120_64\bin\g++.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX static library.
+
+rule CXX_STATIC_LIBRARY_LINKER__tree-sitter-rust_Release
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\Qt\Tools\CMake_64\bin\cmake.exe -E rm -f $TARGET_FILE && C:\Qt\Tools\mingw1120_64\bin\ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Qt\Tools\mingw1120_64\bin\ranlib.exe $TARGET_FILE && $POST_BUILD"
+  description = Linking CXX static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER__tree-sitter-javascript_unscanned_Release
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}C:\Qt\Tools\mingw1120_64\bin\gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__tree-sitter-javascript_unscanned_Release
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}C:\Qt\Tools\mingw1120_64\bin\g++.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX static library.
+
+rule CXX_STATIC_LIBRARY_LINKER__tree-sitter-javascript_Release
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\Qt\Tools\CMake_64\bin\cmake.exe -E rm -f $TARGET_FILE && C:\Qt\Tools\mingw1120_64\bin\ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Qt\Tools\mingw1120_64\bin\ranlib.exe $TARGET_FILE && $POST_BUILD"
+  description = Linking CXX static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER__tree-sitter-typescript_unscanned_Release
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}C:\Qt\Tools\mingw1120_64\bin\gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__tree-sitter-typescript_unscanned_Release
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}C:\Qt\Tools\mingw1120_64\bin\g++.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX static library.
+
+rule CXX_STATIC_LIBRARY_LINKER__tree-sitter-typescript_Release
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\Qt\Tools\CMake_64\bin\cmake.exe -E rm -f $TARGET_FILE && C:\Qt\Tools\mingw1120_64\bin\ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Qt\Tools\mingw1120_64\bin\ranlib.exe $TARGET_FILE && $POST_BUILD"
+  description = Linking CXX static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER__tree-sitter-html_unscanned_Release
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}C:\Qt\Tools\mingw1120_64\bin\gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__tree-sitter-html_unscanned_Release
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}C:\Qt\Tools\mingw1120_64\bin\g++.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX static library.
+
+rule CXX_STATIC_LIBRARY_LINKER__tree-sitter-html_Release
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\Qt\Tools\CMake_64\bin\cmake.exe -E rm -f $TARGET_FILE && C:\Qt\Tools\mingw1120_64\bin\ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Qt\Tools\mingw1120_64\bin\ranlib.exe $TARGET_FILE && $POST_BUILD"
+  description = Linking CXX static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
 # Rule for compiling CXX files.
 
 rule CXX_COMPILER__CodeWizard_unscanned_Release
@@ -36,6 +210,35 @@ rule CXX_EXECUTABLE_LINKER__CodeWizard_Release
 rule CUSTOM_COMMAND
   command = $COMMAND
   description = $DESC
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER__tree-sitter_unscanned_Release
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}C:\Qt\Tools\mingw1120_64\bin\gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__tree-sitter_unscanned_Release
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}C:\Qt\Tools\mingw1120_64\bin\g++.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for linking CXX static library.
+
+rule CXX_STATIC_LIBRARY_LINKER__tree-sitter_Release
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\Qt\Tools\CMake_64\bin\cmake.exe -E rm -f $TARGET_FILE && C:\Qt\Tools\mingw1120_64\bin\ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Qt\Tools\mingw1120_64\bin\ranlib.exe $TARGET_FILE && $POST_BUILD"
+  description = Linking CXX static library $TARGET_FILE
+  restat = $RESTAT
 
 
 #############################################

@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
+project(CodeWizard VERSION 0.1 LANGUAGES C CXX)
 project(CodeWizard VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
@@ -13,6 +14,69 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Core Concurrent)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/tree-sitter)
+
+add_library(tree-sitter-cpp STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-cpp/src/parser.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-cpp/src/scanner.c
+    # ${CMAKE_CURRENT_SOURCE_DIR}/extern/parsers/tree-sitter-cpp/src/scanner.c
+)
+
+add_library(tree-sitter-python STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-python/src/parser.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-python/src/scanner.c
+    # ${CMAKE_CURRENT_SOURCE_DIR}/extern/parsers/tree-sitter-python/src/scanner.c
+)
+
+add_library(tree-sitter-rust STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-rust/src/parser.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-rust/src/scanner.c
+    # ${CMAKE_CURRENT_SOURCE_DIR}/extern/parsers/tree-sitter-rust/src/scanner.c
+)
+
+add_library(tree-sitter-javascript STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-javascript/src/parser.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-javascript/src/scanner.c
+    # ${CMAKE_CURRENT_SOURCE_DIR}/extern/parsers/tree-sitter-javascript/src/scanner.c
+)
+
+add_library(tree-sitter-typescript STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src/parser.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src/scanner.c
+    # ${CMAKE_CURRENT_SOURCE_DIR}/extern/parsers/tree-sitter-typescript/src/scanner.c
+)
+
+add_library(tree-sitter-html STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-html/src/parser.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-html/src/scanner.c
+    # ${CMAKE_CURRENT_SOURCE_DIR}/extern/parsers/tree-sitter-html/src/scanner.c
+)
+
+target_include_directories(tree-sitter-cpp PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-cpp/src
+)
+
+target_include_directories(tree-sitter-python PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-python/src
+)
+
+target_include_directories(tree-sitter-rust PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-rust/src
+)
+
+target_include_directories(tree-sitter-javascript PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-javascript/src
+)
+
+target_include_directories(tree-sitter-typescript PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src
+)
+
+target_include_directories(tree-sitter-html PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-html/src
+)
+
 set(PROJECT_SOURCES
     main.cpp
     mainwindow.cpp
@@ -21,7 +85,6 @@ set(PROJECT_SOURCES
     mytextedit.h
     mytextedit.cpp
 )
-
 
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -64,6 +127,25 @@ else()
         )
     endif()
 endif()
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter/lib/include
+)
+
+# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers)
+
+# Update target_link_libraries to include the parsers
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    Qt::Core
+    Qt::Widgets
+    tree-sitter
+    tree-sitter-cpp
+    tree-sitter-python
+    tree-sitter-rust
+    tree-sitter-javascript
+    tree-sitter-typescript
+    tree-sitter-html
+)
 
 target_link_libraries(CodeWizard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 

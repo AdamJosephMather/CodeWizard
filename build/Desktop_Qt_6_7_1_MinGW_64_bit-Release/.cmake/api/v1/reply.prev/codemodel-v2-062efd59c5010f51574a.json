@@ -1,0 +1,166 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Release-49d457742df4cccd39ef.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						4,
+						5,
+						6
+					]
+				},
+				{
+					"build" : "extern/tree-sitter",
+					"jsonFile" : "directory-extern.tree-sitter-Release-095e24a1c221b75f7ce4.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "extern/tree-sitter",
+					"targetIndexes" : 
+					[
+						3,
+						7,
+						8
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "CodeWizard",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						4,
+						5,
+						6
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "tree-sitter",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						3,
+						7,
+						8
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "CodeWizard::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CodeWizard-Release-fe7a1017b3e72afc5a2c.json",
+					"name" : "CodeWizard",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "CodeWizard_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CodeWizard_autogen-Release-6a5693e78f1eda1bd993.json",
+					"name" : "CodeWizard_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "CodeWizard_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CodeWizard_autogen_timestamp_deps-Release-3ad470eda7553dd124d9.json",
+					"name" : "CodeWizard_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "tree-sitter::@df0f4dfc7b2b45dd2262",
+					"jsonFile" : "target-tree-sitter-Release-2491de3d13a311173360.json",
+					"name" : "tree-sitter",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-cpp-Release-202c4866acce8510a56e.json",
+					"name" : "tree-sitter-cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-cpp_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-cpp_autogen-Release-d07ecc88e67d5bcf0597.json",
+					"name" : "tree-sitter-cpp_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-cpp_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-cpp_autogen_timestamp_deps-Release-e281527eb098bd0e009e.json",
+					"name" : "tree-sitter-cpp_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "tree-sitter_autogen::@df0f4dfc7b2b45dd2262",
+					"jsonFile" : "target-tree-sitter_autogen-Release-19e228e988faa6500854.json",
+					"name" : "tree-sitter_autogen",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "tree-sitter_autogen_timestamp_deps::@df0f4dfc7b2b45dd2262",
+					"jsonFile" : "target-tree-sitter_autogen_timestamp_deps-Release-cbeebf2b10718866669e.json",
+					"name" : "tree-sitter_autogen_timestamp_deps",
+					"projectIndex" : 1
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release",
+		"source" : "C:/Users/adamj/Documents/QtProjects/CodeWizard"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}
