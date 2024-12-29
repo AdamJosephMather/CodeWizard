@@ -4121,9 +4121,14 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         if (client && !noAutocomplete->isChecked() && !onlyCodeWizardBuiltIn->isChecked()) {
             QString keyStr = key_sequence.toString(QKeySequence::NativeText);
 
-            if (keyStr.length() == 1) {
-                QChar ch = keyStr.at(0);
-                if (!ch.isSpace()){
+            QString keyText = key_event->text();
+
+            qDebug() << keyText;
+            if (keyText.length() == 1) {
+                QChar ch = keyText.at(0);
+                qDebug() << ch;
+                if (ch.isLetterOrNumber()) {
+                    qDebug() << "?";
                     expectedCompletionId = -1;
                     callCompleteOponUpdate = true;
                 }
@@ -5467,7 +5472,6 @@ void MainWindow::updateSyntax()
     }
 
     int lineCount = textEdit->document()->blockCount();
-    // int textLen = text.length();
 
     if (lineCount != previousLineCount){
         updateLineNumbers(lineCount);
@@ -5478,7 +5482,6 @@ void MainWindow::updateSyntax()
     textEdit->horizontalScrollBar()->setValue(hScrollVal);
 
     previousLineCount = lineCount;
-    // previousTextLen = textLen;
 
     connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 }
