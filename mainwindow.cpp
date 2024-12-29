@@ -22,7 +22,6 @@
 #include <QtWidgets>
 #include <QTextCursor>
 #include <QRegularExpression>
-#include <QtConcurrent/QtConcurrent>
 
 QString updateSyntaxAdd = "";
 
@@ -49,6 +48,7 @@ QColor c1 = QColor(217, 159, 0);
 QColor c2 = QColor(222, 123, 2);
 QColor c3 = QColor(38, 175, 199);
 QColor c4 = QColor(38, 143, 199);
+QColor c5 = QColor(160, 160, 160);
 
 QColor normalColor = QColor(255, 255, 255);
 
@@ -56,6 +56,7 @@ QTextCharFormat c1Format;
 QTextCharFormat c2Format;
 QTextCharFormat c3Format;
 QTextCharFormat c4Format;
+QTextCharFormat c5Format;
 QTextCharFormat normalColorFormat;
 QList<QTextCharFormat> errorFormats;
 
@@ -336,6 +337,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
     c2Format.setForeground(c2);
     c3Format.setForeground(c3);
     c4Format.setForeground(c4);
+    c5Format.setForeground(c5);
     normalColorFormat.setForeground(normalColor);
 
     QTextCharFormat form = QTextCharFormat();
@@ -2105,7 +2107,11 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
 
     updateDefaultWordLists();
 
-    highlighter = new CodeHighlighter(currentLang, textEdit->document());
+    QTextCharFormat codeWizForm;
+    QColor codeWizCol = QColor(136, 67, 240);
+    codeWizForm.setForeground(codeWizCol);
+
+    highlighter = new CodeHighlighter(currentLang, c3Format, c4Format, c5Format, codeWizForm, textEdit->document());
 
     lineNumberTextEdit = ui->textEdit_4;
     lineNumberTextEdit->setReadOnly(true);
@@ -2916,8 +2922,9 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
         lineCount = finalString.count("<br>");
         QStringList lines = finalString.split("<br>");
     }else{
-        lineCount = finalString.count("\n");
-        QStringList lines = finalString.split("\n");
+        finalString = plaintextToHtml(info);
+        lineCount = finalString.count("<br>");
+        QStringList lines = finalString.split("<br>");
     }
 
     int maxLength = 0;
@@ -2950,14 +2957,26 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 
     hoverBox->setTextInteractionFlags(Qt::TextBrowserInteraction); // Enable interaction
 
-    if (type == "markdown"){
-        hoverBox->setHtml(finalString);
-    }else{
-        hoverBox->setPlainText(finalString);
-    }
+    hoverBox->setHtml(finalString);
 
     hoverBox->move(newPos);
     hoverBox->show();
+}
+
+QString MainWindow::plaintextToHtml(QString plaintext) {
+    QString html = plaintext;
+
+    html.replace("\n---\n", "<hr>");
+    html.replace("\n<hr>", "<hr>");
+    html.replace("<hr>\n", "<hr>");
+
+    while (html.contains("\n\n")){
+        html.replace("\n\n", "\n");
+    }
+
+    html.replace("\n", "<br>");
+
+    return html;
 }
 
 QString MainWindow::markdownToHtml(QString markdown) {
@@ -2967,8 +2986,12 @@ QString MainWindow::markdownToHtml(QString markdown) {
         html.replace("\n\n\n", "\n\n");
     }
 
-    while (html.contains("``")){
-        html.replace("``", "`");
+    html.replace("\n---\n", "<hr>");
+    html.replace("\n<hr>", "<hr>");
+    html.replace("<hr>\n", "<hr>");
+
+    while (html.contains("```")){
+        html.replace("```", "`");
     }
 
     QSet<QChar> alphanumerical = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_'};
@@ -3008,6 +3031,7 @@ QString MainWindow::markdownToHtml(QString markdown) {
     html.replace(QRegularExpression(R"(\[(.+?)\]\((.+?)\))"), R"(<a href="\\2">\\1</a>)");
 
     // Replace line breaks
+    html = html.trimmed();
     html.replace("\n", "<br>");
     html.replace("`", "");
 

@@ -5,11 +5,28 @@
 
 Language languageCls;
 
-CodeHighlighter::CodeHighlighter(Language langCls, QTextDocument *parent)
+QTextCharFormat c3Form;
+QTextCharFormat c4Form;
+QTextCharFormat c5Form;
+QTextCharFormat codeWizFormat;
+
+CodeHighlighter::CodeHighlighter(Language langCls, QTextCharFormat c3F, QTextCharFormat c4F, QTextCharFormat c5F, QTextCharFormat codeWizF, QTextDocument *parent)
     : QSyntaxHighlighter(parent)
 {
     languageCls = langCls;
     setupRules();
+
+    c3Form = c3F;
+    c4Form = c4F;
+    c5Form = c5F;
+    codeWizFormat = codeWizF;
+}
+
+void CodeHighlighter::setColors(QTextCharFormat c3F, QTextCharFormat c4F, QTextCharFormat c5F, QTextCharFormat codeWizF){
+    c3Form = c3F;
+    c4Form = c4F;
+    c5Form = c5F;
+    codeWizFormat = codeWizF;
 }
 
 void CodeHighlighter::highlightBlock(const QString &text) {
@@ -56,20 +73,6 @@ void CodeHighlighter::highlightBlock(const QString &text) {
     bool isExpectedChar = true;
 
     QTextCursor cursor(document());  // Initialize cursor
-    QTextCharFormat c3Format; // Define formats as needed
-    QTextCharFormat c4Format; // Define formats as needed
-    QTextCharFormat c5Format;
-    QTextCharFormat codeWizForm;
-
-    QColor c3 = QColor(38, 175, 199);
-    QColor c4 = QColor(38, 143, 199);
-    QColor c5 = QColor(160, 160, 160);
-    QColor codeWizCol = QColor(136, 67, 240);
-
-    c3Format.setForeground(c3);
-    c4Format.setForeground(c4);
-    c5Format.setForeground(c5);
-    codeWizForm.setForeground(codeWizCol);
 
     int textLength = text.length();
 
@@ -98,11 +101,11 @@ void CodeHighlighter::highlightBlock(const QString &text) {
                 if (textLength >= i+lengthOfElement){
                     QString haveCurrently = text.mid(i, lengthOfElement);
                     if (haveCurrently == lookingFor){
-                        auto format = c4Format; // requires an initializer --__--
+                        auto format = c4Form; // requires an initializer --__--
                         if (currentElementType == 1 || currentElementType == 3) { // 1 or 3 (string or multilinestring)
-                            format = c3Format; // strings
+                            format = c3Form; // strings
                         }else{
-                            format = c4Format; // comments
+                            format = c4Form; // comments
                         }
 
                         setFormat(startOfElement, i-startOfElement+lengthOfElement, format);
@@ -182,7 +185,7 @@ void CodeHighlighter::highlightBlock(const QString &text) {
         }
 
         if (!DONTMakeGreyChars.contains(text[i])){
-            setFormat(i, 1, c5Format);
+            setFormat(i, 1, c5Form);
         }
 
         if (text[i] == '\\') {
@@ -198,9 +201,9 @@ void CodeHighlighter::highlightBlock(const QString &text) {
 
     // Final formatting based on the last state
     if (currentElementType == 4 || currentElementType == 2) {
-        setFormat(startOfElement, text.length()-startOfElement, c4Format);
+        setFormat(startOfElement, text.length()-startOfElement, c4Form);
     }else if (currentElementType == 3 || currentElementType == 1) {
-        setFormat(startOfElement, text.length()-startOfElement, c3Format);
+        setFormat(startOfElement, text.length()-startOfElement, c3Form);
     }
 
     if (currentElementType >= 3 || (currentElementType == 1 && text[text.length()-1] == languageCls.stringExtensions[currentElement])){
@@ -222,7 +225,7 @@ void CodeHighlighter::highlightBlock(const QString &text) {
     QRegularExpressionMatchIterator matchIterator = rule.pattern.globalMatch(text);
     while (matchIterator.hasNext()) {
         QRegularExpressionMatch match = matchIterator.next();
-        setFormat(match.capturedStart(), match.capturedLength(), codeWizForm);
+        setFormat(match.capturedStart(), match.capturedLength(), codeWizFormat);
     }
 }
 

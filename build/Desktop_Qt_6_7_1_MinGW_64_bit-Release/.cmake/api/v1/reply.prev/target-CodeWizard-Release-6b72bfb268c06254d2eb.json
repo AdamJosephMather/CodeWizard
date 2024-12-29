@@ -34,14 +34,14 @@
 			"C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6/Qt6Config.cmake",
 			"C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6Core/Qt6CoreTargets.cmake",
 			"C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6Core/Qt6CoreConfig.cmake",
-			"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeFindDependencyMacro.cmake",
-			"C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake",
-			"C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake",
 			"C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateTargets.cmake",
 			"C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateConfig.cmake",
+			"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeFindDependencyMacro.cmake",
+			"C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake",
 			"C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6Core/Qt6CoreDependencies.cmake",
 			"C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6Gui/Qt6GuiTargets.cmake",
-			"C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6Gui/Qt6GuiConfig.cmake"
+			"C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6Gui/Qt6GuiConfig.cmake",
+			"C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake"
 		],
 		"nodes" : 
 		[
@@ -51,7 +51,7 @@
 			{
 				"command" : 3,
 				"file" : 1,
-				"line" : 27,
+				"line" : 28,
 				"parent" : 0
 			},
 			{
@@ -75,19 +75,19 @@
 			{
 				"command" : 4,
 				"file" : 1,
-				"line" : 84,
+				"line" : 85,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 1,
-				"line" : 67,
+				"line" : 68,
 				"parent" : 0
 			},
 			{
 				"command" : 8,
 				"file" : 1,
-				"line" : 13,
+				"line" : 14,
 				"parent" : 0
 			},
 			{
@@ -127,138 +127,142 @@
 				"parent" : 2
 			},
 			{
+				"command" : 8,
+				"file" : 1,
+				"line" : 13,
+				"parent" : 0
+			},
+			{
+				"file" : 4,
+				"parent" : 15
+			},
+			{
+				"command" : 8,
+				"file" : 4,
+				"line" : 169,
+				"parent" : 16
+			},
+			{
+				"file" : 6,
+				"parent" : 17
+			},
+			{
+				"command" : 7,
+				"file" : 6,
+				"line" : 57,
+				"parent" : 18
+			},
+			{
+				"file" : 5,
+				"parent" : 19
+			},
+			{
+				"command" : 6,
+				"file" : 5,
+				"line" : 61,
+				"parent" : 20
+			},
+			{
+				"command" : 7,
+				"file" : 6,
+				"line" : 45,
+				"parent" : 18
+			},
+			{
+				"file" : 11,
+				"parent" : 22
+			},
+			{
+				"command" : 10,
+				"file" : 11,
+				"line" : 42,
+				"parent" : 23
+			},
+			{
+				"command" : 9,
+				"file" : 10,
+				"line" : 111,
+				"parent" : 24
+			},
+			{
+				"command" : 8,
+				"file" : 9,
+				"line" : 76,
+				"parent" : 25
+			},
+			{
+				"file" : 8,
+				"parent" : 26
+			},
+			{
+				"command" : 7,
+				"file" : 8,
+				"line" : 55,
+				"parent" : 27
+			},
+			{
+				"file" : 7,
+				"parent" : 28
+			},
+			{
+				"command" : 6,
+				"file" : 7,
+				"line" : 61,
+				"parent" : 29
+			},
+			{
+				"command" : 6,
+				"file" : 7,
+				"line" : 76,
+				"parent" : 29
+			},
+			{
 				"command" : 7,
 				"file" : 3,
 				"line" : 43,
 				"parent" : 10
 			},
 			{
-				"file" : 9,
-				"parent" : 15
+				"file" : 14,
+				"parent" : 32
 			},
 			{
 				"command" : 10,
-				"file" : 9,
+				"file" : 14,
 				"line" : 42,
-				"parent" : 16
+				"parent" : 33
 			},
 			{
 				"command" : 9,
-				"file" : 8,
-				"line" : 111,
-				"parent" : 17
-			},
-			{
-				"command" : 8,
-				"file" : 7,
-				"line" : 76,
-				"parent" : 18
-			},
-			{
-				"file" : 6,
-				"parent" : 19
-			},
-			{
-				"command" : 7,
-				"file" : 6,
-				"line" : 57,
-				"parent" : 20
-			},
-			{
-				"file" : 5,
-				"parent" : 21
-			},
-			{
-				"command" : 6,
-				"file" : 5,
-				"line" : 61,
-				"parent" : 22
-			},
-			{
-				"command" : 7,
-				"file" : 6,
-				"line" : 45,
-				"parent" : 20
-			},
-			{
-				"file" : 12,
-				"parent" : 24
-			},
-			{
-				"command" : 10,
-				"file" : 12,
-				"line" : 42,
-				"parent" : 25
-			},
-			{
-				"command" : 9,
-				"file" : 8,
-				"line" : 111,
-				"parent" : 26
-			},
-			{
-				"command" : 8,
-				"file" : 7,
-				"line" : 76,
-				"parent" : 27
-			},
-			{
-				"file" : 11,
-				"parent" : 28
-			},
-			{
-				"command" : 7,
-				"file" : 11,
-				"line" : 55,
-				"parent" : 29
-			},
-			{
 				"file" : 10,
-				"parent" : 30
-			},
-			{
-				"command" : 6,
-				"file" : 10,
-				"line" : 61,
-				"parent" : 31
-			},
-			{
-				"command" : 6,
-				"file" : 10,
-				"line" : 76,
-				"parent" : 31
-			},
-			{
-				"command" : 9,
-				"file" : 8,
 				"line" : 111,
-				"parent" : 17
-			},
-			{
-				"command" : 8,
-				"file" : 7,
-				"line" : 76,
 				"parent" : 34
 			},
 			{
-				"file" : 14,
+				"command" : 8,
+				"file" : 9,
+				"line" : 76,
 				"parent" : 35
 			},
 			{
-				"command" : 7,
-				"file" : 14,
-				"line" : 55,
+				"file" : 13,
 				"parent" : 36
 			},
 			{
+				"command" : 7,
 				"file" : 13,
+				"line" : 55,
 				"parent" : 37
 			},
 			{
-				"command" : 6,
-				"file" : 13,
-				"line" : 61,
+				"file" : 12,
 				"parent" : 38
+			},
+			{
+				"command" : 6,
+				"file" : 12,
+				"line" : 61,
+				"parent" : 39
 			}
 		]
 	},
@@ -430,47 +434,47 @@
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 23,
+				"backtrace" : 21,
 				"fragment" : "-lmpr",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 23,
+				"backtrace" : 21,
 				"fragment" : "-luserenv",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 32,
+				"backtrace" : 30,
 				"fragment" : "-lmingw32",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 32,
+				"backtrace" : 30,
 				"fragment" : "C:\\Qt\\6.7.1\\mingw_64\\lib\\libQt6EntryPoint.a",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 33,
+				"backtrace" : 31,
 				"fragment" : "-lshell32",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 39,
+				"backtrace" : 40,
 				"fragment" : "-ld3d11",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 39,
+				"backtrace" : 40,
 				"fragment" : "-ldxgi",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 39,
+				"backtrace" : 40,
 				"fragment" : "-ldxguid",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 39,
+				"backtrace" : 40,
 				"fragment" : "-ld3d12",
 				"role" : "libraries"
 			},

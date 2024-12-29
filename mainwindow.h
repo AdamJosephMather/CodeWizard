@@ -29,6 +29,7 @@ private slots:
     void openFileTreeContextMenu(const QPoint &pos);
     std::tuple<QString, QString, QString, QStringList> getTabDetails(QString);
     void setupLSP();
+    QString plaintextToHtml(QString plaintext);
     void showWeDontFuckWithTheLSP();
     void showHoldYourHorses();
     void fileTreeToggled();

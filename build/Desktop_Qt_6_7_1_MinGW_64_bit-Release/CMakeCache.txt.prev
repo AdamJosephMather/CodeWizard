@@ -322,6 +322,9 @@ QT_DIR:PATH=C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6
 //No help, variable specified on the command line.
 QT_QMAKE_EXECUTABLE:FILEPATH=C:/Qt/6.7.1/mingw_64/bin/qmake.exe
 
+//The directory containing a CMake configuration file for Qt6Concurrent.
+Qt6Concurrent_DIR:PATH=C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6Concurrent
+
 //The directory containing a CMake configuration file for Qt6CoreTools.
 Qt6CoreTools_DIR:PATH=C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6CoreTools
 

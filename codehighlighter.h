@@ -15,8 +15,9 @@ class CodeHighlighter : public QSyntaxHighlighter
     Q_OBJECT
 
 public:
-    explicit CodeHighlighter(Language language, QTextDocument *parent = nullptr);
+    explicit CodeHighlighter(Language language, QTextCharFormat c3F, QTextCharFormat c4F, QTextCharFormat c5F, QTextCharFormat codeWizF, QTextDocument *parent = nullptr);
     void setLanguage(Language newLang, bool doReHigh);
+    void setColors(QTextCharFormat c3F, QTextCharFormat c4F, QTextCharFormat c5F, QTextCharFormat codeWizF);
 
 protected:
     void highlightBlock(const QString &text) override;

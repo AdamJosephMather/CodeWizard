@@ -7,7 +7,7 @@
 				{
 					"build" : ".",
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-Release-a8ed0da8518556514de3.json",
+					"jsonFile" : "directory-.-Release-d0dde754b42a626758fe.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.16"
@@ -44,7 +44,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "CodeWizard::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-CodeWizard-Release-3c53a37fa2c81cc3911e.json",
+					"jsonFile" : "target-CodeWizard-Release-6b72bfb268c06254d2eb.json",
 					"name" : "CodeWizard",
 					"projectIndex" : 0
 				},

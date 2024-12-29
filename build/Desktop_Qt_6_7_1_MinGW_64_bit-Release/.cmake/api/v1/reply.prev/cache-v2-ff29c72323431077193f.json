@@ -6030,6 +6030,18 @@
 			"value" : "C:/Qt/6.7.1/mingw_64/bin/qmake.exe"
 		},
 		{
+			"name" : "Qt6Concurrent_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for Qt6Concurrent."
+				}
+			],
+			"type" : "PATH",
+			"value" : "C:/Qt/6.7.1/mingw_64/lib/cmake/Qt6Concurrent"
+		},
+		{
 			"name" : "Qt6CoreTools_DIR",
 			"properties" : 
 			[
