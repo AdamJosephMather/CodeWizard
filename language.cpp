@@ -15,7 +15,9 @@ Language::Language(const QString& name,
                    const QStringList& closeIndentsWords,
                    const QStringList& defWordList,
                    const QStringList& fileExtensions,
-                   const std::map<QString, QTextCharFormat>& colorMap)
+                   const std::map<QString, QTextCharFormat>& colorMap,
+                   const std::unordered_map<QString, int>& colorMapTS,
+                   const int& index)
     : name(name),
     strings(strings),
     stringExtensions(stringExtensions),
@@ -29,7 +31,9 @@ Language::Language(const QString& name,
     closeIndentsWords(closeIndentsWords),
     defWordList(defWordList),
     fileExtensions(fileExtensions),
-    colorMap(colorMap) {}
+    colorMap(colorMap),
+    colorMapTS(colorMapTS),
+    index(index) {}
 
 // Default constructor
 Language::Language()
@@ -46,7 +50,9 @@ Language::Language()
     closeIndentsWords(),
     defWordList(),
     fileExtensions(),
-    colorMap() {}
+    colorMap(),
+    colorMapTS(),
+    index() {}
 
 // Copy constructor
 Language::Language(const Language& other)
@@ -63,7 +69,9 @@ Language::Language(const Language& other)
     closeIndentsWords(other.closeIndentsWords),
     defWordList(other.defWordList),
     fileExtensions(other.fileExtensions),
-    colorMap(other.colorMap) {}
+    colorMap(other.colorMap),
+    colorMapTS(other.colorMapTS),
+    index(other.index) {}
 
 // Copy assignment operator
 Language& Language::operator=(const Language& other) {
@@ -82,6 +90,8 @@ Language& Language::operator=(const Language& other) {
         defWordList = other.defWordList;
         fileExtensions = other.fileExtensions;
         colorMap = other.colorMap;
+        colorMapTS = other.colorMapTS;
+        index = other.index;
     }
     return *this;
 }

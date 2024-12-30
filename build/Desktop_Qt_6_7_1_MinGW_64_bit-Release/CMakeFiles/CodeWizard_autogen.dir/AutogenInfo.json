@@ -362,6 +362,12 @@
 			"MU",
 			"EWIEGA46WW/moc_mytextedit.cpp",
 			null
+		],
+		[
+			"C:/Users/adamj/Documents/QtProjects/CodeWizard/syntaxhighlighter.h",
+			"MU",
+			"EWIEGA46WW/moc_syntaxhighlighter.cpp",
+			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
@@ -399,6 +405,13 @@
 		"C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src",
 		"C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src",
 		"C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-lua/src",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-glsl/src",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-java/src",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-go/src",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c/src",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src",
 		"C:/Qt/6.7.1/mingw_64/include/QtCore",
 		"C:/Qt/6.7.1/mingw_64/include",
 		"C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++",
@@ -435,12 +448,19 @@
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : 
 	[
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c-sharp_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c_autogen/include/ui_mainwindow.h",
 		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-cpp_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-glsl_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-go_autogen/include/ui_mainwindow.h",
 		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-html_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-java_autogen/include/ui_mainwindow.h",
 		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-javascript_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-lua_autogen/include/ui_mainwindow.h",
 		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-python_autogen/include/ui_mainwindow.h",
 		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-rust_autogen/include/ui_mainwindow.h",
-		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-typescript_autogen/include/ui_mainwindow.h"
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-typescript_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-wgsl_autogen/include/ui_mainwindow.h"
 	],
 	"MULTI_CONFIG" : false,
 	"PARALLEL" : 4,
@@ -477,18 +497,30 @@
 			"C:/Users/adamj/Documents/QtProjects/CodeWizard/mytextedit.cpp",
 			"MU",
 			null
+		],
+		[
+			"C:/Users/adamj/Documents/QtProjects/CodeWizard/syntaxhighlighter.cpp",
+			"MU",
+			null
 		]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],
 	"UIC_SKIP" : 
 	[
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c-sharp_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c_autogen/include/ui_mainwindow.h",
 		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-cpp_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-glsl_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-go_autogen/include/ui_mainwindow.h",
 		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-html_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-java_autogen/include/ui_mainwindow.h",
 		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-javascript_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-lua_autogen/include/ui_mainwindow.h",
 		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-python_autogen/include/ui_mainwindow.h",
 		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-rust_autogen/include/ui_mainwindow.h",
-		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-typescript_autogen/include/ui_mainwindow.h"
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-typescript_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-wgsl_autogen/include/ui_mainwindow.h"
 	],
 	"UIC_UI_FILES" : [],
 	"USE_BETTER_GRAPH" : false,

@@ -20,41 +20,70 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/tree-sitter)
 add_library(tree-sitter-cpp STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-cpp/src/parser.c
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-cpp/src/scanner.c
-    # ${CMAKE_CURRENT_SOURCE_DIR}/extern/parsers/tree-sitter-cpp/src/scanner.c
+)
+
+add_library(tree-sitter-c-sharp STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-c-sharp/src/parser.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-c-sharp/src/scanner.c
 )
 
 add_library(tree-sitter-python STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-python/src/parser.c
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-python/src/scanner.c
-    # ${CMAKE_CURRENT_SOURCE_DIR}/extern/parsers/tree-sitter-python/src/scanner.c
 )
 
 add_library(tree-sitter-rust STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-rust/src/parser.c
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-rust/src/scanner.c
-    # ${CMAKE_CURRENT_SOURCE_DIR}/extern/parsers/tree-sitter-rust/src/scanner.c
 )
 
 add_library(tree-sitter-javascript STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-javascript/src/parser.c
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-javascript/src/scanner.c
-    # ${CMAKE_CURRENT_SOURCE_DIR}/extern/parsers/tree-sitter-javascript/src/scanner.c
 )
 
 add_library(tree-sitter-typescript STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src/parser.c
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src/scanner.c
-    # ${CMAKE_CURRENT_SOURCE_DIR}/extern/parsers/tree-sitter-typescript/src/scanner.c
 )
 
 add_library(tree-sitter-html STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-html/src/parser.c
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-html/src/scanner.c
-    # ${CMAKE_CURRENT_SOURCE_DIR}/extern/parsers/tree-sitter-html/src/scanner.c
+)
+
+add_library(tree-sitter-lua STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-lua/src/parser.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-lua/src/scanner.c
+)
+
+add_library(tree-sitter-glsl STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-glsl/src/parser.c
+)
+
+add_library(tree-sitter-wgsl STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-wgsl/src/parser.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-wgsl/src/scanner.c
+)
+
+add_library(tree-sitter-go STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-go/src/parser.c
+)
+
+add_library(tree-sitter-java STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-java/src/parser.c
+)
+
+add_library(tree-sitter-c STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-c/src/parser.c
 )
 
 target_include_directories(tree-sitter-cpp PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-cpp/src
+)
+
+target_include_directories(tree-sitter-c-sharp PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-c-sharp/src
 )
 
 target_include_directories(tree-sitter-python PUBLIC
@@ -75,6 +104,31 @@ target_include_directories(tree-sitter-typescript PUBLIC
 
 target_include_directories(tree-sitter-html PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-html/src
+)
+
+#lua, glsl, wgsl, go, java,
+target_include_directories(tree-sitter-lua PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-lua/src
+)
+
+target_include_directories(tree-sitter-glsl PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-glsl/src
+)
+
+target_include_directories(tree-sitter-wgsl PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-wgsl/src
+)
+
+target_include_directories(tree-sitter-go PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-go/src
+)
+
+target_include_directories(tree-sitter-java PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-java/src
+)
+
+target_include_directories(tree-sitter-c PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-c/src
 )
 
 set(PROJECT_SOURCES
@@ -105,6 +159,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         codehighlighter.h codehighlighter.cpp
         language.h language.cpp
         languageserverclient.h languageserverclient.cpp
+        syntaxhighlighter.h syntaxhighlighter.cpp
 
 
     )
@@ -145,6 +200,13 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     tree-sitter-javascript
     tree-sitter-typescript
     tree-sitter-html
+    tree-sitter-lua
+    tree-sitter-glsl
+    tree-sitter-wgsl
+    tree-sitter-java
+    tree-sitter-go
+    tree-sitter-c
+    tree-sitter-c-sharp
 )
 
 target_link_libraries(CodeWizard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)

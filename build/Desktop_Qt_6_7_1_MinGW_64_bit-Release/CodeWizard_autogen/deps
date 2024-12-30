@@ -666,5 +666,7 @@ CodeWizard_autogen/timestamp: \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/mytextedit.cpp \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/mytextedit.h \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/resources.qrc \
+	C:/Users/adamj/Documents/QtProjects/CodeWizard/syntaxhighlighter.cpp \
+	C:/Users/adamj/Documents/QtProjects/CodeWizard/syntaxhighlighter.h \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/mainwindow.ui \
 	C:/Qt/Tools/CMake_64/bin/cmake.exe

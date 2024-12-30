@@ -25,6 +25,9 @@ public:
 
 private slots:
     void printTree(TSNode node, int depth = 0);
+    void setupSyntaxTreeOnOpen(QString code);
+    void onContentsChange(int position, int charsRemoved, int charsAdded);
+    void applyEditToTree(int startByte, int oldEndByte, int newEndByte, int startPointRow, int startPointColumn, int oldEndPointRow, int oldEndPointColumn, int newEndPointRow, int newEndPointColumn);
     void onOpenInExplorer();
     void onCopyPath();
     void onOpenOutside();

@@ -30,6 +30,7 @@ void CodeHighlighter::setColors(QTextCharFormat c3F, QTextCharFormat c4F, QTextC
 }
 
 void CodeHighlighter::highlightBlock(const QString &text) {
+    return;
     // Apply all keyword rules from colormap
     for (const HighlightingRule &rule : qAsConst(highlightingRules)) {
         QRegularExpressionMatchIterator matchIterator = rule.pattern.globalMatch(text);

@@ -87,6 +87,52 @@ build libtree-sitter-cpp.a: CXX_STATIC_LIBRARY_LINKER__tree-sitter-cpp_Release C
   TARGET_PDB = tree-sitter-cpp.a.dbg
 
 # =============================================================================
+# Object build statements for STATIC_LIBRARY target tree-sitter-c-sharp
+
+
+#############################################
+# Order-only phony target for tree-sitter-c-sharp
+
+build cmake_object_order_depends_target_tree-sitter-c-sharp: phony || tree-sitter-c-sharp_autogen tree-sitter-c-sharp_autogen/mocs_compilation.cpp tree-sitter-c-sharp_autogen/timestamp tree-sitter-c-sharp_autogen_timestamp_deps
+
+build CMakeFiles/tree-sitter-c-sharp.dir/tree-sitter-c-sharp_autogen/mocs_compilation.cpp.obj: CXX_COMPILER__tree-sitter-c-sharp_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c-sharp_autogen/mocs_compilation.cpp || cmake_object_order_depends_target_tree-sitter-c-sharp
+  DEP_FILE = CMakeFiles\tree-sitter-c-sharp.dir\tree-sitter-c-sharp_autogen\mocs_compilation.cpp.obj.d
+  FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c-sharp_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-c-sharp.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-c-sharp.dir\tree-sitter-c-sharp_autogen
+
+build CMakeFiles/tree-sitter-c-sharp.dir/extern/tree-sitter-parsers/tree-sitter-c-sharp/src/parser.c.obj: C_COMPILER__tree-sitter-c-sharp_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src/parser.c || cmake_object_order_depends_target_tree-sitter-c-sharp
+  DEP_FILE = CMakeFiles\tree-sitter-c-sharp.dir\extern\tree-sitter-parsers\tree-sitter-c-sharp\src\parser.c.obj.d
+  FLAGS = -O3 -DNDEBUG -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c-sharp_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-c-sharp.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-c-sharp.dir\extern\tree-sitter-parsers\tree-sitter-c-sharp\src
+
+build CMakeFiles/tree-sitter-c-sharp.dir/extern/tree-sitter-parsers/tree-sitter-c-sharp/src/scanner.c.obj: C_COMPILER__tree-sitter-c-sharp_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src/scanner.c || cmake_object_order_depends_target_tree-sitter-c-sharp
+  DEP_FILE = CMakeFiles\tree-sitter-c-sharp.dir\extern\tree-sitter-parsers\tree-sitter-c-sharp\src\scanner.c.obj.d
+  FLAGS = -O3 -DNDEBUG -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c-sharp_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-c-sharp.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-c-sharp.dir\extern\tree-sitter-parsers\tree-sitter-c-sharp\src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target tree-sitter-c-sharp
+
+
+#############################################
+# Link the static library libtree-sitter-c-sharp.a
+
+build libtree-sitter-c-sharp.a: CXX_STATIC_LIBRARY_LINKER__tree-sitter-c-sharp_Release CMakeFiles/tree-sitter-c-sharp.dir/tree-sitter-c-sharp_autogen/mocs_compilation.cpp.obj CMakeFiles/tree-sitter-c-sharp.dir/extern/tree-sitter-parsers/tree-sitter-c-sharp/src/parser.c.obj CMakeFiles/tree-sitter-c-sharp.dir/extern/tree-sitter-parsers/tree-sitter-c-sharp/src/scanner.c.obj || tree-sitter-c-sharp_autogen tree-sitter-c-sharp_autogen_timestamp_deps
+  LANGUAGE_COMPILE_FLAGS = -O3 -DNDEBUG
+  OBJECT_DIR = CMakeFiles\tree-sitter-c-sharp.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = libtree-sitter-c-sharp.a
+  TARGET_PDB = tree-sitter-c-sharp.a.dbg
+
+# =============================================================================
 # Object build statements for STATIC_LIBRARY target tree-sitter-python
 
 
@@ -317,19 +363,267 @@ build libtree-sitter-html.a: CXX_STATIC_LIBRARY_LINKER__tree-sitter-html_Release
   TARGET_PDB = tree-sitter-html.a.dbg
 
 # =============================================================================
+# Object build statements for STATIC_LIBRARY target tree-sitter-lua
+
+
+#############################################
+# Order-only phony target for tree-sitter-lua
+
+build cmake_object_order_depends_target_tree-sitter-lua: phony || tree-sitter-lua_autogen tree-sitter-lua_autogen/mocs_compilation.cpp tree-sitter-lua_autogen/timestamp tree-sitter-lua_autogen_timestamp_deps
+
+build CMakeFiles/tree-sitter-lua.dir/tree-sitter-lua_autogen/mocs_compilation.cpp.obj: CXX_COMPILER__tree-sitter-lua_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-lua_autogen/mocs_compilation.cpp || cmake_object_order_depends_target_tree-sitter-lua
+  DEP_FILE = CMakeFiles\tree-sitter-lua.dir\tree-sitter-lua_autogen\mocs_compilation.cpp.obj.d
+  FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-lua_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-lua/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-lua.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-lua.dir\tree-sitter-lua_autogen
+
+build CMakeFiles/tree-sitter-lua.dir/extern/tree-sitter-parsers/tree-sitter-lua/src/parser.c.obj: C_COMPILER__tree-sitter-lua_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-lua/src/parser.c || cmake_object_order_depends_target_tree-sitter-lua
+  DEP_FILE = CMakeFiles\tree-sitter-lua.dir\extern\tree-sitter-parsers\tree-sitter-lua\src\parser.c.obj.d
+  FLAGS = -O3 -DNDEBUG -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-lua_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-lua/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-lua.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-lua.dir\extern\tree-sitter-parsers\tree-sitter-lua\src
+
+build CMakeFiles/tree-sitter-lua.dir/extern/tree-sitter-parsers/tree-sitter-lua/src/scanner.c.obj: C_COMPILER__tree-sitter-lua_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-lua/src/scanner.c || cmake_object_order_depends_target_tree-sitter-lua
+  DEP_FILE = CMakeFiles\tree-sitter-lua.dir\extern\tree-sitter-parsers\tree-sitter-lua\src\scanner.c.obj.d
+  FLAGS = -O3 -DNDEBUG -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-lua_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-lua/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-lua.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-lua.dir\extern\tree-sitter-parsers\tree-sitter-lua\src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target tree-sitter-lua
+
+
+#############################################
+# Link the static library libtree-sitter-lua.a
+
+build libtree-sitter-lua.a: CXX_STATIC_LIBRARY_LINKER__tree-sitter-lua_Release CMakeFiles/tree-sitter-lua.dir/tree-sitter-lua_autogen/mocs_compilation.cpp.obj CMakeFiles/tree-sitter-lua.dir/extern/tree-sitter-parsers/tree-sitter-lua/src/parser.c.obj CMakeFiles/tree-sitter-lua.dir/extern/tree-sitter-parsers/tree-sitter-lua/src/scanner.c.obj || tree-sitter-lua_autogen tree-sitter-lua_autogen_timestamp_deps
+  LANGUAGE_COMPILE_FLAGS = -O3 -DNDEBUG
+  OBJECT_DIR = CMakeFiles\tree-sitter-lua.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = libtree-sitter-lua.a
+  TARGET_PDB = tree-sitter-lua.a.dbg
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target tree-sitter-glsl
+
+
+#############################################
+# Order-only phony target for tree-sitter-glsl
+
+build cmake_object_order_depends_target_tree-sitter-glsl: phony || tree-sitter-glsl_autogen tree-sitter-glsl_autogen/mocs_compilation.cpp tree-sitter-glsl_autogen/timestamp tree-sitter-glsl_autogen_timestamp_deps
+
+build CMakeFiles/tree-sitter-glsl.dir/tree-sitter-glsl_autogen/mocs_compilation.cpp.obj: CXX_COMPILER__tree-sitter-glsl_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-glsl_autogen/mocs_compilation.cpp || cmake_object_order_depends_target_tree-sitter-glsl
+  DEP_FILE = CMakeFiles\tree-sitter-glsl.dir\tree-sitter-glsl_autogen\mocs_compilation.cpp.obj.d
+  FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-glsl_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-glsl/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-glsl.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-glsl.dir\tree-sitter-glsl_autogen
+
+build CMakeFiles/tree-sitter-glsl.dir/extern/tree-sitter-parsers/tree-sitter-glsl/src/parser.c.obj: C_COMPILER__tree-sitter-glsl_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-glsl/src/parser.c || cmake_object_order_depends_target_tree-sitter-glsl
+  DEP_FILE = CMakeFiles\tree-sitter-glsl.dir\extern\tree-sitter-parsers\tree-sitter-glsl\src\parser.c.obj.d
+  FLAGS = -O3 -DNDEBUG -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-glsl_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-glsl/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-glsl.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-glsl.dir\extern\tree-sitter-parsers\tree-sitter-glsl\src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target tree-sitter-glsl
+
+
+#############################################
+# Link the static library libtree-sitter-glsl.a
+
+build libtree-sitter-glsl.a: CXX_STATIC_LIBRARY_LINKER__tree-sitter-glsl_Release CMakeFiles/tree-sitter-glsl.dir/tree-sitter-glsl_autogen/mocs_compilation.cpp.obj CMakeFiles/tree-sitter-glsl.dir/extern/tree-sitter-parsers/tree-sitter-glsl/src/parser.c.obj || tree-sitter-glsl_autogen tree-sitter-glsl_autogen_timestamp_deps
+  LANGUAGE_COMPILE_FLAGS = -O3 -DNDEBUG
+  OBJECT_DIR = CMakeFiles\tree-sitter-glsl.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = libtree-sitter-glsl.a
+  TARGET_PDB = tree-sitter-glsl.a.dbg
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target tree-sitter-wgsl
+
+
+#############################################
+# Order-only phony target for tree-sitter-wgsl
+
+build cmake_object_order_depends_target_tree-sitter-wgsl: phony || tree-sitter-wgsl_autogen tree-sitter-wgsl_autogen/mocs_compilation.cpp tree-sitter-wgsl_autogen/timestamp tree-sitter-wgsl_autogen_timestamp_deps
+
+build CMakeFiles/tree-sitter-wgsl.dir/tree-sitter-wgsl_autogen/mocs_compilation.cpp.obj: CXX_COMPILER__tree-sitter-wgsl_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-wgsl_autogen/mocs_compilation.cpp || cmake_object_order_depends_target_tree-sitter-wgsl
+  DEP_FILE = CMakeFiles\tree-sitter-wgsl.dir\tree-sitter-wgsl_autogen\mocs_compilation.cpp.obj.d
+  FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-wgsl_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-wgsl.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-wgsl.dir\tree-sitter-wgsl_autogen
+
+build CMakeFiles/tree-sitter-wgsl.dir/extern/tree-sitter-parsers/tree-sitter-wgsl/src/parser.c.obj: C_COMPILER__tree-sitter-wgsl_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src/parser.c || cmake_object_order_depends_target_tree-sitter-wgsl
+  DEP_FILE = CMakeFiles\tree-sitter-wgsl.dir\extern\tree-sitter-parsers\tree-sitter-wgsl\src\parser.c.obj.d
+  FLAGS = -O3 -DNDEBUG -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-wgsl_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-wgsl.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-wgsl.dir\extern\tree-sitter-parsers\tree-sitter-wgsl\src
+
+build CMakeFiles/tree-sitter-wgsl.dir/extern/tree-sitter-parsers/tree-sitter-wgsl/src/scanner.c.obj: C_COMPILER__tree-sitter-wgsl_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src/scanner.c || cmake_object_order_depends_target_tree-sitter-wgsl
+  DEP_FILE = CMakeFiles\tree-sitter-wgsl.dir\extern\tree-sitter-parsers\tree-sitter-wgsl\src\scanner.c.obj.d
+  FLAGS = -O3 -DNDEBUG -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-wgsl_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-wgsl.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-wgsl.dir\extern\tree-sitter-parsers\tree-sitter-wgsl\src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target tree-sitter-wgsl
+
+
+#############################################
+# Link the static library libtree-sitter-wgsl.a
+
+build libtree-sitter-wgsl.a: CXX_STATIC_LIBRARY_LINKER__tree-sitter-wgsl_Release CMakeFiles/tree-sitter-wgsl.dir/tree-sitter-wgsl_autogen/mocs_compilation.cpp.obj CMakeFiles/tree-sitter-wgsl.dir/extern/tree-sitter-parsers/tree-sitter-wgsl/src/parser.c.obj CMakeFiles/tree-sitter-wgsl.dir/extern/tree-sitter-parsers/tree-sitter-wgsl/src/scanner.c.obj || tree-sitter-wgsl_autogen tree-sitter-wgsl_autogen_timestamp_deps
+  LANGUAGE_COMPILE_FLAGS = -O3 -DNDEBUG
+  OBJECT_DIR = CMakeFiles\tree-sitter-wgsl.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = libtree-sitter-wgsl.a
+  TARGET_PDB = tree-sitter-wgsl.a.dbg
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target tree-sitter-go
+
+
+#############################################
+# Order-only phony target for tree-sitter-go
+
+build cmake_object_order_depends_target_tree-sitter-go: phony || tree-sitter-go_autogen tree-sitter-go_autogen/mocs_compilation.cpp tree-sitter-go_autogen/timestamp tree-sitter-go_autogen_timestamp_deps
+
+build CMakeFiles/tree-sitter-go.dir/tree-sitter-go_autogen/mocs_compilation.cpp.obj: CXX_COMPILER__tree-sitter-go_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-go_autogen/mocs_compilation.cpp || cmake_object_order_depends_target_tree-sitter-go
+  DEP_FILE = CMakeFiles\tree-sitter-go.dir\tree-sitter-go_autogen\mocs_compilation.cpp.obj.d
+  FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-go_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-go/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-go.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-go.dir\tree-sitter-go_autogen
+
+build CMakeFiles/tree-sitter-go.dir/extern/tree-sitter-parsers/tree-sitter-go/src/parser.c.obj: C_COMPILER__tree-sitter-go_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-go/src/parser.c || cmake_object_order_depends_target_tree-sitter-go
+  DEP_FILE = CMakeFiles\tree-sitter-go.dir\extern\tree-sitter-parsers\tree-sitter-go\src\parser.c.obj.d
+  FLAGS = -O3 -DNDEBUG -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-go_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-go/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-go.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-go.dir\extern\tree-sitter-parsers\tree-sitter-go\src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target tree-sitter-go
+
+
+#############################################
+# Link the static library libtree-sitter-go.a
+
+build libtree-sitter-go.a: CXX_STATIC_LIBRARY_LINKER__tree-sitter-go_Release CMakeFiles/tree-sitter-go.dir/tree-sitter-go_autogen/mocs_compilation.cpp.obj CMakeFiles/tree-sitter-go.dir/extern/tree-sitter-parsers/tree-sitter-go/src/parser.c.obj || tree-sitter-go_autogen tree-sitter-go_autogen_timestamp_deps
+  LANGUAGE_COMPILE_FLAGS = -O3 -DNDEBUG
+  OBJECT_DIR = CMakeFiles\tree-sitter-go.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = libtree-sitter-go.a
+  TARGET_PDB = tree-sitter-go.a.dbg
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target tree-sitter-java
+
+
+#############################################
+# Order-only phony target for tree-sitter-java
+
+build cmake_object_order_depends_target_tree-sitter-java: phony || tree-sitter-java_autogen tree-sitter-java_autogen/mocs_compilation.cpp tree-sitter-java_autogen/timestamp tree-sitter-java_autogen_timestamp_deps
+
+build CMakeFiles/tree-sitter-java.dir/tree-sitter-java_autogen/mocs_compilation.cpp.obj: CXX_COMPILER__tree-sitter-java_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-java_autogen/mocs_compilation.cpp || cmake_object_order_depends_target_tree-sitter-java
+  DEP_FILE = CMakeFiles\tree-sitter-java.dir\tree-sitter-java_autogen\mocs_compilation.cpp.obj.d
+  FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-java_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-java/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-java.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-java.dir\tree-sitter-java_autogen
+
+build CMakeFiles/tree-sitter-java.dir/extern/tree-sitter-parsers/tree-sitter-java/src/parser.c.obj: C_COMPILER__tree-sitter-java_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-java/src/parser.c || cmake_object_order_depends_target_tree-sitter-java
+  DEP_FILE = CMakeFiles\tree-sitter-java.dir\extern\tree-sitter-parsers\tree-sitter-java\src\parser.c.obj.d
+  FLAGS = -O3 -DNDEBUG -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-java_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-java/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-java.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-java.dir\extern\tree-sitter-parsers\tree-sitter-java\src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target tree-sitter-java
+
+
+#############################################
+# Link the static library libtree-sitter-java.a
+
+build libtree-sitter-java.a: CXX_STATIC_LIBRARY_LINKER__tree-sitter-java_Release CMakeFiles/tree-sitter-java.dir/tree-sitter-java_autogen/mocs_compilation.cpp.obj CMakeFiles/tree-sitter-java.dir/extern/tree-sitter-parsers/tree-sitter-java/src/parser.c.obj || tree-sitter-java_autogen tree-sitter-java_autogen_timestamp_deps
+  LANGUAGE_COMPILE_FLAGS = -O3 -DNDEBUG
+  OBJECT_DIR = CMakeFiles\tree-sitter-java.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = libtree-sitter-java.a
+  TARGET_PDB = tree-sitter-java.a.dbg
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target tree-sitter-c
+
+
+#############################################
+# Order-only phony target for tree-sitter-c
+
+build cmake_object_order_depends_target_tree-sitter-c: phony || tree-sitter-c_autogen tree-sitter-c_autogen/mocs_compilation.cpp tree-sitter-c_autogen/timestamp tree-sitter-c_autogen_timestamp_deps
+
+build CMakeFiles/tree-sitter-c.dir/tree-sitter-c_autogen/mocs_compilation.cpp.obj: CXX_COMPILER__tree-sitter-c_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c_autogen/mocs_compilation.cpp || cmake_object_order_depends_target_tree-sitter-c
+  DEP_FILE = CMakeFiles\tree-sitter-c.dir\tree-sitter-c_autogen\mocs_compilation.cpp.obj.d
+  FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-c.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-c.dir\tree-sitter-c_autogen
+
+build CMakeFiles/tree-sitter-c.dir/extern/tree-sitter-parsers/tree-sitter-c/src/parser.c.obj: C_COMPILER__tree-sitter-c_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c/src/parser.c || cmake_object_order_depends_target_tree-sitter-c
+  DEP_FILE = CMakeFiles\tree-sitter-c.dir\extern\tree-sitter-parsers\tree-sitter-c\src\parser.c.obj.d
+  FLAGS = -O3 -DNDEBUG -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c/src
+  OBJECT_DIR = CMakeFiles\tree-sitter-c.dir
+  OBJECT_FILE_DIR = CMakeFiles\tree-sitter-c.dir\extern\tree-sitter-parsers\tree-sitter-c\src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target tree-sitter-c
+
+
+#############################################
+# Link the static library libtree-sitter-c.a
+
+build libtree-sitter-c.a: CXX_STATIC_LIBRARY_LINKER__tree-sitter-c_Release CMakeFiles/tree-sitter-c.dir/tree-sitter-c_autogen/mocs_compilation.cpp.obj CMakeFiles/tree-sitter-c.dir/extern/tree-sitter-parsers/tree-sitter-c/src/parser.c.obj || tree-sitter-c_autogen tree-sitter-c_autogen_timestamp_deps
+  LANGUAGE_COMPILE_FLAGS = -O3 -DNDEBUG
+  OBJECT_DIR = CMakeFiles\tree-sitter-c.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = libtree-sitter-c.a
+  TARGET_PDB = tree-sitter-c.a.dbg
+
+# =============================================================================
 # Object build statements for EXECUTABLE target CodeWizard
 
 
 #############################################
 # Order-only phony target for CodeWizard
 
-build cmake_object_order_depends_target_CodeWizard: phony || CodeWizard_autogen CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp CodeWizard_autogen/mocs_compilation.cpp CodeWizard_autogen/timestamp CodeWizard_autogen_timestamp_deps cmake_object_order_depends_target_tree-sitter cmake_object_order_depends_target_tree-sitter-cpp cmake_object_order_depends_target_tree-sitter-html cmake_object_order_depends_target_tree-sitter-javascript cmake_object_order_depends_target_tree-sitter-python cmake_object_order_depends_target_tree-sitter-rust cmake_object_order_depends_target_tree-sitter-typescript
+build cmake_object_order_depends_target_CodeWizard: phony || CodeWizard_autogen CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp CodeWizard_autogen/mocs_compilation.cpp CodeWizard_autogen/timestamp CodeWizard_autogen_timestamp_deps cmake_object_order_depends_target_tree-sitter cmake_object_order_depends_target_tree-sitter-c cmake_object_order_depends_target_tree-sitter-c-sharp cmake_object_order_depends_target_tree-sitter-cpp cmake_object_order_depends_target_tree-sitter-glsl cmake_object_order_depends_target_tree-sitter-go cmake_object_order_depends_target_tree-sitter-html cmake_object_order_depends_target_tree-sitter-java cmake_object_order_depends_target_tree-sitter-javascript cmake_object_order_depends_target_tree-sitter-lua cmake_object_order_depends_target_tree-sitter-python cmake_object_order_depends_target_tree-sitter-rust cmake_object_order_depends_target_tree-sitter-typescript cmake_object_order_depends_target_tree-sitter-wgsl
 
 build CMakeFiles/CodeWizard.dir/CodeWizard_autogen/mocs_compilation.cpp.obj: CXX_COMPILER__CodeWizard_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/mocs_compilation.cpp || cmake_object_order_depends_target_CodeWizard
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\CodeWizard.dir\CodeWizard_autogen\mocs_compilation.cpp.obj.d
   FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-lua/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-glsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-java/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-go/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\CodeWizard.dir
   OBJECT_FILE_DIR = CMakeFiles\CodeWizard.dir\CodeWizard_autogen
 
@@ -337,7 +631,7 @@ build CMakeFiles/CodeWizard.dir/main.cpp.obj: CXX_COMPILER__CodeWizard_unscanned
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\CodeWizard.dir\main.cpp.obj.d
   FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-lua/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-glsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-java/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-go/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\CodeWizard.dir
   OBJECT_FILE_DIR = CMakeFiles\CodeWizard.dir
 
@@ -345,7 +639,7 @@ build CMakeFiles/CodeWizard.dir/mainwindow.cpp.obj: CXX_COMPILER__CodeWizard_uns
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\CodeWizard.dir\mainwindow.cpp.obj.d
   FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-lua/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-glsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-java/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-go/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\CodeWizard.dir
   OBJECT_FILE_DIR = CMakeFiles\CodeWizard.dir
 
@@ -353,7 +647,7 @@ build CMakeFiles/CodeWizard.dir/mytextedit.cpp.obj: CXX_COMPILER__CodeWizard_uns
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\CodeWizard.dir\mytextedit.cpp.obj.d
   FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-lua/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-glsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-java/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-go/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\CodeWizard.dir
   OBJECT_FILE_DIR = CMakeFiles\CodeWizard.dir
 
@@ -361,7 +655,7 @@ build CMakeFiles/CodeWizard.dir/codehighlighter.cpp.obj: CXX_COMPILER__CodeWizar
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\CodeWizard.dir\codehighlighter.cpp.obj.d
   FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-lua/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-glsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-java/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-go/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\CodeWizard.dir
   OBJECT_FILE_DIR = CMakeFiles\CodeWizard.dir
 
@@ -369,7 +663,7 @@ build CMakeFiles/CodeWizard.dir/language.cpp.obj: CXX_COMPILER__CodeWizard_unsca
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\CodeWizard.dir\language.cpp.obj.d
   FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-lua/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-glsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-java/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-go/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\CodeWizard.dir
   OBJECT_FILE_DIR = CMakeFiles\CodeWizard.dir
 
@@ -377,7 +671,15 @@ build CMakeFiles/CodeWizard.dir/languageserverclient.cpp.obj: CXX_COMPILER__Code
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\CodeWizard.dir\languageserverclient.cpp.obj.d
   FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-lua/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-glsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-java/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-go/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\CodeWizard.dir
+  OBJECT_FILE_DIR = CMakeFiles\CodeWizard.dir
+
+build CMakeFiles/CodeWizard.dir/syntaxhighlighter.cpp.obj: CXX_COMPILER__CodeWizard_unscanned_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/syntaxhighlighter.cpp || cmake_object_order_depends_target_CodeWizard
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\CodeWizard.dir\syntaxhighlighter.cpp.obj.d
+  FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-lua/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-glsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-java/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-go/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\CodeWizard.dir
   OBJECT_FILE_DIR = CMakeFiles\CodeWizard.dir
 
@@ -385,7 +687,7 @@ build CMakeFiles/CodeWizard.dir/CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp.
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\CodeWizard.dir\CodeWizard_autogen\EWIEGA46WW\qrc_resources.cpp.obj.d
   FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
+  INCLUDES = -IC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/external/tree-sitter -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-lua/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-glsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-java/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-go/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c/src -IC:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src -isystem C:/Qt/6.7.1/mingw_64/include/QtCore -isystem C:/Qt/6.7.1/mingw_64/include -isystem C:/Qt/6.7.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.7.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.7.1/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\CodeWizard.dir
   OBJECT_FILE_DIR = CMakeFiles\CodeWizard.dir\CodeWizard_autogen\EWIEGA46WW
 
@@ -397,10 +699,10 @@ build CMakeFiles/CodeWizard.dir/CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp.
 #############################################
 # Link the executable CodeWizard.exe
 
-build CodeWizard.exe: CXX_EXECUTABLE_LINKER__CodeWizard_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/app.o CMakeFiles/CodeWizard.dir/CodeWizard_autogen/mocs_compilation.cpp.obj CMakeFiles/CodeWizard.dir/main.cpp.obj CMakeFiles/CodeWizard.dir/mainwindow.cpp.obj CMakeFiles/CodeWizard.dir/mytextedit.cpp.obj CMakeFiles/CodeWizard.dir/codehighlighter.cpp.obj CMakeFiles/CodeWizard.dir/language.cpp.obj CMakeFiles/CodeWizard.dir/languageserverclient.cpp.obj CMakeFiles/CodeWizard.dir/CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp.obj | extern/tree-sitter/libtree-sitter.a libtree-sitter-cpp.a libtree-sitter-python.a libtree-sitter-rust.a libtree-sitter-javascript.a libtree-sitter-typescript.a libtree-sitter-html.a C$:/Qt/6.7.1/mingw_64/lib/libQt6Widgets.a C$:/Qt/6.7.1/mingw_64/lib/libQt6Gui.a C$:/Qt/6.7.1/mingw_64/lib/libQt6Core.a C$:/Qt/6.7.1/mingw_64/lib/libQt6EntryPoint.a || CodeWizard_autogen CodeWizard_autogen_timestamp_deps extern/tree-sitter/libtree-sitter.a libtree-sitter-cpp.a libtree-sitter-html.a libtree-sitter-javascript.a libtree-sitter-python.a libtree-sitter-rust.a libtree-sitter-typescript.a
+build CodeWizard.exe: CXX_EXECUTABLE_LINKER__CodeWizard_Release C$:/Users/adamj/Documents/QtProjects/CodeWizard/app.o CMakeFiles/CodeWizard.dir/CodeWizard_autogen/mocs_compilation.cpp.obj CMakeFiles/CodeWizard.dir/main.cpp.obj CMakeFiles/CodeWizard.dir/mainwindow.cpp.obj CMakeFiles/CodeWizard.dir/mytextedit.cpp.obj CMakeFiles/CodeWizard.dir/codehighlighter.cpp.obj CMakeFiles/CodeWizard.dir/language.cpp.obj CMakeFiles/CodeWizard.dir/languageserverclient.cpp.obj CMakeFiles/CodeWizard.dir/syntaxhighlighter.cpp.obj CMakeFiles/CodeWizard.dir/CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp.obj | extern/tree-sitter/libtree-sitter.a libtree-sitter-cpp.a libtree-sitter-python.a libtree-sitter-rust.a libtree-sitter-javascript.a libtree-sitter-typescript.a libtree-sitter-html.a libtree-sitter-lua.a libtree-sitter-glsl.a libtree-sitter-wgsl.a libtree-sitter-java.a libtree-sitter-go.a libtree-sitter-c.a libtree-sitter-c-sharp.a C$:/Qt/6.7.1/mingw_64/lib/libQt6Widgets.a C$:/Qt/6.7.1/mingw_64/lib/libQt6Gui.a C$:/Qt/6.7.1/mingw_64/lib/libQt6Core.a C$:/Qt/6.7.1/mingw_64/lib/libQt6EntryPoint.a || CodeWizard_autogen CodeWizard_autogen_timestamp_deps extern/tree-sitter/libtree-sitter.a libtree-sitter-c-sharp.a libtree-sitter-c.a libtree-sitter-cpp.a libtree-sitter-glsl.a libtree-sitter-go.a libtree-sitter-html.a libtree-sitter-java.a libtree-sitter-javascript.a libtree-sitter-lua.a libtree-sitter-python.a libtree-sitter-rust.a libtree-sitter-typescript.a libtree-sitter-wgsl.a
   FLAGS = -O3 -DNDEBUG
   LINK_FLAGS = -mwindows
-  LINK_LIBRARIES = extern/tree-sitter/libtree-sitter.a  libtree-sitter-cpp.a  libtree-sitter-python.a  libtree-sitter-rust.a  libtree-sitter-javascript.a  libtree-sitter-typescript.a  libtree-sitter-html.a  C:/Qt/6.7.1/mingw_64/lib/libQt6Widgets.a  C:/Qt/6.7.1/mingw_64/lib/libQt6Gui.a  C:/Qt/6.7.1/mingw_64/lib/libQt6Core.a  -lmpr  -luserenv  -lmingw32  C:/Qt/6.7.1/mingw_64/lib/libQt6EntryPoint.a  -lshell32  -ld3d11  -ldxgi  -ldxguid  -ld3d12  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_LIBRARIES = extern/tree-sitter/libtree-sitter.a  libtree-sitter-cpp.a  libtree-sitter-python.a  libtree-sitter-rust.a  libtree-sitter-javascript.a  libtree-sitter-typescript.a  libtree-sitter-html.a  libtree-sitter-lua.a  libtree-sitter-glsl.a  libtree-sitter-wgsl.a  libtree-sitter-java.a  libtree-sitter-go.a  libtree-sitter-c.a  libtree-sitter-c-sharp.a  C:/Qt/6.7.1/mingw_64/lib/libQt6Widgets.a  C:/Qt/6.7.1/mingw_64/lib/libQt6Gui.a  C:/Qt/6.7.1/mingw_64/lib/libQt6Core.a  -lmpr  -luserenv  -lmingw32  C:/Qt/6.7.1/mingw_64/lib/libQt6EntryPoint.a  -lshell32  -ld3d11  -ldxgi  -ldxguid  -ld3d12  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\CodeWizard.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
@@ -488,6 +790,18 @@ build tree-sitter-cpp_autogen: phony CMakeFiles/tree-sitter-cpp_autogen tree-sit
 
 
 #############################################
+# Utility command for tree-sitter-c-sharp_autogen_timestamp_deps
+
+build tree-sitter-c-sharp_autogen_timestamp_deps: phony
+
+
+#############################################
+# Utility command for tree-sitter-c-sharp_autogen
+
+build tree-sitter-c-sharp_autogen: phony CMakeFiles/tree-sitter-c-sharp_autogen tree-sitter-c-sharp_autogen/include/ui_mainwindow.h tree-sitter-c-sharp_autogen/timestamp tree-sitter-c-sharp_autogen/mocs_compilation.cpp tree-sitter-c-sharp_autogen_timestamp_deps
+
+
+#############################################
 # Utility command for tree-sitter-python_autogen_timestamp_deps
 
 build tree-sitter-python_autogen_timestamp_deps: phony
@@ -548,9 +862,81 @@ build tree-sitter-html_autogen: phony CMakeFiles/tree-sitter-html_autogen tree-s
 
 
 #############################################
+# Utility command for tree-sitter-lua_autogen_timestamp_deps
+
+build tree-sitter-lua_autogen_timestamp_deps: phony
+
+
+#############################################
+# Utility command for tree-sitter-lua_autogen
+
+build tree-sitter-lua_autogen: phony CMakeFiles/tree-sitter-lua_autogen tree-sitter-lua_autogen/include/ui_mainwindow.h tree-sitter-lua_autogen/timestamp tree-sitter-lua_autogen/mocs_compilation.cpp tree-sitter-lua_autogen_timestamp_deps
+
+
+#############################################
+# Utility command for tree-sitter-glsl_autogen_timestamp_deps
+
+build tree-sitter-glsl_autogen_timestamp_deps: phony
+
+
+#############################################
+# Utility command for tree-sitter-glsl_autogen
+
+build tree-sitter-glsl_autogen: phony CMakeFiles/tree-sitter-glsl_autogen tree-sitter-glsl_autogen/include/ui_mainwindow.h tree-sitter-glsl_autogen/timestamp tree-sitter-glsl_autogen/mocs_compilation.cpp tree-sitter-glsl_autogen_timestamp_deps
+
+
+#############################################
+# Utility command for tree-sitter-wgsl_autogen_timestamp_deps
+
+build tree-sitter-wgsl_autogen_timestamp_deps: phony
+
+
+#############################################
+# Utility command for tree-sitter-wgsl_autogen
+
+build tree-sitter-wgsl_autogen: phony CMakeFiles/tree-sitter-wgsl_autogen tree-sitter-wgsl_autogen/include/ui_mainwindow.h tree-sitter-wgsl_autogen/timestamp tree-sitter-wgsl_autogen/mocs_compilation.cpp tree-sitter-wgsl_autogen_timestamp_deps
+
+
+#############################################
+# Utility command for tree-sitter-go_autogen_timestamp_deps
+
+build tree-sitter-go_autogen_timestamp_deps: phony
+
+
+#############################################
+# Utility command for tree-sitter-go_autogen
+
+build tree-sitter-go_autogen: phony CMakeFiles/tree-sitter-go_autogen tree-sitter-go_autogen/include/ui_mainwindow.h tree-sitter-go_autogen/timestamp tree-sitter-go_autogen/mocs_compilation.cpp tree-sitter-go_autogen_timestamp_deps
+
+
+#############################################
+# Utility command for tree-sitter-java_autogen_timestamp_deps
+
+build tree-sitter-java_autogen_timestamp_deps: phony
+
+
+#############################################
+# Utility command for tree-sitter-java_autogen
+
+build tree-sitter-java_autogen: phony CMakeFiles/tree-sitter-java_autogen tree-sitter-java_autogen/include/ui_mainwindow.h tree-sitter-java_autogen/timestamp tree-sitter-java_autogen/mocs_compilation.cpp tree-sitter-java_autogen_timestamp_deps
+
+
+#############################################
+# Utility command for tree-sitter-c_autogen_timestamp_deps
+
+build tree-sitter-c_autogen_timestamp_deps: phony
+
+
+#############################################
+# Utility command for tree-sitter-c_autogen
+
+build tree-sitter-c_autogen: phony CMakeFiles/tree-sitter-c_autogen tree-sitter-c_autogen/include/ui_mainwindow.h tree-sitter-c_autogen/timestamp tree-sitter-c_autogen/mocs_compilation.cpp tree-sitter-c_autogen_timestamp_deps
+
+
+#############################################
 # Utility command for CodeWizard_autogen_timestamp_deps
 
-build CodeWizard_autogen_timestamp_deps: phony extern/tree-sitter/libtree-sitter.a libtree-sitter-cpp.a libtree-sitter-html.a libtree-sitter-javascript.a libtree-sitter-python.a libtree-sitter-rust.a libtree-sitter-typescript.a
+build CodeWizard_autogen_timestamp_deps: phony extern/tree-sitter/libtree-sitter.a libtree-sitter-c-sharp.a libtree-sitter-c.a libtree-sitter-cpp.a libtree-sitter-glsl.a libtree-sitter-go.a libtree-sitter-html.a libtree-sitter-java.a libtree-sitter-javascript.a libtree-sitter-lua.a libtree-sitter-python.a libtree-sitter-rust.a libtree-sitter-typescript.a libtree-sitter-wgsl.a
 
 
 #############################################
@@ -566,6 +952,17 @@ build tree-sitter-cpp_autogen/timestamp tree-sitter-cpp_autogen/mocs_compilation
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MinGW_64_bit-Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_autogen C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/tree-sitter-cpp_autogen.dir/AutogenInfo.json Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-cpp_autogen/timestamp && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_transform_depfile Ninja gccdepfile C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-cpp_autogen/deps C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/d/c3823c83bbab1bf0ba80f0f3de0fddb7f34d1ef192b3f94b9f8da09ace395a92.d"
   DESC = Automatic MOC and UIC for target tree-sitter-cpp
   depfile = CMakeFiles\d\c3823c83bbab1bf0ba80f0f3de0fddb7f34d1ef192b3f94b9f8da09ace395a92.d
+  deps = gcc
+  restat = 1
+
+
+#############################################
+# Custom command for tree-sitter-c-sharp_autogen\timestamp
+
+build tree-sitter-c-sharp_autogen/timestamp tree-sitter-c-sharp_autogen/mocs_compilation.cpp | ${cmake_ninja_workdir}tree-sitter-c-sharp_autogen/timestamp ${cmake_ninja_workdir}tree-sitter-c-sharp_autogen/mocs_compilation.cpp: CUSTOM_COMMAND C$:/Qt/6.7.1/mingw_64/./bin/moc.exe C$:/Qt/6.7.1/mingw_64/./bin/uic.exe || tree-sitter-c-sharp_autogen_timestamp_deps
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MinGW_64_bit-Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_autogen C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/tree-sitter-c-sharp_autogen.dir/AutogenInfo.json Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c-sharp_autogen/timestamp && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_transform_depfile Ninja gccdepfile C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c-sharp_autogen/deps C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/d/07aaa13126e9ebce1517fc2e227117c59d94613df0589c0667e4273a3ca1de5e.d"
+  DESC = Automatic MOC and UIC for target tree-sitter-c-sharp
+  depfile = CMakeFiles\d\07aaa13126e9ebce1517fc2e227117c59d94613df0589c0667e4273a3ca1de5e.d
   deps = gcc
   restat = 1
 
@@ -626,9 +1023,75 @@ build tree-sitter-html_autogen/timestamp tree-sitter-html_autogen/mocs_compilati
 
 
 #############################################
+# Custom command for tree-sitter-lua_autogen\timestamp
+
+build tree-sitter-lua_autogen/timestamp tree-sitter-lua_autogen/mocs_compilation.cpp | ${cmake_ninja_workdir}tree-sitter-lua_autogen/timestamp ${cmake_ninja_workdir}tree-sitter-lua_autogen/mocs_compilation.cpp: CUSTOM_COMMAND C$:/Qt/6.7.1/mingw_64/./bin/moc.exe C$:/Qt/6.7.1/mingw_64/./bin/uic.exe || tree-sitter-lua_autogen_timestamp_deps
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MinGW_64_bit-Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_autogen C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/tree-sitter-lua_autogen.dir/AutogenInfo.json Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-lua_autogen/timestamp && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_transform_depfile Ninja gccdepfile C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-lua_autogen/deps C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/d/198c171b2f595a65c75c2fc5b2c22cdf0b4c6834b38dea5b16fa785e869fd3ec.d"
+  DESC = Automatic MOC and UIC for target tree-sitter-lua
+  depfile = CMakeFiles\d\198c171b2f595a65c75c2fc5b2c22cdf0b4c6834b38dea5b16fa785e869fd3ec.d
+  deps = gcc
+  restat = 1
+
+
+#############################################
+# Custom command for tree-sitter-glsl_autogen\timestamp
+
+build tree-sitter-glsl_autogen/timestamp tree-sitter-glsl_autogen/mocs_compilation.cpp | ${cmake_ninja_workdir}tree-sitter-glsl_autogen/timestamp ${cmake_ninja_workdir}tree-sitter-glsl_autogen/mocs_compilation.cpp: CUSTOM_COMMAND C$:/Qt/6.7.1/mingw_64/./bin/moc.exe C$:/Qt/6.7.1/mingw_64/./bin/uic.exe || tree-sitter-glsl_autogen_timestamp_deps
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MinGW_64_bit-Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_autogen C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/tree-sitter-glsl_autogen.dir/AutogenInfo.json Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-glsl_autogen/timestamp && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_transform_depfile Ninja gccdepfile C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-glsl_autogen/deps C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/d/9227d73dbf71c89f19ffaba28576c27dbbbc6a0f2dd48b67f2ca2ebe5356cff6.d"
+  DESC = Automatic MOC and UIC for target tree-sitter-glsl
+  depfile = CMakeFiles\d\9227d73dbf71c89f19ffaba28576c27dbbbc6a0f2dd48b67f2ca2ebe5356cff6.d
+  deps = gcc
+  restat = 1
+
+
+#############################################
+# Custom command for tree-sitter-wgsl_autogen\timestamp
+
+build tree-sitter-wgsl_autogen/timestamp tree-sitter-wgsl_autogen/mocs_compilation.cpp | ${cmake_ninja_workdir}tree-sitter-wgsl_autogen/timestamp ${cmake_ninja_workdir}tree-sitter-wgsl_autogen/mocs_compilation.cpp: CUSTOM_COMMAND C$:/Qt/6.7.1/mingw_64/./bin/moc.exe C$:/Qt/6.7.1/mingw_64/./bin/uic.exe || tree-sitter-wgsl_autogen_timestamp_deps
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MinGW_64_bit-Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_autogen C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/tree-sitter-wgsl_autogen.dir/AutogenInfo.json Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-wgsl_autogen/timestamp && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_transform_depfile Ninja gccdepfile C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-wgsl_autogen/deps C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/d/45d2ba8a11b16e1f3c93609c721272ece2a83f8dda28f10a24776ede2223de3e.d"
+  DESC = Automatic MOC and UIC for target tree-sitter-wgsl
+  depfile = CMakeFiles\d\45d2ba8a11b16e1f3c93609c721272ece2a83f8dda28f10a24776ede2223de3e.d
+  deps = gcc
+  restat = 1
+
+
+#############################################
+# Custom command for tree-sitter-go_autogen\timestamp
+
+build tree-sitter-go_autogen/timestamp tree-sitter-go_autogen/mocs_compilation.cpp | ${cmake_ninja_workdir}tree-sitter-go_autogen/timestamp ${cmake_ninja_workdir}tree-sitter-go_autogen/mocs_compilation.cpp: CUSTOM_COMMAND C$:/Qt/6.7.1/mingw_64/./bin/moc.exe C$:/Qt/6.7.1/mingw_64/./bin/uic.exe || tree-sitter-go_autogen_timestamp_deps
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MinGW_64_bit-Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_autogen C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/tree-sitter-go_autogen.dir/AutogenInfo.json Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-go_autogen/timestamp && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_transform_depfile Ninja gccdepfile C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-go_autogen/deps C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/d/c5e1938ea9748743f64d9a6c44d696027fd66ae246ac9a286ad0c1f4a9f21206.d"
+  DESC = Automatic MOC and UIC for target tree-sitter-go
+  depfile = CMakeFiles\d\c5e1938ea9748743f64d9a6c44d696027fd66ae246ac9a286ad0c1f4a9f21206.d
+  deps = gcc
+  restat = 1
+
+
+#############################################
+# Custom command for tree-sitter-java_autogen\timestamp
+
+build tree-sitter-java_autogen/timestamp tree-sitter-java_autogen/mocs_compilation.cpp | ${cmake_ninja_workdir}tree-sitter-java_autogen/timestamp ${cmake_ninja_workdir}tree-sitter-java_autogen/mocs_compilation.cpp: CUSTOM_COMMAND C$:/Qt/6.7.1/mingw_64/./bin/moc.exe C$:/Qt/6.7.1/mingw_64/./bin/uic.exe || tree-sitter-java_autogen_timestamp_deps
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MinGW_64_bit-Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_autogen C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/tree-sitter-java_autogen.dir/AutogenInfo.json Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-java_autogen/timestamp && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_transform_depfile Ninja gccdepfile C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-java_autogen/deps C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/d/a8bf201ab100eb3f69b3e926eb471dca34fd9610d9cb09a1b83d37c8e9401b3e.d"
+  DESC = Automatic MOC and UIC for target tree-sitter-java
+  depfile = CMakeFiles\d\a8bf201ab100eb3f69b3e926eb471dca34fd9610d9cb09a1b83d37c8e9401b3e.d
+  deps = gcc
+  restat = 1
+
+
+#############################################
+# Custom command for tree-sitter-c_autogen\timestamp
+
+build tree-sitter-c_autogen/timestamp tree-sitter-c_autogen/mocs_compilation.cpp | ${cmake_ninja_workdir}tree-sitter-c_autogen/timestamp ${cmake_ninja_workdir}tree-sitter-c_autogen/mocs_compilation.cpp: CUSTOM_COMMAND C$:/Qt/6.7.1/mingw_64/./bin/moc.exe C$:/Qt/6.7.1/mingw_64/./bin/uic.exe || tree-sitter-c_autogen_timestamp_deps
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MinGW_64_bit-Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_autogen C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/tree-sitter-c_autogen.dir/AutogenInfo.json Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c_autogen/timestamp && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_transform_depfile Ninja gccdepfile C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c_autogen/deps C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/d/ce42b7cc3f0912f9b1105418c9eedb1c87d79344c1b78020512f79c1e6eca9c6.d"
+  DESC = Automatic MOC and UIC for target tree-sitter-c
+  depfile = CMakeFiles\d\ce42b7cc3f0912f9b1105418c9eedb1c87d79344c1b78020512f79c1e6eca9c6.d
+  deps = gcc
+  restat = 1
+
+
+#############################################
 # Custom command for CodeWizard_autogen\timestamp
 
-build CodeWizard_autogen/timestamp CodeWizard_autogen/mocs_compilation.cpp | ${cmake_ninja_workdir}CodeWizard_autogen/timestamp ${cmake_ninja_workdir}CodeWizard_autogen/mocs_compilation.cpp: CUSTOM_COMMAND C$:/Qt/6.7.1/mingw_64/./bin/moc.exe C$:/Qt/6.7.1/mingw_64/./bin/uic.exe || CodeWizard_autogen_timestamp_deps extern/tree-sitter/libtree-sitter.a extern/tree-sitter/tree-sitter_autogen extern/tree-sitter/tree-sitter_autogen_timestamp_deps libtree-sitter-cpp.a libtree-sitter-html.a libtree-sitter-javascript.a libtree-sitter-python.a libtree-sitter-rust.a libtree-sitter-typescript.a tree-sitter-cpp_autogen tree-sitter-cpp_autogen_timestamp_deps tree-sitter-html_autogen tree-sitter-html_autogen_timestamp_deps tree-sitter-javascript_autogen tree-sitter-javascript_autogen_timestamp_deps tree-sitter-python_autogen tree-sitter-python_autogen_timestamp_deps tree-sitter-rust_autogen tree-sitter-rust_autogen_timestamp_deps tree-sitter-typescript_autogen tree-sitter-typescript_autogen_timestamp_deps
+build CodeWizard_autogen/timestamp CodeWizard_autogen/mocs_compilation.cpp | ${cmake_ninja_workdir}CodeWizard_autogen/timestamp ${cmake_ninja_workdir}CodeWizard_autogen/mocs_compilation.cpp: CUSTOM_COMMAND C$:/Qt/6.7.1/mingw_64/./bin/moc.exe C$:/Qt/6.7.1/mingw_64/./bin/uic.exe || CodeWizard_autogen_timestamp_deps extern/tree-sitter/libtree-sitter.a extern/tree-sitter/tree-sitter_autogen extern/tree-sitter/tree-sitter_autogen_timestamp_deps libtree-sitter-c-sharp.a libtree-sitter-c.a libtree-sitter-cpp.a libtree-sitter-glsl.a libtree-sitter-go.a libtree-sitter-html.a libtree-sitter-java.a libtree-sitter-javascript.a libtree-sitter-lua.a libtree-sitter-python.a libtree-sitter-rust.a libtree-sitter-typescript.a libtree-sitter-wgsl.a tree-sitter-c-sharp_autogen tree-sitter-c-sharp_autogen_timestamp_deps tree-sitter-c_autogen tree-sitter-c_autogen_timestamp_deps tree-sitter-cpp_autogen tree-sitter-cpp_autogen_timestamp_deps tree-sitter-glsl_autogen tree-sitter-glsl_autogen_timestamp_deps tree-sitter-go_autogen tree-sitter-go_autogen_timestamp_deps tree-sitter-html_autogen tree-sitter-html_autogen_timestamp_deps tree-sitter-java_autogen tree-sitter-java_autogen_timestamp_deps tree-sitter-javascript_autogen tree-sitter-javascript_autogen_timestamp_deps tree-sitter-lua_autogen tree-sitter-lua_autogen_timestamp_deps tree-sitter-python_autogen tree-sitter-python_autogen_timestamp_deps tree-sitter-rust_autogen tree-sitter-rust_autogen_timestamp_deps tree-sitter-typescript_autogen tree-sitter-typescript_autogen_timestamp_deps tree-sitter-wgsl_autogen tree-sitter-wgsl_autogen_timestamp_deps
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MinGW_64_bit-Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_autogen C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/CodeWizard_autogen.dir/AutogenInfo.json Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/timestamp && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_transform_depfile Ninja gccdepfile C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/deps C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/d/458008569dd9e6da960c771a84d7b879904a90e4f882a6795f821ccfb8db50c0.d"
   DESC = Automatic MOC and UIC for target CodeWizard
   depfile = CMakeFiles\d\458008569dd9e6da960c771a84d7b879904a90e4f882a6795f821ccfb8db50c0.d
@@ -639,7 +1102,7 @@ build CodeWizard_autogen/timestamp CodeWizard_autogen/mocs_compilation.cpp | ${c
 #############################################
 # Custom command for CodeWizard_autogen\EWIEGA46WW\qrc_resources.cpp
 
-build CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp | ${cmake_ninja_workdir}CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp: CUSTOM_COMMAND C$:/Users/adamj/Documents/QtProjects/CodeWizard/resources.qrc CMakeFiles/CodeWizard_autogen.dir/AutoRcc_resources_EWIEGA46WW_Info.json C$:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/UbuntuMono-R.ttf C$:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/Monaco.ttf C$:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/Monospace.ttf C$:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/Courier_New.ttf C$:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/Courier_Prime.ttf C$:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/DroidSansMono.ttf C$:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/SourceCodePro-Regular.ttf C$:/Qt/6.7.1/mingw_64/./bin/rcc.exe C$:/Qt/6.7.1/mingw_64/./bin/rcc.exe || CodeWizard_autogen CodeWizard_autogen_timestamp_deps extern/tree-sitter/libtree-sitter.a extern/tree-sitter/tree-sitter_autogen extern/tree-sitter/tree-sitter_autogen_timestamp_deps libtree-sitter-cpp.a libtree-sitter-html.a libtree-sitter-javascript.a libtree-sitter-python.a libtree-sitter-rust.a libtree-sitter-typescript.a tree-sitter-cpp_autogen tree-sitter-cpp_autogen_timestamp_deps tree-sitter-html_autogen tree-sitter-html_autogen_timestamp_deps tree-sitter-javascript_autogen tree-sitter-javascript_autogen_timestamp_deps tree-sitter-python_autogen tree-sitter-python_autogen_timestamp_deps tree-sitter-rust_autogen tree-sitter-rust_autogen_timestamp_deps tree-sitter-typescript_autogen tree-sitter-typescript_autogen_timestamp_deps
+build CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp | ${cmake_ninja_workdir}CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp: CUSTOM_COMMAND C$:/Users/adamj/Documents/QtProjects/CodeWizard/resources.qrc CMakeFiles/CodeWizard_autogen.dir/AutoRcc_resources_EWIEGA46WW_Info.json C$:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/UbuntuMono-R.ttf C$:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/Monaco.ttf C$:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/Monospace.ttf C$:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/Courier_New.ttf C$:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/Courier_Prime.ttf C$:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/DroidSansMono.ttf C$:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/SourceCodePro-Regular.ttf C$:/Qt/6.7.1/mingw_64/./bin/rcc.exe C$:/Qt/6.7.1/mingw_64/./bin/rcc.exe || CodeWizard_autogen CodeWizard_autogen_timestamp_deps extern/tree-sitter/libtree-sitter.a extern/tree-sitter/tree-sitter_autogen extern/tree-sitter/tree-sitter_autogen_timestamp_deps libtree-sitter-c-sharp.a libtree-sitter-c.a libtree-sitter-cpp.a libtree-sitter-glsl.a libtree-sitter-go.a libtree-sitter-html.a libtree-sitter-java.a libtree-sitter-javascript.a libtree-sitter-lua.a libtree-sitter-python.a libtree-sitter-rust.a libtree-sitter-typescript.a libtree-sitter-wgsl.a tree-sitter-c-sharp_autogen tree-sitter-c-sharp_autogen_timestamp_deps tree-sitter-c_autogen tree-sitter-c_autogen_timestamp_deps tree-sitter-cpp_autogen tree-sitter-cpp_autogen_timestamp_deps tree-sitter-glsl_autogen tree-sitter-glsl_autogen_timestamp_deps tree-sitter-go_autogen tree-sitter-go_autogen_timestamp_deps tree-sitter-html_autogen tree-sitter-html_autogen_timestamp_deps tree-sitter-java_autogen tree-sitter-java_autogen_timestamp_deps tree-sitter-javascript_autogen tree-sitter-javascript_autogen_timestamp_deps tree-sitter-lua_autogen tree-sitter-lua_autogen_timestamp_deps tree-sitter-python_autogen tree-sitter-python_autogen_timestamp_deps tree-sitter-rust_autogen tree-sitter-rust_autogen_timestamp_deps tree-sitter-typescript_autogen tree-sitter-typescript_autogen_timestamp_deps tree-sitter-wgsl_autogen tree-sitter-wgsl_autogen_timestamp_deps
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MinGW_64_bit-Release && C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_autorcc C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/CodeWizard_autogen.dir/AutoRcc_resources_EWIEGA46WW_Info.json Release"
   DESC = Automatic RCC for resources.qrc
   restat = 1
@@ -649,6 +1112,12 @@ build CodeWizard_autogen/EWIEGA46WW/qrc_resources.cpp | ${cmake_ninja_workdir}Co
 # Phony custom command for CMakeFiles\tree-sitter-cpp_autogen
 
 build CMakeFiles/tree-sitter-cpp_autogen tree-sitter-cpp_autogen/include/ui_mainwindow.h | ${cmake_ninja_workdir}CMakeFiles/tree-sitter-cpp_autogen ${cmake_ninja_workdir}tree-sitter-cpp_autogen/include/ui_mainwindow.h: phony tree-sitter-cpp_autogen/timestamp || tree-sitter-cpp_autogen_timestamp_deps
+
+
+#############################################
+# Phony custom command for CMakeFiles\tree-sitter-c-sharp_autogen
+
+build CMakeFiles/tree-sitter-c-sharp_autogen tree-sitter-c-sharp_autogen/include/ui_mainwindow.h | ${cmake_ninja_workdir}CMakeFiles/tree-sitter-c-sharp_autogen ${cmake_ninja_workdir}tree-sitter-c-sharp_autogen/include/ui_mainwindow.h: phony tree-sitter-c-sharp_autogen/timestamp || tree-sitter-c-sharp_autogen_timestamp_deps
 
 
 #############################################
@@ -682,9 +1151,45 @@ build CMakeFiles/tree-sitter-html_autogen tree-sitter-html_autogen/include/ui_ma
 
 
 #############################################
+# Phony custom command for CMakeFiles\tree-sitter-lua_autogen
+
+build CMakeFiles/tree-sitter-lua_autogen tree-sitter-lua_autogen/include/ui_mainwindow.h | ${cmake_ninja_workdir}CMakeFiles/tree-sitter-lua_autogen ${cmake_ninja_workdir}tree-sitter-lua_autogen/include/ui_mainwindow.h: phony tree-sitter-lua_autogen/timestamp || tree-sitter-lua_autogen_timestamp_deps
+
+
+#############################################
+# Phony custom command for CMakeFiles\tree-sitter-glsl_autogen
+
+build CMakeFiles/tree-sitter-glsl_autogen tree-sitter-glsl_autogen/include/ui_mainwindow.h | ${cmake_ninja_workdir}CMakeFiles/tree-sitter-glsl_autogen ${cmake_ninja_workdir}tree-sitter-glsl_autogen/include/ui_mainwindow.h: phony tree-sitter-glsl_autogen/timestamp || tree-sitter-glsl_autogen_timestamp_deps
+
+
+#############################################
+# Phony custom command for CMakeFiles\tree-sitter-wgsl_autogen
+
+build CMakeFiles/tree-sitter-wgsl_autogen tree-sitter-wgsl_autogen/include/ui_mainwindow.h | ${cmake_ninja_workdir}CMakeFiles/tree-sitter-wgsl_autogen ${cmake_ninja_workdir}tree-sitter-wgsl_autogen/include/ui_mainwindow.h: phony tree-sitter-wgsl_autogen/timestamp || tree-sitter-wgsl_autogen_timestamp_deps
+
+
+#############################################
+# Phony custom command for CMakeFiles\tree-sitter-go_autogen
+
+build CMakeFiles/tree-sitter-go_autogen tree-sitter-go_autogen/include/ui_mainwindow.h | ${cmake_ninja_workdir}CMakeFiles/tree-sitter-go_autogen ${cmake_ninja_workdir}tree-sitter-go_autogen/include/ui_mainwindow.h: phony tree-sitter-go_autogen/timestamp || tree-sitter-go_autogen_timestamp_deps
+
+
+#############################################
+# Phony custom command for CMakeFiles\tree-sitter-java_autogen
+
+build CMakeFiles/tree-sitter-java_autogen tree-sitter-java_autogen/include/ui_mainwindow.h | ${cmake_ninja_workdir}CMakeFiles/tree-sitter-java_autogen ${cmake_ninja_workdir}tree-sitter-java_autogen/include/ui_mainwindow.h: phony tree-sitter-java_autogen/timestamp || tree-sitter-java_autogen_timestamp_deps
+
+
+#############################################
+# Phony custom command for CMakeFiles\tree-sitter-c_autogen
+
+build CMakeFiles/tree-sitter-c_autogen tree-sitter-c_autogen/include/ui_mainwindow.h | ${cmake_ninja_workdir}CMakeFiles/tree-sitter-c_autogen ${cmake_ninja_workdir}tree-sitter-c_autogen/include/ui_mainwindow.h: phony tree-sitter-c_autogen/timestamp || tree-sitter-c_autogen_timestamp_deps
+
+
+#############################################
 # Phony custom command for CMakeFiles\CodeWizard_autogen
 
-build CMakeFiles/CodeWizard_autogen CodeWizard_autogen/include/ui_mainwindow.h | ${cmake_ninja_workdir}CMakeFiles/CodeWizard_autogen ${cmake_ninja_workdir}CodeWizard_autogen/include/ui_mainwindow.h: phony CodeWizard_autogen/timestamp || CodeWizard_autogen_timestamp_deps extern/tree-sitter/libtree-sitter.a extern/tree-sitter/tree-sitter_autogen extern/tree-sitter/tree-sitter_autogen_timestamp_deps libtree-sitter-cpp.a libtree-sitter-html.a libtree-sitter-javascript.a libtree-sitter-python.a libtree-sitter-rust.a libtree-sitter-typescript.a tree-sitter-cpp_autogen tree-sitter-cpp_autogen_timestamp_deps tree-sitter-html_autogen tree-sitter-html_autogen_timestamp_deps tree-sitter-javascript_autogen tree-sitter-javascript_autogen_timestamp_deps tree-sitter-python_autogen tree-sitter-python_autogen_timestamp_deps tree-sitter-rust_autogen tree-sitter-rust_autogen_timestamp_deps tree-sitter-typescript_autogen tree-sitter-typescript_autogen_timestamp_deps
+build CMakeFiles/CodeWizard_autogen CodeWizard_autogen/include/ui_mainwindow.h | ${cmake_ninja_workdir}CMakeFiles/CodeWizard_autogen ${cmake_ninja_workdir}CodeWizard_autogen/include/ui_mainwindow.h: phony CodeWizard_autogen/timestamp || CodeWizard_autogen_timestamp_deps extern/tree-sitter/libtree-sitter.a extern/tree-sitter/tree-sitter_autogen extern/tree-sitter/tree-sitter_autogen_timestamp_deps libtree-sitter-c-sharp.a libtree-sitter-c.a libtree-sitter-cpp.a libtree-sitter-glsl.a libtree-sitter-go.a libtree-sitter-html.a libtree-sitter-java.a libtree-sitter-javascript.a libtree-sitter-lua.a libtree-sitter-python.a libtree-sitter-rust.a libtree-sitter-typescript.a libtree-sitter-wgsl.a tree-sitter-c-sharp_autogen tree-sitter-c-sharp_autogen_timestamp_deps tree-sitter-c_autogen tree-sitter-c_autogen_timestamp_deps tree-sitter-cpp_autogen tree-sitter-cpp_autogen_timestamp_deps tree-sitter-glsl_autogen tree-sitter-glsl_autogen_timestamp_deps tree-sitter-go_autogen tree-sitter-go_autogen_timestamp_deps tree-sitter-html_autogen tree-sitter-html_autogen_timestamp_deps tree-sitter-java_autogen tree-sitter-java_autogen_timestamp_deps tree-sitter-javascript_autogen tree-sitter-javascript_autogen_timestamp_deps tree-sitter-lua_autogen tree-sitter-lua_autogen_timestamp_deps tree-sitter-python_autogen tree-sitter-python_autogen_timestamp_deps tree-sitter-rust_autogen tree-sitter-rust_autogen_timestamp_deps tree-sitter-typescript_autogen tree-sitter-typescript_autogen_timestamp_deps tree-sitter-wgsl_autogen tree-sitter-wgsl_autogen_timestamp_deps
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
@@ -900,17 +1405,31 @@ build libtree-sitter.a: phony extern/tree-sitter/libtree-sitter.a
 
 build tree-sitter: phony extern/tree-sitter/libtree-sitter.a
 
+build tree-sitter-c: phony libtree-sitter-c.a
+
+build tree-sitter-c-sharp: phony libtree-sitter-c-sharp.a
+
 build tree-sitter-cpp: phony libtree-sitter-cpp.a
+
+build tree-sitter-glsl: phony libtree-sitter-glsl.a
+
+build tree-sitter-go: phony libtree-sitter-go.a
 
 build tree-sitter-html: phony libtree-sitter-html.a
 
+build tree-sitter-java: phony libtree-sitter-java.a
+
 build tree-sitter-javascript: phony libtree-sitter-javascript.a
+
+build tree-sitter-lua: phony libtree-sitter-lua.a
 
 build tree-sitter-python: phony libtree-sitter-python.a
 
 build tree-sitter-rust: phony libtree-sitter-rust.a
 
 build tree-sitter-typescript: phony libtree-sitter-typescript.a
+
+build tree-sitter-wgsl: phony libtree-sitter-wgsl.a
 
 build tree-sitter_autogen: phony extern/tree-sitter/tree-sitter_autogen
 
@@ -924,7 +1443,7 @@ build tree-sitter_autogen_timestamp_deps: phony extern/tree-sitter/tree-sitter_a
 #############################################
 # Folder: C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release
 
-build all: phony libtree-sitter-cpp.a libtree-sitter-python.a libtree-sitter-rust.a libtree-sitter-javascript.a libtree-sitter-typescript.a libtree-sitter-html.a CodeWizard.exe extern/tree-sitter/all
+build all: phony libtree-sitter-cpp.a libtree-sitter-c-sharp.a libtree-sitter-python.a libtree-sitter-rust.a libtree-sitter-javascript.a libtree-sitter-typescript.a libtree-sitter-html.a libtree-sitter-lua.a libtree-sitter-glsl.a libtree-sitter-wgsl.a libtree-sitter-go.a libtree-sitter-java.a libtree-sitter-c.a CodeWizard.exe extern/tree-sitter/all
 
 # =============================================================================
 

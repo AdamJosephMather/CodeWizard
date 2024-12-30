@@ -378,6 +378,7 @@
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : 
 	[
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c-sharp_autogen/include/ui_mainwindow.h",
 		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-cpp_autogen/include/ui_mainwindow.h"
 	],
 	"MULTI_CONFIG" : false,
@@ -405,6 +406,7 @@
 	"UIC_SEARCH_PATHS" : [],
 	"UIC_SKIP" : 
 	[
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c-sharp_autogen/include/ui_mainwindow.h",
 		"C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-cpp_autogen/include/ui_mainwindow.h"
 	],
 	"UIC_UI_FILES" : [],

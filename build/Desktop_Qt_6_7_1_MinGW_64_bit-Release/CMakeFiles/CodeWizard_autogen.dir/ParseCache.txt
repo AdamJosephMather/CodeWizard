@@ -399,6 +399,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/codehighlighter.h
  mdp:C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/moc_predefs.h
  mdp:C:/Users/adamj/Documents/QtProjects/CodeWizard/codehighlighter.h
  mdp:C:/Users/adamj/Documents/QtProjects/CodeWizard/language.h
+C:/Users/adamj/Documents/QtProjects/CodeWizard/syntaxhighlighter.h
 C:/Users/adamj/Documents/QtProjects/CodeWizard/language.h
 C:/Users/adamj/Documents/QtProjects/CodeWizard/languageserverclient.h
  mmc:Q_OBJECT
@@ -1551,6 +1552,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/codehighlighter.cpp
 C:/Users/adamj/Documents/QtProjects/CodeWizard/language.cpp
 C:/Users/adamj/Documents/QtProjects/CodeWizard/languageserverclient.cpp
 C:/Users/adamj/Documents/QtProjects/CodeWizard/main.cpp
+C:/Users/adamj/Documents/QtProjects/CodeWizard/mytextedit.cpp
 C:/Users/adamj/Documents/QtProjects/CodeWizard/mainwindow.cpp
  uic:./ui_mainwindow.h
-C:/Users/adamj/Documents/QtProjects/CodeWizard/mytextedit.cpp
+C:/Users/adamj/Documents/QtProjects/CodeWizard/syntaxhighlighter.cpp
