@@ -28,7 +28,7 @@ public:
     QList<HighlightBlock> getHighlightBlocks(TSNode root);
 
     // Apply highlighting only where needed
-    void updateHighlighting(QTextDocument* document, const QList<HighlightBlock>& newBlocks);
+    void updateHighlighting(QTextDocument* document, const QList<HighlightBlock>& newBlocks, int cursorPos, TSTree* oldTree, TSTree* newTree, bool forceFull);
     void setFormats(QList<QTextCharFormat> newFormats);
 
     std::unordered_map<QString, int> colormap;
@@ -36,7 +36,7 @@ public:
 private:
     void traverseNode(QStringList, QString, TSNode node, QList<HighlightBlock>& blocks);
     bool shouldHighlight(TSNode node);
-    QTextCharFormat getFormatForType(const QString& type);
+    QTextCharFormat getFormatForType(const QString& parentAndType);
 };
 
 #endif // SYNTAXHIGHLIGHTER_H
