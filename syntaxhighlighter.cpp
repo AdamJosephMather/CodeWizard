@@ -7,33 +7,32 @@
 QList<QTextCharFormat> formats;
 std::unordered_map<QString, int> knownTypes = {{"true",8}, {"false", 8}};
 QRegularExpression *regex = new QRegularExpression("[a-zA-Z0-9]");
+QSet<QString> naughtyTypes = {"escape_sequence"};
 
 void SyntaxHighlighter::setFormats(QList<QTextCharFormat> newFormats){
     formats = newFormats;
 }
 
 // Convert tree-sitter tree into list of highlight blocks
-QList<HighlightBlock> SyntaxHighlighter::getHighlightBlocks(TSNode root) {
+QList<HighlightBlock> SyntaxHighlighter::getHighlightBlocks(TSNode root, uint32_t start, uint32_t end) {
     QList<HighlightBlock> blocks;
-    traverseNode(QStringList(), "", root, blocks);
+    traverseNode(QStringList(), "", root, blocks, start, end);
     return blocks;
 }
 
 // Apply highlighting only where needed
-void SyntaxHighlighter::updateHighlighting(QTextDocument* document, const QList<HighlightBlock>& newBlocks, int cursorPos, TSTree* oldTree, TSTree* newTree, bool forceFull) {
+void SyntaxHighlighter::updateHighlighting(QTextDocument* document, int cursorPos, int addedLen, TSTree* oldTree, TSTree* newTree, bool forceFull) {
     // Get existing format ranges for each block
 
     uint32_t rangeCount;
     TSRange* ranges = ts_tree_get_changed_ranges(oldTree, newTree, &rangeCount);
 
-    qDebug() << "ranges received " << ranges;
-
     // Traverse each changed range
     for (uint32_t z = 0; z < rangeCount; ++z) {
-        qDebug() << ranges[z].start_byte << ranges[z].end_byte;
-
         QTextBlock B1 = document->findBlock(ranges[z].start_byte);
         QTextBlock B2 = document->findBlock(ranges[z].end_byte);
+
+        const QList<HighlightBlock>& newBlocks = getHighlightBlocks(ts_tree_root_node(newTree), ranges[z].start_byte, ranges[z].end_byte+1);
 
         int blockNumber1 = B1.blockNumber();
         int blockNumber2 = B2.blockNumber();
@@ -42,10 +41,7 @@ void SyntaxHighlighter::updateHighlighting(QTextDocument* document, const QList<
             B1 = document->begin();
         }
 
-        // QTextBlock currentBlock = document->findBlock(cursorPos);
-        // qDebug() << currentBlock.position() << currentBlock.blockNumber() << cursorPos;
-
-        for (QTextBlock block = B1; block.isValid() && (block.blockNumber() < blockNumber2+1 || forceFull); block = block.next()) {
+        for (QTextBlock block = B1; block.isValid() && block.blockNumber() < blockNumber2+1; block = block.next()) {
             QTextLayout* layout = block.layout();
             QList<QTextLayout::FormatRange> currentFormats = layout->formats();
 
@@ -92,10 +88,40 @@ void SyntaxHighlighter::updateHighlighting(QTextDocument* document, const QList<
         }
     }
 
+    QTextBlock block = document->findBlock(cursorPos-addedLen).previous();
+    QTextBlock block2 = document->findBlock(cursorPos).next();
 
-    QTextBlock block = document->findBlock(cursorPos);
+    if (!block.isValid()){
+        block = document->findBlock(cursorPos-addedLen);
+    }
+    if (!block2.isValid()){
+        block2 = document->findBlock(cursorPos);
+    }
 
-    for (int z = 0; z < 2; z ++) {
+    int s = block.position();
+    int e = block2.length()+block2.position();
+
+    qDebug() << "Forcing full? " << forceFull << "else stuck with " << s << "to" << e;
+
+    int lessThan = block2.blockNumber()-block.blockNumber();
+    if (forceFull){
+        s = 0;
+
+        QTextCursor cursor(document);
+        cursor.movePosition(QTextCursor::End);
+        QTextBlock block2 = cursor.block();
+
+        e = block2.length()+block2.position();
+
+        block = document->begin();
+        lessThan = document->blockCount();
+    }
+
+    qDebug() << "Finalusage " << forceFull << "got stuck with " << s << "to" << e << "lessthan" << lessThan << "et" << block.blockNumber() << block2.blockNumber();
+
+    const QList<HighlightBlock>& newBlocks = getHighlightBlocks(ts_tree_root_node(newTree), s, e+1);
+
+    for (int z = -1; z < lessThan; z ++) {
         QTextLayout* layout = block.layout();
         if (!block.isValid()){
             continue;
@@ -147,7 +173,7 @@ void SyntaxHighlighter::updateHighlighting(QTextDocument* document, const QList<
     }
 }
 
-void SyntaxHighlighter::traverseNode(QStringList parents, QString p, TSNode node, QList<HighlightBlock>& blocks) {
+void SyntaxHighlighter::traverseNode(QStringList parents, QString p, TSNode node, QList<HighlightBlock>& blocks, uint32_t start, uint32_t end) {
     if (!p.isEmpty()){
         parents.append(p);
     }
@@ -174,9 +200,16 @@ void SyntaxHighlighter::traverseNode(QStringList parents, QString p, TSNode node
 
     // Recurse through children
     uint32_t childCount = ts_node_child_count(node);
+
     for (uint32_t i = 0; i < childCount; ++i) {
         TSNode child = ts_node_child(node, i);
-        traverseNode(parents, nodeType, child, blocks);
+
+        uint32_t startByte = ts_node_start_byte(child);
+        uint32_t endByte = ts_node_end_byte(child);
+
+        if (start < endByte && end > startByte){
+            traverseNode(parents, nodeType, child, blocks, start, end);
+        }
     }
 }
 
@@ -185,13 +218,28 @@ bool SyntaxHighlighter::shouldHighlight(TSNode nodeType) {
         return true;
     }
 
+    bool allNaughty = true;
+
     uint32_t childCount = ts_node_child_count(nodeType);
+    for (uint32_t i = 0; i < childCount; ++i) {
+        TSNode child = ts_node_child(nodeType, i);
+        if (!naughtyTypes.contains(ts_node_type(child))){
+            allNaughty = false;
+            break;
+        }
+    }
+
+    if (allNaughty){
+        return true;
+    }
+
     for (uint32_t i = 0; i < childCount; ++i) {
         TSNode child = ts_node_child(nodeType, i);
         if (regex->match(ts_node_type(child)).hasMatch()){
             return false;
         }
     }
+
     return true;
 }
 
@@ -246,6 +294,5 @@ QTextCharFormat SyntaxHighlighter::getFormatForType(const QString& parentAndType
         return formats[it3->second];  // Access the value of the iterator (which is the key for formats)
     }
 
-    qDebug() << "#######" << parentAndType;
     return QTextCharFormat();  // Return a default QTextCharFormat if not found
 }
