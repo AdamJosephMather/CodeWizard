@@ -21,7 +21,6 @@ public:
              const QStringList& closeIndentsWords,
              const QStringList& defWordList,
              const QStringList& fileExtensions,
-             const std::map<QString, QTextCharFormat>& colorMap,
              const std::unordered_map<QString, int>& colorMapTS,
              const int& index);
     Language();
@@ -49,7 +48,6 @@ public:
     QStringList closeIndentsWords;
     QStringList defWordList;
     QStringList fileExtensions;
-    std::map<QString, QTextCharFormat> colorMap; // Changed from reference to value
     std::unordered_map<QString, int> colorMapTS;
     int index;
 };

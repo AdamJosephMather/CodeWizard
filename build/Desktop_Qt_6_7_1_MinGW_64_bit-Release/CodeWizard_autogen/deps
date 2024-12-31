@@ -8,12 +8,8 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/mingw_64/include/QtCore/QObject \
 	C:/Qt/6.7.1/mingw_64/include/QtCore/QProcess \
 	C:/Qt/6.7.1/mingw_64/include/QtCore/QRect \
-	C:/Qt/6.7.1/mingw_64/include/QtCore/QRegularExpression \
 	C:/Qt/6.7.1/mingw_64/include/QtCore/QSize \
 	C:/Qt/6.7.1/mingw_64/include/QtCore/QSizeF \
-	C:/Qt/6.7.1/mingw_64/include/QtCore/QString \
-	C:/Qt/6.7.1/mingw_64/include/QtCore/QStringList \
-	C:/Qt/6.7.1/mingw_64/include/QtCore/QVector \
 	C:/Qt/6.7.1/mingw_64/include/QtCore/q20functional.h \
 	C:/Qt/6.7.1/mingw_64/include/QtCore/q20memory.h \
 	C:/Qt/6.7.1/mingw_64/include/QtCore/q20type_traits.h \
@@ -151,15 +147,12 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/mingw_64/include/QtCore/quuid.h \
 	C:/Qt/6.7.1/mingw_64/include/QtCore/qvariant.h \
 	C:/Qt/6.7.1/mingw_64/include/QtCore/qvarlengtharray.h \
-	C:/Qt/6.7.1/mingw_64/include/QtCore/qvector.h \
 	C:/Qt/6.7.1/mingw_64/include/QtCore/qversiontagging.h \
 	C:/Qt/6.7.1/mingw_64/include/QtCore/qxptype_traits.h \
 	C:/Qt/6.7.1/mingw_64/include/QtCore/qyieldcpu.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/QAction \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/QContextMenuEvent \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/QMouseEvent \
-	C:/Qt/6.7.1/mingw_64/include/QtGui/QSyntaxHighlighter \
-	C:/Qt/6.7.1/mingw_64/include/QtGui/QTextCharFormat \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/QTransform \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qaction.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qbitmap.h \
@@ -169,10 +162,8 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qevent.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qeventpoint.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qfont.h \
-	C:/Qt/6.7.1/mingw_64/include/QtGui/qfontdatabase.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qfontinfo.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qfontmetrics.h \
-	C:/Qt/6.7.1/mingw_64/include/QtGui/qglyphrun.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qguiapplication.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qguiapplication_platform.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qicon.h \
@@ -187,18 +178,14 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qpixmap.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qpointingdevice.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qpolygon.h \
-	C:/Qt/6.7.1/mingw_64/include/QtGui/qrawfont.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qregion.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qrgb.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qrgba64.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qscreen.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qscreen_platform.h \
-	C:/Qt/6.7.1/mingw_64/include/QtGui/qsyntaxhighlighter.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qtextcursor.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qtextdocument.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qtextformat.h \
-	C:/Qt/6.7.1/mingw_64/include/QtGui/qtextlayout.h \
-	C:/Qt/6.7.1/mingw_64/include/QtGui/qtextobject.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qtextoption.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qtgui-config.h \
 	C:/Qt/6.7.1/mingw_64/include/QtGui/qtguiexports.h \
@@ -653,8 +640,6 @@ CodeWizard_autogen/timestamp: \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/3.29.3/CMakeRCCompiler.cmake \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/3.29.3/CMakeSystem.cmake \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/moc_predefs.h \
-	C:/Users/adamj/Documents/QtProjects/CodeWizard/codehighlighter.cpp \
-	C:/Users/adamj/Documents/QtProjects/CodeWizard/codehighlighter.h \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include/tree_sitter/api.h \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/language.cpp \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/language.h \

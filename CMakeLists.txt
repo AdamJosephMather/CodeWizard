@@ -156,7 +156,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         fonts/Courier_Prime.ttf
         fonts/SourceCodePro-Regular.ttf
         fonts/UbuntuMono-R.ttf
-        codehighlighter.h codehighlighter.cpp
         language.h language.cpp
         languageserverclient.h languageserverclient.cpp
         syntaxhighlighter.h syntaxhighlighter.cpp

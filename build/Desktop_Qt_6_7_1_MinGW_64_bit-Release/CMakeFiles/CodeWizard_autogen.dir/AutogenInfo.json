@@ -334,12 +334,6 @@
 	"HEADERS" : 
 	[
 		[
-			"C:/Users/adamj/Documents/QtProjects/CodeWizard/codehighlighter.h",
-			"MU",
-			"EWIEGA46WW/moc_codehighlighter.cpp",
-			null
-		],
-		[
 			"C:/Users/adamj/Documents/QtProjects/CodeWizard/language.h",
 			"MU",
 			"EWIEGA46WW/moc_language.cpp",
@@ -472,11 +466,6 @@
 	"SETTINGS_FILE" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/CodeWizard_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
-		[
-			"C:/Users/adamj/Documents/QtProjects/CodeWizard/codehighlighter.cpp",
-			"MU",
-			null
-		],
 		[
 			"C:/Users/adamj/Documents/QtProjects/CodeWizard/language.cpp",
 			"MU",

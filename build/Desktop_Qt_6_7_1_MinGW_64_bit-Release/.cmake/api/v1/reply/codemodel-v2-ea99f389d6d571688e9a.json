@@ -11,7 +11,7 @@
 						1
 					],
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-Release-0766458465d7c9d53d02.json",
+					"jsonFile" : "directory-.-Release-4c1aef5ee02207443da0.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.16"
@@ -161,7 +161,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "CodeWizard::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-CodeWizard-Release-2c82054a0c58cfd14868.json",
+					"jsonFile" : "target-CodeWizard-Release-4dfec709b525ef683b77.json",
 					"name" : "CodeWizard",
 					"projectIndex" : 0
 				},
@@ -175,7 +175,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "CodeWizard_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-CodeWizard_autogen_timestamp_deps-Release-4316eb8fc5e2b4caf201.json",
+					"jsonFile" : "target-CodeWizard_autogen_timestamp_deps-Release-d25f6459e017bbc5f5e3.json",
 					"name" : "CodeWizard_autogen_timestamp_deps",
 					"projectIndex" : 0
 				},
@@ -189,14 +189,14 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "tree-sitter-c::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-tree-sitter-c-Release-0c5340cb602bad6069d0.json",
+					"jsonFile" : "target-tree-sitter-c-Release-ffa04561127539ad12bb.json",
 					"name" : "tree-sitter-c",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "tree-sitter-c-sharp::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-tree-sitter-c-sharp-Release-40b8514648ee3fabbd3b.json",
+					"jsonFile" : "target-tree-sitter-c-sharp-Release-7e7239c8bc6269d22c91.json",
 					"name" : "tree-sitter-c-sharp",
 					"projectIndex" : 0
 				},
@@ -231,7 +231,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "tree-sitter-cpp::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-tree-sitter-cpp-Release-dd8b90dfb02622c480c5.json",
+					"jsonFile" : "target-tree-sitter-cpp-Release-1dc6838d0e9c62b5d941.json",
 					"name" : "tree-sitter-cpp",
 					"projectIndex" : 0
 				},
@@ -252,7 +252,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "tree-sitter-glsl::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-tree-sitter-glsl-Release-e82ee947222ebafdf7fc.json",
+					"jsonFile" : "target-tree-sitter-glsl-Release-bd27cf2357505fc203f0.json",
 					"name" : "tree-sitter-glsl",
 					"projectIndex" : 0
 				},
@@ -315,7 +315,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "tree-sitter-java::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-tree-sitter-java-Release-4d414229a1137b9b7512.json",
+					"jsonFile" : "target-tree-sitter-java-Release-47afa33663c63522dcbf.json",
 					"name" : "tree-sitter-java",
 					"projectIndex" : 0
 				},
@@ -336,7 +336,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "tree-sitter-javascript::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-tree-sitter-javascript-Release-e690a3eae4663f35d33d.json",
+					"jsonFile" : "target-tree-sitter-javascript-Release-294b8865aa64af98f806.json",
 					"name" : "tree-sitter-javascript",
 					"projectIndex" : 0
 				},
@@ -420,7 +420,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "tree-sitter-typescript::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-tree-sitter-typescript-Release-8f6b8850104b5cbd7173.json",
+					"jsonFile" : "target-tree-sitter-typescript-Release-3ed9a10381a318c48089.json",
 					"name" : "tree-sitter-typescript",
 					"projectIndex" : 0
 				},

@@ -3,7 +3,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "libtree-sitter-c-sharp.a"
+			"path" : "libtree-sitter-javascript.a"
 		}
 	],
 	"backtrace" : 1,
@@ -27,7 +27,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 25,
+				"line" : 40,
 				"parent" : 0
 			},
 			{
@@ -39,7 +39,7 @@
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 85,
+				"line" : 97,
 				"parent" : 0
 			}
 		]
@@ -57,7 +57,7 @@
 			[
 				{
 					"backtrace" : 0,
-					"path" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c-sharp_autogen/include"
+					"path" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-javascript_autogen/include"
 				},
 				{
 					"backtrace" : 2,
@@ -65,7 +65,7 @@
 				},
 				{
 					"backtrace" : 3,
-					"path" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src"
+					"path" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src"
 				}
 			],
 			"language" : "CXX",
@@ -93,7 +93,7 @@
 			[
 				{
 					"backtrace" : 0,
-					"path" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c-sharp_autogen/include"
+					"path" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-javascript_autogen/include"
 				},
 				{
 					"backtrace" : 2,
@@ -101,7 +101,7 @@
 				},
 				{
 					"backtrace" : 3,
-					"path" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src"
+					"path" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src"
 				}
 			],
 			"language" : "C",
@@ -115,16 +115,16 @@
 	"dependencies" : 
 	[
 		{
-			"id" : "tree-sitter-c-sharp_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
+			"id" : "tree-sitter-javascript_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 0,
-			"id" : "tree-sitter-c-sharp_autogen::@6890427a1f51a3e7e1df"
+			"id" : "tree-sitter-javascript_autogen::@6890427a1f51a3e7e1df"
 		}
 	],
-	"id" : "tree-sitter-c-sharp::@6890427a1f51a3e7e1df",
-	"name" : "tree-sitter-c-sharp",
-	"nameOnDisk" : "libtree-sitter-c-sharp.a",
+	"id" : "tree-sitter-javascript::@6890427a1f51a3e7e1df",
+	"name" : "tree-sitter-javascript",
+	"nameOnDisk" : "libtree-sitter-javascript.a",
 	"paths" : 
 	{
 		"build" : ".",
@@ -169,37 +169,37 @@
 			"backtrace" : 0,
 			"compileGroupIndex" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c-sharp_autogen/mocs_compilation.cpp",
+			"path" : "build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-javascript_autogen/mocs_compilation.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 1,
-			"path" : "extern/tree-sitter-parsers/tree-sitter-c-sharp/src/parser.c",
+			"path" : "extern/tree-sitter-parsers/tree-sitter-javascript/src/parser.c",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 1,
-			"path" : "extern/tree-sitter-parsers/tree-sitter-c-sharp/src/scanner.c",
+			"path" : "extern/tree-sitter-parsers/tree-sitter-javascript/src/scanner.c",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c-sharp_autogen/include/ui_mainwindow.h",
+			"path" : "build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-javascript_autogen/include/ui_mainwindow.h",
 			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c-sharp_autogen/timestamp",
+			"path" : "build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-javascript_autogen/timestamp",
 			"sourceGroupIndex" : 2
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c-sharp_autogen/timestamp.rule",
+			"path" : "build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-javascript_autogen/timestamp.rule",
 			"sourceGroupIndex" : 3
 		}
 	],

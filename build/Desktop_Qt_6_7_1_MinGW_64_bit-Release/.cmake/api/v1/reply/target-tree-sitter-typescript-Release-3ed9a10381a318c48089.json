@@ -115,11 +115,11 @@
 	"dependencies" : 
 	[
 		{
-			"id" : "tree-sitter-typescript_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
-		},
-		{
 			"backtrace" : 0,
 			"id" : "tree-sitter-typescript_autogen::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "tree-sitter-typescript_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
 		}
 	],
 	"id" : "tree-sitter-typescript::@6890427a1f51a3e7e1df",

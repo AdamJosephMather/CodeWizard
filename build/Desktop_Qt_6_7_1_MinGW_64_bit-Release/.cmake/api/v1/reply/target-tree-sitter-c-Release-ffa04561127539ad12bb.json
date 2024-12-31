@@ -3,7 +3,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "libtree-sitter-cpp.a"
+			"path" : "libtree-sitter-c.a"
 		}
 	],
 	"backtrace" : 1,
@@ -27,7 +27,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 20,
+				"line" : 77,
 				"parent" : 0
 			},
 			{
@@ -39,7 +39,7 @@
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 81,
+				"line" : 130,
 				"parent" : 0
 			}
 		]
@@ -57,7 +57,7 @@
 			[
 				{
 					"backtrace" : 0,
-					"path" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-cpp_autogen/include"
+					"path" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c_autogen/include"
 				},
 				{
 					"backtrace" : 2,
@@ -65,7 +65,7 @@
 				},
 				{
 					"backtrace" : 3,
-					"path" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src"
+					"path" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c/src"
 				}
 			],
 			"language" : "CXX",
@@ -93,7 +93,7 @@
 			[
 				{
 					"backtrace" : 0,
-					"path" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-cpp_autogen/include"
+					"path" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c_autogen/include"
 				},
 				{
 					"backtrace" : 2,
@@ -101,30 +101,29 @@
 				},
 				{
 					"backtrace" : 3,
-					"path" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src"
+					"path" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c/src"
 				}
 			],
 			"language" : "C",
 			"sourceIndexes" : 
 			[
-				1,
-				2
+				1
 			]
 		}
 	],
 	"dependencies" : 
 	[
 		{
-			"id" : "tree-sitter-cpp_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
+			"backtrace" : 0,
+			"id" : "tree-sitter-c_autogen::@6890427a1f51a3e7e1df"
 		},
 		{
-			"backtrace" : 0,
-			"id" : "tree-sitter-cpp_autogen::@6890427a1f51a3e7e1df"
+			"id" : "tree-sitter-c_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
 		}
 	],
-	"id" : "tree-sitter-cpp::@6890427a1f51a3e7e1df",
-	"name" : "tree-sitter-cpp",
-	"nameOnDisk" : "libtree-sitter-cpp.a",
+	"id" : "tree-sitter-c::@6890427a1f51a3e7e1df",
+	"name" : "tree-sitter-c",
+	"nameOnDisk" : "libtree-sitter-c.a",
 	"paths" : 
 	{
 		"build" : ".",
@@ -137,29 +136,28 @@
 			"sourceIndexes" : 
 			[
 				0,
-				1,
-				2
+				1
 			]
 		},
 		{
 			"name" : "Header Files",
 			"sourceIndexes" : 
 			[
-				3
+				2
 			]
 		},
 		{
 			"name" : "",
 			"sourceIndexes" : 
 			[
-				4
+				3
 			]
 		},
 		{
 			"name" : "CMake Rules",
 			"sourceIndexes" : 
 			[
-				5
+				4
 			]
 		}
 	],
@@ -169,37 +167,31 @@
 			"backtrace" : 0,
 			"compileGroupIndex" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-cpp_autogen/mocs_compilation.cpp",
+			"path" : "build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c_autogen/mocs_compilation.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 1,
-			"path" : "extern/tree-sitter-parsers/tree-sitter-cpp/src/parser.c",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 1,
-			"path" : "extern/tree-sitter-parsers/tree-sitter-cpp/src/scanner.c",
+			"path" : "extern/tree-sitter-parsers/tree-sitter-c/src/parser.c",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-cpp_autogen/include/ui_mainwindow.h",
+			"path" : "build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c_autogen/include/ui_mainwindow.h",
 			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-cpp_autogen/timestamp",
+			"path" : "build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c_autogen/timestamp",
 			"sourceGroupIndex" : 2
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-cpp_autogen/timestamp.rule",
+			"path" : "build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/tree-sitter-c_autogen/timestamp.rule",
 			"sourceGroupIndex" : 3
 		}
 	],

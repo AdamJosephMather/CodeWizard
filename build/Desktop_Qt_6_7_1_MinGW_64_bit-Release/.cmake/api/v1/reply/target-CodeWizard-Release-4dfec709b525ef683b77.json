@@ -77,19 +77,19 @@
 			{
 				"command" : 4,
 				"file" : 1,
-				"line" : 229,
+				"line" : 228,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 1,
-				"line" : 193,
+				"line" : 192,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 1,
-				"line" : 212,
+				"line" : 211,
 				"parent" : 0
 			},
 			{
@@ -281,7 +281,7 @@
 			{
 				"command" : 12,
 				"file" : 1,
-				"line" : 186,
+				"line" : 185,
 				"parent" : 0
 			}
 		]
@@ -457,8 +457,7 @@
 				18,
 				20,
 				22,
-				24,
-				27
+				25
 			]
 		}
 	],
@@ -467,6 +466,14 @@
 		{
 			"backtrace" : 6,
 			"id" : "tree-sitter-c-sharp::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "tree-sitter-python::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "tree-sitter-cpp::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 6,
@@ -482,15 +489,11 @@
 		},
 		{
 			"backtrace" : 6,
-			"id" : "tree-sitter-python::@6890427a1f51a3e7e1df"
+			"id" : "tree-sitter-go::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 6,
-			"id" : "tree-sitter-cpp::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 6,
-			"id" : "tree-sitter-lua::@6890427a1f51a3e7e1df"
+			"id" : "tree-sitter-html::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 6,
@@ -498,15 +501,7 @@
 		},
 		{
 			"backtrace" : 6,
-			"id" : "tree-sitter-go::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 6,
-			"id" : "tree-sitter-java::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 6,
-			"id" : "tree-sitter-html::@6890427a1f51a3e7e1df"
+			"id" : "tree-sitter-lua::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 6,
@@ -515,6 +510,10 @@
 		{
 			"backtrace" : 6,
 			"id" : "tree-sitter-wgsl::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "tree-sitter-java::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 6,
@@ -712,8 +711,7 @@
 				18,
 				20,
 				22,
-				24,
-				27
+				25
 			]
 		},
 		{
@@ -732,8 +730,7 @@
 				17,
 				19,
 				21,
-				23,
-				25
+				23
 			]
 		},
 		{
@@ -762,15 +759,15 @@
 				14,
 				15,
 				16,
-				26
+				24
 			]
 		},
 		{
 			"name" : "CMake Rules",
 			"sourceIndexes" : 
 			[
-				28,
-				29
+				26,
+				27
 			]
 		}
 	],
@@ -865,17 +862,6 @@
 			"backtrace" : 4,
 			"path" : "fonts/UbuntuMono-R.ttf",
 			"sourceGroupIndex" : 5
-		},
-		{
-			"backtrace" : 4,
-			"path" : "codehighlighter.h",
-			"sourceGroupIndex" : 2
-		},
-		{
-			"backtrace" : 4,
-			"compileGroupIndex" : 0,
-			"path" : "codehighlighter.cpp",
-			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 4,
