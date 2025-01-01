@@ -167,4 +167,5 @@ C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_M
   C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qtwidgets-config.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qtwidgetsexports.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qtwidgetsglobal.h \
-  C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qwidget.h
+  C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qwidget.h \
+  C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include/tree_sitter/api.h

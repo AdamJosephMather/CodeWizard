@@ -22,8 +22,6 @@ QList<HighlightBlock> SyntaxHighlighter::getHighlightBlocks(TSNode root, uint32_
 
 // Apply highlighting only where needed
 void SyntaxHighlighter::updateHighlighting(QTextDocument* document, int cursorPos, int addedLen, TSTree* oldTree, TSTree* newTree, bool forceFull) {
-    // Get existing format ranges for each block
-
     uint32_t rangeCount;
     TSRange* ranges = ts_tree_get_changed_ranges(oldTree, newTree, &rangeCount);
 
@@ -32,7 +30,7 @@ void SyntaxHighlighter::updateHighlighting(QTextDocument* document, int cursorPo
         QTextBlock B1 = document->findBlock(ranges[z].start_byte);
         QTextBlock B2 = document->findBlock(ranges[z].end_byte);
 
-        const QList<HighlightBlock>& newBlocks = getHighlightBlocks(ts_tree_root_node(newTree), ranges[z].start_byte, ranges[z].end_byte+1);
+        const QList<HighlightBlock>& newBlocks = getHighlightBlocks(ts_tree_root_node(newTree), B1.position(), B2.position()+B2.length()+1);
 
         int blockNumber1 = B1.blockNumber();
         int blockNumber2 = B2.blockNumber();

@@ -114,6 +114,7 @@ public:
     QAction *actionUse_File_Tree;
     QAction *actionOpen_Folder;
     QAction *actionUse_File_Tree_If_Fullscreen;
+    QAction *actionSet_Syntax_Colors;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
@@ -334,6 +335,8 @@ public:
         actionUse_File_Tree_If_Fullscreen = new QAction(MainWindow);
         actionUse_File_Tree_If_Fullscreen->setObjectName("actionUse_File_Tree_If_Fullscreen");
         actionUse_File_Tree_If_Fullscreen->setCheckable(true);
+        actionSet_Syntax_Colors = new QAction(MainWindow);
+        actionSet_Syntax_Colors->setObjectName("actionSet_Syntax_Colors");
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         QSizePolicy sizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::Minimum);
@@ -450,7 +453,7 @@ public:
         MainWindow->setStatusBar(statusbar);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName("menuBar");
-        menuBar->setGeometry(QRect(0, 0, 702, 17));
+        menuBar->setGeometry(QRect(0, 0, 702, 21));
         sizePolicy2.setHeightForWidth(menuBar->sizePolicy().hasHeightForWidth());
         menuBar->setSizePolicy(sizePolicy2);
         menuOp1 = new QMenu(menuBar);
@@ -531,6 +534,8 @@ public:
         menuView->addSeparator();
         menuView->addAction(actionUse_File_Tree);
         menuView->addAction(actionUse_File_Tree_If_Fullscreen);
+        menuView->addSeparator();
+        menuView->addAction(actionSet_Syntax_Colors);
         menuHelp->addAction(actionCodeWizard);
         menuHelp->addAction(actionRunning_Files);
         menuHelp->addAction(actionThe_Fix_It_Button);
@@ -657,6 +662,7 @@ public:
         actionUse_File_Tree->setText(QCoreApplication::translate("MainWindow", "Use File Tree", nullptr));
         actionOpen_Folder->setText(QCoreApplication::translate("MainWindow", "Open Folder", nullptr));
         actionUse_File_Tree_If_Fullscreen->setText(QCoreApplication::translate("MainWindow", "Use File Tree If Fullscreen", nullptr));
+        actionSet_Syntax_Colors->setText(QCoreApplication::translate("MainWindow", "Set Syntax Colors", nullptr));
         textEdit_4->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

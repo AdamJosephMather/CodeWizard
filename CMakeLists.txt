@@ -165,6 +165,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         language.h language.cpp
         languageserverclient.h languageserverclient.cpp
         syntaxhighlighter.h syntaxhighlighter.cpp
+        highlightdata.h highlightdata.cpp
 
 
     )

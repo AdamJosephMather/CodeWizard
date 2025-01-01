@@ -22,6 +22,7 @@
 #include <QRegularExpression>
 #include <tree_sitter/api.h>
 #include "syntaxhighlighter.h"
+#include "highlightdata.h"
 
 extern "C" {
     TSLanguage* tree_sitter_cpp(void);
@@ -39,6 +40,9 @@ extern "C" {
     TSLanguage* tree_sitter_go(void);
 }
 
+QList<QLineEdit*> hexColorsList;
+
+bool isErrorHighlighted = false;
 SyntaxHighlighter treeParserSyntaxHighlighter;
 TSTree *tree = nullptr;
 TSParser *parser = ts_parser_new();
@@ -70,6 +74,8 @@ QColor c2 = QColor(222, 123, 2);
 QColor c3 = QColor(38, 175, 199);
 QColor c4 = QColor(38, 143, 199);
 QColor c5 = QColor(160, 160, 160);
+
+QList<QTextCharFormat> coloredFormats;
 
 QColor normalColor = QColor(255, 255, 255);
 
@@ -285,25 +291,6 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    // ts_parser_set_language(parser, tree_sitter_python());
-    // const char *source_code = "int main() { return 0; }";
-    // TSTree *tree = ts_parser_parse_string(
-    //     parser,
-    //     nullptr,  // Optional: previous tree to update
-    //     source_code,
-    //     strlen(source_code)
-    // );
-
-    // TSNode rootNode = ts_tree_root_node(tree);
-
-    // // Print the syntax tree
-    // qDebug() << "Syntax Tree:";
-    // printTree(rootNode);
-
-    // Clean up
-    // ts_tree_delete(tree);
-    // ts_parser_delete(parser);
-
     ui->setupUi(this);
 
     setWindowTitle(windowName);
@@ -373,6 +360,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
     QPalette palette = textEdit->palette();
     normalColor = palette.color(QPalette::WindowText);
 
+    qDebug() << "10";
+
     c1Format.setForeground(c1);
     c2Format.setForeground(c2);
     c3Format.setForeground(c3);
@@ -389,18 +378,9 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
     QTextCharFormat greyFormat;
     QTextCharFormat literalFormat;
 
-    stringsFormat.setForeground(c3);
-    commentsFormat.setForeground(c4);
-    variablesFormat.setForeground(QColor(50, 168, 160));
-    typesFormat.setForeground(c2);
-    functionsFormat.setForeground(QColor(50, 168, 121));
-    extraFormat.setForeground(c1);
-    greyFormat.setForeground(c5);
-    literalFormat.setForeground(QColor(245, 120, 66));
-
-    treeParserSyntaxHighlighter.setFormats({nothingFormat, stringsFormat, commentsFormat, variablesFormat, typesFormat, functionsFormat, extraFormat, greyFormat, literalFormat});
-
     normalColorFormat.setForeground(normalColor);
+
+    qDebug() << "9";
 
     QTextCharFormat form = QTextCharFormat();
     form.setUnderlineStyle(QTextCharFormat::SingleUnderline);
@@ -432,6 +412,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
     form.setUnderlineColor(c4);
     form.setForeground(c4);
     errorFormats.append(form);
+
+    qDebug() << "8";
 
     colormapPythonTS = {{"identifier", 3}, {"decorator", 5}, {"decorator/.CodeWiz./identifier", 5}, {"call", 5}, {"call/.CodeWiz./identifier", 5}, {"abs", 5}, {"abs/.CodeWiz./all", 5}, {"all", 5}, {"all/.CodeWiz./any", 5}, {"any", 5}, {"any/.CodeWiz./ascii", 5}, {"ascii", 5}, {"ascii/.CodeWiz./bin", 5}, {"bin", 5}, {"bin/.CodeWiz./bool", 5}, {"bool", 5}, {"bool/.CodeWiz./breakpoint", 5}, {"breakpoint", 5}, {"breakpoint/.CodeWiz./bytearray", 5}, {"bytearray", 5}, {"bytearray/.CodeWiz./bytes", 5}, {"bytes", 5}, {"bytes/.CodeWiz./callable", 5}, {"callable", 5}, {"callable/.CodeWiz./chr", 5}, {"chr", 5}, {"chr/.CodeWiz./classmethod", 5}, {"classmethod", 5}, {"classmethod/.CodeWiz./compile", 5}, {"compile", 5}, {"compile/.CodeWiz./complex", 5}, {"complex", 5}, {"complex/.CodeWiz./delattr", 5}, {"delattr", 5}, {"delattr/.CodeWiz./dict", 5}, {"dict", 5}, {"dict/.CodeWiz./dir", 5}, {"dir", 5}, {"dir/.CodeWiz./divmod", 5}, {"divmod", 5}, {"divmod/.CodeWiz./enumerate", 5}, {"enumerate", 5}, {"enumerate/.CodeWiz./eval", 5}, {"eval", 5}, {"eval/.CodeWiz./exec", 5}, {"exec", 5}, {"exec/.CodeWiz./filter", 5}, {"filter", 5}, {"filter/.CodeWiz./float", 5}, {"float", 5}, {"float/.CodeWiz./format", 5}, {"format", 5}, {"format/.CodeWiz./frozenset", 5}, {"frozenset", 5}, {"frozenset/.CodeWiz./getattr", 5}, {"getattr", 5}, {"getattr/.CodeWiz./globals", 5}, {"globals", 5}, {"globals/.CodeWiz./hasattr", 5}, {"hasattr", 5}, {"hasattr/.CodeWiz./hash", 5}, {"hash", 5}, {"hash/.CodeWiz./help", 5}, {"help", 5}, {"help/.CodeWiz./hex", 5}, {"hex", 5}, {"hex/.CodeWiz./id", 5}, {"id", 5}, {"id/.CodeWiz./input", 5}, {"input", 5}, {"input/.CodeWiz./int", 5}, {"int", 5}, {"int/.CodeWiz./isinstance", 5}, {"isinstance", 5}, {"isinstance/.CodeWiz./issubclass", 5}, {"issubclass", 5}, {"issubclass/.CodeWiz./iter", 5}, {"iter", 5}, {"iter/.CodeWiz./len", 5}, {"len", 5}, {"len/.CodeWiz./list", 5}, {"list", 5}, {"list/.CodeWiz./locals", 5}, {"locals", 5}, {"locals/.CodeWiz./map", 5}, {"map", 5}, {"map/.CodeWiz./max", 5}, {"max", 5}, {"max/.CodeWiz./memoryview", 5}, {"memoryview", 5}, {"memoryview/.CodeWiz./min", 5}, {"min", 5}, {"min/.CodeWiz./next", 5}, {"next", 5}, {"next/.CodeWiz./object", 5}, {"object", 5}, {"object/.CodeWiz./oct", 5}, {"oct", 5}, {"oct/.CodeWiz./open", 5}, {"open", 5}, {"open/.CodeWiz./ord", 5}, {"ord", 5}, {"ord/.CodeWiz./pow", 5}, {"pow", 5}, {"pow/.CodeWiz./print", 5}, {"print", 5}, {"print/.CodeWiz./property", 5}, {"property", 5}, {"property/.CodeWiz./range", 5}, {"range", 5}, {"range/.CodeWiz./repr", 5}, {"repr", 5}, {"repr/.CodeWiz./reversed", 5}, {"reversed", 5}, {"reversed/.CodeWiz./round", 5}, {"round", 5}, {"round/.CodeWiz./set", 5}, {"set", 5}, {"set/.CodeWiz./setattr", 5}, {"setattr", 5}, {"setattr/.CodeWiz./slice", 5}, {"slice", 5}, {"slice/.CodeWiz./sorted", 5}, {"sorted", 5}, {"sorted/.CodeWiz./staticmethod", 5}, {"staticmethod", 5}, {"staticmethod/.CodeWiz./str", 5}, {"str", 5}, {"str/.CodeWiz./sum", 5}, {"sum", 5}, {"sum/.CodeWiz./super", 5}, {"super", 5}, {"super/.CodeWiz./tuple", 5}, {"tuple", 5}, {"tuple/.CodeWiz./type", 5}, {"type", 5}, {"type/.CodeWiz./vars", 5}, {"vars", 5}, {"vars/.CodeWiz./zip", 5}, {"zip", 5}, {"zip/.CodeWiz./__import__", 5}, {"__import__", 5}, {"__import__/.CodeWiz./function_definition", 5}, {"function_definition", 5}, {"function_definition/.CodeWiz./identifier", 5}, {"none/.CodeWiz./true", 3}, {"true/.CodeWiz./false", 3}, {"integer", 8}, {"integer/.CodeWiz./float", 8}, {"comment", 2}, {"string", 1}, {"escape_sequence", 1}, {"interpolation", 7}, {"interpolation/.CodeWiz./{", 7}, {"{", 7}, {"}", 7}, {"-", 7}, {"-/.CodeWiz./-=", 7}, {"-=", 7}, {"-=/.CodeWiz./!=", 7}, {"!=", 7}, {"!=/.CodeWiz./*", 7}, {"*", 7}, {"*/.CodeWiz./**", 7}, {"**", 7}, {"**/.CodeWiz./**=", 7}, {"**=", 7}, {"**=/.CodeWiz./*=", 7}, {"*=", 7}, {"*=/.CodeWiz.//", 7}, {"/", 7}, {"//.CodeWiz.///", 7}, {"//", 7}, {"///.CodeWiz.///=", 7}, {"//=", 7}, {"//=/.CodeWiz.//=", 7}, {"/=", 7}, {"/=/.CodeWiz./&", 7}, {"&", 7}, {"&/.CodeWiz./&=", 7}, {"&=", 7}, {"&=/.CodeWiz./%", 7}, {"%", 7}, {"%/.CodeWiz./%=", 7}, {"%=", 7}, {"%=/.CodeWiz./^", 7}, {"^", 7}, {"^/.CodeWiz./^=", 7}, {"^=", 7}, {"^=/.CodeWiz./+", 7}, {"+", 7}, {"+/.CodeWiz./->", 7}, {"->", 7}, {"->/.CodeWiz./+=", 7}, {"+=", 7}, {"+=/.CodeWiz./<", 7}, {"<", 7}, {"</.CodeWiz./<<", 7}, {"<<", 7}, {"<</.CodeWiz./<<=", 7}, {"<<=", 7}, {"<<=/.CodeWiz./<=", 7}, {"<=", 7}, {"<=/.CodeWiz./<>", 7}, {"<>", 7}, {"<>/.CodeWiz./=", 7}, {"=", 7}, {"=/.CodeWiz./:=", 7}, {":=", 7}, {":=/.CodeWiz./==", 7}, {"==", 7}, {"==/.CodeWiz./>", 7}, {">", 7}, {">/.CodeWiz./>=", 7}, {">=", 7}, {">=/.CodeWiz./>>", 7}, {">>", 7}, {">>/.CodeWiz./>>=", 7}, {">>=", 7}, {">>=/.CodeWiz./|", 7}, {"|", 7}, {"|/.CodeWiz./|=", 7}, {"|=", 7}, {"|=/.CodeWiz./~", 7}, {"~", 7}, {"~/.CodeWiz./@=", 7}, {"@=", 7}, {"@=/.CodeWiz./and", 7}, {"and", 7}, {"and/.CodeWiz./in", 7}, {"in", 7}, {"in/.CodeWiz./is", 7}, {"is", 7}, {"is/.CodeWiz./not", 7}, {"not", 7}, {"not/.CodeWiz./or", 7}, {"or", 7}, {"or/.CodeWiz./is not", 7}, {"is not", 7}, {"is not/.CodeWiz./not in", 7}, {"not in", 7}, {"as", 6}, {"as/.CodeWiz./assert", 6}, {"assert", 6}, {"assert/.CodeWiz./async", 6}, {"async", 6}, {"async/.CodeWiz./await", 6}, {"await", 6}, {"await/.CodeWiz./break", 6}, {"break", 6}, {"break/.CodeWiz./class", 6}, {"class", 6}, {"class/.CodeWiz./continue", 6}, {"continue", 6}, {"continue/.CodeWiz./def", 6}, {"def", 6}, {"def/.CodeWiz./del", 6}, {"del", 6}, {"del/.CodeWiz./elif", 6}, {"elif", 6}, {"elif/.CodeWiz./else", 6}, {"else", 6}, {"else/.CodeWiz./except", 6}, {"except", 6}, {"except/.CodeWiz./exec", 6}, {"exec/.CodeWiz./finally", 6}, {"finally", 6}, {"finally/.CodeWiz./for", 6}, {"for", 6}, {"for/.CodeWiz./from", 6}, {"from", 6}, {"from/.CodeWiz./global", 6}, {"global", 6}, {"global/.CodeWiz./if", 6}, {"if", 6}, {"if/.CodeWiz./import", 6}, {"import", 6}, {"import/.CodeWiz./lambda", 6}, {"lambda", 6}, {"lambda/.CodeWiz./nonlocal", 6}, {"nonlocal", 6}, {"nonlocal/.CodeWiz./pass", 6}, {"pass", 6}, {"pass/.CodeWiz./print", 6}, {"print/.CodeWiz./raise", 6}, {"raise", 6}, {"raise/.CodeWiz./return", 6}, {"return", 6}, {"return/.CodeWiz./try", 6}, {"try", 6}, {"try/.CodeWiz./while", 6}, {"while", 6}, {"while/.CodeWiz./with", 6}, {"with", 6}, {"with/.CodeWiz./yield", 6}, {"yield", 6}, {"yield/.CodeWiz./match", 6}, {"match", 6}, {"match/.CodeWiz./case", 6}, {"case", 6}};
     colormapRustTS = {{"type_identifier", 4}, {"primitive_type", 4}, {"field_identifier", 4}, {"identifier", 3}, {"scoped_identifier", 4}, {"scoped_identifier/.CodeWiz./identifier", 4}, {"scoped_type_identifier", 4}, {"scoped_type_identifier/.CodeWiz./identifier", 4}, {"scoped_type_identifier/.CodeWiz./scoped_identifier", 4}, {"struct_pattern/.CodeWiz./scoped_type_identifier", 3}, {"scoped_type_identifier/.CodeWiz./type_identifier", 3}, {"call_expression", 5}, {"call_expression/.CodeWiz./identifier", 5}, {"call_expression/.CodeWiz./field_expression", 5}, {"field_expression/.CodeWiz./field_identifier", 5}, {"call_expression/.CodeWiz./scoped_identifier", 5}, {"scoped_identifier/.CodeWiz./::", 5}, {"::", 5}, {"::/.CodeWiz./identifier", 5}, {"generic_function", 5}, {"generic_function/.CodeWiz./identifier", 5}, {"generic_function/.CodeWiz./scoped_identifier", 5}, {"generic_function/.CodeWiz./field_expression", 5}, {"macro_invocation", 5}, {"macro_invocation/.CodeWiz./identifier", 5}, {"!", 5}, {"line_comment", 2}, {"block_comment", 2}, {"doc_comment", 2}, {"(", 7}, {")", 7}, {"[", 7}, {"]", 7}, {"{", 7}, {"}", 7}, {"type_arguments", 7}, {"type_arguments/.CodeWiz./<", 7}, {"<", 7}, {">", 7}, {"type_parameters", 7}, {"type_parameters/.CodeWiz./<", 7}, {":", 7}, {".", 7}, {",", 7}, {";", 7}, {"as", 6}, {"async", 6}, {"await", 6}, {"break", 6}, {"const", 6}, {"continue", 6}, {"default", 6}, {"dyn", 6}, {"else", 6}, {"enum", 6}, {"extern", 6}, {"fn", 6}, {"for", 6}, {"gen", 6}, {"if", 6}, {"impl", 6}, {"in", 6}, {"let", 6}, {"loop", 6}, {"macro_rules!", 6}, {"match", 6}, {"mod", 6}, {"move", 6}, {"pub", 6}, {"raw", 6}, {"ref", 6}, {"return", 6}, {"static", 6}, {"struct", 6}, {"trait", 6}, {"type", 6}, {"union", 6}, {"unsafe", 6}, {"use", 6}, {"where", 6}, {"while", 6}, {"yield", 6}, {"crate", 6}, {"mutable_specifier", 6}, {"self", 6}, {"super", 6}, {"char_literal", 1}, {"string_literal", 1}, {"raw_string_literal", 1}, {"boolean_literal", 3}, {"integer_literal", 3}, {"float_literal", 3}, {"escape_sequence", 1}, {"attribute_item", 4}, {"inner_attribute_item", 4}, {"*", 7}, {"&", 7}, {"'", 7}};
@@ -658,6 +640,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
     cLang.fileExtensions = QStringList() << ".c";
     cLang.colorMapTS = colormapCTS;
 
+    qDebug() << "7";
+
     supportedLangs = {pythonLang, rustLang, WGSLLang, cppLang, txtLang, jsLang, HTMLLang, goLang, luaLang, csharpLang, GLSLLang, javaLang, tsLang, cLang};
 
     for (int i = 0; i < supportedLangs.count(); i ++){
@@ -682,6 +666,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
     replaceTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     lineEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
+    qDebug() << "6";
+
     connect(textEdit->verticalScrollBar(), &QScrollBar::valueChanged,
             this, &MainWindow::updateScrollBarValue);
 
@@ -705,6 +691,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
     connect(ui->pushButton_3, &QPushButton::clicked, this, &MainWindow::nextTriggered);
     connect(ui->pushButton_2, &QPushButton::clicked, this, &MainWindow::replaceTriggered);
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::replaceAllTriggered);
+
+    qDebug() << "5";
 
     connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
     connect(findTextEdit, &QTextEdit::textChanged, this, &MainWindow::findTextEditChanged);
@@ -734,13 +722,21 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
 
     MainWindow::setupCompleter();
 
+    qDebug() << "4";
+
     suggestionBox = new QListWidget(this);
+    qDebug() << "4a";
     suggestionBox->setFocusPolicy(Qt::NoFocus);
+    qDebug() << "4b";
     suggestionBox->hide();
+
+    qDebug() << "3.9";
 
     actionBox = new QListWidget(this);
     actionBox->setFocusPolicy(Qt::NoFocus);
     actionBox->hide();
+
+    qDebug() << "3.8";
 
     hoverBox = new QTextEdit(this);
     hoverBox->setFont(textEdit->font());
@@ -748,11 +744,23 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
     hoverBox->setWordWrapMode(QTextOption::NoWrap);
     hoverBox->hide();
 
+    qDebug() << "3.7";
+
     updateFonts();
+
+    qDebug() << "3.6";
 
     updateFontSelection();
 
+    qDebug() << "3.5";
+
     lineNumberTextEdit->setUndoRedoEnabled(false);
+
+    qDebug() << "startformat";
+    treeParserSyntaxHighlighter.setFormats(coloredFormats);
+    qDebug() << "setformat";
+
+    qDebug() << "3";
 
     connect(suggestionBox, &QListWidget::itemClicked, this, &MainWindow::onSuggestionItemClicked);
     connect(actionBox, &QListWidget::itemClicked, this, &MainWindow::onActionsItemClicked);
@@ -777,6 +785,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
 
     updateLineNumbers(1);
 
+    qDebug() << "2";
+
     //autosave
 
     QTimer* autoSaveTimer = new QTimer(this);
@@ -799,6 +809,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
     fileTreeContextMenu->addAction(openInExplorerAction);
     fileTreeContextMenu->addAction(copyPathAction);
     fileTreeContextMenu->addAction(openOutsideAction);
+
+    qDebug() << "1";
 
     connect(openInExplorerAction, &QAction::triggered, this, &MainWindow::onOpenInExplorer);
     connect(copyPathAction, &QAction::triggered, this, &MainWindow::onCopyPath);
@@ -825,6 +837,123 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
     if (foundationSettings.value("wasFullScreened", false).toBool()){
         setWindowState(Qt::WindowMaximized);
     }
+
+    qDebug() << "Done the begining";
+}
+
+void MainWindow::on_actionSet_Syntax_Colors_triggered() {
+    qDebug() << "Set syntax colors triggered";
+    QDialog diag = QDialog(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    hexColorsList = QList<QLineEdit*>();
+
+    // Create 8 QLineEdit widgets for hex strings
+
+    QList<QString> labelText = {"String Hex:", "Comment Hex:", "Variable Hex:", "Types Hex:", "Function Hex:", "Extra Hex:", "Character Hex:", "Literal Hex:"};
+
+    qDebug() << "COLORED FORMATS: " << coloredFormats;
+    qDebug() << coloredFormats.length();
+    for (int i = 0; i < 8; ++i) {
+        QLabel *label = new QLabel(this);
+        label->setText(labelText[i]);
+        layout->addWidget(label);
+        label->setFont(textEdit->font());
+
+        QLineEdit *lineEdit = new QLineEdit(this);
+        lineEdit->setPlaceholderText("Enter hex code (e.g., #RRGGBB)");
+        lineEdit->setFont(textEdit->font());
+
+        if (coloredFormats.length() > i+1){
+            qDebug() << "Got " << coloredFormats.length() << "<" << i+1;
+            lineEdit->setText(coloredFormats[i+1].foreground().color().name());
+        }else{
+            qDebug() << "Got " << coloredFormats.length() << "!<" << i+1;
+        }
+
+
+        hexColorsList.push_back(lineEdit);
+
+        layout->addWidget(lineEdit);
+    }
+
+    // Create a QPushButton
+    QPushButton *validateButton = new QPushButton("Validate and Convert", this);
+    validateButton->setFont(textEdit->font());
+
+    QPushButton *resetButton = new QPushButton("Reset to default", this);
+    resetButton->setFont(textEdit->font());
+
+    connect(validateButton, &QPushButton::clicked, this, &MainWindow::validateAndConvert);
+
+    layout->addWidget(validateButton);
+    layout->addWidget(resetButton);
+
+    diag.setLayout(layout);
+    diag.exec();
+}
+
+void MainWindow::resetSyntaxColors(){
+    qDebug() << "Resting syntax colors";
+    coloredFormats = {};
+    coloredFormats.append(QTextCharFormat());
+
+    QString str = "38,175,199|38,143,199|50,168,160|222,123,2|50,168,121|217,159,0|160,160,160|245,120,66";
+
+    for(const QString color : str.split("|")){
+        qDebug() << color;
+        QStringList nums = color.split(",");
+        QTextCharFormat form = QTextCharFormat();
+        qDebug() << QColor(nums[0].toInt(), nums[1].toInt(), nums[2].toInt());
+        form.setForeground(QColor(nums[0].toInt(), nums[1].toInt(), nums[2].toInt()));
+        coloredFormats.append(form);
+    }
+
+    for (int i = 0; i < 8; ++i) {
+        hexColorsList[i]->setText(coloredFormats[i].foreground().color().name());
+    }
+}
+
+void MainWindow::validateAndConvert(){
+    qDebug() << "Validating and converting";
+
+    QDialog diag = QDialog(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    QLabel *label = new QLabel(this);
+    label->setFont(textEdit->font());
+
+    QList<QString> hexEdits;
+
+    for (const QLineEdit* LE : hexColorsList){
+        QRegularExpression regex("^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$");
+        QRegularExpressionMatch match = regex.match(LE->text());
+
+        if (match.hasMatch()) {
+            hexEdits.append(LE->text());
+        } else {
+            label->setText("ERROR: Hex code invalid: \""+LE->text()+"\"");
+            layout->addWidget(label);
+            diag.setLayout(layout);
+            diag.exec();
+            return;
+        }
+    }
+
+    qDebug() << hexEdits;
+    coloredFormats = {};
+    coloredFormats.append(QTextCharFormat());
+
+    for (const QString hex : hexEdits){
+        QTextCharFormat form;
+        form.setForeground(QColor(hex));
+        coloredFormats.append(form);
+        treeParserSyntaxHighlighter.setFormats(coloredFormats);
+        saveWantedTheme();
+    }
+
+    label->setText("Succeeded! Please reopen your current file.");
+    layout->addWidget(label);
+    diag.setLayout(layout);
+    diag.exec();
 }
 
 void MainWindow::applyEditToTree(int startByte, int oldEndByte, int newEndByte, int startPointRow, int startPointColumn, int oldEndPointRow, int oldEndPointColumn, int newEndPointRow, int newEndPointColumn) {
@@ -1409,14 +1538,19 @@ void MainWindow::setupLSP()
     });
 
     connect(client, &LanguageServerClient::receivedDiagnostics, [this](const QStringList &messages, const QList<int> &startC, const QList<int> &startL, const QList<int> &endC, const QList<int> &endL, const QList<int> &severity){
+        if (isErrorHighlighted){
+            qDebug() << "cl 2";
+            highlightDiagnostics(true);
+        }
         errMessages = messages;
         errStartC = startC;
         errStartL = startL;
         errEndC = endC;
         errEndL = endL;
         errSeverity = severity;
-        return;
         highlightDiagnostics(false);
+        qDebug() << "r 2";
+        isErrorHighlighted = true;
     });
 
     connect(client, &LanguageServerClient::hoverInformationReceived, [this](QString info, QString type, int id) {
@@ -1836,6 +1970,10 @@ void MainWindow::setupCompleter() {
             return;
         }
 
+        if (isErrorHighlighted){
+            highlightDiagnostics(true);
+        }
+
         //Here be dragons
 
         //updateSyntaxTree(plaintext);
@@ -1936,6 +2074,7 @@ QString MainWindow::getCurrentWord() {
 
 void MainWindow::saveWantedTheme()
 {
+    qDebug() << "Saving wanted theme";
     if (currentLang.name == "Python"){
         pythonTag = lineEdit->toPlainText();
     }else if (currentLang.name == "Rust"){
@@ -2010,12 +2149,30 @@ void MainWindow::saveWantedTheme()
     settings.setValue("autoSaveAct", autoSaveAct->isChecked());
     settings.setValue("randomSelectFileTypeAct",randomSelectFileTypeAct->isChecked());
 
+    QStringList strLst = QStringList();
+
+    bool firstLine = true;
+    for (const QTextCharFormat form : coloredFormats){
+        qDebug() << form;
+        if (firstLine){
+            firstLine = false;
+            continue;
+        }
+
+        QString str = QString::number(form.foreground().color().red())+","+QString::number(form.foreground().color().green())+","+QString::number(form.foreground().color().blue());
+        strLst.append(str);
+    }
+
+    QString str = strLst.join("|");
+    qDebug() << "SAVING" << str;
+
+    settings.setValue("syntaxColors", str);
+
     settings.setValue("fontSize", fontSize);
     settings.setValue("darkModeEnabled", darkmode);
     settings.setValue("currentFont", currentFont);
     settings.setValue("tabWidth", tabWidth);
     settings.setValue("codewizard_version", versionNumber);
-
 }
 
 bool MainWindow::wantedTheme()
@@ -2055,6 +2212,22 @@ bool MainWindow::wantedTheme()
         csharpLSP = settings.value("csharpLSP", "").toString();
         javaLSP = settings.value("javaLSP", "").toString();
         cLSP = settings.value("cLSP", "").toString();
+
+        QString numbers = settings.value("syntaxColors", "38,175,199|38,143,199|50,168,160|222,123,2|50,168,121|217,159,0|160,160,160|245,120,66").toString();
+
+        coloredFormats = {};
+        coloredFormats.append(QTextCharFormat());
+
+        for(const QString color : numbers.split("|")){
+            qDebug() << color;
+            QStringList nums = color.split(",");
+            QTextCharFormat form = QTextCharFormat();
+            qDebug() << QColor(nums[0].toInt(), nums[1].toInt(), nums[2].toInt());
+            form.setForeground(QColor(nums[0].toInt(), nums[1].toInt(), nums[2].toInt()));
+            coloredFormats.append(form);
+        }
+
+        qDebug() << coloredFormats.length();
 
         showWarnings->setChecked(settings.value("showWarnings", true).toBool());
         showErrors->setChecked(settings.value("showErrors", true).toBool());
@@ -3894,51 +4067,36 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
     int pos = blckcursor.position();
 
     if (reverseTheProcess){
-        if(errMessages.empty()){
+        isErrorHighlighted = false;
+
+        if (errMessages.length() == 0){
             return;
         }
 
-        for (int i = 0; i < errStartL.size(); ++i) {
-            int startLine = errStartL[i];
-            int endLine = errEndL[i];
-            int startC = errStartC[i];
-            int endC = errEndC[i];
-            int severity = errSeverity[i];
 
-            // Process each block in the range
-            for (int currentLine = startLine; currentLine <= endLine; ++currentLine) {
-                QTextBlock block = textDocument->findBlockByNumber(currentLine);
-                if (!block.isValid()) {
-                    continue;
-                }
-
+        // Only clear blocks that were highlighted
+        QTextBlock block = textDocument->begin();
+        while (block.isValid()) {
+            HighlightData* data = static_cast<HighlightData*>(block.userData());
+            if (data && data->hasHighlight) {
                 QTextLayout* layout = block.layout();
+
                 if (!layout) {
                     continue;
                 }
 
                 QTextLayout::FormatRange range;
                 range.format = errorFormats[0];
+                range.start = block.position();
+                range.length = block.length();
 
-                // Set start position
-                if (currentLine == startLine) {
-                    range.start = startC;
-                } else {
-                    range.start = 0;
-                }
-
-                // Set length
-                if (currentLine == endLine) {
-                    range.length = endC - range.start;
-                } else {
-                    range.length = block.length() - range.start;
-                }
-
-                // Apply the format
                 QVector<QTextLayout::FormatRange> formats = layout->formats();
                 formats.append(range);
                 layout->setFormats(formats);
+                textDocument->markContentsDirty(range.start, range.length);
+                data->hasHighlight = false;
             }
+            block = block.next();
         }
     }else{
         QList<int> allowedSeverities;
@@ -3979,6 +4137,14 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
             // Process each block in the range
             for (int currentLine = startLine; currentLine <= endLine; ++currentLine) {
                 QTextBlock block = textDocument->findBlockByNumber(currentLine);
+
+                HighlightData* data = static_cast<HighlightData*>(block.userData());
+                if (!data) {
+                    data = new HighlightData();
+                    const_cast<QTextBlock&>(block).setUserData(data);
+                }
+                data->hasHighlight = true;
+
                 if (!block.isValid()) {
                     continue;
                 }
@@ -4009,13 +4175,12 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
                 QVector<QTextLayout::FormatRange> formats = layout->formats();
                 formats.append(range);
                 layout->setFormats(formats);
+                textDocument->markContentsDirty(range.start, range.length);
             }
         }
     }
 
     blckcursor.setPosition(pos);
-
-    textDocument->markContentsDirty(0, textDocument->characterCount());
 
     textEdit->blockSignals(false);
 }

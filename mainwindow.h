@@ -24,6 +24,9 @@ public:
 
 
 private slots:
+    void resetSyntaxColors();
+    void validateAndConvert();
+    void on_actionSet_Syntax_Colors_triggered();
     void printTree(TSNode node, int depth = 0);
     void setupSyntaxTreeOnOpen(QString code);
     void onContentsChange(int position, int charsRemoved, int charsAdded);

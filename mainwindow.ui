@@ -231,7 +231,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>0</x>
      <y>0</y>
      <width>702</width>
-     <height>17</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -322,6 +322,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="separator"/>
     <addaction name="actionUse_File_Tree"/>
     <addaction name="actionUse_File_Tree_If_Fullscreen"/>
+    <addaction name="separator"/>
+    <addaction name="actionSet_Syntax_Colors"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -853,6 +855,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </property>
    <property name="text">
     <string>Use File Tree If Fullscreen</string>
+   </property>
+  </action>
+  <action name="actionSet_Syntax_Colors">
+   <property name="text">
+    <string>Set Syntax Colors</string>
    </property>
   </action>
  </widget>
