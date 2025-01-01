@@ -14,9 +14,17 @@ CodeWizard has an optional filetree on the left. Here's an example without.
 
 <img width="563" alt="CodeWizardScreenshot2Fixed" src="https://github.com/user-attachments/assets/fa289d1c-ae7a-48c6-8680-cb66638f0efc" />
 
+## Why use CodeWizard?
+
+CodeWizard offers a couple of major improvements on the existing editors. The first and most important one is system resource usage. CodeWizard clocks in at 20 MB of RAM usage on my machine. Compare that to VSCode which consumes upwards of 600 MB of RAM when opened. The second advantage CodeWizard has is simplicity. CodeWizard is ideal for people used to and or wanting the IDLE like experience without excess bloat. Of course it does support the more complicated features like LSPs and whatnot, but it's an optional addon.
+
 ## Language Server Protocol
 
 CodeWizard Version 8.0.0 and onwards support LSPs. Specifically, you can specify the command to start an LSP for CodeWizard to use for the current language. See the help menu in CodeWizard for more info on how to setup an LSP. Furthermore, CodeWizard does have a builtin autocomplete which activates when there is no LSP set, or when the user specifies to rely on CodeWizard's builtin rather than the LSP.
+
+## Syntax Highlighting
+
+Version 8.5.0 now utilizes tree-sitter with incremental updates to highlight your code. Furthermore, it all comes preinstalled and at no cost to performance. Note: Plaintext documents do not receive syntax highlighting.
 
 ## Other
 
