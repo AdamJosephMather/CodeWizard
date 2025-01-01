@@ -8,11 +8,13 @@ CodeWizard is a custom Code Editor / IDE designed by Adam Mather. The main point
 
 ## Screenshots
 
-<img width="1127" alt="CodeWizardScreenshot1" src="https://github.com/user-attachments/assets/e5e5bf31-a14d-42f6-9853-13b188602ea9" />
+<img width="1128" alt="image" src="https://github.com/user-attachments/assets/51700913-e2b4-429d-93e7-0d63bfd0fc3d" />
+
 
 CodeWizard has an optional filetree on the left. Here's an example without.
 
-<img width="563" alt="CodeWizardScreenshot2Fixed" src="https://github.com/user-attachments/assets/fa289d1c-ae7a-48c6-8680-cb66638f0efc" />
+<img width="564" alt="image" src="https://github.com/user-attachments/assets/f2af939e-2352-40c5-866a-b198801540e3" />
+
 
 ## Why use CodeWizard?
 
@@ -24,7 +26,7 @@ CodeWizard Version 8.0.0 and onwards support LSPs. Specifically, you can specify
 
 ## Syntax Highlighting
 
-Version 8.5.0 now utilizes tree-sitter with incremental updates to highlight your code. Furthermore, it all comes preinstalled and at no cost to performance. Note: Plaintext documents do not receive syntax highlighting.
+Version 8.5.0 now utilizes tree-sitter with incremental updates to highlight your code. You can now customize the colors CodeWizard will use to highlight your code under View->Set Syntax Colors. Furthermore, it all comes preinstalled and at no cost to performance. Note: Plaintext documents do not receive syntax highlighting.
 
 ## Other
 
