@@ -1,0 +1,44 @@
+cmake_minimum_required(VERSION 3.10)
+project(tree-sitter)
+
+# Define TREE_SITTER_STATIC to build without ICU dependency
+add_definitions(-DTREE_SITTER_STATIC)
+
+if(MSVC)
+    # Add MSVC-specific compile options
+    add_compile_options(/w)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+endif()
+
+# Create the tree-sitter library
+add_library(tree-sitter STATIC
+    lib/src/lib.c
+    lib/src/lexer.c
+    lib/src/tree.c
+    lib/src/node.c
+    lib/src/query.c
+    lib/src/stack.c
+    lib/src/language.c
+    lib/src/subtree.c
+)
+
+# Add include directories
+target_include_directories(tree-sitter
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/lib/include
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/lib/src
+)
+
+# Set language standard
+set_target_properties(tree-sitter PROPERTIES
+    C_STANDARD 99
+    C_STANDARD_REQUIRED ON
+    POSITION_INDEPENDENT_CODE ON
+)
+
+# Add compiler definitions
+target_compile_definitions(tree-sitter 
+    PUBLIC TREE_SITTER_STATIC
+    PRIVATE TREE_SITTER_INTERNAL_BUILD
+)
