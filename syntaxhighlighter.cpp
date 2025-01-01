@@ -86,20 +86,22 @@ void SyntaxHighlighter::updateHighlighting(QTextDocument* document, int cursorPo
         }
     }
 
-    QTextBlock block = document->findBlock(cursorPos-addedLen).previous();
-    QTextBlock block2 = document->findBlock(cursorPos).next();
 
-    if (!block.isValid()){
-        block = document->findBlock(cursorPos-addedLen);
+    QTextBlock block = document->findBlock(cursorPos);
+    if (block.previous().isValid()){
+        block = block.previous();
     }
-    if (!block2.isValid()){
-        block2 = document->findBlock(cursorPos);
+
+    QTextBlock block2 = document->findBlock(cursorPos+addedLen);
+    if (block2.next().isValid()){
+        block2 = block2.next();
     }
+
+    qDebug() << block.isValid() << block.blockNumber() << block.position() << cursorPos-addedLen;
+    qDebug() << "2" << block2.isValid() << block2.blockNumber() << block2.position() << cursorPos+addedLen;
 
     int s = block.position();
     int e = block2.length()+block2.position();
-
-    qDebug() << "Forcing full? " << forceFull << "else stuck with " << s << "to" << e;
 
     int lessThan = block2.blockNumber()-block.blockNumber();
     if (forceFull){
@@ -115,14 +117,12 @@ void SyntaxHighlighter::updateHighlighting(QTextDocument* document, int cursorPo
         lessThan = document->blockCount();
     }
 
-    qDebug() << "Finalusage " << forceFull << "got stuck with " << s << "to" << e << "lessthan" << lessThan << "et" << block.blockNumber() << block2.blockNumber();
-
     const QList<HighlightBlock>& newBlocks = getHighlightBlocks(ts_tree_root_node(newTree), s, e+1);
 
     for (int z = -1; z < lessThan; z ++) {
         QTextLayout* layout = block.layout();
         if (!block.isValid()){
-            continue;
+            break;
         }
         QList<QTextLayout::FormatRange> currentFormats = layout->formats();
 

@@ -52,7 +52,6 @@ private slots:
     void handleMouseMoved(QPoint pos);
     void on_actionLSP_triggered();
     void on_actionLSP_2_triggered();
-    void setTagLineSize();
     bool insertCompletion();
     bool activateCodeAction();
     void pullUpSaveDialogue();
