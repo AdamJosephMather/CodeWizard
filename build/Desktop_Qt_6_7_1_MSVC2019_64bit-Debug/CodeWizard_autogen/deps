@@ -8,12 +8,8 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/QObject \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/QProcess \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/QRect \
-	C:/Qt/6.7.1/msvc2019_64/include/QtCore/QRegularExpression \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/QSize \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/QSizeF \
-	C:/Qt/6.7.1/msvc2019_64/include/QtCore/QString \
-	C:/Qt/6.7.1/msvc2019_64/include/QtCore/QStringList \
-	C:/Qt/6.7.1/msvc2019_64/include/QtCore/QVector \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/q20functional.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/q20memory.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/q20type_traits.h \
@@ -151,15 +147,12 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/quuid.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qvariant.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qvarlengtharray.h \
-	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qvector.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qversiontagging.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qxptype_traits.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qyieldcpu.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/QAction \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/QContextMenuEvent \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/QMouseEvent \
-	C:/Qt/6.7.1/msvc2019_64/include/QtGui/QSyntaxHighlighter \
-	C:/Qt/6.7.1/msvc2019_64/include/QtGui/QTextCharFormat \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/QTransform \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qaction.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qbitmap.h \
@@ -169,10 +162,8 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qevent.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qeventpoint.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qfont.h \
-	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qfontdatabase.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qfontinfo.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qfontmetrics.h \
-	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qglyphrun.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qguiapplication.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qguiapplication_platform.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qicon.h \
@@ -187,18 +178,14 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qpixmap.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qpointingdevice.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qpolygon.h \
-	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qrawfont.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qregion.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qrgb.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qrgba64.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qscreen.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qscreen_platform.h \
-	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qsyntaxhighlighter.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qtextcursor.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qtextdocument.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qtextformat.h \
-	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qtextlayout.h \
-	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qtextobject.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qtextoption.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qtgui-config.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/qtguiexports.h \
@@ -258,6 +245,15 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6/QtPublicTestHelpers.cmake \
 	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6/QtPublicToolHelpers.cmake \
 	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentAdditionalTargetInfo.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentConfig.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentConfigVersion.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentConfigVersionImpl.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentDependencies.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentTargets-debug.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentTargets-relwithdebinfo.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentTargets.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentVersionlessTargets.cmake \
 	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Core/Qt6CoreAdditionalTargetInfo.cmake \
 	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Core/Qt6CoreConfig.cmake \
 	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Core/Qt6CoreConfigExtras.cmake \
@@ -427,105 +423,47 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateConfigVersionImpl.cmake \
 	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateTargets.cmake \
 	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateVersionlessTargets.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCXXCompiler.cmake.in \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCXXCompilerABI.cpp \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCInformation.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCXXInformation.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCheckCompilerFlagCommonPatterns.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCompilerIdDetection.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeDetermineCXXCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeDetermineCompileFeatures.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeDetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeDetermineCompilerABI.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeDetermineRCCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeDetermineSystem.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeFindBinUtils.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeFindDependencyMacro.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeGenericSystem.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeInitializeConfigs.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeLanguageInformation.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeNinjaFindMake.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeParseImplicitIncludeInfo.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeParseImplicitLinkInfo.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeParseLibraryArchitecture.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeRCCompiler.cmake.in \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeRCInformation.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeSystem.cmake.in \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeSystemSpecificInformation.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeSystemSpecificInitialize.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeTestCXXCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeTestCompilerCommon.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeTestRCCompiler.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCSourceCompiles.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXCompilerFlag.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXSourceCompiles.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckIncludeFileCXX.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckIncludeFile.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckLibraryExists.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/ADSP-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/ARMCC-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/ARMClang-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/AppleClang-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/Borland-DetermineCompiler.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/CMakeCommonCompilerMacros.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/Clang-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/Clang-DetermineCompilerInternal.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/Cray-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/CrayClang-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/Embarcadero-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/Fujitsu-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/GHS-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/HP-CXX-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/IAR-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/Intel-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/MSVC-C.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/MSVC-CXX.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/MSVC-DetermineCompiler.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/MSVC.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/NVHPC-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/NVIDIA-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/OrangeC-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/PGI-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/PathScale-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/SCO-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/TI-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/TIClang-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/Tasking-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/Watcom-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/XL-CXX-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindPackageHandleStandardArgs.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindPackageMessage.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindThreads.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindVulkan.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/GNUInstallDirs.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Internal/CMakeDetermineLinkerId.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Internal/CheckFlagCommonConfig.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Internal/FeatureTesting.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-Determine-CXX.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-Initialize.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-MSVC-C.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-MSVC-CXX.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-MSVC.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/WindowsPaths.cmake \
 	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/CMakeLists.txt \
 	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/.qtc/package-manager/auto-setup.cmake \
+	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/CMakeFiles/3.29.3/CMakeCCompiler.cmake \
 	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/CMakeFiles/3.29.3/CMakeCXXCompiler.cmake \
 	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/CMakeFiles/3.29.3/CMakeRCCompiler.cmake \
 	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/CMakeFiles/3.29.3/CMakeSystem.cmake \
-	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/codehighlighter.cpp \
-	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/codehighlighter.h \
+	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include/tree_sitter/api.h \
 	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/language.cpp \
 	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/language.h \
 	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/languageserverclient.cpp \
@@ -536,5 +474,7 @@ CodeWizard_autogen/timestamp: \
 	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/mytextedit.cpp \
 	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/mytextedit.h \
 	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/resources.qrc \
+	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/syntaxhighlighter.cpp \
+	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/syntaxhighlighter.h \
 	C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/mainwindow.ui \
 	C:/Qt/Tools/CMake_64/bin/cmake.exe

@@ -12,12 +12,23 @@
 		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/CMakeFiles/3.29.3/CMakeSystem.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeSystemSpecificInitialize.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-Initialize.cmake",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/CMakeFiles/3.29.3/CMakeCCompiler.cmake",
 		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/CMakeFiles/3.29.3/CMakeCXXCompiler.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeSystemSpecificInformation.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeGenericSystem.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeInitializeConfigs.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/WindowsPaths.cmake",
+		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCInformation.cmake",
+		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeLanguageInformation.cmake",
+		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/MSVC-C.cmake",
+		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/MSVC.cmake",
+		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/CMakeCommonCompilerMacros.cmake",
+		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-MSVC-C.cmake",
+		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-MSVC.cmake",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/CMakeFiles/3.29.3/CMakeRCCompiler.cmake",
+		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeRCInformation.cmake",
+		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCXXInformation.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeLanguageInformation.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/MSVC-CXX.cmake",
@@ -25,9 +36,8 @@
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Compiler/CMakeCommonCompilerMacros.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-MSVC-CXX.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Platform/Windows-MSVC.cmake",
-		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/CMakeFiles/3.29.3/CMakeRCCompiler.cmake",
-		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeRCInformation.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/.qtc/package-manager/auto-setup.cmake",
 		"C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6/Qt6ConfigVersion.cmake",
 		"C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6/Qt6ConfigVersionImpl.cmake",
 		"C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6/Qt6Config.cmake",
@@ -60,8 +70,9 @@
 		"C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6/Qt6Dependencies.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindThreads.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckLibraryExists.cmake",
-		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckIncludeFileCXX.cmake",
-		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXSourceCompiles.cmake",
+		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckIncludeFile.cmake",
+		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCSourceCompiles.cmake",
+		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindPackageHandleStandardArgs.cmake",
 		"C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindPackageMessage.cmake",
 		"C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6/Qt6ConfigVersion.cmake",
@@ -347,12 +358,6 @@
 	"HEADERS" : 
 	[
 		[
-			"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/codehighlighter.h",
-			"MU",
-			"EWIEGA46WW/moc_codehighlighter.cpp",
-			null
-		],
-		[
 			"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/language.h",
 			"MU",
 			"EWIEGA46WW/moc_language.cpp",
@@ -375,6 +380,12 @@
 			"MU",
 			"EWIEGA46WW/moc_mytextedit.cpp",
 			null
+		],
+		[
+			"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/syntaxhighlighter.h",
+			"MU",
+			"EWIEGA46WW/moc_syntaxhighlighter.cpp",
+			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
@@ -385,6 +396,7 @@
 		"QT_CORE_LIB",
 		"QT_GUI_LIB",
 		"QT_WIDGETS_LIB",
+		"TREE_SITTER_STATIC",
 		"UNICODE",
 		"WIN32",
 		"WIN64",
@@ -401,6 +413,21 @@
 	],
 	"MOC_INCLUDES" : 
 	[
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/external/tree-sitter",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-cpp/src",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-javascript/src",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-typescript/typescript/src",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-html/src",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-lua/src",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-glsl/src",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-java/src",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-go/src",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c/src",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-c-sharp/src",
 		"C:/Qt/6.7.1/msvc2019_64/include/QtCore",
 		"C:/Qt/6.7.1/msvc2019_64/include",
 		"C:/Qt/6.7.1/msvc2019_64/mkspecs/win32-msvc",
@@ -421,7 +448,22 @@
 	"MOC_PREDEFS_CMD" : [],
 	"MOC_PREDEFS_FILE" : "",
 	"MOC_RELAXED_MODE" : false,
-	"MOC_SKIP" : [],
+	"MOC_SKIP" : 
+	[
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-c-sharp_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-c_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-cpp_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-glsl_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-go_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-html_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-java_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-javascript_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-lua_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-python_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-rust_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-typescript_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-wgsl_autogen/include/ui_mainwindow.h"
+	],
 	"MULTI_CONFIG" : false,
 	"PARALLEL" : 12,
 	"PARSE_CACHE_FILE" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/CMakeFiles/CodeWizard_autogen.dir/ParseCache.txt",
@@ -432,11 +474,6 @@
 	"SETTINGS_FILE" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/CMakeFiles/CodeWizard_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
-		[
-			"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/codehighlighter.cpp",
-			"MU",
-			null
-		],
 		[
 			"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/language.cpp",
 			"MU",
@@ -461,11 +498,31 @@
 			"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/mytextedit.cpp",
 			"MU",
 			null
+		],
+		[
+			"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/syntaxhighlighter.cpp",
+			"MU",
+			null
 		]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],
-	"UIC_SKIP" : [],
+	"UIC_SKIP" : 
+	[
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-c-sharp_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-c_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-cpp_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-glsl_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-go_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-html_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-java_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-javascript_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-lua_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-python_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-rust_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-typescript_autogen/include/ui_mainwindow.h",
+		"C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Debug/tree-sitter-wgsl_autogen/include/ui_mainwindow.h"
+	],
 	"UIC_UI_FILES" : [],
 	"USE_BETTER_GRAPH" : false,
 	"VERBOSITY" : 0

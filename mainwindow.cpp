@@ -1415,6 +1415,7 @@ void MainWindow::setupLSP()
         errEndC = endC;
         errEndL = endL;
         errSeverity = severity;
+        return;
         highlightDiagnostics(false);
     });
 

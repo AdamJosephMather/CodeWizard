@@ -13,11 +13,13 @@
 #include <QtGui/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTreeView>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 #include "mytextedit.h"
@@ -99,10 +101,24 @@ public:
     QAction *actionC_3;
     QAction *actionLSP;
     QAction *actionLSP_2;
+    QAction *actionHover;
+    QAction *actionShow_Warnings;
+    QAction *actionShow_Errors;
+    QAction *actionShow_Other;
+    QAction *actionOnly_Use_CodeWizard_Built_In;
+    QAction *actionNo_Autocomplete;
+    QAction *actionAuto_Save;
+    QAction *actionExtras;
+    QAction *actionRandomly_Choose_Program_Type_On_Save;
+    QAction *actionShortcuts;
+    QAction *actionUse_File_Tree;
+    QAction *actionOpen_Folder;
+    QAction *actionUse_File_Tree_If_Fullscreen;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout_3;
+    QTreeView *treeView;
     MyTextEdit *textEdit_4;
     MyTextEdit *textEdit;
     MyTextEdit *textEdit_2;
@@ -120,10 +136,14 @@ public:
     QMenu *menuRun;
     QMenu *menuEdit;
     QMenu *menuFonts;
+    QMenu *menuSilly;
     QMenu *menuFixit;
     QMenu *menuView;
     QMenu *menuHelp;
     QMenu *menuLanguage;
+    QMenu *menuLSP_Settings;
+    QMenu *menuWarnings;
+    QMenu *menuAutocomplete;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -274,6 +294,46 @@ public:
         actionLSP->setObjectName("actionLSP");
         actionLSP_2 = new QAction(MainWindow);
         actionLSP_2->setObjectName("actionLSP_2");
+        actionHover = new QAction(MainWindow);
+        actionHover->setObjectName("actionHover");
+        actionHover->setCheckable(true);
+        actionHover->setChecked(true);
+        actionShow_Warnings = new QAction(MainWindow);
+        actionShow_Warnings->setObjectName("actionShow_Warnings");
+        actionShow_Warnings->setCheckable(true);
+        actionShow_Warnings->setChecked(true);
+        actionShow_Errors = new QAction(MainWindow);
+        actionShow_Errors->setObjectName("actionShow_Errors");
+        actionShow_Errors->setCheckable(true);
+        actionShow_Errors->setChecked(true);
+        actionShow_Other = new QAction(MainWindow);
+        actionShow_Other->setObjectName("actionShow_Other");
+        actionShow_Other->setCheckable(true);
+        actionShow_Other->setChecked(true);
+        actionOnly_Use_CodeWizard_Built_In = new QAction(MainWindow);
+        actionOnly_Use_CodeWizard_Built_In->setObjectName("actionOnly_Use_CodeWizard_Built_In");
+        actionOnly_Use_CodeWizard_Built_In->setCheckable(true);
+        actionNo_Autocomplete = new QAction(MainWindow);
+        actionNo_Autocomplete->setObjectName("actionNo_Autocomplete");
+        actionNo_Autocomplete->setCheckable(true);
+        actionAuto_Save = new QAction(MainWindow);
+        actionAuto_Save->setObjectName("actionAuto_Save");
+        actionAuto_Save->setCheckable(true);
+        actionExtras = new QAction(MainWindow);
+        actionExtras->setObjectName("actionExtras");
+        actionRandomly_Choose_Program_Type_On_Save = new QAction(MainWindow);
+        actionRandomly_Choose_Program_Type_On_Save->setObjectName("actionRandomly_Choose_Program_Type_On_Save");
+        actionRandomly_Choose_Program_Type_On_Save->setCheckable(true);
+        actionShortcuts = new QAction(MainWindow);
+        actionShortcuts->setObjectName("actionShortcuts");
+        actionUse_File_Tree = new QAction(MainWindow);
+        actionUse_File_Tree->setObjectName("actionUse_File_Tree");
+        actionUse_File_Tree->setCheckable(true);
+        actionOpen_Folder = new QAction(MainWindow);
+        actionOpen_Folder->setObjectName("actionOpen_Folder");
+        actionUse_File_Tree_If_Fullscreen = new QAction(MainWindow);
+        actionUse_File_Tree_If_Fullscreen->setObjectName("actionUse_File_Tree_If_Fullscreen");
+        actionUse_File_Tree_If_Fullscreen->setCheckable(true);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         QSizePolicy sizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::Minimum);
@@ -290,13 +350,26 @@ public:
         verticalLayout->setObjectName("verticalLayout");
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setObjectName("horizontalLayout_3");
-        textEdit_4 = new MyTextEdit(centralwidget);
-        textEdit_4->setObjectName("textEdit_4");
-        QSizePolicy sizePolicy1(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
+        treeView = new QTreeView(centralwidget);
+        treeView->setObjectName("treeView");
+        QSizePolicy sizePolicy1(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Expanding);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(textEdit_4->sizePolicy().hasHeightForWidth());
-        textEdit_4->setSizePolicy(sizePolicy1);
+        sizePolicy1.setHeightForWidth(treeView->sizePolicy().hasHeightForWidth());
+        treeView->setSizePolicy(sizePolicy1);
+        treeView->setMinimumSize(QSize(300, 0));
+        treeView->setMaximumSize(QSize(300, 16777215));
+        treeView->setDragEnabled(false);
+
+        horizontalLayout_3->addWidget(treeView);
+
+        textEdit_4 = new MyTextEdit(centralwidget);
+        textEdit_4->setObjectName("textEdit_4");
+        QSizePolicy sizePolicy2(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(textEdit_4->sizePolicy().hasHeightForWidth());
+        textEdit_4->setSizePolicy(sizePolicy2);
         textEdit_4->setMinimumSize(QSize(50, 0));
         textEdit_4->setMaximumSize(QSize(50, 16777215));
 
@@ -316,11 +389,11 @@ public:
 
         textEdit_2 = new MyTextEdit(centralwidget);
         textEdit_2->setObjectName("textEdit_2");
-        QSizePolicy sizePolicy2(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(textEdit_2->sizePolicy().hasHeightForWidth());
-        textEdit_2->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy3(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Fixed);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(textEdit_2->sizePolicy().hasHeightForWidth());
+        textEdit_2->setSizePolicy(sizePolicy3);
         textEdit_2->setMinimumSize(QSize(0, 28));
         textEdit_2->setMaximumSize(QSize(16777215, 28));
 
@@ -328,8 +401,8 @@ public:
 
         textEdit_3 = new MyTextEdit(centralwidget);
         textEdit_3->setObjectName("textEdit_3");
-        sizePolicy2.setHeightForWidth(textEdit_3->sizePolicy().hasHeightForWidth());
-        textEdit_3->setSizePolicy(sizePolicy2);
+        sizePolicy3.setHeightForWidth(textEdit_3->sizePolicy().hasHeightForWidth());
+        textEdit_3->setSizePolicy(sizePolicy3);
         textEdit_3->setMinimumSize(QSize(0, 28));
         textEdit_3->setMaximumSize(QSize(16777215, 28));
 
@@ -378,8 +451,8 @@ public:
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName("menuBar");
         menuBar->setGeometry(QRect(0, 0, 702, 17));
-        sizePolicy1.setHeightForWidth(menuBar->sizePolicy().hasHeightForWidth());
-        menuBar->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(menuBar->sizePolicy().hasHeightForWidth());
+        menuBar->setSizePolicy(sizePolicy2);
         menuOp1 = new QMenu(menuBar);
         menuOp1->setObjectName("menuOp1");
         menuOpen_Recent = new QMenu(menuOp1);
@@ -390,6 +463,8 @@ public:
         menuEdit->setObjectName("menuEdit");
         menuFonts = new QMenu(menuEdit);
         menuFonts->setObjectName("menuFonts");
+        menuSilly = new QMenu(menuEdit);
+        menuSilly->setObjectName("menuSilly");
         menuFixit = new QMenu(menuBar);
         menuFixit->setObjectName("menuFixit");
         menuView = new QMenu(menuBar);
@@ -398,6 +473,12 @@ public:
         menuHelp->setObjectName("menuHelp");
         menuLanguage = new QMenu(menuBar);
         menuLanguage->setObjectName("menuLanguage");
+        menuLSP_Settings = new QMenu(menuLanguage);
+        menuLSP_Settings->setObjectName("menuLSP_Settings");
+        menuWarnings = new QMenu(menuLSP_Settings);
+        menuWarnings->setObjectName("menuWarnings");
+        menuAutocomplete = new QMenu(menuLSP_Settings);
+        menuAutocomplete->setObjectName("menuAutocomplete");
         MainWindow->setMenuBar(menuBar);
 
         menuBar->addAction(menuOp1->menuAction());
@@ -409,6 +490,7 @@ public:
         menuBar->addAction(menuHelp->menuAction());
         menuOp1->addAction(actionNew);
         menuOp1->addAction(actionOpen);
+        menuOp1->addAction(actionOpen_Folder);
         menuOp1->addAction(menuOpen_Recent->menuAction());
         menuOp1->addAction(actionSave);
         menuOp1->addAction(actionSave_As);
@@ -429,6 +511,9 @@ public:
         menuEdit->addAction(actionTab_Width);
         menuEdit->addAction(actionDark_Mode);
         menuEdit->addAction(actionLight_Mode);
+        menuEdit->addSeparator();
+        menuEdit->addAction(actionAuto_Save);
+        menuEdit->addAction(menuSilly->menuAction());
         menuFonts->addAction(actionCourier_New_2);
         menuFonts->addAction(actionCourier_Prime_2);
         menuFonts->addAction(actionDroidSansMono_2);
@@ -436,18 +521,23 @@ public:
         menuFonts->addAction(actionMonospace_2);
         menuFonts->addAction(actionSourceCodePro_2);
         menuFonts->addAction(actionUbuntuMono_2);
+        menuSilly->addAction(actionRandomly_Choose_Program_Type_On_Save);
         menuFixit->addAction(actionFix_It);
         menuFixit->addAction(actionChange_to_IDLE_format);
         menuView->addAction(actionIncrease_Text_Size);
         menuView->addAction(actionDecrease_Text_Size);
         menuView->addAction(actionSet_Text_Size);
         menuView->addAction(actionReset_Text_Size);
+        menuView->addSeparator();
+        menuView->addAction(actionUse_File_Tree);
+        menuView->addAction(actionUse_File_Tree_If_Fullscreen);
         menuHelp->addAction(actionCodeWizard);
         menuHelp->addAction(actionRunning_Files);
         menuHelp->addAction(actionThe_Fix_It_Button);
         menuHelp->addAction(actionSettings);
         menuHelp->addAction(actionMacros);
         menuHelp->addAction(actionLSP_2);
+        menuHelp->addAction(actionExtras);
         menuLanguage->addAction(actionPython_2);
         menuLanguage->addAction(actionC);
         menuLanguage->addAction(actionC_2);
@@ -464,6 +554,15 @@ public:
         menuLanguage->addAction(actionPlaintext);
         menuLanguage->addSeparator();
         menuLanguage->addAction(actionLSP);
+        menuLanguage->addAction(menuLSP_Settings->menuAction());
+        menuLSP_Settings->addAction(menuWarnings->menuAction());
+        menuLSP_Settings->addAction(menuAutocomplete->menuAction());
+        menuLSP_Settings->addAction(actionHover);
+        menuWarnings->addAction(actionShow_Warnings);
+        menuWarnings->addAction(actionShow_Errors);
+        menuWarnings->addAction(actionShow_Other);
+        menuAutocomplete->addAction(actionOnly_Use_CodeWizard_Built_In);
+        menuAutocomplete->addAction(actionNo_Autocomplete);
 
         retranslateUi(MainWindow);
 
@@ -492,8 +591,8 @@ public:
         actionUn_Comment_Alt_5->setText(QCoreApplication::translate("MainWindow", "Un Comment (Alt + 4)", nullptr));
         actionDark_Mode->setText(QCoreApplication::translate("MainWindow", "Dark Mode", nullptr));
         actionLight_Mode->setText(QCoreApplication::translate("MainWindow", "Light Mode", nullptr));
-        actionIncrease_Text_Size->setText(QCoreApplication::translate("MainWindow", "Increase Text Size", nullptr));
-        actionDecrease_Text_Size->setText(QCoreApplication::translate("MainWindow", "Decrease Text Size", nullptr));
+        actionIncrease_Text_Size->setText(QCoreApplication::translate("MainWindow", "Increase Text Size (Ctrl+)", nullptr));
+        actionDecrease_Text_Size->setText(QCoreApplication::translate("MainWindow", "Decrease Text Size (Ctrl-)", nullptr));
         actionReset_Text_Size->setText(QCoreApplication::translate("MainWindow", "Reset Text Size", nullptr));
         actionChange_to_IDLE_format->setText(QCoreApplication::translate("MainWindow", "Change to IDLE Format", nullptr));
         actionChoose_Font->setText(QCoreApplication::translate("MainWindow", "Choose Font", nullptr));
@@ -545,6 +644,19 @@ public:
         actionC_3->setText(QCoreApplication::translate("MainWindow", "C", nullptr));
         actionLSP->setText(QCoreApplication::translate("MainWindow", "Set LSP For Language", nullptr));
         actionLSP_2->setText(QCoreApplication::translate("MainWindow", "LSP", nullptr));
+        actionHover->setText(QCoreApplication::translate("MainWindow", "Hover", nullptr));
+        actionShow_Warnings->setText(QCoreApplication::translate("MainWindow", "Show Warnings", nullptr));
+        actionShow_Errors->setText(QCoreApplication::translate("MainWindow", "Show Errors", nullptr));
+        actionShow_Other->setText(QCoreApplication::translate("MainWindow", "Show Other", nullptr));
+        actionOnly_Use_CodeWizard_Built_In->setText(QCoreApplication::translate("MainWindow", "Only Use CodeWizard Built In", nullptr));
+        actionNo_Autocomplete->setText(QCoreApplication::translate("MainWindow", "No Autocomplete", nullptr));
+        actionAuto_Save->setText(QCoreApplication::translate("MainWindow", "Auto Save", nullptr));
+        actionExtras->setText(QCoreApplication::translate("MainWindow", "Extras", nullptr));
+        actionRandomly_Choose_Program_Type_On_Save->setText(QCoreApplication::translate("MainWindow", "Randomly Choose Program Type On Save", nullptr));
+        actionShortcuts->setText(QCoreApplication::translate("MainWindow", "Shortcuts", nullptr));
+        actionUse_File_Tree->setText(QCoreApplication::translate("MainWindow", "Use File Tree", nullptr));
+        actionOpen_Folder->setText(QCoreApplication::translate("MainWindow", "Open Folder", nullptr));
+        actionUse_File_Tree_If_Fullscreen->setText(QCoreApplication::translate("MainWindow", "Use File Tree If Fullscreen", nullptr));
         textEdit_4->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -570,10 +682,14 @@ public:
         menuRun->setTitle(QCoreApplication::translate("MainWindow", "Run", nullptr));
         menuEdit->setTitle(QCoreApplication::translate("MainWindow", "Edit", nullptr));
         menuFonts->setTitle(QCoreApplication::translate("MainWindow", "Fonts", nullptr));
+        menuSilly->setTitle(QCoreApplication::translate("MainWindow", "Silly", nullptr));
         menuFixit->setTitle(QCoreApplication::translate("MainWindow", "Fix It", nullptr));
         menuView->setTitle(QCoreApplication::translate("MainWindow", "View", nullptr));
         menuHelp->setTitle(QCoreApplication::translate("MainWindow", "Help", nullptr));
         menuLanguage->setTitle(QCoreApplication::translate("MainWindow", "Language", nullptr));
+        menuLSP_Settings->setTitle(QCoreApplication::translate("MainWindow", "LSP Settings", nullptr));
+        menuWarnings->setTitle(QCoreApplication::translate("MainWindow", "Warnings", nullptr));
+        menuAutocomplete->setTitle(QCoreApplication::translate("MainWindow", "Autocomplete", nullptr));
     } // retranslateUi
 
 };
