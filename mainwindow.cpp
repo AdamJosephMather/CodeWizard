@@ -884,6 +884,7 @@ void MainWindow::on_actionSet_Syntax_Colors_triggered() {
     resetButton->setFont(textEdit->font());
 
     connect(validateButton, &QPushButton::clicked, this, &MainWindow::validateAndConvert);
+    connect(resetButton, &QPushButton::clicked, this, &MainWindow::resetSyntaxColors);
 
     layout->addWidget(validateButton);
     layout->addWidget(resetButton);
@@ -908,8 +909,8 @@ void MainWindow::resetSyntaxColors(){
         coloredFormats.append(form);
     }
 
-    for (int i = 0; i < 8; ++i) {
-        hexColorsList[i]->setText(coloredFormats[i].foreground().color().name());
+    for (int i = 1; i < 9; ++i) {
+        hexColorsList[i-1]->setText(coloredFormats[i].foreground().color().name());
     }
 }
 
