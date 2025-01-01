@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 3.5)
 project(CodeWizard VERSION 0.1 LANGUAGES C CXX)
 project(CodeWizard VERSION 0.1 LANGUAGES CXX)
 
+set(BUILD_SHARED_LIBS ON)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 if(MSVC)
     # Add MSVC-specific compile options
     add_compile_options(/w)
@@ -144,6 +149,14 @@ set(PROJECT_SOURCES
     mainwindow.ui
     mytextedit.h
     mytextedit.cpp
+    syntaxhighlighter.h
+    syntaxhighlighter.cpp
+    language.h
+    language.cpp
+    highlightdata.h
+    highlightdata.cpp
+    languageserverclient.h
+    languageserverclient.cpp
 )
 
 
@@ -237,6 +250,29 @@ install(TARGETS CodeWizard
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+# Add this after your existing install commands
+if(WIN32)
+    # Install tree-sitter and parser DLLs alongside the executable
+    install(TARGETS
+        tree-sitter
+        tree-sitter-cpp
+        tree-sitter-python
+        tree-sitter-rust
+        tree-sitter-javascript
+        tree-sitter-typescript
+        tree-sitter-html
+        tree-sitter-lua
+        tree-sitter-glsl
+        tree-sitter-wgsl
+        tree-sitter-java
+        tree-sitter-go
+        tree-sitter-c
+        tree-sitter-c-sharp
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION bin
+    )
+endif()
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(CodeWizard)

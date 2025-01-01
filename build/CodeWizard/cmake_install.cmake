@@ -33,7 +33,63 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/CodeWizard.exe")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/bin/CodeWizard.exe")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/extern/tree-sitter/tree-sitter.lib")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-cpp.lib")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-python.lib")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-rust.lib")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-javascript.lib")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-typescript.lib")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-html.lib")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-lua.lib")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-glsl.lib")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-wgsl.lib")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-java.lib")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-go.lib")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-c.lib")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-c-sharp.lib")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)

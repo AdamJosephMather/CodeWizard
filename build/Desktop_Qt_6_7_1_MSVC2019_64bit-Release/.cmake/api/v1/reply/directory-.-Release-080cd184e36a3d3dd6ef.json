@@ -1,0 +1,219 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 248,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 257,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"bin/CodeWizard.exe"
+			],
+			"targetId" : "CodeWizard::@6890427a1f51a3e7e1df",
+			"targetIndex" : 0,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"extern/tree-sitter/tree-sitter.lib"
+			],
+			"targetId" : "tree-sitter::@df0f4dfc7b2b45dd2262",
+			"targetIndex" : 3,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"tree-sitter-cpp.lib"
+			],
+			"targetId" : "tree-sitter-cpp::@6890427a1f51a3e7e1df",
+			"targetIndex" : 10,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"tree-sitter-python.lib"
+			],
+			"targetId" : "tree-sitter-python::@6890427a1f51a3e7e1df",
+			"targetIndex" : 31,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"tree-sitter-rust.lib"
+			],
+			"targetId" : "tree-sitter-rust::@6890427a1f51a3e7e1df",
+			"targetIndex" : 34,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"tree-sitter-javascript.lib"
+			],
+			"targetId" : "tree-sitter-javascript::@6890427a1f51a3e7e1df",
+			"targetIndex" : 25,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"tree-sitter-typescript.lib"
+			],
+			"targetId" : "tree-sitter-typescript::@6890427a1f51a3e7e1df",
+			"targetIndex" : 37,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"tree-sitter-html.lib"
+			],
+			"targetId" : "tree-sitter-html::@6890427a1f51a3e7e1df",
+			"targetIndex" : 19,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"tree-sitter-lua.lib"
+			],
+			"targetId" : "tree-sitter-lua::@6890427a1f51a3e7e1df",
+			"targetIndex" : 28,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"tree-sitter-glsl.lib"
+			],
+			"targetId" : "tree-sitter-glsl::@6890427a1f51a3e7e1df",
+			"targetIndex" : 13,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"tree-sitter-wgsl.lib"
+			],
+			"targetId" : "tree-sitter-wgsl::@6890427a1f51a3e7e1df",
+			"targetIndex" : 40,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"tree-sitter-java.lib"
+			],
+			"targetId" : "tree-sitter-java::@6890427a1f51a3e7e1df",
+			"targetIndex" : 22,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"tree-sitter-go.lib"
+			],
+			"targetId" : "tree-sitter-go::@6890427a1f51a3e7e1df",
+			"targetIndex" : 16,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"tree-sitter-c.lib"
+			],
+			"targetId" : "tree-sitter-c::@6890427a1f51a3e7e1df",
+			"targetIndex" : 4,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"tree-sitter-c-sharp.lib"
+			],
+			"targetId" : "tree-sitter-c-sharp::@6890427a1f51a3e7e1df",
+			"targetIndex" : 5,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	}
+}

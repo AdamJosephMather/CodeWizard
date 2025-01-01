@@ -52,7 +52,7 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 
-QString versionNumber = "8.0.0";
+QString versionNumber = "8.5.0";
 
 QPoint mousePos;
 
@@ -957,6 +957,7 @@ void MainWindow::onContentsChange(int position, int charsRemoved, int charsAdded
     TSTree* newTree = ts_parser_parse_string(parser, tree, documentText.constData(), documentText.size());
 
     treeParserSyntaxHighlighter.updateHighlighting(textDocument, position, charsAdded, tree, newTree, charsAdded == textDocument->characterCount());
+
     tree = newTree;
 
     // Highlight the affected block
@@ -2080,7 +2081,9 @@ void MainWindow::saveWantedTheme()
 
     QString str = strLst.join("|");
 
-    settings.setValue("syntaxColors", str);
+    if (coloredFormats.length() == 9){
+        settings.setValue("syntaxColors", str);
+    }
 
     settings.setValue("fontSize", fontSize);
     settings.setValue("darkModeEnabled", darkmode);
@@ -2131,6 +2134,10 @@ bool MainWindow::wantedTheme()
 
         coloredFormats = {};
         coloredFormats.append(QTextCharFormat());
+
+        if (numbers.count("|") != 7){
+            numbers = "38,175,199|38,143,199|50,168,160|222,123,2|41,171,47|217,159,0|160,160,160|245,120,66";
+        }
 
         for(const QString color : numbers.split("|")){
             QStringList nums = color.split(",");
@@ -2369,8 +2376,6 @@ void MainWindow::setupSyntaxTreeOnOpen(QString code)
         source_code,
         strlen(source_code)
     );
-
-    TSNode rootNode = ts_tree_root_node(tree);
 }
 
 void MainWindow::on_actionOpen_triggered()

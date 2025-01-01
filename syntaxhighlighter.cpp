@@ -3,8 +3,11 @@
 #include <QTextLayout>
 #include <QFont>
 #include <qregularexpression.h>
+#include <QDialog>
+#include <QLabel>
+#include <qboxlayout.h>
 
-QList<QTextCharFormat> formats;
+QList<QTextCharFormat> formats = {QTextCharFormat(), QTextCharFormat(), QTextCharFormat(), QTextCharFormat(), QTextCharFormat(), QTextCharFormat(), QTextCharFormat(), QTextCharFormat(), QTextCharFormat()};
 std::unordered_map<QString, int> knownTypes = {{"true",8}, {"false", 8}};
 QRegularExpression *regex = new QRegularExpression("[a-zA-Z0-9]");
 QSet<QString> naughtyTypes = {"escape_sequence"};
@@ -86,7 +89,6 @@ void SyntaxHighlighter::updateHighlighting(QTextDocument* document, int cursorPo
         }
     }
 
-
     QTextBlock block = document->findBlock(cursorPos);
     if (block.previous().isValid()){
         block = block.previous();
@@ -96,9 +98,6 @@ void SyntaxHighlighter::updateHighlighting(QTextDocument* document, int cursorPo
     if (block2.next().isValid()){
         block2 = block2.next();
     }
-
-    qDebug() << block.isValid() << block.blockNumber() << block.position() << cursorPos-addedLen;
-    qDebug() << "2" << block2.isValid() << block2.blockNumber() << block2.position() << cursorPos+addedLen;
 
     int s = block.position();
     int e = block2.length()+block2.position();
@@ -246,6 +245,7 @@ QTextCharFormat SyntaxHighlighter::getFormatForType(const QString& parentAndType
     if (it != colormap.end()) {
         return formats[it->second];  // Access the value of the iterator (which is the key for formats)
     }
+
 
     QStringList PAT = parentAndType.split("/.CodeWiz./");
     QString type = PAT[1];
