@@ -953,8 +953,8 @@ void MainWindow::onContentsChange(int position, int charsRemoved, int charsAdded
     applyEditToTree(startByte, oldEndByte, newEndByte, startRow, startCol, oldEndRow, oldEndCol, newEndRow, newEndCol);
 
     // Parse incrementally
-    QByteArray documentText = textDocument->toPlainText().toUtf8();
-    TSTree* newTree = ts_parser_parse_string(parser, tree, documentText.constData(), documentText.size());
+    QByteArray documentText = textDocument->toPlainText().toLatin1().constData();
+    TSTree* newTree = ts_parser_parse_string(parser, tree, documentText, documentText.size());
 
     treeParserSyntaxHighlighter.updateHighlighting(textDocument, position, charsAdded, tree, newTree, charsAdded == textDocument->characterCount());
 
@@ -2367,7 +2367,7 @@ void MainWindow::setupSyntaxTreeOnOpen(QString code)
 
     QElapsedTimer timer;
     timer.start();
-    QByteArray byteArray = code.toUtf8();
+    QByteArray byteArray = code.toLatin1();
     const char* source_code = byteArray.constData();
 
     tree = ts_parser_parse_string(
