@@ -24,6 +24,8 @@ public:
 
 
 private slots:
+    int colorDifference(QColor c1, QColor c2);
+    void syntaxColorsOffImage();
     void resetSyntaxColors();
     void validateAndConvert();
     void on_actionSet_Syntax_Colors_triggered();

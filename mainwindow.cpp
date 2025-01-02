@@ -672,6 +672,9 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
     this->installEventFilter(this); // for the fullscreen
 
     bool thm = wantedTheme();
+
+    darkmode = thm;
+
     lineEdit->setPlainText(pythonTag);
 
     QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", QSettings::NativeFormat);
@@ -838,17 +841,123 @@ void MainWindow::on_actionSet_Syntax_Colors_triggered() {
     QPushButton *validateButton = new QPushButton("Validate and Convert", this);
     validateButton->setFont(textEdit->font());
 
+    QPushButton *imageButton = new QPushButton("Color off image (;", this);
+    imageButton->setFont(textEdit->font());
+
     QPushButton *resetButton = new QPushButton("Reset to default", this);
     resetButton->setFont(textEdit->font());
 
     connect(validateButton, &QPushButton::clicked, this, &MainWindow::validateAndConvert);
     connect(resetButton, &QPushButton::clicked, this, &MainWindow::resetSyntaxColors);
+    connect(imageButton, &QPushButton::clicked, this, &MainWindow::syntaxColorsOffImage);
 
     layout->addWidget(validateButton);
+    layout->addWidget(imageButton);
     layout->addWidget(resetButton);
 
     diag.setLayout(layout);
     diag.exec();
+}
+
+int MainWindow::colorDifference(QColor c1, QColor c2){
+    return qSqrt(qPow(c1.red()-c2.red(), 2) + qPow(c1.green()-c2.green(), 2) + qPow(c1.blue()-c2.blue(), 2));
+}
+
+void MainWindow::syntaxColorsOffImage(){
+    QString filePath = QFileDialog::getOpenFileName(nullptr, "Open Image File", "", "Images (*.png *.jpg *.bmp *.jpeg);;All Files (*)");
+    if (filePath.isEmpty()) {
+        return;
+    }
+    QPixmap pixmap(filePath);
+    if (pixmap.isNull()) {
+        return;
+    }
+
+    QImage image = pixmap.toImage();
+
+    int width = image.width();
+    int height = image.height();
+
+    std::srand(static_cast<unsigned>(std::time(nullptr)));
+    QList<QColor> chosen;
+
+    qDebug() << darkmode;
+
+    int leiniency = 11;
+
+    for (int z = 0; z < 5; z++){
+        chosen = {};
+        bool worked = true;
+
+        for (int i = 0; i < 8; i++){
+            bool first = true;
+            QColor workingon;
+
+            for (int j = 0; j < 200; j++){
+                int x = std::rand() % width;
+                int y = std::rand() % height;
+
+                QRgb rgb = image.pixel(x,y);
+                QColor color(rgb);
+
+                int brightness = .212*(float)color.red()+.7152*(float)color.green()+.0722*(float)color.blue();
+
+                if (darkmode && brightness < 163-z*leiniency){
+                    continue;
+                }else if(!darkmode && brightness > 133+z*leiniency){
+                    continue;
+                }
+
+                if (first){
+                    bool keep = true;
+
+                    for (int k = 0; k < chosen.length(); k++){
+                        if (colorDifference(chosen[k], color) < 50){
+                            keep = false;
+                            break;
+                        }
+                    }
+
+                    if (keep){
+                        workingon = color;
+                        first = false;
+                    }
+                }else{
+                    if (colorDifference(workingon, color) < 30){
+                        workingon = QColor((workingon.red()+color.red())/2, (workingon.green()+color.green())/2, (workingon.blue()+color.blue())/2);
+                    }
+                }
+            }
+
+            if (first && z == 4){ // max number of retries
+                openHelpMenu("This image did not play nicely with this feature. Try again (unlikely to work - we tried 5 times for you) or pick another image.");
+                return;
+            }else if (first){
+                worked = false;
+                break;
+            }
+
+            chosen.push_back(workingon);
+        }
+
+        if (worked){
+            break;
+        }
+    }
+
+    coloredFormats = {};
+    coloredFormats.append(QTextCharFormat());
+    for (const QColor color : chosen){
+        QTextCharFormat form = QTextCharFormat();
+        form.setForeground(color);
+        coloredFormats.append(form);
+    }
+
+    for (int i = 1; i < 9; ++i) {
+        hexColorsList[i-1]->setText(coloredFormats[i].foreground().color().name());
+    }
+
+    validateAndConvert();
 }
 
 void MainWindow::resetSyntaxColors(){
@@ -867,6 +976,8 @@ void MainWindow::resetSyntaxColors(){
     for (int i = 1; i < 9; ++i) {
         hexColorsList[i-1]->setText(coloredFormats[i].foreground().color().name());
     }
+
+    validateAndConvert();
 }
 
 void MainWindow::validateAndConvert(){
@@ -923,11 +1034,9 @@ void MainWindow::applyEditToTree(int startByte, int oldEndByte, int newEndByte, 
 }
 
 void MainWindow::onContentsChange(int position, int charsRemoved, int charsAdded) {
-    qDebug() << "Content change " << position << charsRemoved << charsAdded;
     if (!tree){
         return;
     }
-    qDebug() << "Working";
 
     QElapsedTimer timer;
     timer.start();
@@ -1150,9 +1259,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 
         setupSyntaxTreeOnOpen(fileContent);
 
-        // textEdit->blockSignals(true);
         textEdit->setPlainText(fileContent);
-        // textEdit->blockSignals(false);
 
         previousLineCount = fileContent.count('\xa')+1;
         file.close();
@@ -2970,9 +3077,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
                 QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier);
             QApplication::postEvent(textEdit, enterEvent);
             return true; // Mark as handled
-        }else if (key_sequence == QKeySequence("Return")) {
-            handleTabs();
-            //return true;
         }else if (key_sequence == QKeySequence("Alt+3")) {
             on_actionComment_Ctrl_Alt_triggered();
             return true; // Mark as handled
@@ -3079,6 +3183,11 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
                 textEdit->setTextCursor(cursor);
                 return true;
             }
+        }
+
+        if (key_sequence == QKeySequence("Return")) {
+            handleTabs();
+            //return true;
         }
     }else if (watched == findTextEdit) {
         if (key_event->key() == Qt::Key_Escape) {
@@ -3446,7 +3555,6 @@ void MainWindow::centerCursor() {
 void MainWindow::on_actionIncrement_Ctrl_triggered()
 {
     textEdit->blockSignals(true);
-    //disconnect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
     QTextCursor cursor = textEdit->textCursor();
     int start;
     int end;
@@ -3504,13 +3612,11 @@ void MainWindow::on_actionIncrement_Ctrl_triggered()
 
     updateSyntax();
     textEdit->blockSignals(false);
-    //connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 }
 
 void MainWindow::on_actionDe_Increment_Ctrl_triggered()
 {
     textEdit->blockSignals(true);
-    //disconnect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
     QTextCursor cursor = textEdit->textCursor();
     int start;
     int end;
@@ -3572,7 +3678,6 @@ void MainWindow::on_actionDe_Increment_Ctrl_triggered()
 
     updateSyntax();
     textEdit->blockSignals(false);
-    //connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 }
 
 void MainWindow::on_actionComment_Ctrl_Alt_triggered()
@@ -3973,6 +4078,7 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
         isErrorHighlighted = false;
 
         if (errMessages.length() == 0){
+            textEdit->blockSignals(false);
             return;
         }
 
@@ -4023,6 +4129,7 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
         }
 
         if (allowedSeverities.isEmpty()){
+            textEdit->blockSignals(false);
             return;
         }
 
@@ -4485,11 +4592,8 @@ void MainWindow::changeTheme(bool darkMode)
     changeHighlightColors(darkmode);
 
     normalColorFormat.setForeground(normalColor);
-
-    disconnect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
     updateSyntax();
     centerCursor();
-    connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 }
 
 void MainWindow::on_actionCourier_New_2_triggered()
