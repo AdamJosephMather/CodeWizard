@@ -12,7 +12,7 @@ def isRegex(txt):
 	cnt += txt.count("$")
 	if cnt > 2:
 		return True
-	return False
+	return False #comme
 
 pattern = r'\((\w+)\)'
 pattern2 = r'@([\w.]+)'
