@@ -20,15 +20,15 @@ Example with different coloring selected
 <img width="1128" alt="image" src="https://github.com/user-attachments/assets/4f0ba778-f7d9-4e28-ac0c-5f46116016a2" />
 
 
-In case you're wondering, the hex values are as follows for this theming: 
-Strings:    #9fcff7 
-Comments:   #727983 
-Variables:  #6caae3 
-Types:      #e57069 
-Functions:  #be99e7 
-Extra:      #da6862 
-Characters: #a0a0a0 
-Literals:   #f57842 
+In case you're wondering, the hex values are as follows for this theming:  
+Strings:    #9fcff7  
+Comments:   #727983  
+Variables:  #6caae3  
+Types:      #e57069  
+Functions:  #be99e7  
+Extra:      #da6862  
+Characters: #a0a0a0  
+Literals:   #f57842  
 
 ## Why use CodeWizard?
 
