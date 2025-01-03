@@ -8,27 +8,12 @@ CodeWizard is a custom Code Editor / IDE designed by Adam Mather. The main point
 
 ## Screenshots
 
-<img width="1128" alt="image" src="https://github.com/user-attachments/assets/51700913-e2b4-429d-93e7-0d63bfd0fc3d" />
+<img width="1128" alt="image" src="https://github.com/user-attachments/assets/49cb11af-2087-4b83-a517-0252afcf2495" />
 
 
 CodeWizard has an optional filetree on the left. Here's an example without.
 
-<img width="564" alt="image" src="https://github.com/user-attachments/assets/f2af939e-2352-40c5-866a-b198801540e3" />
-
-Example with different coloring selected
-
-<img width="1128" alt="image" src="https://github.com/user-attachments/assets/4f0ba778-f7d9-4e28-ac0c-5f46116016a2" />
-
-
-In case you're wondering, the hex values are as follows for this theming:  
-Strings:    #9fcff7  
-Comments:   #727983  
-Variables:  #6caae3  
-Types:      #e57069  
-Functions:  #be99e7  
-Extra:      #da6862  
-Characters: #a0a0a0  
-Literals:   #f57842  
+<img width="564" alt="image" src="https://github.com/user-attachments/assets/2f355013-3dd9-4e0d-a927-a46e3bfa191f" />
 
 ## Why use CodeWizard?
 
