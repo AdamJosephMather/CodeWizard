@@ -52,7 +52,7 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 
-QString versionNumber = "8.5.2";
+QString versionNumber = "8.5.3";
 
 QPoint mousePos;
 
@@ -288,6 +288,7 @@ QPoint suggestedPosition;
 QMenu* fileTreeContextMenu;
 
 bool ctrlDown = false;
+bool holdingAnEvent;
 
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
 	: QMainWindow(parent)
@@ -880,8 +881,6 @@ void MainWindow::syntaxColorsOffImage(){
 
 	std::srand(static_cast<unsigned>(std::time(nullptr)));
 	QList<QColor> chosen;
-
-	qDebug() << darkmode;
 
 	int leiniency = 11;
 
@@ -3023,22 +3022,59 @@ void MainWindow::on_actionReplay_Macro_triggered() {
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
+	
 	if (event->type()==QEvent::WindowStateChange){
 		onWindowStateChanged();
 	}
 
 	if (recordingMacro && (event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease)) {
 		QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-
-		// Create a new QKeyEvent using the constructor parameters
-		recordedEvents.append(new QKeyEvent(
+		QKeySequence key_sequence{static_cast<int>(keyEvent->modifiers()) + keyEvent->key()};
+		
+		auto newEvent = new QKeyEvent(
 			keyEvent->type(),      // Type of event (KeyPress/KeyRelease)
 			keyEvent->key(),       // The key that was pressed
 			keyEvent->modifiers(), // Any modifier keys (Shift, Ctrl, etc.)
 			keyEvent->text()       // Text representation of the key
-			));
-
+			);
+		
+		bool saved = false;
+		
+		if ((key_sequence == QKeySequence("Alt+Alt") || key_sequence == QKeySequence("Alt")) && event->type() == QEvent::KeyRelease && holdingAnEvent){
+			recordedEvents.removeLast();
+			recordedWidgets.removeLast();
+			on_actionEnd_Macro_Recording_triggered();
+			textEdit->setFocus();
+			holdingAnEvent = false;
+			return true;
+		}else if ((key_sequence == QKeySequence("Alt+Alt") || key_sequence == QKeySequence("Alt")) && event->type() == QEvent::KeyPress){
+			holdingAnEvent = true;
+		}
+		
+		if ((key_sequence != QKeySequence("Alt") && key_sequence != QKeySequence("Alt+Alt"))){
+			holdingAnEvent = false;
+		}
+		
+		recordedEvents.append(newEvent);
 		recordedWidgets.append(watched);
+	}
+	
+	
+	if (event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease && !recordingMacro){
+		QKeyEvent *key_event = dynamic_cast<QKeyEvent*>(event);
+		QKeySequence key_sequence{static_cast<int>(key_event->modifiers()) + key_event->key()};
+		
+		if (event->type() == QEvent::KeyRelease && holdingAnEvent && (key_sequence == QKeySequence("Alt+Alt") || key_sequence == QKeySequence("Alt"))){
+			on_actionStart_Macro_Recording_triggered();
+			textEdit->setFocus();
+			holdingAnEvent = false;
+		}else if (event->type() == QEvent::KeyPress && !holdingAnEvent && (key_sequence == QKeySequence("Alt+Alt") || key_sequence == QKeySequence("Alt"))){
+			holdingAnEvent = true;
+		}
+		
+		if (key_sequence != QKeySequence("Alt+Alt") && key_sequence != QKeySequence("Alt")){
+			holdingAnEvent = false;
+		}
 	}
 
 	if( event->type() != QEvent::KeyPress){
@@ -3194,7 +3230,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 		if (key_sequence == QKeySequence("Return")) {
 			handleTabs();
-			//return true;
 		}
 	}else if (watched == findTextEdit) {
 		if (key_event->key() == Qt::Key_Escape) {
