@@ -1,0 +1,1 @@
+C:/Users/adamj/OneDrive/Documents/LanguageServers/clangd_19.1.2/bin/clangd.exe --compile-commands-dir=C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\build\.qtc_clangd
