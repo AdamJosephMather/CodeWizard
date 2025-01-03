@@ -1,6 +1,6 @@
-// MyTextEdit.h
 #ifndef MYTEXTEDIT_H
 #define MYTEXTEDIT_H
+
 #include <QTextEdit>
 #include <QMouseEvent>
 #include <QMimeData>
@@ -32,6 +32,7 @@ protected:
             emit mouseClickedAtCursor(cursor);
         }
     }
+    void wheelEvent(QWheelEvent *event) override;
 
 signals:
     void mousePositionChanged(QPoint pos);
@@ -39,4 +40,5 @@ signals:
     void mouseClicked(QPoint pos);                 // New signal for mouse clicks
     void mouseClickedAtCursor(QTextCursor cursor); // New signal with cursor info
 };
+
 #endif // MYTEXTEDIT_H

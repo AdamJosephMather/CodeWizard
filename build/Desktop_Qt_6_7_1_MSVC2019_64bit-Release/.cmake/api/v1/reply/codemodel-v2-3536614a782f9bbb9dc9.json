@@ -1,0 +1,490 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Release-cefd0b6f6da9f130b73b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20,
+						21,
+						22,
+						23,
+						24,
+						25,
+						26,
+						27,
+						28,
+						29,
+						30,
+						31,
+						32,
+						33,
+						34,
+						35,
+						36,
+						37,
+						38,
+						39,
+						40,
+						41,
+						42
+					]
+				},
+				{
+					"build" : "extern/tree-sitter",
+					"jsonFile" : "directory-extern.tree-sitter-Release-095e24a1c221b75f7ce4.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "extern/tree-sitter",
+					"targetIndexes" : 
+					[
+						3,
+						43,
+						44
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "CodeWizard",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20,
+						21,
+						22,
+						23,
+						24,
+						25,
+						26,
+						27,
+						28,
+						29,
+						30,
+						31,
+						32,
+						33,
+						34,
+						35,
+						36,
+						37,
+						38,
+						39,
+						40,
+						41,
+						42
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "tree-sitter",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						3,
+						43,
+						44
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "CodeWizard::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CodeWizard-Release-74dadfeabbe67b9d1aaf.json",
+					"name" : "CodeWizard",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "CodeWizard_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CodeWizard_autogen-Release-40c6a7627d30d78fd29e.json",
+					"name" : "CodeWizard_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "CodeWizard_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CodeWizard_autogen_timestamp_deps-Release-8e8dfcc6ac15368f9e4c.json",
+					"name" : "CodeWizard_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "tree-sitter::@df0f4dfc7b2b45dd2262",
+					"jsonFile" : "target-tree-sitter-Release-40a1b842e5e3012d45f4.json",
+					"name" : "tree-sitter",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-c-Release-0d426e7369c40879094d.json",
+					"name" : "tree-sitter-c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-c-sharp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-c-sharp-Release-e2a2289efd2c15706b15.json",
+					"name" : "tree-sitter-c-sharp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-c-sharp_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-c-sharp_autogen-Release-7d3f8647b329146033c8.json",
+					"name" : "tree-sitter-c-sharp_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-c-sharp_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-c-sharp_autogen_timestamp_deps-Release-788604513fd94ad09291.json",
+					"name" : "tree-sitter-c-sharp_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-c_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-c_autogen-Release-4772e9c7700dc50e714b.json",
+					"name" : "tree-sitter-c_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-c_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-c_autogen_timestamp_deps-Release-6bc799b9cf3cdf344480.json",
+					"name" : "tree-sitter-c_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-cpp-Release-5a05e7d94242331d3184.json",
+					"name" : "tree-sitter-cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-cpp_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-cpp_autogen-Release-813a412a2abcc0ba2605.json",
+					"name" : "tree-sitter-cpp_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-cpp_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-cpp_autogen_timestamp_deps-Release-e281527eb098bd0e009e.json",
+					"name" : "tree-sitter-cpp_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-glsl::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-glsl-Release-da59c916f484d5897562.json",
+					"name" : "tree-sitter-glsl",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-glsl_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-glsl_autogen-Release-b12639451a7010771f00.json",
+					"name" : "tree-sitter-glsl_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-glsl_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-glsl_autogen_timestamp_deps-Release-1d71099c7a34ecf39a3f.json",
+					"name" : "tree-sitter-glsl_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-go::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-go-Release-24741cc8eac35d400ae5.json",
+					"name" : "tree-sitter-go",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-go_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-go_autogen-Release-8c19b831ecb0e1be0bc0.json",
+					"name" : "tree-sitter-go_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-go_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-go_autogen_timestamp_deps-Release-0c8befd3d7a3fe37f678.json",
+					"name" : "tree-sitter-go_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-html::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-html-Release-68e4106ca3a8708af77e.json",
+					"name" : "tree-sitter-html",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-html_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-html_autogen-Release-b030d75dd9a25e1f2287.json",
+					"name" : "tree-sitter-html_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-html_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-html_autogen_timestamp_deps-Release-236fdabbaaaf9d3df5c8.json",
+					"name" : "tree-sitter-html_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-java::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-java-Release-014d52625fb933f2cf43.json",
+					"name" : "tree-sitter-java",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-java_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-java_autogen-Release-8f6f839c9ecfee1f9512.json",
+					"name" : "tree-sitter-java_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-java_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-java_autogen_timestamp_deps-Release-37020e884c4283137e8a.json",
+					"name" : "tree-sitter-java_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-javascript::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-javascript-Release-634570ba8d7e1ace256e.json",
+					"name" : "tree-sitter-javascript",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-javascript_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-javascript_autogen-Release-e71ea2f9de6f61e66dc1.json",
+					"name" : "tree-sitter-javascript_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-javascript_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-javascript_autogen_timestamp_deps-Release-5966279a08b08690f9f0.json",
+					"name" : "tree-sitter-javascript_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-lua::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-lua-Release-31116dbf0126e22aa606.json",
+					"name" : "tree-sitter-lua",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-lua_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-lua_autogen-Release-2782b8d5d26bc840b787.json",
+					"name" : "tree-sitter-lua_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-lua_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-lua_autogen_timestamp_deps-Release-8cc3884277a87935cbec.json",
+					"name" : "tree-sitter-lua_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-python::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-python-Release-6a407d66ce302050f829.json",
+					"name" : "tree-sitter-python",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-python_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-python_autogen-Release-a81a9e8d459261aefecb.json",
+					"name" : "tree-sitter-python_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-python_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-python_autogen_timestamp_deps-Release-b6b385c18f671465b142.json",
+					"name" : "tree-sitter-python_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-rust::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-rust-Release-5acc4e2f5e2ae23f6e38.json",
+					"name" : "tree-sitter-rust",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-rust_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-rust_autogen-Release-28213e6e9e706acfe505.json",
+					"name" : "tree-sitter-rust_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-rust_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-rust_autogen_timestamp_deps-Release-75987ff40a21528c5348.json",
+					"name" : "tree-sitter-rust_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-typescript::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-typescript-Release-6664072f7ce5bae0ff12.json",
+					"name" : "tree-sitter-typescript",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-typescript_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-typescript_autogen-Release-ae4acc14f25b436ba3a9.json",
+					"name" : "tree-sitter-typescript_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-typescript_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-typescript_autogen_timestamp_deps-Release-0c1f3c3fb2cb78599101.json",
+					"name" : "tree-sitter-typescript_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-wgsl::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-wgsl-Release-2b0d803cd6c60399cfb9.json",
+					"name" : "tree-sitter-wgsl",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-wgsl_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-wgsl_autogen-Release-6b6860b238eb550da75c.json",
+					"name" : "tree-sitter-wgsl_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-wgsl_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-wgsl_autogen_timestamp_deps-Release-45ada15a65f450c7995b.json",
+					"name" : "tree-sitter-wgsl_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "tree-sitter_autogen::@df0f4dfc7b2b45dd2262",
+					"jsonFile" : "target-tree-sitter_autogen-Release-ed2475ad2cc8a409ff87.json",
+					"name" : "tree-sitter_autogen",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "tree-sitter_autogen_timestamp_deps::@df0f4dfc7b2b45dd2262",
+					"jsonFile" : "target-tree-sitter_autogen_timestamp_deps-Release-cbeebf2b10718866669e.json",
+					"name" : "tree-sitter_autogen_timestamp_deps",
+					"projectIndex" : 1
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release",
+		"source" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

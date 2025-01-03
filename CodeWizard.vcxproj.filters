@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\CodeWizard_autogen\mocs_compilation_Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\mainwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\mytextedit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\syntaxhighlighter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\language.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\highlightdata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\languageserverclient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\CodeWizard_autogen\EWIEGA46WW\qrc_resources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\CodeWizard_autogen\mocs_compilation_Release.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\CodeWizard_autogen\mocs_compilation_MinSizeRel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\CodeWizard_autogen\mocs_compilation_RelWithDebInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\mytextedit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\syntaxhighlighter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\language.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\highlightdata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\languageserverclient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\CodeWizard_autogen\include_Debug\ui_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\CodeWizard_autogen\include_Release\ui_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\CodeWizard_autogen\include_MinSizeRel\ui_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\CodeWizard_autogen\include_RelWithDebInfo\ui_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\CMakeFiles\2691e8ec4bae9cdc883dd4978cd36564\autouic_(CONFIG).stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\CMakeFiles\ce1beb980187321a12aa167d1e51a116\qrc_resources.cpp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\mainwindow.ui" />
+    <None Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\resources\Python.ico" />
+    <None Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\fonts\Courier_New.ttf" />
+    <None Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\fonts\DroidSansMono.ttf" />
+    <None Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\fonts\Monaco.ttf" />
+    <None Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\fonts\Monospace.ttf" />
+    <None Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\resources.qrc" />
+    <None Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\fonts\Courier_Prime.ttf" />
+    <None Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\fonts\SourceCodePro-Regular.ttf" />
+    <None Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\fonts\UbuntuMono-R.ttf" />
+    <None Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\CodeWizard_autogen\autouic_Debug.stamp" />
+    <None Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\CodeWizard_autogen\autouic_Release.stamp" />
+    <None Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\CodeWizard_autogen\autouic_MinSizeRel.stamp" />
+    <None Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\CodeWizard_autogen\autouic_RelWithDebInfo.stamp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\app.o">
+      <Filter>Object Files</Filter>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{BE9F34A8-27B2-38DF-A6E3-F0F447E37786}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{892F3F9D-9500-32E1-8ED3-67DEC955D19A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object Files">
+      <UniqueIdentifier>{BF8DF084-EC23-3519-9B8F-D0DDAF45383D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{AC1CF44D-C3B5-36B2-A77C-301C16D5EA3A}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
