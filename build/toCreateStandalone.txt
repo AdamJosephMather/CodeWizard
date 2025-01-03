@@ -1,4 +1,4 @@
-copy the exe from the vs code folder to the exe folder, deleting anything in the exe folder
+copy the files from the vs code folder to the exe folder, deleting anything in the exe folder, delete .cmake folder, anything with _autogen, and .qt, .qt__
 
 C:\Qt\Tools\QtDesignStudio\qt6_design_studio_reduced_version\bin\windeployqt.exe CodeWizard.exe
 cd C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\build\CodeWizard
