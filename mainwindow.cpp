@@ -23,6 +23,9 @@
 #include <tree_sitter/api.h>
 #include "syntaxhighlighter.h"
 #include "highlightdata.h"
+#include "speaker.h"
+#include <QtMultimedia/QAudioOutput>
+#include <QtMultimedia/QMediaPlayer>
 
 extern "C" {
 	TSLanguage* tree_sitter_cpp(void);
@@ -52,7 +55,7 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 
-QString versionNumber = "8.5.3";
+QString versionNumber = "8.6.0";
 
 QPoint mousePos;
 
@@ -290,6 +293,9 @@ QMenu* fileTreeContextMenu;
 bool ctrlDown = false;
 bool holdingAnEvent;
 
+Speaker* speaker;
+QAction *useSpeakerAction;
+
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
 	: QMainWindow(parent)
 	, ui(new Ui::MainWindow)
@@ -342,6 +348,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
 
 	autoSaveAct = ui->actionAuto_Save;
 	randomSelectFileTypeAct = ui->actionRandomly_Choose_Program_Type_On_Save;
+	useSpeakerAction = ui->actionUse_Speaker;
 
 	recordMacroButton = ui->actionStart_Macro_Recording;
 	endRecordMacroButton = ui->actionEnd_Macro_Recording;
@@ -755,6 +762,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
 
 	connect(autoSaveAct, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(randomSelectFileTypeAct, &QAction::toggled, this, &MainWindow::saveWantedTheme);
+	connect(useSpeakerAction, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(useFileTree, &QAction::toggled, this, &MainWindow::fileTreeToggled);
 	connect(useFileTreeIfFullscreen, &QAction::toggled, this, &MainWindow::fileTreeToggled);
 	connect(fileTree, &QTreeView::doubleClicked, this, &MainWindow::fileTreeOpened);
@@ -808,6 +816,11 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent)
 	if (foundationSettings.value("wasFullScreened", false).toBool()){
 		setWindowState(Qt::WindowMaximized);
 	}
+	
+	QAudioOutput *audioOutput = new QAudioOutput(this);
+	QMediaPlayer* player = new QMediaPlayer(this);
+	player->setAudioOutput(audioOutput);
+	speaker = new Speaker(player);
 }
 
 void MainWindow::on_actionSet_Syntax_Colors_triggered() {
@@ -1192,6 +1205,9 @@ void MainWindow::on_actionOpen_Folder_triggered(){
 }
 
 void MainWindow::showWeDontFuckWithTheLSP(){
+	if (useSpeakerAction->isChecked()){
+		speaker->speak("ANSWILSP.wav");
+	}
 	QMessageBox messageBox;
 	messageBox.setWindowTitle("CodeWizard");
 	messageBox.setText("Please retry in a moment, this action is not supported while the LSP is initializing.");
@@ -1202,6 +1218,9 @@ void MainWindow::showWeDontFuckWithTheLSP(){
 }
 
 void MainWindow::showHoldYourHorses(){
+	if (useSpeakerAction->isChecked()){
+		speaker->speak("ANSWOF.wav");
+	}
 	QMessageBox messageBox;
 	messageBox.setWindowTitle("CodeWizard");
 	messageBox.setText("Please retry in a moment, still opening another file.");
@@ -1224,12 +1243,16 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 
 	isOpeningFile = true;
 
-	if (!index.model()->hasChildren(index)) {
+    if (!index.model()->hasChildren(index)) {
 		QString newFile = index.data(QFileSystemModel::FilePathRole).toString();
 
 		if (newFile.isEmpty()){
 			isOpeningFile = false;
 			return;
+		}
+		
+		if (useSpeakerAction->isChecked()){
+			speaker->speak("OpeningFile.wav");
 		}
 
 		if (unsaved && fileName != ""){
@@ -1283,6 +1306,10 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		lspMutex.lock();
 		setupLSP();
 		lspMutex.unlock();
+
+        if (useSpeakerAction->isChecked()){
+			speaker->speak("FileOpened.wav");
+		}
 	}
 	isOpeningFile = false;
 }
@@ -1577,6 +1604,10 @@ void MainWindow::setupLSP()
 		return;
 	}
 
+    if (useSpeakerAction->isChecked()){
+		speaker->speak("InitializingLSP.wav");
+	}
+
 	client = new LanguageServerClient(lspPath, textEdit);
 
 	// Connect to receive completions
@@ -1669,6 +1700,10 @@ void MainWindow::setupLSP()
 	client->initialize(fileInfo.absolutePath());
 
 	client->openDocument(fileName, languageId, textEdit->toPlainText());
+
+    if (useSpeakerAction->isChecked()){
+		speaker->speak("InitializedLSP.wav");
+	}
 
 	isSettingUpLSP = false;
 }
@@ -2178,6 +2213,7 @@ void MainWindow::saveWantedTheme()
 
 	settings.setValue("autoSaveAct", autoSaveAct->isChecked());
 	settings.setValue("randomSelectFileTypeAct",randomSelectFileTypeAct->isChecked());
+	settings.setValue("useSpeakerAction", useSpeakerAction->isChecked());
 
 	QStringList strLst = QStringList();
 
@@ -2280,6 +2316,7 @@ bool MainWindow::wantedTheme()
 		}
 
 		randomSelectFileTypeAct->setChecked(settings.value("randomSelectFileTypeAct", defaultRandomSelect).toBool());
+		useSpeakerAction->setChecked(settings.value("useSpeakerAction", false).toBool());
 
 		recentFiles = settings.value("recentFiles", {}).toStringList();
 		updateRecentList(recentFiles);
@@ -2363,6 +2400,32 @@ void MainWindow::findTextEditChanged()
 
 	connect(findTextEdit, &QTextEdit::textChanged, this, &MainWindow::findTextEditChanged);
 }
+
+void MainWindow::previousTriggered()
+{
+	QString text = textEdit->toPlainText();
+	QTextCursor cursor = textEdit->textCursor();
+	QString find = findTextEdit->toPlainText();
+
+	if (find.isEmpty()) {
+		return;
+	}
+
+	int startPosition = cursor.position();
+	int position = text.lastIndexOf(find, startPosition - find.length() - 1, Qt::CaseInsensitive);
+
+	if (position == -1) {
+		position = text.lastIndexOf(find, text.length() - 1, Qt::CaseInsensitive);
+	}
+
+	if (position != -1)
+	{
+		cursor.setPosition(position);
+		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, find.length());
+		textEdit->setTextCursor(cursor);
+	}
+}
+
 
 void MainWindow::nextTriggered()
 {
@@ -2528,6 +2591,10 @@ void MainWindow::on_actionOpen_triggered()
 	}
 
 	if (!fileName.isEmpty()) {
+        if (useSpeakerAction->isChecked()){
+			speaker->speak("OpeningFile.wav");
+		}
+		
 		setLangOffFilename(fileName, false);
 		unsaved = false;
 
@@ -2587,6 +2654,10 @@ void MainWindow::on_actionOpen_triggered()
 		lspMutex.lock();
 		setupLSP();
 		lspMutex.unlock();
+
+        if (useSpeakerAction->isChecked()){
+			speaker->speak("FileOpened.wav");
+		}
 	}
 
 	isOpeningFile = false;
@@ -2674,6 +2745,10 @@ void MainWindow::pullUpSaveDialogue()
 	if (autoSaveAct->isChecked()){
 		on_actionSave_triggered();
 		return;
+	}
+	
+	if (useSpeakerAction->isChecked()){
+		speaker->speak("SaveFile.wav");
 	}
 
 	QMessageBox dialog;
@@ -2932,6 +3007,9 @@ void MainWindow::on_actionStart_Macro_Recording_triggered() {
 	recordMacroButton->setEnabled(false);
 	endRecordMacroButton->setEnabled(true);
 	replayMacroButton->setEnabled(false);
+	if (useSpeakerAction->isChecked()){
+		speaker->speak("StartedMacroRecording.wav");
+	}
 }
 
 void MainWindow::on_actionEnd_Macro_Recording_triggered() {
@@ -2939,6 +3017,9 @@ void MainWindow::on_actionEnd_Macro_Recording_triggered() {
 	recordMacroButton->setEnabled(true);
 	endRecordMacroButton->setEnabled(false);
 	replayMacroButton->setEnabled(true);
+    if (useSpeakerAction->isChecked()){
+		speaker->speak("EndedMacroRecording.wav");
+	}
 }
 
 void MainWindow::on_actionReplay_Macro_triggered() {
@@ -3234,6 +3315,9 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 	}else if (watched == findTextEdit) {
 		if (key_event->key() == Qt::Key_Escape) {
 			textEdit->setFocus();
+			return true;
+		}else if (key_sequence == QKeySequence("Shift+Return")){
+			previousTriggered();
 			return true;
 		}else if (key_event->key() == Qt::Key_Return) {
 			nextTriggered();
@@ -3538,7 +3622,7 @@ void MainWindow::on_actionSave_triggered()
 
 		if (fileName.isEmpty()){
 			return;
-		}
+        }
 
 		QFileInfo fileInfo(fileName);
 		QString fileNameName = fileInfo.fileName();
@@ -4967,6 +5051,10 @@ void MainWindow::openRecentFile(QString newFile){
 
 	isOpeningFile = true;
 
+    if (useSpeakerAction->isChecked()){
+		speaker->speak("OpeningFile.wav");
+	}
+
 	if (unsaved && fileName != ""){
 		pullUpSaveDialogue();
 	}
@@ -5034,6 +5122,10 @@ void MainWindow::openRecentFile(QString newFile){
 		lspMutex.lock();
 		setupLSP();
 		lspMutex.unlock();
+	}
+
+    if (useSpeakerAction->isChecked()){
+		speaker->speak("FileOpened.wav");
 	}
 
 	isOpeningFile = false;

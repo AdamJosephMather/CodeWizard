@@ -115,6 +115,7 @@ public:
     QAction *actionOpen_Folder;
     QAction *actionUse_File_Tree_If_Fullscreen;
     QAction *actionSet_Syntax_Colors;
+    QAction *actionUse_Speaker;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
@@ -340,6 +341,9 @@ public:
         actionUse_File_Tree_If_Fullscreen->setCheckable(true);
         actionSet_Syntax_Colors = new QAction(MainWindow);
         actionSet_Syntax_Colors->setObjectName("actionSet_Syntax_Colors");
+        actionUse_Speaker = new QAction(MainWindow);
+        actionUse_Speaker->setObjectName("actionUse_Speaker");
+        actionUse_Speaker->setCheckable(true);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         QSizePolicy sizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::Minimum);
@@ -546,6 +550,7 @@ public:
         menuFonts->addAction(actionSourceCodePro_2);
         menuFonts->addAction(actionUbuntuMono_2);
         menuSilly->addAction(actionRandomly_Choose_Program_Type_On_Save);
+        menuSilly->addAction(actionUse_Speaker);
         menuFixit->addAction(actionFix_It);
         menuFixit->addAction(actionChange_to_IDLE_format);
         menuView->addAction(actionIncrease_Text_Size);
@@ -684,6 +689,7 @@ public:
         actionOpen_Folder->setText(QCoreApplication::translate("MainWindow", "Open Folder", nullptr));
         actionUse_File_Tree_If_Fullscreen->setText(QCoreApplication::translate("MainWindow", "Use File Tree If Fullscreen", nullptr));
         actionSet_Syntax_Colors->setText(QCoreApplication::translate("MainWindow", "Set Syntax Colors", nullptr));
+        actionUse_Speaker->setText(QCoreApplication::translate("MainWindow", "Use Speaker", nullptr));
         textEdit_4->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

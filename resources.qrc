@@ -8,4 +8,17 @@
         <file>fonts/SourceCodePro-Regular.ttf</file>
         <file>fonts/UbuntuMono-R.ttf</file>
     </qresource>
+    <qresource prefix="/audio">
+        <file>audio/EndedMacroRecording.wav</file>
+        <file>audio/FileOpened.wav</file>
+        <file>audio/InitializingLSP.wav</file>
+        <file>audio/InitializedLSP.wav</file>
+        <file>audio/OpeningFile.wav</file>
+        <file>audio/StartedMacroRecording.wav</file>
+        <file>audio/Success.wav</file>
+        <file>audio/SaveFile.wav</file>
+        <file>audio/ANSWILSP.wav</file>
+        <file>audio/ANSWOF.wav</file>
+        <file>audio/AnErrorOccured.wav</file>
+    </qresource>
 </RCC>

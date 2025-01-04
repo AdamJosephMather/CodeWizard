@@ -22,6 +22,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Multimedia)
 find_package(Qt6 REQUIRED COMPONENTS Core Concurrent)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
@@ -157,6 +158,8 @@ set(PROJECT_SOURCES
     highlightdata.cpp
     languageserverclient.h
     languageserverclient.cpp
+    speaker.h
+    speaker.cpp
 )
 
 
@@ -171,7 +174,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         fonts/DroidSansMono.ttf
         fonts/Monaco.ttf
         fonts/Monospace.ttf
-        resources.qrc
         fonts/Courier_Prime.ttf
         fonts/SourceCodePro-Regular.ttf
         fonts/UbuntuMono-R.ttf
@@ -179,8 +181,19 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         languageserverclient.h languageserverclient.cpp
         syntaxhighlighter.h syntaxhighlighter.cpp
         highlightdata.h highlightdata.cpp
-
-
+        speaker.h speaker.cpp
+        audio/EndedMacroRecording.wav
+        audio/FileOpened.wav
+        audio/InitializingLSP.wav
+        audio/InitializedLSP.wav
+        audio/OpeningFile.wav
+        audio/StartedMacroRecording.wav
+        audio/Success.wav
+        audio/SaveFile.wav
+        audio/ANSWILSP.wav
+        audio/ANSWOF.wav
+        audio/AnErrorOccured.wav
+        resources.qrc
     )
 
 # Define target properties for Android with Qt 6 as:
@@ -212,6 +225,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt::Core
     Qt::Widgets
+    Qt::Multimedia
     tree-sitter
     tree-sitter-cpp
     tree-sitter-python

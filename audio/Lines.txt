@@ -1,0 +1,12 @@
+1. Started Macro Recording
+2. Ended Macro Recording *
+3. Initializing LSP
+4. LSP Initialized
+5. Opening File
+6. File Opened *
+7. Sucess
+***
+8. Action not supported while LSP is initializing
+9. Action not supported while opening file
+10. Save file?
+11. Error

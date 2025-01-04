@@ -306,6 +306,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <string>Silly</string>
      </property>
      <addaction name="actionRandomly_Choose_Program_Type_On_Save"/>
+     <addaction name="actionUse_Speaker"/>
     </widget>
     <addaction name="separator"/>
     <addaction name="actionIncrement_Ctrl"/>
@@ -881,6 +882,14 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionSet_Syntax_Colors">
    <property name="text">
     <string>Set Syntax Colors</string>
+   </property>
+  </action>
+  <action name="actionUse_Speaker">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Use Speaker</string>
    </property>
   </action>
  </widget>

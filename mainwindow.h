@@ -114,6 +114,7 @@ private slots:
 	void updateSyntax();
 	void findTriggered();
 	void nextTriggered();
+	void previousTriggered();
 	void replaceTriggered();
 	void replaceAllTriggered();
 	void updateLineNumbers(int);
