@@ -329,6 +329,9 @@ Qt6Multimedia_DIR:PATH=C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Multimedia
 //The directory containing a CMake configuration file for Qt6Network.
 Qt6Network_DIR:PATH=C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Network
 
+//The directory containing a CMake configuration file for Qt6TextToSpeech.
+Qt6TextToSpeech_DIR:PATH=C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech
+
 //The directory containing a CMake configuration file for Qt6WidgetsTools.
 Qt6WidgetsTools_DIR:PATH=C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6WidgetsTools
 
@@ -772,6 +775,10 @@ QT_FEATURE_filesystemiterator:INTERNAL=ON
 QT_FEATURE_filesystemmodel:INTERNAL=ON
 //Qt feature: filesystemwatcher (from target Qt6::Core)
 QT_FEATURE_filesystemwatcher:INTERNAL=ON
+//Qt feature: flite (from target Qt6::TextToSpeech)
+QT_FEATURE_flite:INTERNAL=OFF
+//Qt feature: flite_alsa (from target Qt6::TextToSpeech)
+QT_FEATURE_flite_alsa:INTERNAL=OFF
 //Qt feature: fontcombobox (from target Qt6::Widgets)
 QT_FEATURE_fontcombobox:INTERNAL=ON
 //Qt feature: fontconfig (from target Qt6::Gui)
@@ -1144,6 +1151,8 @@ QT_FEATURE_sortfilterproxymodel:INTERNAL=ON
 QT_FEATURE_spatialaudio:INTERNAL=ON
 //Qt feature: spatialaudio_quick3d (from target Qt6::Multimedia)
 QT_FEATURE_spatialaudio_quick3d:INTERNAL=ON
+//Qt feature: speechd (from target Qt6::TextToSpeech)
+QT_FEATURE_speechd:INTERNAL=OFF
 //Qt feature: spinbox (from target Qt6::Widgets)
 QT_FEATURE_spinbox:INTERNAL=ON
 //Qt feature: splashscreen (from target Qt6::Widgets)

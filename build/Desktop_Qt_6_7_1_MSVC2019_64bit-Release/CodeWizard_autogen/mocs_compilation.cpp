@@ -2,3 +2,4 @@
 #include "EWIEGA46WW/moc_languageserverclient.cpp"
 #include "EWIEGA46WW/moc_mainwindow.cpp"
 #include "EWIEGA46WW/moc_mytextedit.cpp"
+#include "EWIEGA46WW/moc_recordinglight.cpp"

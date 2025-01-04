@@ -23,9 +23,8 @@
 #include <tree_sitter/api.h>
 #include "syntaxhighlighter.h"
 #include "highlightdata.h"
-#include "speaker.h"
-#include <QtMultimedia/QAudioOutput>
-#include <QtMultimedia/QMediaPlayer>
+#include <QTextToSpeech>
+#include "recordinglight.h"
 
 extern "C" {
 	TSLanguage* tree_sitter_cpp(void);
@@ -55,7 +54,7 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 
-QString versionNumber = "8.6.0";
+QString versionNumber = "8.6.1";
 
 QPoint mousePos;
 
@@ -63,6 +62,7 @@ QVector<QKeyEvent*> recordedEvents;
 QVector<QObject*> recordedWidgets;
 bool recordingMacro = false;
 bool playingMacro = false;
+RecordingLight *recordingLight;
 
 QString fileName = "";
 QString defWindowTitle = "CodeWizard V"+versionNumber+" - New File";
@@ -295,7 +295,7 @@ QMenu* fileTreeContextMenu;
 bool ctrlDown = false;
 bool holdingAnEvent = false;
 
-Speaker* speaker;
+QTextToSpeech *speech;
 QAction *useSpeakerAction;
 
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -822,10 +822,26 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		setWindowState(Qt::WindowMaximized);
 	}
 	
-	QAudioOutput *audioOutput = new QAudioOutput(this);
-	QMediaPlayer* player = new QMediaPlayer(this);
-	player->setAudioOutput(audioOutput);
-	speaker = new Speaker(player);
+	speech = new QTextToSpeech(this);
+	
+	QList<QVoice> voices = speech->availableVoices();
+    qDebug() << "Available voices:";
+
+    for (const QVoice &voice : voices) {
+        qDebug() << "Name:" << voice.name() << "| Gender:" << voice.gender() << "| Age:" << voice.age();
+    }
+	
+	// Select a male voice, if available
+	for (const QVoice &voice : voices) {
+		if (voice.gender() == QVoice::Male) {
+			speech->setVoice(voice);
+			qDebug() << "Selected male voice:" << voice.name();
+			break;
+		}
+	}
+	
+	recordingLight = new RecordingLight(textEdit);
+	recordingLight->hide();
 }
 
 void MainWindow::on_actionSet_Syntax_Colors_triggered() {
@@ -952,7 +968,11 @@ void MainWindow::syntaxColorsOffImage(){
 				}
 			}
 
-			if (first && z == 4){ // max number of retries
+			if (first && z == 7){ // max number of retries
+				if (useSpeakerAction->isCheckable()){
+					speech->say("This image did not play nicely with this feature.");
+				}
+				
 				openHelpMenu("This image did not play nicely with this feature. Try again (unlikely to work - we tried 8 times for you) or pick another image.");
 				return;
 			}else if (first){
@@ -1022,6 +1042,9 @@ void MainWindow::validateAndConvert(){
 		if (match.hasMatch()) {
 			hexEdits.append(LE->text());
 		} else {
+			if (useSpeakerAction->isCheckable()){
+				speech->say("Hex code invalid.");
+			}
 			label->setText("ERROR: Hex code invalid: \""+LE->text()+"\"");
 			layout->addWidget(label);
 			diag.setLayout(layout);
@@ -1042,6 +1065,10 @@ void MainWindow::validateAndConvert(){
 	}
 	
 	rehighlightFullDoc();
+	
+	if (useSpeakerAction->isCheckable()){
+		speech->say("Succeeded!");
+	}
 
 	label->setText("Succeeded!");
 	layout->addWidget(label);
@@ -1245,7 +1272,7 @@ void MainWindow::showWeDontFuckWithTheLSP(){
 	qDebug() << "showWeDontFuckWithTheLSP";
 	
 	if (useSpeakerAction->isChecked()){
-		speaker->speak("ANSWILSP.wav");
+		speech->say("Action not supported while LSP is initializing.");
 	}
 	QMessageBox messageBox;
 	messageBox.setWindowTitle("CodeWizard");
@@ -1260,7 +1287,7 @@ void MainWindow::showHoldYourHorses(){
 	qDebug() << "showHoldYourHorses";
 	
 	if (useSpeakerAction->isChecked()){
-		speaker->speak("ANSWOF.wav");
+		speech->say("Action not supported while opening file.");
 	}
 	QMessageBox messageBox;
 	messageBox.setWindowTitle("CodeWizard");
@@ -1299,7 +1326,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		}
 		
 		if (useSpeakerAction->isChecked()){
-			speaker->speak("OpeningFile.wav");
+			speech->say("Opening File");
 		}
 
 		if (unsaved && fileName != ""){
@@ -1360,7 +1387,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		lspMutex.unlock();
 		
         if (useSpeakerAction->isChecked()){
-			speaker->speak("FileOpened.wav");
+			speech->say("File Opened");
 		}
 	}
 	isOpeningFile = false;
@@ -1622,7 +1649,9 @@ void MainWindow::gotoDefinitionReceived(int line, int character, QString uri) {
 	
 	if (uri != QUrl::fromLocalFile(fileName).toString()){
 		globalArgFileName = QUrl(uri).toLocalFile();
-		QMetaObject::invokeMethod(this, "on_actionOpen_triggered", Qt::QueuedConnection);
+		QMetaObject::invokeMethod(this, [this, line, character, uri]() {
+			on_actionOpen_triggered(false);
+		}, Qt::QueuedConnection);
 		QMetaObject::invokeMethod(this, [this, line, character, uri]() {
 			if (uri == QUrl::fromLocalFile(fileName).toString()){
 				gotoDefinitionReceived(line, character, uri);
@@ -1695,7 +1724,7 @@ void MainWindow::setupLSP()
 	}
 
     if (useSpeakerAction->isChecked()){
-		speaker->speak("InitializingLSP.wav");
+		speech->say("Initializing LSP");
 	}
 
 	client = new LanguageServerClient(lspPath, textEdit);
@@ -1787,7 +1816,7 @@ void MainWindow::setupLSP()
 	client->openDocument(fileName, languageId, textEdit->toPlainText());
 
     if (useSpeakerAction->isChecked()){
-		speaker->speak("InitializedLSP.wav");
+		speech->say("Initialized LSP");
 	}
 
 	isSettingUpLSP = false;
@@ -2700,7 +2729,7 @@ void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
 	isErrorHighlighted = false;
 }
 
-void MainWindow::on_actionOpen_triggered()
+void MainWindow::on_actionOpen_triggered(bool updateFileTree)
 {
 	qDebug() << "on_actionOpen_triggered";
 	
@@ -2739,7 +2768,7 @@ void MainWindow::on_actionOpen_triggered()
 
 	if (!fileName.isEmpty()) {
         if (useSpeakerAction->isChecked()){
-			speaker->speak("OpeningFile.wav");
+			speech->say("Opening File");
 		}
 		
 		setLangOffFilename(fileName, false);
@@ -2782,11 +2811,13 @@ void MainWindow::on_actionOpen_triggered()
 
 		addFileToRecentList(fileName);
 
-		fileModel->setRootPath(fileInfo.absolutePath());
-		QSettings settings("FoundationTechnologies", "CodeWizard");
-		settings.setValue("mostRecentFolder", fileInfo.absolutePath());
+		if (updateFileTree){
+			fileModel->setRootPath(fileInfo.absolutePath());
+			QSettings settings("FoundationTechnologies", "CodeWizard");
+			settings.setValue("mostRecentFolder", fileInfo.absolutePath());
 
-		fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
+			fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
+		}
 
 		if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())){
 			fileTree->show();
@@ -2804,7 +2835,7 @@ void MainWindow::on_actionOpen_triggered()
 		lspMutex.unlock();
 
         if (useSpeakerAction->isChecked()){
-			speaker->speak("FileOpened.wav");
+			speech->say("File Opened");
 		}
 	}
 
@@ -2904,7 +2935,7 @@ void MainWindow::pullUpSaveDialogue()
 	}
 	
 	if (useSpeakerAction->isChecked()){
-		speaker->speak("SaveFile.wav");
+		speech->say("Save File?");
 	}
 
 	QMessageBox dialog;
@@ -3179,8 +3210,13 @@ void MainWindow::on_actionStart_Macro_Recording_triggered() {
 	endRecordMacroButton->setEnabled(true);
 	replayMacroButton->setEnabled(false);
 	if (useSpeakerAction->isChecked()){
-		speaker->speak("StartedMacroRecording.wav");
+		speech->say("Started Macro Recording");
 	}
+	int margin = 15; // Margin from the top-right edge
+	recordingLight->move(textEdit->width() - recordingLight->width() - margin, margin);
+	recordingLight->raise();
+	recordingLight->show();
+	qDebug() << "Moved to: " << textEdit->width() - recordingLight->width() - margin, margin;
 }
 
 void MainWindow::on_actionEnd_Macro_Recording_triggered() {
@@ -3191,8 +3227,10 @@ void MainWindow::on_actionEnd_Macro_Recording_triggered() {
 	endRecordMacroButton->setEnabled(false);
 	replayMacroButton->setEnabled(true);
     if (useSpeakerAction->isChecked()){
-		speaker->speak("EndedMacroRecording.wav");
+		speech->say("Ended Macro Recording");
 	}
+	
+	recordingLight->hide();
 }
 
 void MainWindow::on_actionReplay_Macro_triggered() {
@@ -3217,7 +3255,7 @@ void MainWindow::on_actionReplay_Macro_triggered() {
 	dialog.setFont(textEdit->font());
 	dialog.setWindowTitle("Macro");
 	dialog.setLabelText("Repeat number (0 is end of file):");
-	dialog.setIntValue(0);
+	dialog.setIntValue(1);
 	dialog.setIntMinimum(0);
 	dialog.setIntMaximum(99999999999999);
 	dialog.setIntStep(1);
@@ -5340,7 +5378,7 @@ void MainWindow::openRecentFile(QString newFile){
 	isOpeningFile = true;
 
     if (useSpeakerAction->isChecked()){
-		speaker->speak("OpeningFile.wav");
+		speech->say("Opening File");
 	}
 
 	if (unsaved && fileName != ""){
@@ -5420,7 +5458,7 @@ void MainWindow::openRecentFile(QString newFile){
 	}
 
     if (useSpeakerAction->isChecked()){
-		speaker->speak("FileOpened.wav");
+		speech->say("File Opened");
 	}
 
 	isOpeningFile = false;

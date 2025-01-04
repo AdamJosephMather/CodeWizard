@@ -67,7 +67,7 @@ private slots:
 	void on_actionEnd_Macro_Recording_triggered();
 	void on_actionReplay_Macro_triggered();
 	void on_actionExit_triggered();
-	void on_actionOpen_triggered();
+	void on_actionOpen_triggered(bool updateFileTree = true);
 	void on_actionSave_triggered();
 	void on_actionSave_As_triggered();
 	void on_actionNew_triggered();

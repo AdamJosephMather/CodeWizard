@@ -219,6 +219,31 @@ tree-sitter-glsl_autogen/timestamp: \
 	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Network/Qt6QTlsBackendOpenSSLPluginTargets-debug.cmake \
 	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Network/Qt6QTlsBackendOpenSSLPluginTargets-relwithdebinfo.cmake \
 	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Network/Qt6QTlsBackendOpenSSLPluginTargets.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6QTextToSpeechMockPluginAdditionalTargetInfo.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6QTextToSpeechMockPluginConfig.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6QTextToSpeechMockPluginTargets-debug.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6QTextToSpeechMockPluginTargets-relwithdebinfo.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6QTextToSpeechMockPluginTargets.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6QTextToSpeechSapiPluginAdditionalTargetInfo.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6QTextToSpeechSapiPluginConfig.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6QTextToSpeechSapiPluginTargets-debug.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6QTextToSpeechSapiPluginTargets-relwithdebinfo.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6QTextToSpeechSapiPluginTargets.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6QTextToSpeechWinRTPluginAdditionalTargetInfo.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6QTextToSpeechWinRTPluginConfig.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6QTextToSpeechWinRTPluginTargets-debug.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6QTextToSpeechWinRTPluginTargets-relwithdebinfo.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6QTextToSpeechWinRTPluginTargets.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6TextToSpeechAdditionalTargetInfo.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6TextToSpeechConfig.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6TextToSpeechConfigVersion.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6TextToSpeechConfigVersionImpl.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6TextToSpeechDependencies.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6TextToSpeechPlugins.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6TextToSpeechTargets-debug.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6TextToSpeechTargets-relwithdebinfo.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6TextToSpeechTargets.cmake \
+	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6TextToSpeech/Qt6TextToSpeechVersionlessTargets.cmake \
 	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Widgets/Qt6QModernWindowsStylePluginAdditionalTargetInfo.cmake \
 	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Widgets/Qt6QModernWindowsStylePluginConfig.cmake \
 	C:/Qt/6.7.1/msvc2019_64/lib/cmake/Qt6Widgets/Qt6QModernWindowsStylePluginTargets-debug.cmake \
