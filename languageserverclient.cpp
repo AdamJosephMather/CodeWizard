@@ -44,6 +44,7 @@ LanguageServerClient::LanguageServerClient(const QString &serverPath, QTextEdit 
     serverProcess.start("cmd", QStringList() << "/k" << serverPath); // to send /k
 
     if (!serverProcess.waitForStarted()) {
+        failedToStart = true;
         qWarning() << "Failed to start language server at:" << serverPath;
         qWarning() << "Error:" << serverProcess.errorString();
     }

@@ -23,6 +23,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void gotoDefinitionReceived(int line, int character, QString uri);
 	void rehighlightFullDoc();
 	void changeOnlyEditsTheme(bool);
 	int colorDifference(QColor c1, QColor c2);

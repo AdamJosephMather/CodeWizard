@@ -3,7 +3,6 @@
 #include <QString>
 #include <QStringList>
 #include <QTextCharFormat>
-#include <map>
 
 class Language {
 public:
