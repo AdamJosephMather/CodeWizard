@@ -1,1 +1,3 @@
+Get the .qtc_clangd from the build of whichever computer you are on - advisable to put it outside of the CodeWizard directory w/out pushing it to GitHub
+
 C:/Users/adamj/OneDrive/Documents/LanguageServers/clangd_19.1.2/bin/clangd.exe --compile-commands-dir=C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\build\.qtc_clangd

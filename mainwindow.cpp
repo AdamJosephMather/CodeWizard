@@ -810,7 +810,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
 	fileTree->hideColumn(1);  // Hide column at index 1 (Size)
 	fileTree->hideColumn(2);  // Hide column at index 2 (Type)
-	fileTree->hideColumn(3);  // Hide column at index 2 (Type)
+	fileTree->hideColumn(3);
 
 	if (useFileTree->isChecked() && mostRecentPath != ""){
 		fileTree->show();
@@ -1604,10 +1604,6 @@ void MainWindow::on_actionLSP_triggered()
 	}
 
 	lspPath = dialog.textValue();
-
-	if (lspPath.isEmpty()){
-		return;
-	}
 
 	//QString lspPath = QFileDialog::getOpenFileName(this, tr("Open File"), fileName, tr("All Files (*);"));
 
