@@ -115,7 +115,7 @@ constexpr auto qt_meta_stringdata_CLASSMainWindowENDCLASS = QtMocHelpers::string
     "on_actionReplay_Macro_triggered",
     "on_actionExit_triggered",
     "on_actionOpen_triggered",
-    "updateFileTree",
+    "dontUpdateFileTree",
     "on_actionSave_triggered",
     "on_actionSave_As_triggered",
     "on_actionNew_triggered",
