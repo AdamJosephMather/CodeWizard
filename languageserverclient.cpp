@@ -41,7 +41,7 @@ LanguageServerClient::LanguageServerClient(const QString &serverPath, QTextEdit 
 	connect(&serverProcess, &QProcess::errorOccurred, this, &LanguageServerClient::onServerErrorOccurred);
 	connect(&serverProcess, &QProcess::finished, this, &LanguageServerClient::onServerFinished);
 
-	serverProcess.start("cmd", QStringList() << "/k" << serverPath); // to send /k
+	serverProcess.start("cmd", QStringList() << "/c" << serverPath); // to send /k
 
 	if (!serverProcess.waitForStarted()) {
 		failedToStart = true;
@@ -168,36 +168,6 @@ void LanguageServerClient::initialize(const QString &rootUri)
 
 void LanguageServerClient::shutdown()
 {
-	// the following is designed to follow the protocol for shutdown - whatevs
-	/*// Check if the server has already been initialized
-	if (isInitialized) {
-		// Send the shutdown request
-		int shutdownRequestId = requestId++;
-		QJsonObject shutdownMessage {
-			{"jsonrpc", "2.0"},
-			{"id", shutdownRequestId},
-			{"method", "shutdown"},
-			{"params", QJsonObject()}
-		};
-
-		shutdownId = shutdownRequestId;
-
-		sendMessage(shutdownMessage);
-
-		if (!alreadyDoneShutdownLoop){
-			shutdownLoop.exec();
-		}
-
-		// Send the exit notification
-		QJsonObject exitMessage {
-			{"jsonrpc", "2.0"},
-			{"method", "exit"},
-			{"params", QJsonObject()}
-		};
-
-		sendMessage(exitMessage);
-	}*/
-
 	if (failedToStart){
 		return;
 	}
@@ -655,6 +625,7 @@ QJsonObject LanguageServerClient::readMessage() // How do I put this? I'm a god.
 	int bytesAvail = serverProcess.bytesAvailable();
 	if (bytesAvail != 0){
 		QByteArray line = serverProcess.read(bytesAvail);
+//		qDebug() << line;
 		currentExecution += line;
 	}
 

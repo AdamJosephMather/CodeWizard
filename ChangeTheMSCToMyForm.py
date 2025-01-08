@@ -3,7 +3,7 @@ import re
 from collections import defaultdict
 
 filedir = "testhighlight"
-file = 'python.msc'
+file = 'typescript.msc'
 
 def isRegex(txt):
 	cnt = txt.count("^")
@@ -162,6 +162,9 @@ dct = {
 	}
 
 out = ""
+
+print(fulls)
+print("\n\n")
 
 for i in fulls:
 	out += "{\""+i.replace("\\", "\\\\").replace("\"", "\\\"")+"\", "+str(dct[fulls[i]])+"}, "
