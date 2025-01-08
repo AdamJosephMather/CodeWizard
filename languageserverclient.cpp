@@ -21,48 +21,48 @@ int initializeRequestId = -999;
 QTextEdit* copyOfTextEdit;
 
 LanguageServerClient::LanguageServerClient(const QString &serverPath, QTextEdit *providedTextEdit, QObject *parent)
-    : QObject(parent), requestId(0), documentVersion(1)
+	: QObject(parent), requestId(0), documentVersion(1)
 {
-    copyOfTextEdit = providedTextEdit;
-    langID = "";
-    missingNext = "";
-    fileURI = "";
-    currentExecution = QByteArray();
-    fileRootURI = "";
-    requestsMap = QMap<int, QString>();
-    diagnostics = QJsonArray();
-    quitting = false;
-    shutdownId = -999;
-    alreadyDoneShutdownLoop = false;
-    initializeRequestId = -999;
-    failedToStart = false;
+	copyOfTextEdit = providedTextEdit;
+	langID = "";
+	missingNext = "";
+	fileURI = "";
+	currentExecution = QByteArray();
+	fileRootURI = "";
+	requestsMap = QMap<int, QString>();
+	diagnostics = QJsonArray();
+	quitting = false;
+	shutdownId = -999;
+	alreadyDoneShutdownLoop = false;
+	initializeRequestId = -999;
+	failedToStart = false;
 
-    connect(&serverProcess, &QProcess::readyReadStandardOutput, this, &LanguageServerClient::onServerReadyRead);
-    connect(&serverProcess, &QProcess::errorOccurred, this, &LanguageServerClient::onServerErrorOccurred);
-    connect(&serverProcess, &QProcess::finished, this, &LanguageServerClient::onServerFinished);
+	connect(&serverProcess, &QProcess::readyReadStandardOutput, this, &LanguageServerClient::onServerReadyRead);
+	connect(&serverProcess, &QProcess::errorOccurred, this, &LanguageServerClient::onServerErrorOccurred);
+	connect(&serverProcess, &QProcess::finished, this, &LanguageServerClient::onServerFinished);
 
-    serverProcess.start("cmd", QStringList() << "/k" << serverPath); // to send /k
+	serverProcess.start("cmd", QStringList() << "/k" << serverPath); // to send /k
 
-    if (!serverProcess.waitForStarted()) {
-        failedToStart = true;
-        qWarning() << "Failed to start language server at:" << serverPath;
-        qWarning() << "Error:" << serverProcess.errorString();
-    }
+	if (!serverProcess.waitForStarted()) {
+		failedToStart = true;
+		qWarning() << "Failed to start language server at:" << serverPath;
+		qWarning() << "Error:" << serverProcess.errorString();
+	}
 }
 
 void LanguageServerClient::onServerErrorOccurred(QProcess::ProcessError error)
 {
-    qWarning() << "Server error occurred:" << error;
-    qWarning() << "Error String:" << serverProcess.errorString();
-    initializeLoop.quit();
-    failedToStart = true;
+	qWarning() << "Server error occurred:" << error;
+	qWarning() << "Error String:" << serverProcess.errorString();
+	initializeLoop.quit();
+	failedToStart = true;
 }
 
 void LanguageServerClient::onServerFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    qWarning() << "Server process finished with exit code:" << exitCode << "and status:" << exitStatus;
-    initializeLoop.quit();
-    failedToStart = true;
+	qWarning() << "Server process finished with exit code:" << exitCode << "and status:" << exitStatus;
+	initializeLoop.quit();
+	failedToStart = true;
 }
 
 LanguageServerClient::~LanguageServerClient()
@@ -71,626 +71,623 @@ LanguageServerClient::~LanguageServerClient()
 
 void LanguageServerClient::initialize(const QString &rootUri)
 {
-    fileRootURI = QUrl::fromLocalFile(rootUri).toString();
+	fileRootURI = QUrl::fromLocalFile(rootUri).toString();
 
-    QJsonObject capabilities {
-        {"textDocument", QJsonObject{
-                             {"completion", QJsonObject{
-                                                {"completionItem", QJsonObject{
-                                                                       {"snippetSupport", true},
-                                                                       {"resolveSupport", QJsonObject{
-                                                                                              {"properties", QJsonArray{"documentation", "detail", "additionalTextEdits"}}
-                                                                                          }},
-                                                                       {"commitCharactersSupport", true},
-                                                                       {"deprecatedSupport", true}
-                                                                   }},
-                                                {"contextSupport", true},
-                                                {"triggerCharacters", QJsonArray{".", ":", ">", "<", "/", "@", "*"}},
-                                                {"resolveProvider", true},
-                                                {"completionProvider", QJsonObject{
-                                                                           {"resolveProvider", true},
-                                                                           {"triggerCharacters", QJsonArray{".", ":", ">", "<", "/", "@", "*", "(", "[", "{", "'", "\"", "#"}}
-                                                                       }}
-                                            }},
-                             {"synchronization", QJsonObject{
-                                                     {"dynamicRegistration", true},
-                                                     {"didSave", true},
-                                                     {"didChange", true},
-                                                     {"willSave", false}
-                                                 }},
-                             {"publishDiagnostics", QJsonObject{
-                                                        {"enabled", true}  // Enable diagnostics
-                                                    }}
-                         }},
-        {"workspace", QJsonObject{
-                          {"workspaceFolders", true},
-                          {"configuration", true}
-                      }}
-    };
+	QJsonObject capabilities {
+		{"textDocument", QJsonObject{
+			{"completion", QJsonObject{
+				{"completionItem", QJsonObject{
+					{"snippetSupport", true},
+					{"resolveSupport", QJsonObject{
+						{"properties", QJsonArray{"documentation", "detail", "additionalTextEdits"}}
+				}},
+				{"commitCharactersSupport", true},
+				{"deprecatedSupport", true}
+			}},
+			{"contextSupport", true},
+			{"triggerCharacters", QJsonArray{".", ":", ">", "<", "/", "@", "*"}},
+			{"resolveProvider", true},
+			{"completionProvider", QJsonObject{
+				{"resolveProvider", true},
+				{"triggerCharacters", QJsonArray{".", ":", ">", "<", "/", "@", "*", "(", "[", "{", "'", "\"", "#"}}
+			}}
+			}},
+			{"synchronization", QJsonObject{
+			{"dynamicRegistration", true},
+			{"didSave", true},
+			{"didChange", true},
+			{"willSave", false}
+		}},
+		{"publishDiagnostics", QJsonObject{
+			{"enabled", true}  // Enable diagnostics
+		}}
+		}},
+		{"workspace", QJsonObject{
+			{"workspaceFolders", true},
+			{"configuration", true}
+		}}
+	};
 
-    QJsonObject params {
-        {"rootUri", fileRootURI},
-        {"capabilities", capabilities},
-        {"clientInfo", QJsonObject{
-                           {"name", "CodeWizardLSP"},
-                           {"version", "1.0.0"}
-                       }},
-        {"workspaceFolders", QJsonArray{
-                                 QJsonObject{
-                                     {"uri", fileRootURI},
-                                     {"name", "workspace"}
-                                 }
-                             }}
-    };
+	QJsonObject params {
+		{"rootUri", fileRootURI},
+		{"capabilities", capabilities},
+		{"clientInfo", QJsonObject{
+						   {"name", "CodeWizardLSP"},
+						   {"version", "1.0.0"}
+					   }},
+		{"workspaceFolders", QJsonArray{
+								 QJsonObject{
+									 {"uri", fileRootURI},
+									 {"name", "workspace"}
+								 }
+							 }}
+	};
 
-    initializeRequestId = requestId++;
-    QJsonObject message {
-        {"jsonrpc", "2.0"},
-        {"id", initializeRequestId},
-        {"method", "initialize"},
-        {"params", params}
-    };
+	initializeRequestId = requestId++;
+	QJsonObject message {
+		{"jsonrpc", "2.0"},
+		{"id", initializeRequestId},
+		{"method", "initialize"},
+		{"params", params}
+	};
 
-    sendMessage(message);
+	sendMessage(message);
 
-    if (failedToStart){
-        QMessageBox newWarningBox;
-        newWarningBox.setIcon(QMessageBox::Warning);
-        newWarningBox.setText("Failed to start LSP - Ensure it's accessible via the command given.");
-        newWarningBox.setWindowTitle(tr("Error"));
-        newWarningBox.setFont(copyOfTextEdit->font());
-        newWarningBox.exec();
-        return;
-    }
+	if (failedToStart){
+		QMessageBox newWarningBox;
+		newWarningBox.setIcon(QMessageBox::Warning);
+		newWarningBox.setText("Failed to start LSP - Ensure it's accessible via the command given.");
+		newWarningBox.setWindowTitle(tr("Error"));
+		newWarningBox.setFont(copyOfTextEdit->font());
+		newWarningBox.exec();
+		return;
+	}
 
-    initializeLoop.exec();
+	initializeLoop.exec();
 
-    if (failedToStart){
-        QMessageBox newWarningBox;
-        newWarningBox.setIcon(QMessageBox::Warning);
-        newWarningBox.setText("Failed to start LSP - Ensure it's accessible via the command given.");
-        newWarningBox.setWindowTitle(tr("Error"));
-        newWarningBox.setFont(copyOfTextEdit->font());
-        newWarningBox.exec();
-        return;
-    }
+	if (failedToStart){
+		QMessageBox newWarningBox;
+		newWarningBox.setIcon(QMessageBox::Warning);
+		newWarningBox.setText("Failed to start LSP - Ensure it's accessible via the command given.");
+		newWarningBox.setWindowTitle(tr("Error"));
+		newWarningBox.setFont(copyOfTextEdit->font());
+		newWarningBox.exec();
+		return;
+	}
 
-    QJsonObject initializedMessage {
-        {"jsonrpc", "2.0"},
-        {"method", "initialized"},
-        {"params", QJsonObject()}
-    };
+	QJsonObject initializedMessage {
+		{"jsonrpc", "2.0"},
+		{"method", "initialized"},
+		{"params", QJsonObject()}
+	};
 
-    sendMessage(initializedMessage);
+	sendMessage(initializedMessage);
 
-    isInitialized = true;
+	isInitialized = true;
 }
 
 void LanguageServerClient::shutdown()
 {
-    // the following is designed to follow the protocol for shutdown - whatevs
-    /*// Check if the server has already been initialized
-    if (isInitialized) {
-        // Send the shutdown request
-        int shutdownRequestId = requestId++;
-        QJsonObject shutdownMessage {
-            {"jsonrpc", "2.0"},
-            {"id", shutdownRequestId},
-            {"method", "shutdown"},
-            {"params", QJsonObject()}
-        };
+	// the following is designed to follow the protocol for shutdown - whatevs
+	/*// Check if the server has already been initialized
+	if (isInitialized) {
+		// Send the shutdown request
+		int shutdownRequestId = requestId++;
+		QJsonObject shutdownMessage {
+			{"jsonrpc", "2.0"},
+			{"id", shutdownRequestId},
+			{"method", "shutdown"},
+			{"params", QJsonObject()}
+		};
 
-        shutdownId = shutdownRequestId;
+		shutdownId = shutdownRequestId;
 
-        sendMessage(shutdownMessage);
+		sendMessage(shutdownMessage);
 
-        if (!alreadyDoneShutdownLoop){
-            shutdownLoop.exec();
-        }
+		if (!alreadyDoneShutdownLoop){
+			shutdownLoop.exec();
+		}
 
-        // Send the exit notification
-        QJsonObject exitMessage {
-            {"jsonrpc", "2.0"},
-            {"method", "exit"},
-            {"params", QJsonObject()}
-        };
+		// Send the exit notification
+		QJsonObject exitMessage {
+			{"jsonrpc", "2.0"},
+			{"method", "exit"},
+			{"params", QJsonObject()}
+		};
 
-        sendMessage(exitMessage);
-    }*/
+		sendMessage(exitMessage);
+	}*/
 
-    if (failedToStart){
-        return;
-    }
+	if (failedToStart){
+		return;
+	}
 
-    serverProcess.close();
+	serverProcess.close();
 
-    serverProcess.terminate();
+	serverProcess.terminate();
 
-    if (!serverProcess.waitForFinished(500)) { // 500 milliseconds because I've given up on properly ending the connection and I'm expecting a failure - yeah
-        serverProcess.kill();
-        serverProcess.waitForFinished();
-    }
+	if (!serverProcess.waitForFinished(500)) { // 500 milliseconds because I've given up on properly ending the connection and I'm expecting a failure - yeah
+		serverProcess.kill();
+		serverProcess.waitForFinished();
+	}
 
-    serverProcess.deleteLater();
+	serverProcess.deleteLater();
 }
-
 
 void LanguageServerClient::openDocument(const QString &uri, const QString &languageId, const QString &content)
 {
-    langID = languageId;
-    fileURI = QUrl::fromLocalFile(uri).toString();
+	langID = languageId;
+	fileURI = QUrl::fromLocalFile(uri).toString();
 
-    QJsonObject textDocument {
-        {"uri", fileURI},
-        {"languageId", languageId},
-        {"version", documentVersion},
-        {"text", content}
-    };
+	QJsonObject textDocument {
+		{"uri", fileURI},
+		{"languageId", languageId},
+		{"version", documentVersion},
+		{"text", content}
+	};
 
-    QJsonObject params {
-        {"textDocument", textDocument}
-    };
+	QJsonObject params {
+		{"textDocument", textDocument}
+	};
 
-    QJsonObject message {
-        {"jsonrpc", "2.0"},
-        {"method", "textDocument/didOpen"},
-        {"params", params}
-    };
+	QJsonObject message {
+		{"jsonrpc", "2.0"},
+		{"method", "textDocument/didOpen"},
+		{"params", params}
+	};
 
-    sendMessage(message);
+	sendMessage(message);
 }
 
 void LanguageServerClient::updateDocument(const QString &content)
 {
-    QJsonObject textDocument {
-        {"uri", fileURI},
-        {"version", ++documentVersion}
-    };
+	QJsonObject textDocument {
+		{"uri", fileURI},
+		{"version", ++documentVersion}
+	};
 
-    QJsonArray contentChanges {
-        QJsonObject { {"text", content} }
-    };
+	QJsonArray contentChanges {
+		QJsonObject { {"text", content} }
+	};
 
-    QJsonObject params {
-        {"textDocument", textDocument},
-        {"contentChanges", contentChanges}
-    };
+	QJsonObject params {
+		{"textDocument", textDocument},
+		{"contentChanges", contentChanges}
+	};
 
-    QJsonObject message {
-        {"jsonrpc", "2.0"},
-        {"method", "textDocument/didChange"},
-        {"params", params}
-    };
+	QJsonObject message {
+		{"jsonrpc", "2.0"},
+		{"method", "textDocument/didChange"},
+		{"params", params}
+	};
 
-    sendMessage(message);
+	sendMessage(message);
 }
 
 void LanguageServerClient::documentSaved(QString text){
-    QJsonObject textDocument {
-        {"uri", fileURI},
-        {"languageId", langID},
-        {"version", ++documentVersion}
-    };
+	QJsonObject textDocument {
+		{"uri", fileURI},
+		{"languageId", langID},
+		{"version", ++documentVersion}
+	};
 
-    QJsonObject params {
-        {"textDocument", textDocument},
-        {"text", text}
-    };
+	QJsonObject params {
+		{"textDocument", textDocument},
+		{"text", text}
+	};
 
-    QJsonObject message {
-        {"jsonrpc", "2.0"},
-        {"method", "textDocument/didSave"},
-        {"params", params}
-    };
+	QJsonObject message {
+		{"jsonrpc", "2.0"},
+		{"method", "textDocument/didSave"},
+		{"params", params}
+	};
 
-    sendMessage(message);
-
+	sendMessage(message);
 
 }
 
 int LanguageServerClient::requestCompletion(int line, int character)
 {
-    QJsonObject textDocument {
-        {"uri", fileURI}
-    };
+	QJsonObject textDocument {
+		{"uri", fileURI}
+	};
 
-    QJsonObject position {
-        {"line", line},
-        {"character", character}
-    };
+	QJsonObject position {
+		{"line", line},
+		{"character", character}
+	};
 
-    QJsonObject context{
-        {"triggerKind", 1} // 1 - manual completion trigger 2 - typing
-    };
+	QJsonObject context{
+		{"triggerKind", 1} // 1 - manual completion trigger 2 - typing
+	};
 
-    QJsonObject params {
-        {"textDocument", textDocument},
-        {"position", position},
-        {"context", context}
-    };
+	QJsonObject params {
+		{"textDocument", textDocument},
+		{"position", position},
+		{"context", context}
+	};
 
-    QJsonObject message {
-        {"jsonrpc", "2.0"},
-        {"id", requestId++},
-        {"method", "textDocument/completion"},
-        {"params", params}
-    };
+	QJsonObject message {
+		{"jsonrpc", "2.0"},
+		{"id", requestId++},
+		{"method", "textDocument/completion"},
+		{"params", params}
+	};
 
-    requestsMap.insert(requestId-1, "textDocument/completion");
+	requestsMap.insert(requestId-1, "textDocument/completion");
 
-    sendMessage(message);
+	sendMessage(message);
 
-    return requestId-1;
+	return requestId-1;
 }
 
 int LanguageServerClient::requestHover(int line, int character)
 {
-    QJsonObject textDocument {
-        {"uri", fileURI}
-    };
+	QJsonObject textDocument {
+		{"uri", fileURI}
+	};
 
-    QJsonObject position {
-        {"line", line},
-        {"character", character}
-    };
+	QJsonObject position {
+		{"line", line},
+		{"character", character}
+	};
 
-    QJsonObject params {
-        {"textDocument", textDocument},
-        {"position", position}
-    };
+	QJsonObject params {
+		{"textDocument", textDocument},
+		{"position", position}
+	};
 
-    QJsonObject message {
-        {"jsonrpc", "2.0"},
-        {"id", requestId++},
-        {"method", "textDocument/hover"},
-        {"params", params}
-    };
+	QJsonObject message {
+		{"jsonrpc", "2.0"},
+		{"id", requestId++},
+		{"method", "textDocument/hover"},
+		{"params", params}
+	};
 
-    requestsMap.insert(requestId-1, "textDocument/hover");
+	requestsMap.insert(requestId-1, "textDocument/hover");
 
-    sendMessage(message);
+	sendMessage(message);
 
-    return requestId-1;
+	return requestId-1;
 }
 
 void LanguageServerClient::requestActions(int line, int character, int line2, int character2)
 {
-    // Create the textDocument object with the file URI
-    QJsonObject textDocument {
-        {"uri", fileURI}
-    };
+	// Create the textDocument object with the file URI
+	QJsonObject textDocument {
+		{"uri", fileURI}
+	};
 
-    // Create the range object with start and end positions
-    QJsonObject range {
-        {"start", QJsonObject{{"line", line}, {"character", character}}},
-        {"end", QJsonObject{{"line", line2}, {"character", character2}}}
-    };
+	// Create the range object with start and end positions
+	QJsonObject range {
+		{"start", QJsonObject{{"line", line}, {"character", character}}},
+		{"end", QJsonObject{{"line", line2}, {"character", character2}}}
+	};
 
-    // Create the context object (can be empty if no diagnostics are provided)
-    QJsonObject context {
-        {"diagnostics", filterDiagnostics(diagnostics, line, character, line2, character2)} // Optionally, provide diagnostics here if available
-    };
+	// Create the context object (can be empty if no diagnostics are provided)
+	QJsonObject context {
+		{"diagnostics", filterDiagnostics(diagnostics, line, character, line2, character2)} // Optionally, provide diagnostics here if available
+	};
 
-    // Create the params object to pass to the request
-    QJsonObject params {
-        {"textDocument", textDocument},
-        {"range", range},
-        {"context", context}  // Optional: Include diagnostics if needed
-    };
+	// Create the params object to pass to the request
+	QJsonObject params {
+		{"textDocument", textDocument},
+		{"range", range},
+		{"context", context}  // Optional: Include diagnostics if needed
+	};
 
-    // Create the message object for the request
-    QJsonObject message {
-        {"jsonrpc", "2.0"},
-        {"id", requestId++},
-        {"method", "textDocument/codeAction"},
-        {"params", params}
-    };
+	// Create the message object for the request
+	QJsonObject message {
+		{"jsonrpc", "2.0"},
+		{"id", requestId++},
+		{"method", "textDocument/codeAction"},
+		{"params", params}
+	};
 
-    requestsMap.insert(requestId-1, "textDocument/codeAction");
+	requestsMap.insert(requestId-1, "textDocument/codeAction");
 
-    sendMessage(message);
+	sendMessage(message);
 }
 
 QJsonArray LanguageServerClient::filterDiagnostics(const QJsonArray &diagnostics, int lineStart, int columnStart, int lineEnd, int columnEnd)
 {
-    QJsonArray filteredDiagnostics;
+	QJsonArray filteredDiagnostics;
 
-    for (const auto &diagnostic : diagnostics) {
-        QJsonObject diagnosticObj = diagnostic.toObject();
-        QJsonObject range = diagnosticObj["range"].toObject();
-        QJsonObject start = range["start"].toObject();
-        QJsonObject end = range["end"].toObject();
+	for (const auto &diagnostic : diagnostics) {
+		QJsonObject diagnosticObj = diagnostic.toObject();
+		QJsonObject range = diagnosticObj["range"].toObject();
+		QJsonObject start = range["start"].toObject();
+		QJsonObject end = range["end"].toObject();
 
-        int diagStartLine = start["line"].toInt();
-        int diagStartColumn = start["character"].toInt();
-        int diagEndLine = end["line"].toInt();
-        int diagEndColumn = end["character"].toInt();
+		int diagStartLine = start["line"].toInt();
+		int diagStartColumn = start["character"].toInt();
+		int diagEndLine = end["line"].toInt();
+		int diagEndColumn = end["character"].toInt();
 
-        // Check if the diagnostic range intersects with the requested range
-        if ((diagEndLine >= lineStart && diagStartLine <= lineEnd) &&
-            (diagEndColumn >= columnStart && diagStartColumn <= columnEnd)) {
-            filteredDiagnostics.append(diagnostic);
-        }
-    }
+		// Check if the diagnostic range intersects with the requested range
+		if ((diagEndLine >= lineStart && diagStartLine <= lineEnd) &&
+			(diagEndColumn >= columnStart && diagStartColumn <= columnEnd)) {
+			filteredDiagnostics.append(diagnostic);
+		}
+	}
 
-    return filteredDiagnostics;
+	return filteredDiagnostics;
 }
 
 void LanguageServerClient::requestGotoDefinition(int line, int character)
 {
-    QJsonObject textDocument {
-        {"uri", fileURI}
-    };
+	QJsonObject textDocument {
+		{"uri", fileURI}
+	};
 
-    QJsonObject position {
-        {"line", line},
-        {"character", character}
-    };
+	QJsonObject position {
+		{"line", line},
+		{"character", character}
+	};
 
-    QJsonObject params {
-        {"textDocument", textDocument},
-        {"position", position}
-    };
+	QJsonObject params {
+		{"textDocument", textDocument},
+		{"position", position}
+	};
 
-    QJsonObject message {
-        {"jsonrpc", "2.0"},
-        {"id", requestId++},
-        {"method", "textDocument/definition"},
-        {"params", params}
-    };
+	QJsonObject message {
+		{"jsonrpc", "2.0"},
+		{"id", requestId++},
+		{"method", "textDocument/definition"},
+		{"params", params}
+	};
 
-    requestsMap.insert(requestId-1, "textDocument/definition");
+	requestsMap.insert(requestId-1, "textDocument/definition");
 
-    sendMessage(message);
+	sendMessage(message);
 }
-
 
 void LanguageServerClient::onServerReadyRead()
 {
-    while (serverProcess.bytesAvailable() > 0 || currentExecution.contains("\r\n") || currentExecution.contains("Content-Length")) {
-        QJsonObject response = readMessage();
-        if (response == QJsonObject()){
-            continue;
-        }
+	while (serverProcess.bytesAvailable() > 0 || currentExecution.contains("\r\n") || currentExecution.contains("Content-Length")) {
+		QJsonObject response = readMessage();
+		if (response == QJsonObject()){
+			continue;
+		}
 
-        if (response["method"] == "window/logMessage"){
-            continue;
-        }
+		if (response["method"] == "window/logMessage"){
+			continue;
+		}
 
-        int id = response["id"].toInt();
+		int id = response["id"].toInt();
 
-        if (id == shutdownId && (response["method"].isNull() || !response.contains("method"))){
-            alreadyDoneShutdownLoop = true;
-            shutdownLoop.quit();
-            continue;
-        }
+		if (id == shutdownId && (response["method"].isNull() || !response.contains("method"))){
+			alreadyDoneShutdownLoop = true;
+			shutdownLoop.quit();
+			continue;
+		}
 
-        // Handle initialize response
-        if (!isInitialized && response["result"].toObject()["capabilities"].toObject() != QJsonObject()) {
-            // Initialize response received
-            QJsonObject serverCapabilities = response["result"].toObject()["capabilities"].toObject();
-            // You can store server capabilities here if needed
-            // Signal that we've received the initialize response
-            initializeLoop.quit();
-            emit initializeResponseReceived();
-            continue;
-        }
+		// Handle initialize response
+		if (!isInitialized && response["result"].toObject()["capabilities"].toObject() != QJsonObject()) {
+			// Initialize response received
+			QJsonObject serverCapabilities = response["result"].toObject()["capabilities"].toObject();
+			// You can store server capabilities here if needed
+			// Signal that we've received the initialize response
+			initializeLoop.quit();
+			emit initializeResponseReceived();
+			continue;
+		}
 
-        if (!isInitialized && id == initializeRequestId && (response["method"].isNull() || !response.contains("method"))){ // backup
-            initializeLoop.quit();
-            emit initializeResponseReceived();
-            continue;
-        }
+		if (!isInitialized && id == initializeRequestId && (response["method"].isNull() || !response.contains("method"))){ // backup
+			initializeLoop.quit();
+			emit initializeResponseReceived();
+			continue;
+		}
 
-        if (response.contains("error")) {
-            qWarning() << "Error in response:" << response;
-            continue;
-        }
+		if (response.contains("error")) {
+			qWarning() << "Error in response:" << response;
+			continue;
+		}
 
-        if (response["method"] == "workspace/configuration"){
-            sendMessage(QJsonObject{
-                {"jsonrpc", "2.0"},
-                {"id", id},
-                {"result", QJsonArray{QJsonObject{}}}
-            });
-            continue;
-        }
+		if (response["method"] == "workspace/configuration"){
+			sendMessage(QJsonObject{
+				{"jsonrpc", "2.0"},
+				{"id", id},
+				{"result", QJsonArray{QJsonObject{}}}
+			});
+			continue;
+		}
 
-        if (response["method"] == "textDocument/publishDiagnostics"){
-            if (response["params"].toObject()["uri"].toString().toLower() == fileURI.toLower()) {
-                QJsonArray items = response["params"].toObject()["diagnostics"].toArray();
-                diagnostics = items;
-                QStringList messages = {};
-                QList<int> startC = {};
-                QList<int> startL = {};
-                QList<int> endC = {};
-                QList<int> endL = {};
-                QList<int> severity = {};
+		if (response["method"] == "textDocument/publishDiagnostics"){
+			if (response["params"].toObject()["uri"].toString().toLower() == fileURI.toLower()) {
+				QJsonArray items = response["params"].toObject()["diagnostics"].toArray();
+				diagnostics = items;
+				QStringList messages = {};
+				QList<int> startC = {};
+				QList<int> startL = {};
+				QList<int> endC = {};
+				QList<int> endL = {};
+				QList<int> severity = {};
 
-                for (const QJsonValue &item : items) {
-                    messages.push_back(item.toObject()["message"].toString());
-                    startC.push_back(item.toObject()["range"].toObject()["start"].toObject()["character"].toInt());
-                    startL.push_back(item.toObject()["range"].toObject()["start"].toObject()["line"].toInt());
-                    endC.push_back(item.toObject()["range"].toObject()["end"].toObject()["character"].toInt());
-                    endL.push_back(item.toObject()["range"].toObject()["end"].toObject()["line"].toInt());
-                    severity.push_back(item.toObject()["severity"].toInt());
-                }
+				for (const QJsonValue &item : items) {
+					messages.push_back(item.toObject()["message"].toString());
+					startC.push_back(item.toObject()["range"].toObject()["start"].toObject()["character"].toInt());
+					startL.push_back(item.toObject()["range"].toObject()["start"].toObject()["line"].toInt());
+					endC.push_back(item.toObject()["range"].toObject()["end"].toObject()["character"].toInt());
+					endL.push_back(item.toObject()["range"].toObject()["end"].toObject()["line"].toInt());
+					severity.push_back(item.toObject()["severity"].toInt());
+				}
 
-                // Create a list of indices to sort the severity list
-                QList<int> indices(severity.size());
-                std::iota(indices.begin(), indices.end(), 0);  // Fill indices with 0, 1, 2, ..., n
+				// Create a list of indices to sort the severity list
+				QList<int> indices(severity.size());
+				std::iota(indices.begin(), indices.end(), 0);  // Fill indices with 0, 1, 2, ..., n
 
-                // Sort indices based on severity values
-                std::sort(indices.begin(), indices.end(), [&](int a, int b) {
-                    return severity[a] > severity[b];  // Compare severity values
-                });
+				// Sort indices based on severity values
+				std::sort(indices.begin(), indices.end(), [&](int a, int b) {
+					return severity[a] > severity[b];  // Compare severity values
+				});
 
-                // Create sorted versions of the other lists based on the sorted indices
-                QStringList sortedMessages;
-                QList<int> sortedStartC, sortedStartL, sortedEndC, sortedEndL, sortedSeverity;
+				// Create sorted versions of the other lists based on the sorted indices
+				QStringList sortedMessages;
+				QList<int> sortedStartC, sortedStartL, sortedEndC, sortedEndL, sortedSeverity;
 
-                for (int index : indices) {
-                    sortedMessages.push_back(messages[index]);
-                    sortedStartC.push_back(startC[index]);
-                    sortedStartL.push_back(startL[index]);
-                    sortedEndC.push_back(endC[index]);
-                    sortedEndL.push_back(endL[index]);
-                    sortedSeverity.push_back(severity[index]);
-                }
+				for (int index : indices) {
+					sortedMessages.push_back(messages[index]);
+					sortedStartC.push_back(startC[index]);
+					sortedStartL.push_back(startL[index]);
+					sortedEndC.push_back(endC[index]);
+					sortedEndL.push_back(endL[index]);
+					sortedSeverity.push_back(severity[index]);
+				}
 
-                emit receivedDiagnostics(sortedMessages, sortedStartC, sortedStartL, sortedEndC, sortedEndL, sortedSeverity);
-            }
-        }else if (response["method"] == "window/showMessage" || response["method"] == "client/registerCapability"){
-            continue;
-        }
+				emit receivedDiagnostics(sortedMessages, sortedStartC, sortedStartL, sortedEndC, sortedEndL, sortedSeverity);
+			}
+		}else if (response["method"] == "window/showMessage" || response["method"] == "client/registerCapability"){
+			continue;
+		}
 
-        QString responseType = "";
-        if (requestsMap.contains(id)){
-            responseType = requestsMap[id];
-        }
+		QString responseType = "";
+		if (requestsMap.contains(id)){
+			responseType = requestsMap[id];
+		}
 
-        QJsonObject result = response["result"].toObject();
+		QJsonObject result = response["result"].toObject();
 
-        if (responseType == "textDocument/hover") { // responses to requests (autocomplete,hover,etc)
-            QString contents = result["contents"].toObject()["value"].toString();
-            QString type = result["contents"].toObject()["kind"].toString();
+		if (responseType == "textDocument/hover") { // responses to requests (autocomplete,hover,etc)
+			QString contents = result["contents"].toObject()["value"].toString();
+			QString type = result["contents"].toObject()["kind"].toString();
 
-            if (contents != ""){
-                emit hoverInformationReceived(contents.replace("\n\n\n", "\n\n"), type, id);
-            }
-            continue;
-        }else if (responseType == "textDocument/codeAction"){
-            QJsonArray codeActions = response["result"].toArray();
-            emit codeActionsReceived(codeActions); // it's complicated enough that we just send the stuff.
-            continue;
-        }else if (responseType == "textDocument/definition"){
-            QJsonArray array = response["result"].toArray();
-            if (array.size() == 0){
-                continue;
-            }
+			if (contents != ""){
+				emit hoverInformationReceived(contents.replace("\n\n\n", "\n\n"), type, id);
+			}
+			continue;
+		}else if (responseType == "textDocument/codeAction"){
+			QJsonArray codeActions = response["result"].toArray();
+			emit codeActionsReceived(codeActions); // it's complicated enough that we just send the stuff.
+			continue;
+		}else if (responseType == "textDocument/definition"){
+			QJsonArray array = response["result"].toArray();
+			if (array.size() == 0){
+				continue;
+			}
 
-            QJsonObject location = array[0].toObject()["range"].toObject()["end"].toObject();
+			QJsonObject location = array[0].toObject()["range"].toObject()["end"].toObject();
 
-            int line = location["line"].toInt();
-            int character = location["character"].toInt();
-            QString locFile = response["result"].toArray()[0].toObject()["uri"].toString();
+			int line = location["line"].toInt();
+			int character = location["character"].toInt();
+			QString locFile = response["result"].toArray()[0].toObject()["uri"].toString();
 
-            emit gotoDefinitionsReceived(line, character, locFile);
-            continue;
-        }else if (responseType == "textDocument/completion"){
-            QJsonArray items = result["items"].toArray();
+			emit gotoDefinitionsReceived(line, character, locFile);
+			continue;
+		}else if (responseType == "textDocument/completion"){
+			QJsonArray items = result["items"].toArray();
 
-            QStringList completions;
-            QStringList sortTexts;
+			QStringList completions;
+			QStringList sortTexts;
 
-            for (const QJsonValue &item : items) {
-                QJsonObject itmObj = item.toObject();
-                if (itmObj.contains("insertText")){
-                    QString newStr = itmObj["insertText"].toString();
+			for (const QJsonValue &item : items) {
+				QJsonObject itmObj = item.toObject();
+				if (itmObj.contains("insertText")){
+					QString newStr = itmObj["insertText"].toString();
 
-                    if (completions.contains(newStr)){
-                        continue;
-                    }
+					if (completions.contains(newStr)){
+						continue;
+					}
 
-                    completions.append(newStr);
-                    if (itmObj.contains("sortText")){
-                        sortTexts.append(itmObj["sortText"].toString());
-                    }
-                } else if (itmObj.contains("textEdit")){
-                    QString newStr = itmObj["textEdit"].toObject()["newText"].toString();
+					completions.append(newStr);
+					if (itmObj.contains("sortText")){
+						sortTexts.append(itmObj["sortText"].toString());
+					}
+				} else if (itmObj.contains("textEdit")){
+					QString newStr = itmObj["textEdit"].toObject()["newText"].toString();
 
-                    if (completions.contains(newStr)){
-                        continue;
-                    }
+					if (completions.contains(newStr)){
+						continue;
+					}
 
-                    completions.append(newStr);
-                    if (itmObj.contains("sortText")){
-                        sortTexts.append(itmObj["sortText"].toString());
-                    }
-                } else if (itmObj.contains("label")){
-                    QString newStr = itmObj["label"].toString();
+					completions.append(newStr);
+					if (itmObj.contains("sortText")){
+						sortTexts.append(itmObj["sortText"].toString());
+					}
+				} else if (itmObj.contains("label")){
+					QString newStr = itmObj["label"].toString();
 
-                    if (completions.contains(newStr)){
-                        continue;
-                    }
+					if (completions.contains(newStr)){
+						continue;
+					}
 
-                    completions.append(newStr);
-                    if (itmObj.contains("sortText")){
-                        sortTexts.append(itmObj["sortText"].toString());
-                    }
-                }
-            }
+					completions.append(newStr);
+					if (itmObj.contains("sortText")){
+						sortTexts.append(itmObj["sortText"].toString());
+					}
+				}
+			}
 
-            if (sortTexts.length() == completions.length()){
-                QVector<QPair<QString, QString>> combined;
-                for (int i = 0; i < completions.size(); ++i) {
-                    combined.append(qMakePair(sortTexts[i], completions[i]));
-                }
+			if (sortTexts.length() == completions.length()){
+				QVector<QPair<QString, QString>> combined;
+				for (int i = 0; i < completions.size(); ++i) {
+					combined.append(qMakePair(sortTexts[i], completions[i]));
+				}
 
-                std::sort(combined.begin(), combined.end(), [](const QPair<QString, QString>& a, const QPair<QString, QString>& b) {
-                    return a.first < b.first;
-                });
+				std::sort(combined.begin(), combined.end(), [](const QPair<QString, QString>& a, const QPair<QString, QString>& b) {
+					return a.first < b.first;
+				});
 
-                QStringList outLst;
-                for (const auto& pair : combined) {
-                    outLst.append(pair.second);
-                }
+				QStringList outLst;
+				for (const auto& pair : combined) {
+					outLst.append(pair.second);
+				}
 
-                emit completionReceived(outLst, id);
-            }else{
-                emit completionReceived(completions, id);
-            }
-            continue;
-        }
-    }
+				emit completionReceived(outLst, id);
+			}else{
+				emit completionReceived(completions, id);
+			}
+			continue;
+		}
+	}
 }
 
 void LanguageServerClient::sendMessage(const QJsonObject &message)
 {
-    QByteArray data = QJsonDocument(message).toJson(QJsonDocument::Compact);
-    QString header = QString("Content-Length: %1\r\n\r\n").arg(data.size());
-    serverProcess.write(header.toUtf8());
-    serverProcess.write(data);
+	QByteArray data = QJsonDocument(message).toJson(QJsonDocument::Compact);
+	QString header = QString("Content-Length: %1\r\n\r\n").arg(data.size());
+	serverProcess.write(header.toUtf8());
+	serverProcess.write(data);
 }
 
 QJsonObject LanguageServerClient::readMessage() // How do I put this? I'm a god.
 {
-    int bytesAvail = serverProcess.bytesAvailable();
-    if (bytesAvail != 0){
-        QByteArray line = serverProcess.read(bytesAvail);
-        currentExecution += line;
-    }
+	int bytesAvail = serverProcess.bytesAvailable();
+	if (bytesAvail != 0){
+		QByteArray line = serverProcess.read(bytesAvail);
+		currentExecution += line;
+	}
 
-    int index = currentExecution.indexOf("Content-Length");
+	int index = currentExecution.indexOf("Content-Length");
 
-    if (index != -1) {
-        QByteArray part1 = currentExecution.left(index);
-        currentExecution = currentExecution.mid(index + 14);
+	if (index != -1) {
+		QByteArray part1 = currentExecution.left(index);
+		currentExecution = currentExecution.mid(index + 14);
 
-        QJsonDocument doc = QJsonDocument::fromJson(part1);
-        if (doc.isObject()){
-            return QJsonDocument::fromJson(part1).object();
-        }
-    }
+		QJsonDocument doc = QJsonDocument::fromJson(part1);
+		if (doc.isObject()){
+			return QJsonDocument::fromJson(part1).object();
+		}
+	}
 
-    index = currentExecution.indexOf("\r\n");
+	index = currentExecution.indexOf("\r\n");
 
-    if (index != -1) {
-        QByteArray part1 = currentExecution.left(index);         // Part before "\r\n"
-        currentExecution = currentExecution.mid(index + 2);     // Part after "\r\n" (skipping over "\r\n")
+	if (index != -1) {
+		QByteArray part1 = currentExecution.left(index);         // Part before "\r\n"
+		currentExecution = currentExecution.mid(index + 2);     // Part after "\r\n" (skipping over "\r\n")
 
-        QJsonDocument doc = QJsonDocument::fromJson(part1);
-        if (doc.isObject()){
-            return QJsonDocument::fromJson(part1).object();
-        }
-    }
+		QJsonDocument doc = QJsonDocument::fromJson(part1);
+		if (doc.isObject()){
+			return QJsonDocument::fromJson(part1).object();
+		}
+	}
 
-    QJsonDocument doc = QJsonDocument::fromJson(currentExecution);
-    if (doc.isObject()){
-        QJsonObject obj = QJsonDocument::fromJson(currentExecution).object();
-        currentExecution = "";
-        return obj;
-    }
+	QJsonDocument doc = QJsonDocument::fromJson(currentExecution);
+	if (doc.isObject()){
+		QJsonObject obj = QJsonDocument::fromJson(currentExecution).object();
+		currentExecution = "";
+		return obj;
+	}
 
-    return QJsonObject();
+	return QJsonObject();
 }
