@@ -23,6 +23,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void checkForFixitDialogue();
 	int convertTheVersionNumber(QString vnum);
 	void gotoDefinitionReceived(int line, int character, QString uri);
 	void rehighlightFullDoc();
@@ -42,7 +43,7 @@ private slots:
 	void mouseClicked();
 	void openFileTreeContextMenu(const QPoint &pos);
 	std::tuple<QString, QString, QString, QStringList> getTabDetails(QString);
-	void setupLSP();
+	void setupLSP(QString oldFile);
 	QString plaintextToHtml(QString plaintext);
 	void showWeDontFuckWithTheLSP();
 	void showHoldYourHorses();

@@ -6,48 +6,48 @@
 
 class Language {
 public:
-    // Constructors
-    Language(const QString& name,
-             const QStringList& stringExtensions,
-             const QStringList& extensions,
-             const QStringList& comments,
-             const QStringList& multiLineStringsStart,
-             const QStringList& multiLineStringsEnd,
-             const QStringList& multiLineCommentsStart,
-             const QStringList& multiLineCommentsEnd,
-             const QStringList& openIndents,
-             const QStringList& closeIndents,
-             const QStringList& closeIndentsWords,
-             const QStringList& defWordList,
-             const QStringList& fileExtensions,
-             const std::unordered_map<QString, int>& colorMapTS,
-             const int& index);
-    Language();
+	// Constructors
+	Language(const QString& name,
+			 const QStringList& stringExtensions,
+			 const QStringList& extensions,
+			 const QStringList& comments,
+			 const QStringList& multiLineStringsStart,
+			 const QStringList& multiLineStringsEnd,
+			 const QStringList& multiLineCommentsStart,
+			 const QStringList& multiLineCommentsEnd,
+			 const QStringList& openIndents,
+			 const QStringList& closeIndents,
+			 const QStringList& closeIndentsWords,
+			 const QStringList& defWordList,
+			 const QStringList& fileExtensions,
+			 const std::unordered_map<QString, int>& colorMapTS,
+			 const int& index);
+	Language();
 
-    // Copy constructor
-    Language(const Language& other);
+	// Copy constructor
+	Language(const Language& other);
 
-    // Copy assignment operator
-    Language& operator=(const Language& other);
+	// Copy assignment operator
+	Language& operator=(const Language& other);
 
-    // Destructor
-    ~Language();
+	// Destructor
+	~Language();
 
 public:
-    QString name;
-    QStringList strings;
-    QStringList stringExtensions;
-    QStringList comments;
-    QStringList multiLineStringsStart;
-    QStringList multiLineStringsEnd;
-    QStringList multiLineCommentsStart;
-    QStringList multiLineCommentsEnd;
-    QStringList openIndents;
-    QStringList closeIndents;
-    QStringList closeIndentsWords;
-    QStringList defWordList;
-    QStringList fileExtensions;
-    std::unordered_map<QString, int> colorMapTS;
-    int index;
+	QString name;
+	QStringList strings;
+	QStringList stringExtensions;
+	QStringList comments;
+	QStringList multiLineStringsStart;
+	QStringList multiLineStringsEnd;
+	QStringList multiLineCommentsStart;
+	QStringList multiLineCommentsEnd;
+	QStringList openIndents;
+	QStringList closeIndents;
+	QStringList closeIndentsWords;
+	QStringList defWordList;
+	QStringList fileExtensions;
+	std::unordered_map<QString, int> colorMapTS;
+	int index;
 };
 #endif // LANGUAGE_H

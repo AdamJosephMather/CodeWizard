@@ -301,7 +301,7 @@ QAction *useSpeakerAction;
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
 	qDebug() << "MainWindow";
-	
+
 	ui->setupUi(this);
 
 	setWindowTitle(windowName);
@@ -363,11 +363,11 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	lineEdit = ui->textEdit_5;
 
 	textEdit = ui->textEdit;
-	
+
 	lineNumberTextEdit = ui->textEdit_4;
-	
+
 	bool thm = wantedTheme(); // must happen before any posibility of setting the saveWantedTheme
-	
+
 	textEdit->setWordWrapMode(QTextOption::NoWrap);
 	textEdit->setFocus();
 	textDocument = textEdit->document();
@@ -666,7 +666,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	codeWizForm.setForeground(codeWizCol);
 
 	setupSyntaxTreeOnOpen("");
-	
+
 	lineNumberTextEdit->setReadOnly(true);
 	lineNumberTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	lineNumberTextEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn); // So that it can't get out of sync w/ main textedit
@@ -821,16 +821,16 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	if (foundationSettings.value("wasFullScreened", false).toBool()){
 		setWindowState(Qt::WindowMaximized);
 	}
-	
-	speech = new QTextToSpeech(this);
-	
-	QList<QVoice> voices = speech->availableVoices();
-    qDebug() << "Available voices:";
 
-    for (const QVoice &voice : voices) {
-        qDebug() << "Name:" << voice.name() << "| Gender:" << voice.gender() << "| Age:" << voice.age();
-    }
-	
+	speech = new QTextToSpeech(this);
+
+	QList<QVoice> voices = speech->availableVoices();
+	qDebug() << "Available voices:";
+
+	for (const QVoice &voice : voices) {
+		qDebug() << "Name:" << voice.name() << "| Gender:" << voice.gender() << "| Age:" << voice.age();
+	}
+
 	// Select a male voice, if available
 	for (const QVoice &voice : voices) {
 		if (voice.gender() == QVoice::Male) {
@@ -839,14 +839,14 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 			break;
 		}
 	}
-	
+
 	recordingLight = new RecordingLight(textEdit);
 	recordingLight->hide();
 }
 
 void MainWindow::on_actionSet_Syntax_Colors_triggered() {
 	qDebug() << "on_actionSet_Syntax_Colors_triggered";
-	
+
 	QDialog diag = QDialog(this);
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	hexColorsList = QList<QLineEdit*>();
@@ -898,13 +898,13 @@ void MainWindow::on_actionSet_Syntax_Colors_triggered() {
 
 int MainWindow::colorDifference(QColor c1, QColor c2){
 	qDebug() << "colorDifference";
-	
+
 	return qSqrt(qPow(c1.red()-c2.red(), 2) + qPow(c1.green()-c2.green(), 2) + qPow(c1.blue()-c2.blue(), 2));
 }
 
 void MainWindow::syntaxColorsOffImage(){
 	qDebug() << "syntaxColorsOffImage";
-	
+
 	QString filePath = QFileDialog::getOpenFileName(nullptr, "Open Image File", "", "Images (*.png *.jpg *.bmp *.jpeg);;All Files (*)");
 	if (filePath.isEmpty()) {
 		return;
@@ -972,7 +972,7 @@ void MainWindow::syntaxColorsOffImage(){
 				if (useSpeakerAction->isCheckable()){
 					speech->say("This image did not play nicely with this feature.");
 				}
-				
+
 				openHelpMenu("This image did not play nicely with this feature. Try again (unlikely to work - we tried 8 times for you) or pick another image.");
 				return;
 			}else if (first){
@@ -1005,7 +1005,7 @@ void MainWindow::syntaxColorsOffImage(){
 
 void MainWindow::resetSyntaxColors(){
 	qDebug() << "resetSyntaxColors";
-	
+
 	coloredFormats = {};
 	coloredFormats.append(QTextCharFormat());
 
@@ -1027,7 +1027,7 @@ void MainWindow::resetSyntaxColors(){
 
 void MainWindow::validateAndConvert(){
 	qDebug() << "validateAndConvert";
-	
+
 	QDialog diag = QDialog(this);
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	QLabel *label = new QLabel(this);
@@ -1063,9 +1063,9 @@ void MainWindow::validateAndConvert(){
 		treeParserSyntaxHighlighter.setFormats(coloredFormats);
 		saveWantedTheme();
 	}
-	
+
 	rehighlightFullDoc();
-	
+
 	if (useSpeakerAction->isCheckable()){
 		speech->say("Succeeded!");
 	}
@@ -1078,7 +1078,7 @@ void MainWindow::validateAndConvert(){
 
 void MainWindow::applyEditToTree(int startByte, int oldEndByte, int newEndByte, int startPointRow, int startPointColumn, int oldEndPointRow, int oldEndPointColumn, int newEndPointRow, int newEndPointColumn) {
 	qDebug() << "applyEditToTree";
-	
+
 	TSInputEdit edit;
 	edit.start_byte = startByte;
 	edit.old_end_byte = oldEndByte;
@@ -1093,19 +1093,19 @@ void MainWindow::applyEditToTree(int startByte, int oldEndByte, int newEndByte, 
 
 void MainWindow::rehighlightFullDoc(){
 	qDebug() << "rehighlightFullDoc";
-	
+
 	if (!tree){
 		return;
 	}
 	// Determine the range of affected text
 	int startByte = 0;
-	
+
 	treeParserSyntaxHighlighter.fullDocRehighlight(textDocument, tree);
 }
 
 void MainWindow::onContentsChange(int position, int charsRemoved, int charsAdded) {
 	qDebug() << "onContentsChange";
-	
+
 	if (!tree){
 		return;
 	}
@@ -1162,7 +1162,7 @@ void MainWindow::printTree(TSNode node, int depth) {
 
 void MainWindow::mouseClicked(){
 	qDebug() << "mouseClicked";
-	
+
 	if (ctrlDown) {
 		gotoDefinitionActionTriggered();
 	}
@@ -1170,8 +1170,8 @@ void MainWindow::mouseClicked(){
 
 void MainWindow::onOpenOutside()
 {
-	qDebug() << "onOpenOutside";	
-	
+	qDebug() << "onOpenOutside";
+
 	QModelIndex index = fileTree->currentIndex();
 	if (!index.isValid())
 		return;
@@ -1193,7 +1193,7 @@ void MainWindow::onOpenOutside()
 void MainWindow::onOpenInExplorer()
 {
 	qDebug() << "onOpenInExplorer";
-	
+
 	QModelIndex index = fileTree->currentIndex();
 	if (!index.isValid())
 		return;
@@ -1206,7 +1206,7 @@ void MainWindow::onOpenInExplorer()
 void MainWindow::onCopyPath()
 {
 	qDebug() << "onCopyPath";
-	
+
 	QModelIndex index = fileTree->currentIndex();
 	if (!index.isValid())
 		return;
@@ -1219,7 +1219,7 @@ void MainWindow::onCopyPath()
 void MainWindow::openFileTreeContextMenu(const QPoint &pos)
 {
 	qDebug() << "openFileTreeContextMenu";
-	
+
 	// Get the index at the cursor position
 	QModelIndex index = fileTree->indexAt(pos);
 	if (!index.isValid())
@@ -1235,7 +1235,7 @@ void MainWindow::openFileTreeContextMenu(const QPoint &pos)
 
 void MainWindow::onWindowStateChanged(){
 	qDebug() << "onWindowStateChanged";
-	
+
 	if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())){ // BACK TO HERE YO
 		fileTree->show();
 	}else{
@@ -1245,7 +1245,7 @@ void MainWindow::onWindowStateChanged(){
 
 void MainWindow::on_actionOpen_Folder_triggered(){
 	qDebug() << "on_actionOpen_Folder_triggered";
-	
+
 	QString folderPath = QFileDialog::getExistingDirectory(this,
 		"Select Folder",  // Dialog title
 		QString(),        // Initial directory (can leave empty for default)
@@ -1269,7 +1269,7 @@ void MainWindow::on_actionOpen_Folder_triggered(){
 
 void MainWindow::showWeDontFuckWithTheLSP(){
 	qDebug() << "showWeDontFuckWithTheLSP";
-	
+
 	if (useSpeakerAction->isChecked()){
 		speech->say("Action not supported while LSP is initializing.");
 	}
@@ -1284,7 +1284,7 @@ void MainWindow::showWeDontFuckWithTheLSP(){
 
 void MainWindow::showHoldYourHorses(){
 	qDebug() << "showHoldYourHorses";
-	
+
 	if (useSpeakerAction->isChecked()){
 		speech->say("Action not supported while opening file.");
 	}
@@ -1297,9 +1297,34 @@ void MainWindow::showHoldYourHorses(){
 	messageBox.exec();
 }
 
+void MainWindow::checkForFixitDialogue(){
+	qDebug() << "showHoldYourHorses";
+
+	if (!textEdit->toPlainText().contains("\n    ")){
+		return;
+	}
+
+	if (useSpeakerAction->isChecked()){
+		speech->say("Detected space based indenting in file. Fix-it recommended.");
+	}
+
+	QMessageBox messageBox;
+	messageBox.setWindowTitle("CodeWizard");
+	messageBox.setText("Detected space-based indenting in file. Run Fix-It?");
+	messageBox.setIcon(QMessageBox::Information);
+	messageBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	
+	messageBox.setFont(textEdit->font());
+
+	// Execute and check the user's choice
+	if (messageBox.exec() == QMessageBox::Yes) {
+		on_actionFix_It_triggered();
+	}
+}
+
 void MainWindow::fileTreeOpened(const QModelIndex &index){
 	qDebug() << "fileTreeOpened";
-	
+
 	if (isSettingUpLSP){
 		showWeDontFuckWithTheLSP();
 		return;
@@ -1310,20 +1335,22 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		return;
 	}
 
+	QString oldFile = fileName;
+
 	isOpeningFile = true;
-	
+
 	qDebug() << "Setting";
 	storedLineNumbers[fileName] = textEdit->verticalScrollBar()->value();
 	qDebug() << "Set";
 
-    if (!index.model()->hasChildren(index)) {
+	if (!index.model()->hasChildren(index)) {
 		QString newFile = index.data(QFileSystemModel::FilePathRole).toString();
 
 		if (newFile.isEmpty()){
 			isOpeningFile = false;
 			return;
 		}
-		
+
 		if (useSpeakerAction->isChecked()){
 			speech->say("Opening File");
 		}
@@ -1380,21 +1407,23 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		if (it != storedLineNumbers.end()) {
 			textEdit->verticalScrollBar()->setValue(it->second);
 		}
-		
+
 		lspMutex.lock();
-		setupLSP();
+		setupLSP(oldFile);
 		lspMutex.unlock();
-		
-        if (useSpeakerAction->isChecked()){
+
+		if (useSpeakerAction->isChecked()){
 			speech->say("File Opened");
 		}
 	}
 	isOpeningFile = false;
+
+	checkForFixitDialogue();
 }
 
 void MainWindow::fileTreeToggled(){
 	qDebug() << "fileTreeToggled";
-	
+
 	saveWantedTheme();
 	if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())){
 		fileTree->show();
@@ -1405,7 +1434,7 @@ void MainWindow::fileTreeToggled(){
 
 void MainWindow::autoSave(){
 	qDebug() << "autoSave";
-	
+
 	if (isSettingUpLSP){ // we don't show message here because it's automated
 		return;
 	}
@@ -1419,7 +1448,7 @@ void MainWindow::autoSave(){
 
 void MainWindow::gotoDefinitionActionTriggered(){
 	qDebug() << "gotoDefinitionActionTriggered";
-	
+
 	if (isSettingUpLSP || isOpeningFile){
 		return;
 	}
@@ -1437,7 +1466,7 @@ void MainWindow::gotoDefinitionActionTriggered(){
 void MainWindow::handleMouseMoved(QPoint pos)
 {
 //	qDebug() << "handleMouseMoved"; - we don't do it for certain functions
-	
+
 	QPoint difference = pos - mousePos;
 
 	if (qAbs(difference.x()) < 30 && qAbs(difference.y()) < 30){
@@ -1519,7 +1548,7 @@ void MainWindow::handleMouseMoved(QPoint pos)
 			int column = cursor.columnNumber();
 			QTimer::singleShot(600, [=]() { // call after x milliseconds
 				QPoint difference = pos - mousePos;
-				
+
 				if (qAbs(difference.x()) > 30 || qAbs(difference.y()) > 30){
 					return;
 				}
@@ -1534,7 +1563,7 @@ void MainWindow::handleMouseMoved(QPoint pos)
 
 void MainWindow::onSuggestionItemClicked(QListWidgetItem* item){
 	qDebug() << "onSuggestionItemClicked";
-	
+
 	currentSelection = suggestionBox->row(item);
 	fillSuggestions();
 	insertCompletion();
@@ -1542,7 +1571,7 @@ void MainWindow::onSuggestionItemClicked(QListWidgetItem* item){
 
 void MainWindow::onActionsItemClicked(QListWidgetItem* item){
 	qDebug() << "onActionsItemClicked";
-	
+
 	currentSelectionAction = actionBox->row(item);
 	fillActionsBox();
 	activateCodeAction();
@@ -1551,7 +1580,7 @@ void MainWindow::onActionsItemClicked(QListWidgetItem* item){
 void MainWindow::on_actionLSP_triggered()
 {
 	qDebug() << "on_actionLSP_triggered";
-	
+
 	QString lspPath = "";
 	QString languageId = currentLang.name.toLower(); // need to reasign for langs where my chosen name is not the language id
 
@@ -1641,7 +1670,7 @@ void MainWindow::on_actionLSP_triggered()
 
 void MainWindow::gotoDefinitionReceived(int line, int character, QString uri) {
 	qDebug() << "gotoDefinitionReceived";
-	
+
 	if (uri != QUrl::fromLocalFile(fileName).toString()){
 		globalArgFileName = QUrl(uri).toLocalFile();
 		QMetaObject::invokeMethod(this, [this, line, character, uri]() {
@@ -1652,28 +1681,21 @@ void MainWindow::gotoDefinitionReceived(int line, int character, QString uri) {
 				gotoDefinitionReceived(line, character, uri);
 			}
 		}, Qt::QueuedConnection);
-		
+
 		return;
 	}
-	
+
 	QTextCursor cursor = textEdit->textCursor();
 	cursor.setPosition(textDocument->findBlockByNumber(line).position() + character);
 	textEdit->setTextCursor(cursor);
 	textEdit->ensureCursorVisible();
 }
 
-
-void MainWindow::setupLSP()
+void MainWindow::setupLSP(QString oldFile)
 {
 	qDebug() << "setupLSP";
-	
-	isSettingUpLSP = true;
 
-	if (client){
-		client->shutdown();
-		delete client;
-		client = nullptr;
-	}
+	isSettingUpLSP = true;
 
 	QString lspPath = "";
 	QString languageId = currentLang.name.toLower(); // need to reasign for langs where my chosen name is not the language id
@@ -1713,12 +1735,27 @@ void MainWindow::setupLSP()
 		lspPath = cLSP;
 	}
 
+	if (client && client->lspPath == lspPath){
+		client->closeDocument(oldFile);
+		client->openDocument(fileName, languageId, textEdit->toPlainText());
+		isSettingUpLSP = false;
+		return;
+	}
+
+	//The client is not setup with the correct LSP
+
+	if (client){
+		client->shutdown();
+		delete client;
+		client = nullptr;
+	}
+
 	if (lspPath.isEmpty() || fileName.isEmpty()){
 		isSettingUpLSP = false;
 		return;
 	}
 
-    if (useSpeakerAction->isChecked()){
+	if (useSpeakerAction->isChecked()){
 		speech->say("Initializing LSP");
 	}
 
@@ -1810,7 +1847,7 @@ void MainWindow::setupLSP()
 
 	client->openDocument(fileName, languageId, textEdit->toPlainText());
 
-    if (useSpeakerAction->isChecked()){
+	if (useSpeakerAction->isChecked()){
 		speech->say("Initialized LSP");
 	}
 
@@ -1819,7 +1856,7 @@ void MainWindow::setupLSP()
 
 void MainWindow::ShowSuggestionsWithSuperSet(QStringList completions){
 	qDebug() << "ShowSuggestionsWithSuperSet";
-	
+
 	QString word = MainWindow::getCurrentWord();
 
 	suggestion = {};
@@ -1873,7 +1910,7 @@ void MainWindow::ShowSuggestionsWithSuperSet(QStringList completions){
 
 void MainWindow::fillActionsBox(){
 	qDebug() << "fillActionsBox";
-	
+
 	actionBox->clear();
 	for (int i = 0; i < codeActions.count(); i++){
 		QString copiedString = codeActions[i].toObject()["title"].toString();
@@ -1895,7 +1932,7 @@ void MainWindow::fillActionsBox(){
 
 void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 	qDebug() << "moveHoverBox";
-	
+
 	QString finalString = info.trimmed();
 
 	QStringList lines;
@@ -1948,7 +1985,7 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 
 QString MainWindow::plaintextToHtml(QString plaintext) {
 	qDebug() << "plaintextToHtml";
-	
+
 	QString html = plaintext;
 
 	html.replace("\n---\n", "<hr>");
@@ -1966,7 +2003,7 @@ QString MainWindow::plaintextToHtml(QString plaintext) {
 
 QString MainWindow::markdownToHtml(QString markdown) {
 	qDebug() << "markdownToHtml";
-	
+
 	QString html = markdown;
 
 	while (html.contains("\n\n\n")){
@@ -2028,7 +2065,7 @@ QString MainWindow::markdownToHtml(QString markdown) {
 void MainWindow::on_actionIncrease_Text_Size_triggered()
 {
 	qDebug() << "on_actionIncrease_Text_Size_triggered";
-	
+
 	fontSize += 1;
 	updateFonts();
 	saveWantedTheme();
@@ -2037,7 +2074,7 @@ void MainWindow::on_actionIncrease_Text_Size_triggered()
 void MainWindow::on_actionReset_Text_Size_triggered()
 {
 	qDebug() << "on_actionReset_Text_Size_triggered";
-	
+
 	fontSize = 11;
 	updateFonts();
 	saveWantedTheme();
@@ -2046,7 +2083,7 @@ void MainWindow::on_actionReset_Text_Size_triggered()
 void MainWindow::on_actionDecrease_Text_Size_triggered()
 {
 	qDebug() << "on_actionDecrease_Text_Size_triggered";
-	
+
 	if (fontSize > 1){
 		fontSize -= 1;
 	}
@@ -2057,7 +2094,7 @@ void MainWindow::on_actionDecrease_Text_Size_triggered()
 void MainWindow::on_actionSet_Text_Size_triggered()
 {
 	qDebug() << "on_actionSet_Text_Size_triggered";
-	
+
 	QInputDialog dialog;
 	dialog.setFont(textEdit->font());  // Set the font to Arial, size 12
 	dialog.setWindowTitle("Font Size");
@@ -2078,14 +2115,12 @@ void MainWindow::on_actionSet_Text_Size_triggered()
 void MainWindow::updateFonts()
 {
 	qDebug() << "updateFonts";
-	
+
 	QFont font = textEdit->font();
 	font.setPointSize(fontSize);
 	font.setItalic(false);
 	font.setBold(false);
 	textEdit->setFont(font);
-	
-	qDebug() << "FONT ITALIC: " << font.italic();
 
 	QFontMetrics metrics(textEdit->font());
 
@@ -2166,7 +2201,7 @@ void MainWindow::updateFonts()
 
 void MainWindow::setupCompleter() {
 	qDebug() << "setupCompleter";
-	
+
 	QObject::connect(textEdit, &QTextEdit::cursorPositionChanged, [=]() {
 		qDebug() << "lamda textEdit cursorPositionChanged";
 		suggestionBox->hide();
@@ -2232,7 +2267,7 @@ void MainWindow::setupCompleter() {
 
 void MainWindow::updateDefaultWordLists(){
 	qDebug() << "updateDefaultWordLists";
-	
+
 	wrdLstDefQStringy = currentLang.defWordList;
 
 	wrdLstDefQSetted.clear();
@@ -2243,7 +2278,7 @@ void MainWindow::updateDefaultWordLists(){
 
 void MainWindow::fillSuggestions(){
 	qDebug() << "fillSuggestions";
-	
+
 	suggestionBox->clear();
 	for (int i = 0; i < suggestion.length(); i++){
 		QString copiedString = suggestion[i];
@@ -2266,7 +2301,7 @@ void MainWindow::fillSuggestions(){
 
 QString MainWindow::getCurrentWord() {
 	qDebug() << "getCurrentWord";
-	
+
 	QTextCursor cursor = textEdit->textCursor();
 	QTextBlock block = cursor.block();
 	QString blockText = block.text();    // Use block.text() instead of cursor.selectedText()
@@ -2284,7 +2319,7 @@ QString MainWindow::getCurrentWord() {
 void MainWindow::saveWantedTheme()
 {
 	qDebug() << "saveWantedTheme";
-	
+
 	if (currentLang.name == "Python"){
 		pythonTag = lineEdit->toPlainText();
 	}else if (currentLang.name == "Rust"){
@@ -2390,28 +2425,28 @@ int MainWindow::convertTheVersionNumber(QString vnum){
 	if (vnum == ""){
 		vnum = versionNumber;
 	}
-	
+
 	if (vnum == "prior 6.0.0"){
 		vnum = "5.9.9";
 	}
-	
+
 	vnum = vnum.replace(".", "");
 	int intVersion = vnum.toInt();
-	
+
 	return intVersion;
 }
 
 bool MainWindow::wantedTheme()
 {
 	qDebug() << "wantedTheme";
-	
+
 	QSettings settings("FoundationTechnologies", "CodeWizard");
 	bool exists = settings.value("variablesSet", false).toBool();
 
 	if (exists){
 		int vnum = convertTheVersionNumber(settings.value("codewizard_version", "prior 6.0.0").toString());
 		qDebug() << vnum;
-		
+
 		if (vnum < 600){ // prior 6.0.0
 			pythonTag = settings.value("pythonTag", defPythonTag).toString();
 			rustTag = settings.value("rustTag", defRustTag).toString();
@@ -2506,7 +2541,7 @@ bool MainWindow::wantedTheme()
 MainWindow::~MainWindow()
 {
 	qDebug() << "~MainWindow";
-	
+
 	QSettings settings("FoundationTechnologies", "CodeWizard");
 	settings.setValue("wasFullScreened", (isFullScreen() || isMaximized()));
 
@@ -2528,21 +2563,21 @@ MainWindow::~MainWindow()
 void MainWindow::updateScrollBarValue(int value)
 {
 	qDebug() << "updateScrollBarValue";
-	
+
 	lineNumberTextEdit->verticalScrollBar()->setValue(value);
 }
 
 void MainWindow::updateScrollBarValue2(int value)
 {
 	qDebug() << "updateScrollBarValue2";
-	
+
 	textEdit->verticalScrollBar()->setValue(value);
 }
 
 void MainWindow::findTriggered()
 {
 	qDebug() << "findTriggered";
-	
+
 	QString text = textEdit->toPlainText();
 	QTextCursor cursor = textEdit->textCursor();
 	QString find = findTextEdit->toPlainText();
@@ -2563,7 +2598,7 @@ void MainWindow::findTriggered()
 void MainWindow::findTextEditChanged()
 {
 	qDebug() << "findTextEditChanged";
-	
+
 	disconnect(findTextEdit, &QTextEdit::textChanged, this, &MainWindow::findTextEditChanged);
 	QTextCursor cursor = findTextEdit->textCursor();
 	int cursorPosition = cursor.position();
@@ -2583,7 +2618,7 @@ void MainWindow::findTextEditChanged()
 void MainWindow::previousTriggered()
 {
 	qDebug() << "previousTriggered";
-	
+
 	QString text = textEdit->toPlainText();
 	QTextCursor cursor = textEdit->textCursor();
 	QString find = findTextEdit->toPlainText();
@@ -2607,11 +2642,10 @@ void MainWindow::previousTriggered()
 	}
 }
 
-
 void MainWindow::nextTriggered()
 {
 	qDebug() << "nextTriggered";
-	
+
 	QString text = textEdit->toPlainText();
 	QTextCursor cursor = textEdit->textCursor();
 	QString find = findTextEdit->toPlainText();
@@ -2638,7 +2672,7 @@ void MainWindow::nextTriggered()
 void MainWindow::replaceTriggered()
 {
 	qDebug() << "replaceTriggered";
-	
+
 	QTextCursor cursor = textEdit->textCursor();
 	QString selectedText = cursor.selectedText();
 	QString find = findTextEdit->toPlainText();
@@ -2659,7 +2693,7 @@ void MainWindow::replaceTriggered()
 void MainWindow::replaceAllTriggered()
 {
 	qDebug() << "replaceAllTriggered";
-	
+
 	QString find = findTextEdit->toPlainText();
 	QString replace = replaceTextEdit->toPlainText();
 
@@ -2690,14 +2724,14 @@ void MainWindow::replaceAllTriggered()
 void MainWindow::on_actionExit_triggered()
 {
 	qDebug() << "on_actionExit_triggered";
-	
+
 	QApplication::quit();
 }
 
 void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
 {
 	qDebug() << "setupSyntaxTreeOnOpen";
-	
+
 	treeParserSyntaxHighlighter.colormap = currentLang.colorMapTS;
 
 	if (currentLang.name == "Python"){
@@ -2742,20 +2776,20 @@ void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
 		source_code,
 		strlen(source_code)
 	);
-	
+
 //	printTree(ts_tree_root_node(tree), 0);
-	
+
 	if (doHighlight){
 		rehighlightFullDoc();
 	}
-	
+
 	isErrorHighlighted = false;
 }
 
 void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 {
 	qDebug() << "on_actionOpen_triggered";
-	
+
 	if (isSettingUpLSP){
 		showWeDontFuckWithTheLSP();
 		return;
@@ -2767,6 +2801,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	}
 
 	isOpeningFile = true;
+	QString oldFile = fileName;
 
 	if (unsaved && fileName != ""){
 		pullUpSaveDialogue();
@@ -2786,14 +2821,14 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 		isOpeningFile = false;
 		return;
 	}
-	
+
 	storedLineNumbers[fileName] = textEdit->verticalScrollBar()->value();
 
 	if (!fileName.isEmpty()) {
-        if (useSpeakerAction->isChecked()){
+		if (useSpeakerAction->isChecked()){
 			speech->say("Opening File");
 		}
-		
+
 		setLangOffFilename(fileName, false);
 		unsaved = false;
 
@@ -2847,27 +2882,29 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 		}else{
 			fileTree->hide();
 		}
-		
+
 		auto it = storedLineNumbers.find(fileName);
 		if (it != storedLineNumbers.end()) {
 			textEdit->verticalScrollBar()->setValue(it->second);
 		}
 
 		lspMutex.lock();
-		setupLSP();
+		setupLSP(oldFile);
 		lspMutex.unlock();
 
-        if (useSpeakerAction->isChecked()){
+		if (useSpeakerAction->isChecked()){
 			speech->say("File Opened");
 		}
 	}
 
 	isOpeningFile = false;
+
+	checkForFixitDialogue();
 }
 
 void MainWindow::setLangOffFilename(QString fileName, bool rehigh){
 	qDebug() << "setLangOffFilename";
-	
+
 	for (int i = 0; i < supportedLangs.size(); i++){
 		for (int j = 0; j < supportedLangs[i].fileExtensions.size(); j++){
 			if (fileName.endsWith(supportedLangs[i].fileExtensions[j], Qt::CaseInsensitive)){
@@ -2886,7 +2923,7 @@ void MainWindow::setLangOffFilename(QString fileName, bool rehigh){
 
 void MainWindow::updateTagLine(){
 	qDebug() << "updateTagLine";
-	
+
 	if (currentLang.name == "Python"){
 		lineEdit->setPlainText(pythonTag);
 	}else if (currentLang.name == "Rust"){
@@ -2920,7 +2957,7 @@ void MainWindow::updateTagLine(){
 
 void MainWindow::updateExtraWordsList(){
 	qDebug() << "updateExtraWordsList";
-	
+
 	extraWordList.clear();
 
 	QString text = textEdit->toPlainText();
@@ -2951,12 +2988,12 @@ void MainWindow::updateExtraWordsList(){
 void MainWindow::pullUpSaveDialogue()
 {
 	qDebug() << "pullUpSaveDialogue";
-	
+
 	if (autoSaveAct->isChecked()){
 		on_actionSave_triggered();
 		return;
 	}
-	
+
 	if (useSpeakerAction->isChecked()){
 		speech->say("Save File?");
 	}
@@ -2977,7 +3014,7 @@ void MainWindow::pullUpSaveDialogue()
 void MainWindow::on_actionNew_triggered()
 {
 	qDebug() << "on_actionNew_triggered";
-	
+
 	if (unsaved && fileName != ""){
 		pullUpSaveDialogue();
 	}
@@ -3008,7 +3045,7 @@ void MainWindow::on_actionNew_triggered()
 void saveToFile(QString text)
 {
 	qDebug() << "saveToFile";
-	
+
 	if (fileName.isEmpty()) {
 		qWarning() << "Error: File name is empty.";
 		return;
@@ -3032,7 +3069,7 @@ void saveToFile(QString text)
 void MainWindow::on_actionRun_Module_F5_triggered()
 {
 	qDebug() << "on_actionRun_Module_F5_triggered";
-	
+
 	on_actionSave_triggered();
 	QProcess *process = new QProcess(this);
 
@@ -3121,7 +3158,7 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
 	qDebug() << "keyReleaseEvent";
-	
+
 	if(event->key() == Qt::Key_Control)
 	{
 		ctrlDown = false;
@@ -3131,7 +3168,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
 	qDebug() << "keyPressEvent";
-	
+
 	if (event->key() == Qt::Key_Control){
 		ctrlDown = true;
 	}
@@ -3207,7 +3244,7 @@ void MainWindow::openFind()
 void removeOneTabAndAddChar(QString characterToAdd)
 {
 	qDebug() << "removeOneTabAndAddChar";
-	
+
 	QTextCursor cursor = textEdit->textCursor();
 
 	cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
@@ -3224,7 +3261,7 @@ void removeOneTabAndAddChar(QString characterToAdd)
 
 void MainWindow::on_actionStart_Macro_Recording_triggered() {
 	qDebug() << "on_actionStart_Macro_Recording_triggered";
-	
+
 	// Clear previous recordings and reset state
 	recordedEvents.clear();
 	recordedWidgets.clear();
@@ -3244,21 +3281,21 @@ void MainWindow::on_actionStart_Macro_Recording_triggered() {
 
 void MainWindow::on_actionEnd_Macro_Recording_triggered() {
 	qDebug() << "on_actionEnd_Macro_Recording_triggered";
-	
+
 	recordingMacro = false;
 	recordMacroButton->setEnabled(true);
 	endRecordMacroButton->setEnabled(false);
 	replayMacroButton->setEnabled(true);
-    if (useSpeakerAction->isChecked()){
+	if (useSpeakerAction->isChecked()){
 		speech->say("Ended Macro Recording");
 	}
-	
+
 	recordingLight->hide();
 }
 
 void MainWindow::on_actionReplay_Macro_triggered() {
 	qDebug() << "on_actionReplay_Macro_triggered";
-	
+
 	if (recordingMacro){
 		return;
 	}
@@ -3340,7 +3377,7 @@ void MainWindow::on_actionReplay_Macro_triggered() {
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
 //	qDebug() << "eventFilter"; - we don't do it for certain functions
-	
+
 	if (event->type()==QEvent::WindowStateChange){
 		onWindowStateChanged();
 	}
@@ -3348,16 +3385,16 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 	if (recordingMacro && (event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease)) {
 		QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 		QKeySequence key_sequence{static_cast<int>(keyEvent->modifiers()) + keyEvent->key()};
-		
+
 		auto newEvent = new QKeyEvent(
 			keyEvent->type(),      // Type of event (KeyPress/KeyRelease)
 			keyEvent->key(),       // The key that was pressed
 			keyEvent->modifiers(), // Any modifier keys (Shift, Ctrl, etc.)
 			keyEvent->text()       // Text representation of the key
 			);
-		
+
 		bool saved = false;
-		
+
 		if ((key_sequence == QKeySequence("Alt+Alt") || key_sequence == QKeySequence("Alt")) && event->type() == QEvent::KeyRelease && holdingAnEvent){
 			recordedEvents.removeLast();
 			recordedWidgets.removeLast();
@@ -3368,20 +3405,19 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		}else if ((key_sequence == QKeySequence("Alt+Alt") || key_sequence == QKeySequence("Alt")) && event->type() == QEvent::KeyPress){
 			holdingAnEvent = true;
 		}
-		
+
 		if ((key_sequence != QKeySequence("Alt") && key_sequence != QKeySequence("Alt+Alt"))){
 			holdingAnEvent = false;
 		}
-		
+
 		recordedEvents.append(newEvent);
 		recordedWidgets.append(watched);
 	}
-	
-	
+
 	if (event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease && !recordingMacro){
 		QKeyEvent *key_event = dynamic_cast<QKeyEvent*>(event);
 		QKeySequence key_sequence{static_cast<int>(key_event->modifiers()) + key_event->key()};
-		
+
 		if (event->type() == QEvent::KeyRelease && holdingAnEvent && (key_sequence == QKeySequence("Alt+Alt") || key_sequence == QKeySequence("Alt"))){
 			on_actionStart_Macro_Recording_triggered();
 			textEdit->setFocus();
@@ -3389,7 +3425,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		}else if (event->type() == QEvent::KeyPress && !holdingAnEvent && (key_sequence == QKeySequence("Alt+Alt") || key_sequence == QKeySequence("Alt"))){
 			holdingAnEvent = true;
 		}
-		
+
 		if (key_sequence != QKeySequence("Alt+Alt") && key_sequence != QKeySequence("Alt")){
 			holdingAnEvent = false;
 		}
@@ -3572,7 +3608,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 QString MainWindow::convertLeadingSpacesToTabs(const QString& input) {
 	qDebug() << "convertLeadingSpacesToTabs";
-	
+
 	// Split into lines
 	QStringList lines = input.split('\n');
 
@@ -3739,7 +3775,7 @@ bool MainWindow::activateCodeAction()
 bool MainWindow::insertCompletion()
 {
 	qDebug() << "insertCompletion";
-	
+
 	if (isSettingUpLSP || isOpeningFile){
 		return false;
 	}
@@ -3850,7 +3886,7 @@ bool MainWindow::insertCompletion()
 void MainWindow::on_actionSave_triggered()
 {
 	qDebug() << "on_actionSave_triggered";
-	
+
 	if (isSettingUpLSP){
 		showWeDontFuckWithTheLSP();
 		return;
@@ -3858,7 +3894,7 @@ void MainWindow::on_actionSave_triggered()
 
 	lspMutex.lock();
 	if (!client){
-		setupLSP();
+		setupLSP("");
 	}
 	lspMutex.unlock();
 
@@ -3867,7 +3903,7 @@ void MainWindow::on_actionSave_triggered()
 
 		if (fileName.isEmpty()){
 			return;
-        }
+		}
 
 		QFileInfo fileInfo(fileName);
 		QString fileNameName = fileInfo.fileName();
@@ -3906,7 +3942,7 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::centerCursor() {
 	qDebug() << "centerCursor";
-	
+
 	QTextCursor cursor = textEdit->textCursor();
 	QRect cursorRect = textEdit->cursorRect(cursor);
 
@@ -3928,7 +3964,7 @@ void MainWindow::centerCursor() {
 void MainWindow::on_actionIncrement_Ctrl_triggered()
 {
 	qDebug() << "on_actionIncrement_Ctrl_triggered";
-	
+
 	textEdit->blockSignals(true);
 	QTextCursor cursor = textEdit->textCursor();
 	int start;
@@ -3989,7 +4025,7 @@ void MainWindow::on_actionIncrement_Ctrl_triggered()
 void MainWindow::on_actionDe_Increment_Ctrl_triggered()
 {
 	qDebug() << "on_actionDe_Increment_Ctrl_triggered";
-	
+
 	textEdit->blockSignals(true);
 	QTextCursor cursor = textEdit->textCursor();
 	int start;
@@ -4055,7 +4091,7 @@ void MainWindow::on_actionDe_Increment_Ctrl_triggered()
 void MainWindow::on_actionComment_Ctrl_Alt_triggered()
 {
 	qDebug() << "on_actionComment_Ctrl_Alt_triggered";
-	
+
 	disconnect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 	QTextCursor cursor = textEdit->textCursor();
 	cursor.beginEditBlock();
@@ -4106,7 +4142,7 @@ void MainWindow::on_actionComment_Ctrl_Alt_triggered()
 void MainWindow::on_actionUn_Comment_Alt_5_triggered()
 {
 	qDebug() << "on_actionUn_Comment_Alt_5_triggered";
-	
+
 	disconnect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 	QTextCursor cursor = textEdit->textCursor();
 	cursor.beginEditBlock();
@@ -4191,7 +4227,7 @@ void MainWindow::on_actionUn_Comment_Alt_5_triggered()
 void MainWindow::on_actionDark_Mode_triggered()
 {
 	qDebug() << "on_actionDark_Mode_triggered";
-	
+
 	darkmode = true;
 	changeTheme(darkmode);
 	saveWantedTheme();
@@ -4200,7 +4236,7 @@ void MainWindow::on_actionDark_Mode_triggered()
 void MainWindow::on_actionLight_Mode_triggered()
 {
 	qDebug() << "on_actionLight_Mode_triggered";
-	
+
 	darkmode = false;
 	changeTheme(darkmode);
 	saveWantedTheme();
@@ -4209,7 +4245,7 @@ void MainWindow::on_actionLight_Mode_triggered()
 void MainWindow::on_actionTab_Width_triggered()
 {
 	qDebug() << "on_actionTab_Width_triggered";
-	
+
 	QInputDialog dialog;
 	dialog.setFont(textEdit->font());
 	dialog.setWindowTitle("Preferences");
@@ -4230,11 +4266,13 @@ void MainWindow::on_actionTab_Width_triggered()
 void MainWindow::on_actionSave_As_triggered()
 {
 	qDebug() << "on_actionSave_As_triggered";
-	
+
 	if (isSettingUpLSP){
 		showWeDontFuckWithTheLSP();
 		return;
 	}
+
+	QString oldFile = fileName;
 
 	QString newFile = QFileDialog::getSaveFileName(this, tr("Save File"), fileName, tr("All Files (*);"));
 	if (newFile != ""){
@@ -4270,13 +4308,13 @@ void MainWindow::on_actionSave_As_triggered()
 	savedText = textEdit->toPlainText();
 
 	lspMutex.lock();
-	setupLSP();
+	setupLSP(oldFile);
 	lspMutex.unlock();
 }
 
 void MainWindow::on_actionFix_It_triggered(){ // THE FIX IT BUTTON
 	qDebug() << "on_actionFix_It_triggered";
-	
+
 	disconnect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 
 	QString text = textEdit->toPlainText();
@@ -4382,7 +4420,7 @@ void MainWindow::on_actionFix_It_triggered(){ // THE FIX IT BUTTON
 
 void MainWindow::on_actionChange_to_IDLE_format_triggered(){
 	qDebug() << "on_actionChange_to_IDLE_format_triggered";
-	
+
 	disconnect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 
 	QString text = textEdit->toPlainText();
@@ -4456,7 +4494,7 @@ void MainWindow::on_actionChange_to_IDLE_format_triggered(){
 void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to get right - don't touch a single line of this shit
 {
 	qDebug() << "highlightDiagnostics";
-	
+
 	textEdit->blockSignals(true);
 
 	QTextCursor blckcursor = textEdit->textCursor();
@@ -4524,7 +4562,7 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 			int startC = errStartC[i];
 			int endC = errEndC[i];
 			int severity = errSeverity[i];
-			
+
 			if (!allowedSeverities.contains(severity)){
 				continue;
 			}
@@ -4592,7 +4630,7 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 void MainWindow::updateLineNumbers(int count) // good enough
 {
 	qDebug() << "updateLineNumbers";
-	
+
 	lineNumberTextEdit->blockSignals(true);
 
 	int globalDigits = QString::number(globalLineCount).length();
@@ -4622,7 +4660,7 @@ void MainWindow::updateLineNumbers(int count) // good enough
 std::tuple<QString, QString, QString, QStringList> MainWindow::getTabDetails(QString lineText)
 {
 	qDebug() << "getTabDetails";
-	
+
 	bool doneIndentSection = false;
 	QString tabs = "";
 	QString lastRealChar = "";
@@ -4687,7 +4725,7 @@ std::tuple<QString, QString, QString, QStringList> MainWindow::getTabDetails(QSt
 void MainWindow::handleTabs()
 {
 	qDebug() << "handleTabs";
-	
+
 	QString text = textEdit->toPlainText();
 	QTextCursor cursor = textEdit->textCursor();
 
@@ -4758,7 +4796,7 @@ void MainWindow::handleTabs()
 void MainWindow::updateSyntax()
 {
 	qDebug() << "updateSyntax";
-	
+
 	if (isSettingUpLSP || isOpeningFile){
 		return;
 	}
@@ -4808,7 +4846,7 @@ void MainWindow::updateSyntax()
 
 void MainWindow::changeHighlightColors(bool darkmode){
 	qDebug() << "changeHighlightColors";
-	
+
 	QPalette lightPalette = qApp->palette();
 
 	if (darkmode){
@@ -4828,44 +4866,44 @@ void MainWindow::changeHighlightColors(bool darkmode){
 
 void MainWindow::changeOnlyEditsTheme(bool darkmode){
 	qDebug() << "changeOnlyEditsTheme";
-	
+
 	if (darkmode){
 		QPalette palette = textEdit->palette();
 		palette.setColor(QPalette::Base, QColor(28, 28, 28));
 		textEdit->setPalette(palette);
-		
+
 		palette = lineNumberTextEdit->palette();
 		palette.setColor(QPalette::Base, QColor(35, 35, 35));
 		lineNumberTextEdit->setPalette(palette);
-	
+
 		palette = fileTree->palette();
 		palette.setColor(QPalette::Base, QColor(35, 35, 35));
 		fileTree->setPalette(palette);
-		
+
 		palette = replaceTextEdit->palette();
 		palette.setColor(QPalette::Base, QColor(35, 35, 35));
 		replaceTextEdit->setPalette(palette);
-	
+
 		palette = findTextEdit->palette();
 		palette.setColor(QPalette::Base, QColor(35, 35, 35));
 		findTextEdit->setPalette(palette);
-		
+
 		palette = lineEdit->palette();
 		palette.setColor(QPalette::Base, QColor(35, 35, 35));
 		lineEdit->setPalette(palette);
-		
+
 		palette = findButton->palette();
 		palette.setColor(QPalette::Button, QColor(35, 35, 35));
 		findButton->setPalette(palette);
-		
+
 		palette = replaceButton->palette();
 		palette.setColor(QPalette::Button, QColor(35, 35, 35));
 		replaceButton->setPalette(palette);
-		
+
 		palette = replaceAllButton->palette();
 		palette.setColor(QPalette::Button, QColor(35, 35, 35));
 		replaceAllButton->setPalette(palette);
-		
+
 		palette = nextButton->palette();
 		palette.setColor(QPalette::Button, QColor(35, 35, 35));
 		nextButton->setPalette(palette);
@@ -4873,7 +4911,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		QPalette palette = textEdit->palette();
 		palette.setColor(QPalette::Base, QColor(240, 240, 240));
 		textEdit->setPalette(palette);
-		
+
 		palette = lineNumberTextEdit->palette();
 		palette.setColor(QPalette::Base, QColor(245, 245, 245));
 		lineNumberTextEdit->setPalette(palette);
@@ -4881,7 +4919,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		palette = fileTree->palette();
 		palette.setColor(QPalette::Base, QColor(245, 245, 245));
 		fileTree->setPalette(palette);
-		
+
 		palette = replaceTextEdit->palette();
 		palette.setColor(QPalette::Base, QColor(245, 245, 245));
 		replaceTextEdit->setPalette(palette);
@@ -4889,23 +4927,23 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		palette = findTextEdit->palette();
 		palette.setColor(QPalette::Base, QColor(245, 245, 245));
 		findTextEdit->setPalette(palette);
-		
+
 		palette = lineEdit->palette();
 		palette.setColor(QPalette::Base, QColor(245, 245, 245));
 		lineEdit->setPalette(palette);
-		
+
 		palette = findButton->palette();
 		palette.setColor(QPalette::Button, QColor(245, 245, 245));
 		findButton->setPalette(palette);
-		
+
 		palette = replaceButton->palette();
 		palette.setColor(QPalette::Button, QColor(245, 245, 245));
 		replaceButton->setPalette(palette);
-		
+
 		palette = replaceAllButton->palette();
 		palette.setColor(QPalette::Button, QColor(245, 245, 245));
 		replaceAllButton->setPalette(palette);
-		
+
 		palette = nextButton->palette();
 		palette.setColor(QPalette::Button, QColor(245, 245, 245));
 		nextButton->setPalette(palette);
@@ -4915,7 +4953,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 void MainWindow::changeTheme(bool darkMode)
 {
 	qDebug() << "changeTheme";
-	
+
 	// Dark theme style
 	QString contextMenuSheet = R"(
 		QMenu {
@@ -5067,7 +5105,7 @@ void MainWindow::changeTheme(bool darkMode)
 		qApp->setPalette(lightPalette);
 		normalColor = QColor(0, 0, 0);
 	}
-	
+
 	changeOnlyEditsTheme(darkmode);
 	changeHighlightColors(darkmode);
 
@@ -5079,7 +5117,7 @@ void MainWindow::changeTheme(bool darkMode)
 void MainWindow::on_actionCourier_New_2_triggered()
 {
 	qDebug() << "on_actionCourier_New_2_triggered";
-	
+
 	currentFont = "Courier New";
 	updateFontSelection();
 }
@@ -5087,7 +5125,7 @@ void MainWindow::on_actionCourier_New_2_triggered()
 void MainWindow::on_actionCourier_Prime_2_triggered()
 {
 	qDebug() << "on_actionCourier_Prime_2_triggered";
-	
+
 	currentFont = "Courier Prime";
 	updateFontSelection();
 }
@@ -5095,7 +5133,7 @@ void MainWindow::on_actionCourier_Prime_2_triggered()
 void MainWindow::on_actionSourceCodePro_2_triggered()
 {
 	qDebug() << "on_actionSourceCodePro_2_triggered";
-	
+
 	currentFont = "Source Code Pro";
 	updateFontSelection();
 }
@@ -5103,7 +5141,7 @@ void MainWindow::on_actionSourceCodePro_2_triggered()
 void MainWindow::on_actionUbuntuMono_2_triggered()
 {
 	qDebug() << "on_actionUbuntuMono_2_triggered";
-	
+
 	currentFont = "Ubuntu Mono";
 	updateFontSelection();
 }
@@ -5111,7 +5149,7 @@ void MainWindow::on_actionUbuntuMono_2_triggered()
 void MainWindow::on_actionDroidSansMono_2_triggered()
 {
 	qDebug() << "on_actionDroidSansMono_2_triggered";
-	
+
 	currentFont = "Droid Sans Mono";
 	updateFontSelection();
 }
@@ -5119,7 +5157,7 @@ void MainWindow::on_actionDroidSansMono_2_triggered()
 void MainWindow::on_actionMonaco_2_triggered()
 {
 	qDebug() << "on_actionMonaco_2_triggered";
-	
+
 	currentFont = "Monaco";
 	updateFontSelection();
 }
@@ -5127,7 +5165,7 @@ void MainWindow::on_actionMonaco_2_triggered()
 void MainWindow::on_actionMonospace_2_triggered()
 {
 	qDebug() << "on_actionMonospace_2_triggered";
-	
+
 	currentFont = "Monospace";
 	updateFontSelection();
 }
@@ -5135,16 +5173,13 @@ void MainWindow::on_actionMonospace_2_triggered()
 void MainWindow::updateFontSelection()
 {
 	qDebug() << "updateFontSelection";
-	
+
 	QFont font = textEdit->font();
-	
-	font.setItalic(false);
+
+	font.setItalic(false); // these 2 are probably not neccecarry
 	font.setBold(false);
-	
-	qDebug() << font;
-	// Update just the font family to Monaco
-	font.setFamily(currentFont); // Set to Monaco
-	// Reapply the updated font to QTextEdit
+	font.setFamily(currentFont);
+
 	textEdit->setFont(font);
 	updateFonts();
 	saveWantedTheme();
@@ -5152,7 +5187,7 @@ void MainWindow::updateFontSelection()
 
 void MainWindow::on_actionRunning_Files_triggered(){
 	qDebug() << "on_actionRunning_Files_triggered";
-	
+
 	openHelpMenu("Running Files:\n"
 				 "\n"
 				 "1. The 'tag line':\n"
@@ -5171,7 +5206,7 @@ void MainWindow::on_actionRunning_Files_triggered(){
 
 void MainWindow::on_actionThe_Fix_It_Button_triggered(){
 	qDebug() << "on_actionThe_Fix_It_Button_triggered";
-	
+
 	openHelpMenu("The Fix It Button\n\n"
 				 "The Fix It button was named with grand plans for it, and they still exist. Kinda.\n\n"
 				 "Currently the Fix It button serves mainly to change all four space increments (the indenting) to tabs. It is also designed to remove excess whitespace on lines and remove multiple blank lines.\n\n"
@@ -5180,60 +5215,58 @@ void MainWindow::on_actionThe_Fix_It_Button_triggered(){
 
 void MainWindow::on_actionCodeWizard_triggered(){
 	qDebug() << "on_actionCodeWizard_triggered";
-	
+
 	openHelpMenu("Designed by Adam Mather.\n\nVersion "+versionNumber);
 }
 
 void MainWindow::on_actionSettings_triggered(){
 	qDebug() << "on_actionSettings_triggered";
-	
+
 	openHelpMenu("The settings for CodeWizard are mostly under the edit tab. Notable settings include:\n\nEdit->Fonts\nEdit->Tab Width\nEdit->Dark Mode\nEdit->Light Mode\nEdit->Auto Save\nView->Use File Tree\nView->Use File Tree If Fullscreen\nLanguage->LSP Settings\n\nNotable Shortcuts:\n\nAlt+Enter - Code Actions (LSP helpers)\nRight Click->Goto Definition (Requires LSP)");
 }
 
 void MainWindow::on_actionExtras_triggered(){
 	qDebug() << "on_actionExtras_triggered";
-	
+
 	openHelpMenu("Notable Extras:\n\nAuto Save - Runs every 10 seconds, can be disabled with Edit->Auto Save");
 }
 
 void MainWindow::on_actionMacros_triggered(){
 	qDebug() << "on_actionMacros_triggered";
-	
+
 	openHelpMenu("Macros:\nIn CodeWizard, a macro is a recorded set of keyboard actions. Once a macro is recorded with 'Edit->Start Macro Recording' and 'Edit->End Macro Recording' said macro can then be played back with Ctrl+P or 'Edit->Replay Macro'. If you run a macro '0' times it will run until the end of the file. No, it will not fix your dumb mistakes. Yes, it is a great way to waste time. (I promise) It is worthwhile to note that to stop a macro run amuck you can use Ctrl+P again to stop the macro execution.");
 }
 
 void MainWindow::on_actionLSP_2_triggered(){
 	qDebug() << "on_actionLSP_2_triggered";
-	
-    openHelpMenu("Language Server Protocol:\n\nFrom CodeWizard V8.0.0 onwards we now support users setting their own Language Server. First set the language you want to set the LSP for, then press Language->Set LSP for language. To specify the LSP to use, type the command needed to run said language server. For example:\n\n   Python - \"jedi-language-server.exe\"\n      Install with \"pip install jedi-language-server\" and ensure \"C:\\Users\\USERNAME\\AppData\\Roaming\\Python\\PythonXX\\Scripts\" is in your path\n\n   C/C++ - \"clangd.exe\"\n      Download from official site\n\n   Rust - \"rust-analyzer.exe\"\n      Download from official site\n\n   TypeScript/JavaScript - \"typescript-language-server --stdio\"\n      Installed with \"npm install -g typescript-language-server typescript\"\n\n   Go - \"gopls\"\n      Installed with \"go install golang.org/x/tools/gopls@latest\"\n\n   HTML - \"vscode-html-language-server --stdio\"\n      Installed with \"npm i -g vscode-langservers-extracted\" (also provides vscode-css-language-server, vscode-json-language-server, vscode-eslint-language-server)\n\n\nLanguage Servers Provide the following features to CodeWizard:\n\n   1. Autocompletion\n   2. Hover for info\n   3. Goto definition\n   4. Errors/Warnings\n   5. Code Actions (error correction, formatting, etc)\n\nAll of these can be enabled/disabled under Languages->LSP Settings. There is also the option to disable LSP autocomplete but keep CodeWizard autocomplete, should you prefer it.\n\nExtra Notes:\n   1. When first setting the LSP for a language it may crash, just try again. It usually works the second time.");
+
+	openHelpMenu("Language Server Protocol:\n\nFrom CodeWizard V8.0.0 onwards we now support users setting their own Language Server. First set the language you want to set the LSP for, then press Language->Set LSP for language. To specify the LSP to use, type the command needed to run said language server. For example:\n\n   Python - \"jedi-language-server.exe\"\n      Install with \"pip install jedi-language-server\" and ensure \"C:\\Users\\USERNAME\\AppData\\Roaming\\Python\\PythonXX\\Scripts\" is in your path\n\n   C/C++ - \"clangd.exe\"\n      Download from official site\n\n   Rust - \"rust-analyzer.exe\"\n      Download from official site\n\n   TypeScript/JavaScript - \"typescript-language-server --stdio\"\n      Installed with \"npm install -g typescript-language-server typescript\"\n\n   Go - \"gopls\"\n      Installed with \"go install golang.org/x/tools/gopls@latest\"\n\n   HTML - \"vscode-html-language-server --stdio\"\n      Installed with \"npm i -g vscode-langservers-extracted\" (also provides vscode-css-language-server, vscode-json-language-server, vscode-eslint-language-server)\n\n\nLanguage Servers Provide the following features to CodeWizard:\n\n   1. Autocompletion\n   2. Hover for info\n   3. Goto definition\n   4. Errors/Warnings\n   5. Code Actions (error correction, formatting, etc)\n\nAll of these can be enabled/disabled under Languages->LSP Settings. There is also the option to disable LSP autocomplete but keep CodeWizard autocomplete, should you prefer it.\n\nExtra Notes:\n   1. When first setting the LSP for a language it may crash, just try again. It usually works the second time.");
 }
 
 void MainWindow::openHelpMenu(QString text) {
 	qDebug() << "openHelpMenu";
-	
+
 	// Create a simple help dialog
 	QDialog *helpDialog = new QDialog(this);
 	helpDialog->setWindowTitle("Help Menu");
 
-	helpDialog->resize(700, 100); // seems to resize to the apropriate size given the text or something
+	helpDialog->resize(700, 100); // seems to resize to the apropriate size given the text or something - it's the label that causes this I think
 
 	QLabel *helpText = new QLabel(text, helpDialog);
-	helpText->setWordWrap(true); // Enable text wrapping if the text is long
+	helpText->setWordWrap(true);
 	helpText->setFont(textEdit->font());
 	helpText->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
-	// Create a layout for the dialog
 	QVBoxLayout *layout = new QVBoxLayout(helpDialog);
 	layout->addWidget(helpText);
 
-	// Show the dialog
 	helpDialog->setLayout(layout);
-	helpDialog->exec(); // Use exec() to block interaction with the main window until closed
+	helpDialog->exec();
 }
 
 void MainWindow::on_actionPython_2_triggered(){
 	qDebug() << "on_actionPython_2_triggered";
-	
+
 	currentLang = pythonLang;
 	lineEdit->setPlainText(pythonTag);
 	updateDefaultWordLists();
@@ -5242,7 +5275,7 @@ void MainWindow::on_actionPython_2_triggered(){
 
 void MainWindow::on_actionC_triggered(){
 	qDebug() << "on_actionC_triggered";
-	
+
 	currentLang = cppLang;
 	lineEdit->setPlainText(CppTag);
 	updateDefaultWordLists();
@@ -5251,7 +5284,7 @@ void MainWindow::on_actionC_triggered(){
 
 void MainWindow::on_actionWGSL_triggered(){
 	qDebug() << "on_actionWGSL_triggered";
-	
+
 	currentLang = WGSLLang;
 	lineEdit->setPlainText(WGSLTag);
 	updateDefaultWordLists();
@@ -5260,7 +5293,7 @@ void MainWindow::on_actionWGSL_triggered(){
 
 void MainWindow::on_actionRust_triggered(){
 	qDebug() << "on_actionRust_triggered";
-	
+
 	currentLang = rustLang;
 	lineEdit->setPlainText(rustTag);
 	updateDefaultWordLists();
@@ -5269,7 +5302,7 @@ void MainWindow::on_actionRust_triggered(){
 
 void MainWindow::on_actionHTML_triggered(){
 	qDebug() << "on_actionHTML_triggered";
-	
+
 	currentLang = HTMLLang;
 	lineEdit->setPlainText(HTMLTag);
 	updateDefaultWordLists();
@@ -5278,7 +5311,7 @@ void MainWindow::on_actionHTML_triggered(){
 
 void MainWindow::on_actionGo_triggered(){
 	qDebug() << "on_actionGo_triggered";
-	
+
 	currentLang = goLang;
 	lineEdit->setPlainText(goTag);
 	updateDefaultWordLists();
@@ -5287,7 +5320,7 @@ void MainWindow::on_actionGo_triggered(){
 
 void MainWindow::on_actionLua_triggered(){
 	qDebug() << "on_actionLua_triggered";
-	
+
 	currentLang = luaLang;
 	lineEdit->setPlainText(luaTag);
 	updateDefaultWordLists();
@@ -5296,7 +5329,7 @@ void MainWindow::on_actionLua_triggered(){
 
 void MainWindow::on_actionPlaintext_triggered(){
 	qDebug() << "on_actionPlaintext_triggered";
-	
+
 	currentLang = txtLang;
 	lineEdit->setPlainText("");
 	updateDefaultWordLists();
@@ -5305,7 +5338,7 @@ void MainWindow::on_actionPlaintext_triggered(){
 
 void MainWindow::on_actionJavaScript_triggered(){
 	qDebug() << "on_actionJavaScript_triggered";
-	
+
 	currentLang = jsLang;
 	lineEdit->setPlainText(jsTag);
 	updateDefaultWordLists();
@@ -5314,7 +5347,7 @@ void MainWindow::on_actionJavaScript_triggered(){
 
 void MainWindow::on_actionTypeScript_triggered(){
 	qDebug() << "on_actionTypeScript_triggered";
-	
+
 	currentLang = tsLang;
 	lineEdit->setPlainText(tsTag);
 	updateDefaultWordLists();
@@ -5323,7 +5356,7 @@ void MainWindow::on_actionTypeScript_triggered(){
 
 void MainWindow::on_actionC_2_triggered(){
 	qDebug() << "on_actionC_2_triggered";
-	
+
 	currentLang = csharpLang;
 	lineEdit->setPlainText(csharpTag);
 	updateDefaultWordLists();
@@ -5332,7 +5365,7 @@ void MainWindow::on_actionC_2_triggered(){
 
 void MainWindow::on_actionC_3_triggered(){
 	qDebug() << "on_actionC_3_triggered";
-	
+
 	currentLang = cLang;
 	lineEdit->setPlainText(cTag);
 	updateDefaultWordLists();
@@ -5341,7 +5374,7 @@ void MainWindow::on_actionC_3_triggered(){
 
 void MainWindow::on_actionGLSL_triggered(){
 	qDebug() << "on_actionGLSL_triggered";
-	
+
 	currentLang = GLSLLang;
 	lineEdit->setPlainText(GLSLTag);
 	updateDefaultWordLists();
@@ -5350,7 +5383,7 @@ void MainWindow::on_actionGLSL_triggered(){
 
 void MainWindow::on_actionJava_triggered(){
 	qDebug() << "on_actionJava_triggered";
-	
+
 	currentLang = javaLang;
 	lineEdit->setPlainText(javaTag);
 	updateDefaultWordLists();
@@ -5359,7 +5392,7 @@ void MainWindow::on_actionJava_triggered(){
 
 void MainWindow::addFileToRecentList(QString file){
 	qDebug() << "addFileToRecentList";
-	
+
 	if (recentFiles.contains(file)){
 		recentFiles.removeAll(file);
 	}
@@ -5375,7 +5408,7 @@ void MainWindow::addFileToRecentList(QString file){
 
 void MainWindow::updateRecentList(QStringList files){
 	qDebug() << "updateRecentList";
-	
+
 	menuOpen_Recent->clear();
 
 	for (QString file : files){
@@ -5392,7 +5425,7 @@ void MainWindow::updateRecentList(QStringList files){
 
 void MainWindow::openRecentFile(QString newFile){
 	qDebug() << "openRecentFile";
-	
+
 	if (isSettingUpLSP){
 		showWeDontFuckWithTheLSP();
 		return;
@@ -5403,9 +5436,11 @@ void MainWindow::openRecentFile(QString newFile){
 		return;
 	}
 
+	QString oldFile = fileName;
+
 	isOpeningFile = true;
 
-    if (useSpeakerAction->isChecked()){
+	if (useSpeakerAction->isChecked()){
 		speech->say("Opening File");
 	}
 
@@ -5419,7 +5454,7 @@ void MainWindow::openRecentFile(QString newFile){
 		isOpeningFile = false;
 		return;
 	}
-	
+
 	storedLineNumbers[fileName] = textEdit->verticalScrollBar()->value();
 
 	if (!fileName.isEmpty()) {
@@ -5474,20 +5509,22 @@ void MainWindow::openRecentFile(QString newFile){
 		}else{
 			fileTree->hide();
 		}
-		
+
 		auto it = storedLineNumbers.find(fileName);
 		if (it != storedLineNumbers.end()) {
 			textEdit->verticalScrollBar()->setValue(it->second);
 		}
 
 		lspMutex.lock();
-		setupLSP();
+		setupLSP(oldFile);
 		lspMutex.unlock();
 	}
 
-    if (useSpeakerAction->isChecked()){
+	if (useSpeakerAction->isChecked()){
 		speech->say("File Opened");
 	}
 
 	isOpeningFile = false;
+
+	checkForFixitDialogue();
 }

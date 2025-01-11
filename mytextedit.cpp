@@ -2,6 +2,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QContextMenuEvent>
+#include <qregularexpression.h>
 #include <qscrollbar.h>
 
 QString menuStyle = "";
@@ -14,9 +15,48 @@ void MyTextEdit::setContextMenuStyle(const QString& stylesheet) {
 	menuStyle = stylesheet;
 }
 
+QString MyTextEdit::changeToTabs(QString text){
+	QStringList lines = text.split("\n");
+	QStringList newLines;
+	
+	for (QString line : lines){
+		int seen = 0;
+		QString rest = "";
+		bool doneSeen = false;
+		
+		for (QChar c : line){
+			if (c == ' ' && !doneSeen){
+				seen ++;
+			}else{
+				doneSeen = true;
+				rest += c;
+			}
+		}
+		
+		int tabs = seen/4;
+		int spaces = seen%4;
+		
+		QString outLine = "";
+		
+		for (int i = 0; i < tabs; i++){
+			outLine += "	";
+		}
+		
+		for (int i = 0; i < spaces; i++){
+			outLine += " ";
+		}
+		
+		outLine += rest;
+		
+		newLines.push_back(outLine);
+	}
+	
+	return newLines.join("\n");
+}
+
 void MyTextEdit::insertFromMimeData(const QMimeData *source) {
 	if (source->hasText()) {
-		this->insertPlainText(source->text());
+		this->insertPlainText(changeToTabs(source->text()));
 	}
 }
 

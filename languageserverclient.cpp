@@ -23,6 +23,8 @@ QTextEdit* copyOfTextEdit;
 LanguageServerClient::LanguageServerClient(const QString &serverPath, QTextEdit *providedTextEdit, QObject *parent)
 	: QObject(parent), requestId(0), documentVersion(1)
 {
+	lspPath = serverPath;
+
 	copyOfTextEdit = providedTextEdit;
 	langID = "";
 	missingNext = "";
@@ -203,6 +205,27 @@ void LanguageServerClient::openDocument(const QString &uri, const QString &langu
 	QJsonObject message {
 		{"jsonrpc", "2.0"},
 		{"method", "textDocument/didOpen"},
+		{"params", params}
+	};
+
+	sendMessage(message);
+}
+
+void LanguageServerClient::closeDocument(const QString &uri)
+{
+	fileURI = QUrl::fromLocalFile(uri).toString();
+
+	QJsonObject textDocument {
+		{"uri", fileURI}
+	};
+
+	QJsonObject params {
+		{"textDocument", textDocument}
+	};
+
+	QJsonObject message {
+		{"jsonrpc", "2.0"},
+		{"method", "textDocument/didClose"},
 		{"params", params}
 	};
 

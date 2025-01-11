@@ -6,9 +6,9 @@
 class HighlightData : public QTextBlockUserData
 {
 public:
-    HighlightData(); // Constructor declaration
+	HighlightData(); // Constructor declaration
 
-    bool hasHighlight; // Member variable
+	bool hasHighlight; // Member variable
 };
 
 #endif // HIGHLIGHTDATA_H
