@@ -23,6 +23,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	int convertTheVersionNumber(QString vnum);
 	void gotoDefinitionReceived(int line, int character, QString uri);
 	void rehighlightFullDoc();
 	void changeOnlyEditsTheme(bool);

@@ -54,7 +54,7 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 
-QString versionNumber = "8.6.2";
+QString versionNumber = "8.6.3";
 
 QPoint mousePos;
 
@@ -139,7 +139,7 @@ int tabWidth = 4;
 QString defPythonTag = "python \"[filename]\"";
 QString defRustTag = "cargo run";
 QString defWGSLTag = "cargo run";
-QString defCppTag = "call \"C:\\Program Files\\Microsoft Visual Studio\\[VERSION_NUMBER]\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat\" x64\ncl /EHsc \"[filename]\"\n\"[filenameWoutExt].exe\"";
+QString defCppTag = "call \"C:\\Program Files\\Microsoft Visual Studio\\[VERSION_NUMBER]\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat\" x64\ncl /EHsc \"[filename]\" && \"[filenameWoutExt].exe\"";
 QString defTxtTag = "\"[filename]\"";
 QString defJsTag = "node \"[filename]\"";
 QString defTsTag = "ts-node \"[filename]\"";
@@ -149,7 +149,7 @@ QString defLuaTag = "lua \"[filename]\"";
 QString defCsharpTag = "csc \"[filename]\"";
 QString defGLSLTag = "";
 QString defJavaTag = "javac \"[filename]\"\njava \"[filename]\"";
-QString defCTag = "call \"C:\\Program Files\\Microsoft Visual Studio\\[VERSION_NUMBER]\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat\" x64\ncl \"[filename]\"\n\"[filenameWoutExt].exe\"";
+QString defCTag = "call \"C:\\Program Files\\Microsoft Visual Studio\\[VERSION_NUMBER]\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat\" x64\ncl \"[filename]\" && \"[filenameWoutExt].exe\"";
 
 QString pythonTag = defPythonTag;
 QString rustTag = defRustTag;
@@ -2081,7 +2081,11 @@ void MainWindow::updateFonts()
 	
 	QFont font = textEdit->font();
 	font.setPointSize(fontSize);
+	font.setItalic(false);
+	font.setBold(false);
 	textEdit->setFont(font);
+	
+	qDebug() << "FONT ITALIC: " << font.italic();
 
 	QFontMetrics metrics(textEdit->font());
 
@@ -2382,6 +2386,21 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("codewizard_version", versionNumber);
 }
 
+int MainWindow::convertTheVersionNumber(QString vnum){
+	if (vnum == ""){
+		vnum = versionNumber;
+	}
+	
+	if (vnum == "prior 6.0.0"){
+		vnum = "5.9.9";
+	}
+	
+	vnum = vnum.replace(".", "");
+	int intVersion = vnum.toInt();
+	
+	return intVersion;
+}
+
 bool MainWindow::wantedTheme()
 {
 	qDebug() << "wantedTheme";
@@ -2390,7 +2409,10 @@ bool MainWindow::wantedTheme()
 	bool exists = settings.value("variablesSet", false).toBool();
 
 	if (exists){
-		if (settings.value("codewizard_version", "prior 6.0.0").toString() != "prior 6.0.0"){
+		int vnum = convertTheVersionNumber(settings.value("codewizard_version", "prior 6.0.0").toString());
+		qDebug() << vnum;
+		
+		if (vnum < 600){ // prior 6.0.0
 			pythonTag = settings.value("pythonTag", defPythonTag).toString();
 			rustTag = settings.value("rustTag", defRustTag).toString();
 			WGSLTag = settings.value("WGSLTag", defWGSLTag).toString();
@@ -2405,6 +2427,10 @@ bool MainWindow::wantedTheme()
 			csharpTag = settings.value("csharpTag", defCsharpTag).toString();
 			javaTag = settings.value("javaTag", defJavaTag).toString();
 			cTag = settings.value("cTag", defCTag).toString();
+		}
+		if (vnum < 863){
+			CppTag = defCppTag;
+			cTag = defCTag;
 		}
 
 		pythonLSP = settings.value("pythonLSP", "").toString();
@@ -2717,7 +2743,7 @@ void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
 		strlen(source_code)
 	);
 	
-	printTree(ts_tree_root_node(tree), 0);
+//	printTree(ts_tree_root_node(tree), 0);
 	
 	if (doHighlight){
 		rehighlightFullDoc();
@@ -5111,6 +5137,11 @@ void MainWindow::updateFontSelection()
 	qDebug() << "updateFontSelection";
 	
 	QFont font = textEdit->font();
+	
+	font.setItalic(false);
+	font.setBold(false);
+	
+	qDebug() << font;
 	// Update just the font family to Monaco
 	font.setFamily(currentFont); // Set to Monaco
 	// Reapply the updated font to QTextEdit
