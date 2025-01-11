@@ -123,7 +123,7 @@ public:
     QTreeView *treeView;
     MyTextEdit *textEdit_4;
     MyTextEdit *textEdit;
-    QHBoxLayout *horizontalLayout;
+    QHBoxLayout *findLayout;
     QVBoxLayout *verticalLayout_4;
     MyTextEdit *textEdit_2;
     MyTextEdit *textEdit_3;
@@ -397,10 +397,10 @@ public:
 
         verticalLayout->addLayout(horizontalLayout_3);
 
-        horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setSpacing(5);
-        horizontalLayout->setObjectName("horizontalLayout");
-        horizontalLayout->setContentsMargins(5, 0, 5, -1);
+        findLayout = new QHBoxLayout();
+        findLayout->setSpacing(5);
+        findLayout->setObjectName("findLayout");
+        findLayout->setContentsMargins(5, 0, 5, -1);
         verticalLayout_4 = new QVBoxLayout();
         verticalLayout_4->setSpacing(1);
         verticalLayout_4->setObjectName("verticalLayout_4");
@@ -426,7 +426,7 @@ public:
         verticalLayout_4->addWidget(textEdit_3);
 
 
-        horizontalLayout->addLayout(verticalLayout_4);
+        findLayout->addLayout(verticalLayout_4);
 
         verticalLayout_3 = new QVBoxLayout();
         verticalLayout_3->setSpacing(1);
@@ -442,7 +442,7 @@ public:
         verticalLayout_3->addWidget(pushButton_2);
 
 
-        horizontalLayout->addLayout(verticalLayout_3);
+        findLayout->addLayout(verticalLayout_3);
 
         verticalLayout_2 = new QVBoxLayout();
         verticalLayout_2->setSpacing(1);
@@ -458,16 +458,16 @@ public:
         verticalLayout_2->addWidget(pushButton);
 
 
-        horizontalLayout->addLayout(verticalLayout_2);
+        findLayout->addLayout(verticalLayout_2);
 
         textEdit_5 = new MyTextEdit(centralwidget);
         textEdit_5->setObjectName("textEdit_5");
         textEdit_5->setMaximumSize(QSize(200, 28));
 
-        horizontalLayout->addWidget(textEdit_5);
+        findLayout->addWidget(textEdit_5);
 
 
-        verticalLayout->addLayout(horizontalLayout);
+        verticalLayout->addLayout(findLayout);
 
 
         horizontalLayout_2->addLayout(verticalLayout);
@@ -478,7 +478,7 @@ public:
         MainWindow->setStatusBar(statusbar);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName("menuBar");
-        menuBar->setGeometry(QRect(0, 0, 702, 21));
+        menuBar->setGeometry(QRect(0, 0, 702, 17));
         sizePolicy2.setHeightForWidth(menuBar->sizePolicy().hasHeightForWidth());
         menuBar->setSizePolicy(sizePolicy2);
         menuOp1 = new QMenu(menuBar);

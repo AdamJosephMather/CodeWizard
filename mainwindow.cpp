@@ -54,7 +54,7 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 
-QString versionNumber = "8.6.3";
+QString versionNumber = "8.7.0";
 
 QPoint mousePos;
 
