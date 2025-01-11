@@ -54,7 +54,7 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 
-QString versionNumber = "8.7.1";
+QString versionNumber = "8.7.2";
 
 QPoint mousePos;
 
@@ -2450,7 +2450,7 @@ bool MainWindow::wantedTheme()
 		int vnum = convertTheVersionNumber(settings.value("codewizard_version", "prior 6.0.0").toString());
 		qDebug() << vnum;
 
-		if (vnum < 600){ // prior 6.0.0
+		if (vnum > 599){ // prior 6.0.0
 			pythonTag = settings.value("pythonTag", defPythonTag).toString();
 			rustTag = settings.value("rustTag", defRustTag).toString();
 			WGSLTag = settings.value("WGSLTag", defWGSLTag).toString();
