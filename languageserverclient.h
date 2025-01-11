@@ -29,6 +29,7 @@ public:
 
 	bool isInitialized = false;
 	QString lspPath;
+	QStringList triggerChars;
 
 signals:
 	void completionReceived(const QStringList &completions, int id);

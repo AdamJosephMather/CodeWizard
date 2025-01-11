@@ -459,6 +459,20 @@ void LanguageServerClient::onServerReadyRead()
 		if (!isInitialized && response["result"].toObject()["capabilities"].toObject() != QJsonObject()) {
 			// Initialize response received
 			QJsonObject serverCapabilities = response["result"].toObject()["capabilities"].toObject();
+			
+			QJsonArray triggerCharsArr = serverCapabilities["completionProvider"].toObject()["triggerCharacters"].toArray();
+			
+			triggerChars.clear();
+			QStringList stringList;
+			for (const QJsonValue &value : triggerCharsArr) {
+				if (value.isString()) {
+					triggerChars.push_back(value.toString());
+				}
+			}
+			triggerChars.push_back("_");
+			
+			qDebug() << "TRIGGER CHARACTERS: " << triggerChars;
+			
 			// You can store server capabilities here if needed
 			// Signal that we've received the initialize response
 			initializeLoop.quit();

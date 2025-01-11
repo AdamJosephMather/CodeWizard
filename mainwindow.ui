@@ -113,7 +113,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QHBoxLayout" name="findLayout">
         <property name="spacing">
          <number>5</number>
         </property>
@@ -252,7 +252,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>0</x>
      <y>0</y>
      <width>702</width>
-     <height>21</height>
+     <height>17</height>
     </rect>
    </property>
    <property name="sizePolicy">

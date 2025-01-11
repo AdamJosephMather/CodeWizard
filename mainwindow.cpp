@@ -217,6 +217,8 @@ QFileSystemModel *fileModel;
 QTextEdit *findBar;
 QTextEdit *replaceBar;
 
+QHBoxLayout *findLayout;
+
 int globalLineCount = 1;
 
 QString globalArgFileName;
@@ -320,6 +322,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	findBar = ui->textEdit_2;
 	replaceBar = ui->textEdit_3;
+	findLayout = ui->findLayout;
 
 	menuBarItem = ui->menuBar;
 
@@ -2663,6 +2666,7 @@ void MainWindow::nextTriggered()
 
 	if (position != -1)
 	{
+		textEdit->horizontalScrollBar()->setValue(0);
 		cursor.setPosition(position);
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, find.length());
 		textEdit->setTextCursor(cursor);
@@ -3195,6 +3199,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 		}else if (event->key() == Qt::Key_BracketRight){
 			on_actionIncrement_Ctrl_triggered();
 		}else if (event->key() == Qt::Key_F || event->key() == Qt::Key_H){
+			changeFindSectionVisibility(true);
 			openFind();
 		}else if (event->key() == Qt::Key_P){
 			on_actionReplay_Macro_triggered();
@@ -3437,7 +3442,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 	QKeyEvent *key_event = dynamic_cast<QKeyEvent*>(event);
 	QKeySequence key_sequence{static_cast<int>(key_event->modifiers()) + key_event->key()};
-
+	
 	if (watched == textEdit){
 		if (isSettingUpLSP || isOpeningFile){
 			return false;
@@ -3450,7 +3455,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 			if (keyText.length() == 1) {
 				QChar ch = keyText.at(0);
-				if (ch.isLetterOrNumber()) {
+				if (ch.isLetterOrNumber() || client->triggerChars.contains(ch)) {
 					expectedCompletionId = -1;
 					callCompleteOponUpdate = true;
 				}
@@ -3581,6 +3586,10 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				return true;
 			}
 		}
+		
+		if(!suggestionBox->isVisible() && !actionBox->isVisible() && key_event->key() == Qt::Key_Escape){
+			changeFindSectionVisibility(false);
+		}
 
 		if (key_sequence == QKeySequence("Return")) {
 			handleTabs();
@@ -3604,6 +3613,36 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 	}
 
 	return false;
+}
+
+void MainWindow::changeFindSectionVisibility(bool visible){
+	for (int i = 0; i < findLayout->count(); ++i) {
+		QWidget* widget = findLayout->itemAt(i)->widget();
+		auto* layoutItm = findLayout->itemAt(i)->layout();
+		qDebug() << widget << layoutItm;
+		
+		if (widget) {
+			if (visible){
+				widget->show();
+			}else{
+				widget->hide();
+			}
+		}
+		
+		if (layoutItm) {
+			for (int j = 0; j < layoutItm->count(); ++j) {
+				QWidget* widget2 = layoutItm->itemAt(j)->widget();
+				qDebug() << widget2;
+				if (widget2) {
+					if (visible){
+						widget2->show();
+					}else{
+						widget2->hide();
+					}
+				}
+			}
+		}
+	}
 }
 
 QString MainWindow::convertLeadingSpacesToTabs(const QString& input) {
