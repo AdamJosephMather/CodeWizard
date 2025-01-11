@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
 project(CodeWizard VERSION 0.1 LANGUAGES C CXX)
-project(CodeWizard VERSION 0.1 LANGUAGES CXX)
 
 set(BUILD_SHARED_LIBS ON)
 
