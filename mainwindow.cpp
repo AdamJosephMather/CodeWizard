@@ -54,7 +54,7 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 
-QString versionNumber = "8.7.0";
+QString versionNumber = "8.7.1";
 
 QPoint mousePos;
 
@@ -1012,7 +1012,7 @@ void MainWindow::resetSyntaxColors(){
 	coloredFormats = {};
 	coloredFormats.append(QTextCharFormat());
 
-	QString str = "38,175,199|38,143,199|50,168,160|222,123,2|41,171,47|217,159,0|160,160,160|245,120,66";
+	QString str = "186,143,63|122,122,122|212,72,81|204,125,55|124,147,153|136,64,237|115,115,115|69,143,222";
 
 	for(const QString color : str.split("|")){
 		QStringList nums = color.split(",");
@@ -2486,13 +2486,19 @@ bool MainWindow::wantedTheme()
 		javaLSP = settings.value("javaLSP", "").toString();
 		cLSP = settings.value("cLSP", "").toString();
 
-		QString numbers = settings.value("syntaxColors", "38,175,199|38,143,199|50,168,160|222,123,2|41,171,47|217,159,0|160,160,160|245,120,66").toString();
-
+		QString numbers = settings.value("syntaxColors", "186,143,63|122,122,122|212,72,81|204,125,55|124,147,153|136,64,237|115,115,115|69,143,222").toString();
+		
+		if (numbers == "38,175,199|38,143,199|50,168,160|222,123,2|41,171,47|217,159,0|160,160,160|245,120,66"){
+			numbers = "186,143,63|122,122,122|212,72,81|204,125,55|124,147,153|136,64,237|115,115,115|69,143,222";
+		}
+		
+		qDebug() << numbers;
+		
 		coloredFormats = {};
 		coloredFormats.append(QTextCharFormat());
 
 		if (numbers.count("|") != 7){
-			numbers = "38,175,199|38,143,199|50,168,160|222,123,2|41,171,47|217,159,0|160,160,160|245,120,66";
+			numbers = "186,143,63|122,122,122|212,72,81|204,125,55|124,147,153|136,64,237|115,115,115|69,143,222";
 		}
 
 		for(const QString color : numbers.split("|")){
