@@ -1978,8 +1978,8 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 		newPos.setY(givenPos.y() + 50);
 	}
 
-	hoverBox->setTextInteractionFlags(Qt::TextBrowserInteraction); // Enable interaction
-
+	hoverBox->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
+	hoverBox->setFocusPolicy(Qt::StrongFocus); // Allow the hoverBox to receive keyboard focus
 	hoverBox->setHtml(finalString);
 
 	hoverBox->move(newPos);
@@ -3102,14 +3102,15 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 	QString fileNameName = fileInfo.fileName();
 
 	// Create a temporary directory if not already present
-	QString tmpDirPath = "C:/.tmp";
+	QString tmpDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/CodeWizard";
 	QDir tmpDir(tmpDirPath);
 	if (!tmpDir.exists()) {
 		tmpDir.mkpath(tmpDirPath);
 	}
-
+	
 	// Define the batch file path
 	QString batFilePath = tmpDirPath + "/run_script.bat";
+	qDebug() << batFilePath;
 
 	// Write the command to the .bat file
 	QFile batFile(batFilePath);
@@ -3328,7 +3329,7 @@ void MainWindow::on_actionReplay_Macro_triggered() {
 	dialog.setLabelText("Repeat number (0 is end of file):");
 	dialog.setIntValue(1);
 	dialog.setIntMinimum(0);
-	dialog.setIntMaximum(99999999999999);
+	dialog.setIntMaximum(276447231);
 	dialog.setIntStep(1);
 	dialog.exec();
 
@@ -4692,17 +4693,15 @@ void MainWindow::updateLineNumbers(int count) // good enough
 	if (globalDigits != countDigits) {
 		updateFonts();
 	}
-
+	
 	QStringList lineNumbers;
 
 	for (int i = 1; i < count; ++i) {
 		lineNumbers << QString::number(i); // Collect line numbers in a list
 	}
-
 	QString text = lineNumbers.join("<br>");
 
 	lineNumberTextEdit->setHtml("<p align=\"right\">"+text);
-//	lineNumberTextEdit->setAlignment(Qt::AlignRight);
 	lineNumberTextEdit->blockSignals(false);
 }
 
