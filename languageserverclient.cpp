@@ -22,7 +22,7 @@ QTextEdit* copyOfTextEdit;
 
 LanguageServerClient::LanguageServerClient(const QString &serverPath, QTextEdit *providedTextEdit, QObject *parent)
 	: QObject(parent), requestId(0), documentVersion(1)
-{
+{	
 	lspPath = serverPath;
 
 	copyOfTextEdit = providedTextEdit;

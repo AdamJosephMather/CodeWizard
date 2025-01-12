@@ -54,7 +54,7 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 
-QString versionNumber = "8.7.2";
+QString versionNumber = "8.7.3";
 
 QPoint mousePos;
 
@@ -1436,7 +1436,7 @@ void MainWindow::fileTreeToggled(){
 }
 
 void MainWindow::autoSave(){
-	qDebug() << "autoSave";
+//	qDebug() << "autoSave";
 
 	if (isSettingUpLSP){ // we don't show message here because it's automated
 		return;
@@ -2571,14 +2571,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::updateScrollBarValue(int value)
 {
-	qDebug() << "updateScrollBarValue";
+//	qDebug() << "updateScrollBarValue";
 
 	lineNumberTextEdit->verticalScrollBar()->setValue(value);
 }
 
 void MainWindow::updateScrollBarValue2(int value)
 {
-	qDebug() << "updateScrollBarValue2";
+//	qDebug() << "updateScrollBarValue2";
 
 	textEdit->verticalScrollBar()->setValue(value);
 }
@@ -3625,7 +3625,6 @@ void MainWindow::changeFindSectionVisibility(bool visible){
 	for (int i = 0; i < findLayout->count(); ++i) {
 		QWidget* widget = findLayout->itemAt(i)->widget();
 		auto* layoutItm = findLayout->itemAt(i)->layout();
-		qDebug() << widget << layoutItm;
 		
 		if (widget) {
 			if (visible){
@@ -3638,7 +3637,7 @@ void MainWindow::changeFindSectionVisibility(bool visible){
 		if (layoutItm) {
 			for (int j = 0; j < layoutItm->count(); ++j) {
 				QWidget* widget2 = layoutItm->itemAt(j)->widget();
-				qDebug() << widget2;
+				
 				if (widget2) {
 					if (visible){
 						widget2->show();
@@ -4539,7 +4538,7 @@ void MainWindow::on_actionChange_to_IDLE_format_triggered(){
 void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to get right - don't touch a single line of this shit
 {
 	qDebug() << "highlightDiagnostics";
-
+	
 	textEdit->blockSignals(true);
 
 	QTextCursor blckcursor = textEdit->textCursor();
@@ -4549,12 +4548,10 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 	if (reverseTheProcess){
 		isErrorHighlighted = false;
 
-		if (errMessages.length() == 0){
+		if (numberOfBlocksColored == 0){
 			textEdit->blockSignals(false);
 			return;
 		}
-
-		int changed = 0;
 
 		// Only clear blocks that were highlighted
 		QTextBlock block = textDocument->begin();
@@ -4577,7 +4574,6 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 				layout->setFormats(formats);
 				textDocument->markContentsDirty(block.position() + range.start, range.length);
 				data->hasHighlight = false;
-				changed += 1;
 			}
 			block = block.next();
 		}
@@ -4619,50 +4615,58 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 					endC += 1;
 				}
 			}
+			
+			QTextBlock block = textDocument->findBlockByNumber(startLine);
 
 			// Process each block in the range
 			for (int currentLine = startLine; currentLine <= endLine; ++currentLine) {
-				QTextBlock block = textDocument->findBlockByNumber(currentLine);
-
+				if (!block.isValid()) {
+					break;
+				}
+				
+				QTextLayout* layout = block.layout();
+				if (!layout) {
+					continue;
+				}
+				
 				HighlightData* data = static_cast<HighlightData*>(block.userData());
 				if (!data) {
 					data = new HighlightData();
 					const_cast<QTextBlock&>(block).setUserData(data);
 				}
 				data->hasHighlight = true;
-
-				if (!block.isValid()) {
-					continue;
-				}
-
-				QTextLayout* layout = block.layout();
-				if (!layout) {
-					continue;
-				}
+				
+				int blockLen = block.length();
+				int blockPos = block.position();
 
 				QTextLayout::FormatRange range;
 				range.format = errorFormats[severity];
 
-				// Set start position
 				if (currentLine == startLine) {
 					range.start = startC;
-				} else {
+					if (currentLine == endLine) {
+						range.length = endC-startC;
+					}else{
+						range.length = blockLen-startC;
+					}
+				}else{
 					range.start = 0;
+					if (currentLine == endLine) {
+						range.length = endC;
+					}else{
+						range.length = blockLen;
+					}
 				}
 
-				// Set length
-				if (currentLine == endLine) {
-					range.length = endC - range.start;
-				} else {
-					range.length = block.length() - range.start;
-				}
-
-				// Apply the format
 				QVector<QTextLayout::FormatRange> formats = layout->formats();
 				formats.append(range);
 				layout->setFormats(formats);
-				textDocument->markContentsDirty(block.position() + range.start, range.length);
+				textDocument->markContentsDirty(blockPos, blockLen);
 				numberOfBlocksColored += 1;
+				
+				if (currentLine != endLine){ 
+					block = block.next();
+				}
 			}
 		}
 	}
