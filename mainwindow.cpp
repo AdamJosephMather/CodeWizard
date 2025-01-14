@@ -54,7 +54,7 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 
-QString versionNumber = "8.7.3";
+QString versionNumber = "8.7.4";
 
 QPoint mousePos;
 
@@ -752,6 +752,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	lineNumberTextEdit->setUndoRedoEnabled(false);
 	treeParserSyntaxHighlighter.setFormats(coloredFormats);
+	treeParserSyntaxHighlighter.setLanguage(currentLang.name);
 
 	connect(suggestionBox, &QListWidget::itemClicked, this, &MainWindow::onSuggestionItemClicked);
 	connect(actionBox, &QListWidget::itemClicked, this, &MainWindow::onActionsItemClicked);
@@ -1096,6 +1097,8 @@ void MainWindow::applyEditToTree(int startByte, int oldEndByte, int newEndByte, 
 
 void MainWindow::rehighlightFullDoc(){
 	qDebug() << "rehighlightFullDoc";
+	
+	treeParserSyntaxHighlighter.setLanguage(currentLang.name);
 
 	if (!tree){
 		return;
@@ -1137,6 +1140,7 @@ void MainWindow::onContentsChange(int position, int charsRemoved, int charsAdded
 	QByteArray documentText = textDocument->toPlainText().toLatin1().constData();
 	TSTree* newTree = ts_parser_parse_string(parser, tree, documentText, documentText.size());
 
+	treeParserSyntaxHighlighter.setLanguage(currentLang.name); // we do this because I'm too lazy to do it any other way
 	treeParserSyntaxHighlighter.updateHighlighting(textDocument, position, charsAdded, tree, newTree, charsAdded == textDocument->characterCount());
 
 	tree = newTree;

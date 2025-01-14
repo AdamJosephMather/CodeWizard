@@ -11,15 +11,20 @@ QList<QTextCharFormat> formats = {QTextCharFormat(), QTextCharFormat(), QTextCha
 std::unordered_map<QString, int> knownTypes = {{"true",8}, {"false", 8}};
 QRegularExpression *regex = new QRegularExpression("[a-zA-Z0-9]");
 QSet<QString> naughtyTypes = {"escape_sequence"};
+QString curLang = "Python";
 
 void SyntaxHighlighter::setFormats(QList<QTextCharFormat> newFormats){
 	formats = newFormats;
 }
 
+void SyntaxHighlighter::setLanguage(QString language){
+	curLang = language;
+}
+
 // Convert tree-sitter tree into list of highlight blocks
 QList<HighlightBlock> SyntaxHighlighter::getHighlightBlocks(TSNode root, uint32_t start, uint32_t end) {
 	QList<HighlightBlock> blocks;
-	traverseNode(QStringList(), "", root, blocks, start, end);
+	traverseNode(QStringList(), "", root, blocks, start, end, QList<QString>());
 	return blocks;
 }
 
@@ -211,7 +216,7 @@ void SyntaxHighlighter::updateHighlighting(QTextDocument* document, int cursorPo
 	}
 }
 
-void SyntaxHighlighter::traverseNode(QStringList parents, QString p, TSNode node, QList<HighlightBlock>& blocks, uint32_t start, uint32_t end) {
+void SyntaxHighlighter::traverseNode(QStringList parents, QString p, TSNode node, QList<HighlightBlock>& blocks, uint32_t start, uint32_t end, QList<QString> siblings) {
 	if (!p.isEmpty()){
 		parents.append(p);
 	}
@@ -228,26 +233,30 @@ void SyntaxHighlighter::traverseNode(QStringList parents, QString p, TSNode node
 				parentType = parents[i];
 			}
 		}
-
+		
 		blocks.append(HighlightBlock{
 			static_cast<int>(startByte),
 			static_cast<int>(endByte - startByte),
-			parentType+"/.CodeWiz./"+nodeType
+			parents.join("/.CodeWiz./")+"/.SEPERATOR./"+parentType+"/.CodeWiz./"+nodeType+"/.SEPERATOR./"+siblings.join("/.CodeWiz./")
 		});
 	}
 
 	// Recurse through children
 	uint32_t childCount = ts_node_child_count(node);
+	
+	QList<QString> followingSibs;
 
-	for (uint32_t i = 0; i < childCount; ++i) {
-		TSNode child = ts_node_child(node, i);
-
+	for (uint32_t i = 0; i < childCount ; ++i) {
+		TSNode child = ts_node_child(node, childCount-i-1);
+		
 		uint32_t startByte = ts_node_start_byte(child);
 		uint32_t endByte = ts_node_end_byte(child);
 
 		if (start < endByte && end > startByte){
-			traverseNode(parents, nodeType, child, blocks, start, end);
+			traverseNode(parents, nodeType, child, blocks, start, end, followingSibs);
 		}
+		
+		followingSibs.push_back(ts_node_type(child));
 	}
 }
 
@@ -281,13 +290,40 @@ bool SyntaxHighlighter::shouldHighlight(TSNode nodeType) {
 	return true;
 }
 
-QTextCharFormat SyntaxHighlighter::getFormatForType(const QString& parentAndType) {
+int SyntaxHighlighter::specificPythonFix(QStringList parents, QStringList PAT, QString following){
+	if (parents.length() < 2 || following != ""){
+		return -1;
+	}
+	
+	if (parents[parents.length()-1] != "attribute" || parents[parents.length()-2] != "call"){
+		return -1;
+	}
+	
+	return 5;
+}
+
+
+QTextCharFormat SyntaxHighlighter::getFormatForType(const QString& lotsOinfo) {
+	QStringList parts = lotsOinfo.split("/.SEPERATOR./");
+	
+	QString parentAndType = parts[1];
+	QStringList PAT = parentAndType.split("/.CodeWiz./");
+	QStringList parents = parts[0].split("/.CodeWiz./");
+	QString following = parts[2];
+	
+	if (curLang == "Python"){
+		int pythonFix = specificPythonFix(parents, PAT, following);
+		
+		if (pythonFix != -1){
+			return formats[pythonFix];
+		}
+	}
+	
 	auto it = colormap.find(parentAndType);  // Find the iterator for the type
 	if (it != colormap.end()) {
 		return formats[it->second];  // Access the value of the iterator (which is the key for formats)
 	}
-
-	QStringList PAT = parentAndType.split("/.CodeWiz./");
+	
 	QString type = PAT[1];
 
 	auto it2 = colormap.find(type);  // Find the iterator for the type

@@ -26,6 +26,7 @@ class SyntaxHighlighter {
 public:
 	// Convert tree-sitter tree into list of highlight blocks
 	QList<HighlightBlock> getHighlightBlocks(TSNode root, uint32_t start, uint32_t end);
+	void setLanguage(QString language);
 
 	// Apply highlighting only where needed
 	void fullDocRehighlight(QTextDocument* document, TSTree* tree);
@@ -35,7 +36,8 @@ public:
 	std::unordered_map<QString, int> colormap;
 
 private:
-	void traverseNode(QStringList, QString, TSNode node, QList<HighlightBlock>& blocks, uint32_t start, uint32_t end);
+	int specificPythonFix(QStringList parents, QStringList PAT, QString following);
+	void traverseNode(QStringList parents, QString p, TSNode node, QList<HighlightBlock>& blocks, uint32_t start, uint32_t end, QList<QString> siblings);
 	bool shouldHighlight(TSNode node);
 	QTextCharFormat getFormatForType(const QString& parentAndType);
 };
