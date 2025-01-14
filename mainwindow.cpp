@@ -2683,8 +2683,7 @@ void MainWindow::nextTriggered()
 	}
 }
 
-void MainWindow::replaceTriggered()
-{
+void MainWindow::replaceTriggered(){
 	qDebug() << "replaceTriggered";
 
 	QTextCursor cursor = textEdit->textCursor();
@@ -2704,8 +2703,7 @@ void MainWindow::replaceTriggered()
 	}
 }
 
-void MainWindow::replaceAllTriggered()
-{
+void MainWindow::replaceAllTriggered(){
 	qDebug() << "replaceAllTriggered";
 
 	QString find = findTextEdit->toPlainText();
@@ -2719,27 +2717,61 @@ void MainWindow::replaceAllTriggered()
 	QTextCursor docCursor(textDocument);
 
 	docCursor = textDocument->find(re, docCursor);
-	if (!docCursor.isNull()) {
-		docCursor.beginEditBlock();
-		docCursor.insertText(replace);
-		docCursor.endEditBlock();
+	if (docCursor.isNull()) {
+		return;
 	}
+	docCursor.beginEditBlock();
+	docCursor.insertText(replace);
 
 	while (!docCursor.isNull() && !docCursor.atEnd()) {
-		docCursor = textDocument->find(re, docCursor);
-		if (!docCursor.isNull()) {
-			docCursor.joinPreviousEditBlock();
-			docCursor.insertText(replace);
-			docCursor.endEditBlock();
+		auto c = textDocument->find(re, docCursor);
+		
+		if (c.isNull()){
+			break;
 		}
+		
+		docCursor.setPosition(c.position(), QTextCursor::MoveAnchor);
+		docCursor.setPosition(c.anchor(), QTextCursor::KeepAnchor);
+		
+		docCursor.insertText(replace);
 	}
+	
+	docCursor.endEditBlock();
 }
 
-void MainWindow::on_actionExit_triggered()
-{
+void MainWindow::on_actionExit_triggered(){
 	qDebug() << "on_actionExit_triggered";
-
 	QApplication::quit();
+}
+
+void MainWindow::clearTSSyntaxHighlighting(){
+	qDebug() << "clearTSSyntaxHighlighting";
+	
+	QTextBlock block = textEdit->document()->firstBlock();
+	QTextCharFormat form = QTextCharFormat();
+	form.setForeground(normalColor);
+	
+	while (block.isValid()){
+		QTextLayout* layout = block.layout();
+
+		if (!layout) {
+			block = block.next();
+			continue;
+		}
+
+		QTextLayout::FormatRange range;
+		range.format = form;
+		range.start = 0;
+		range.length = block.length();
+
+		QVector<QTextLayout::FormatRange> formats = layout->formats();
+		formats.append(range);
+		layout->setFormats(formats);
+		
+		block = block.next();
+	}
+	
+	textDocument->markContentsDirty(0, textDocument->characterCount());
 }
 
 void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
@@ -2760,6 +2792,7 @@ void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
 		ts_parser_set_language(parser, tree_sitter_cpp());
 	}else if (currentLang.name == "Txt"){
 		tree = nullptr;
+		clearTSSyntaxHighlighting();
 		return;
 	}else if (currentLang.name == "JS"){
 		ts_parser_set_language(parser, tree_sitter_javascript());

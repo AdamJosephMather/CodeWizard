@@ -23,6 +23,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void clearTSSyntaxHighlighting();
 	void changeFindSectionVisibility(bool visible);
 	void checkForFixitDialogue();
 	int convertTheVersionNumber(QString vnum);
