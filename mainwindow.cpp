@@ -1938,7 +1938,7 @@ void MainWindow::fillActionsBox(){
 }
 
 void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
-	qDebug() << "moveHoverBox";
+	qDebug() << "moveHoverBox - type " << type;
 
 	QString finalString = info.trimmed();
 
@@ -1992,20 +1992,32 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 
 QString MainWindow::plaintextToHtml(QString plaintext) {
 	qDebug() << "plaintextToHtml";
+	
+	qDebug() << plaintext;
 
 	QString html = plaintext;
+	
+	html.replace("&", "&amp;");
+	html.replace(">", "&gt;");
+	html.replace("<", "&lt;");
+	html.replace("\"", "&quot;");
+	html.replace("'", "&apos;");
 
-	html.replace("\n---\n", "<hr>");
-	html.replace("\n<hr>", "<hr>");
-	html.replace("<hr>\n", "<hr>");
+	html.replace("\n---\n", "</p><hr><p>");
+	html.replace("\n<hr>", "</p><hr><p>");
+	html.replace("<hr>\n", "</p><hr><p>");
 
 	while (html.contains("\n\n")){
 		html.replace("\n\n", "\n");
 	}
 
 	html.replace("\n", "<br>");
+	
+	html = "<p>"+html+"</p>";
+	
+	qDebug() << html;
 
-	return html;
+	return "<div style=\"white-space: pre;\">"+html+"</div>";
 }
 
 QString MainWindow::markdownToHtml(QString markdown) {
@@ -2016,6 +2028,12 @@ QString MainWindow::markdownToHtml(QString markdown) {
 	while (html.contains("\n\n\n")){
 		html.replace("\n\n\n", "\n\n");
 	}
+	
+	html.replace("&", "&amp;");
+	html.replace(">", "&gt;");
+	html.replace("<", "&lt;");
+	html.replace("\"", "&quot;");
+	html.replace("'", "&apos;");
 
 	html.replace("\n---\n", "<hr>");
 	html.replace("\n<hr>", "<hr>");
@@ -2065,8 +2083,10 @@ QString MainWindow::markdownToHtml(QString markdown) {
 	html = html.trimmed();
 	html.replace("\n", "<br>");
 	html.replace("`", "");
+	
+	qDebug() << html;
 
-	return html;
+	return "<div style=\"white-space: pre;\">"+html+"</div>";
 }
 
 void MainWindow::on_actionIncrease_Text_Size_triggered()
