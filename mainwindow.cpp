@@ -374,6 +374,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	textEdit->setWordWrapMode(QTextOption::NoWrap);
 	textEdit->setFocus();
 	textDocument = textEdit->document();
+	
 	QFont monacoFont("Monaco");
 	textEdit->setFont(monacoFont);
 
@@ -674,6 +675,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	lineNumberTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	lineNumberTextEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn); // So that it can't get out of sync w/ main textedit
 	lineNumberTextEdit->setAlignment(Qt::AlignRight);
+	
+	textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
 	findTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	replaceTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -760,6 +763,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(textEdit, &MyTextEdit::mousePositionChanged, this, &MainWindow::handleMouseMoved);
 	connect(textEdit, &MyTextEdit::gotoDefinitionActionTriggered, this, &MainWindow::gotoDefinitionActionTriggered);
 	connect(textEdit, &MyTextEdit::mouseClicked, this, &MainWindow::mouseClicked);
+	connect(textEdit, &MyTextEdit::handleSizeChange, this, &MainWindow::updateMargins);
 	connect(textDocument, &QTextDocument::contentsChange, this, &MainWindow::onContentsChange);
 
 	connect(showWarnings, &QAction::toggled, this, &MainWindow::saveWantedTheme); // down here because they will call saveWantedTheme when being set otherwise
@@ -846,6 +850,27 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	recordingLight = new RecordingLight(textEdit);
 	recordingLight->hide();
+	
+	updateMargins();
+}
+
+void MainWindow::updateMargins() {
+	qDebug() << "updateMargins";
+	
+	QFontMetrics metrics(textEdit->font());
+	
+	int size = textEdit->height()-metrics.height()*2;
+	if (size < 0){
+		size = 0;
+	}
+	
+	auto format = textDocument->rootFrame()->frameFormat();
+	format.setBottomMargin(size);
+	textDocument->rootFrame()->setFrameFormat(format);
+	
+	auto format2 = lineNumberTextEdit->document()->rootFrame()->frameFormat();
+	format2.setBottomMargin(size);
+	lineNumberTextEdit->document()->rootFrame()->setFrameFormat(format2);
 }
 
 void MainWindow::on_actionSet_Syntax_Colors_triggered() {
@@ -1365,19 +1390,9 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		if (unsaved && fileName != ""){
 			pullUpSaveDialogue();
 		}
-
-		fileName = newFile;
-
-		setLangOffFilename(fileName, false);
-
-		unsaved = false;
-
-		QFileInfo fileInfo(fileName);
-		QString fileNameName = fileInfo.fileName();
-
-		windowName = "CodeWizard V"+versionNumber+" - "+fileNameName+" - "+fileName;
-
-		QFile file(fileName);
+		
+		QFileInfo fileInfo(newFile);
+		QFile file(newFile);
 		if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
 			QMessageBox newWarningBox;
 			newWarningBox.setIcon(QMessageBox::Warning);
@@ -1388,6 +1403,23 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 			isOpeningFile = false;
 			return;
 		}
+		
+		bool ret = checkForLargeFile(&file);
+		
+		if (!ret){
+			isOpeningFile = false;
+			return;
+		}
+
+		fileName = newFile;
+
+		setLangOffFilename(fileName, false);
+
+		unsaved = false;
+
+		QString fileNameName = fileInfo.fileName();
+
+		windowName = "CodeWizard V"+versionNumber+" - "+fileNameName+" - "+fileName;
 
 		QTextStream in(&file);
 		QString fileContent = in.readAll();
@@ -1426,6 +1458,32 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 	isOpeningFile = false;
 
 	checkForFixitDialogue();
+}
+
+bool MainWindow::checkForLargeFile(QFile *file){
+	qint64 fileSize = file->size(); // bytes
+	qint64 kb = fileSize/1024; // 1000 of these per mb
+	qDebug() << "Size of KB: " << kb;
+	
+	if (kb > 1000){ // 1mb I think
+		if (useSpeakerAction->isChecked()){
+			speech->say("That's a large file ("+QString::number(kb/1000)+" mb). Open anyways?");
+		}
+	
+		QMessageBox dialog;
+		dialog.setWindowTitle("CodeWizard");
+		dialog.setText("Opening large file - continue?");
+		dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+		dialog.setDefaultButton(QMessageBox::Yes);
+		dialog.setFont(textEdit->font());
+	
+		int response = dialog.exec();
+		if (response == QMessageBox::No) {
+			return false;
+		}
+	}
+	
+	return true;
 }
 
 void MainWindow::fileTreeToggled(){
@@ -2882,86 +2940,90 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 		newFile = QFileDialog::getOpenFileName(this, tr("Open File"), fileName, tr("All Files (*);"));
 	}
 
-	if (!newFile.isEmpty()){
-		fileName = newFile;
-	}else{
+	if (newFile.isEmpty()){
 		isOpeningFile = false;
 		return;
 	}
 
-	storedLineNumbers[fileName] = textEdit->verticalScrollBar()->value();
+	storedLineNumbers[newFile] = textEdit->verticalScrollBar()->value();
 
-	if (!fileName.isEmpty()) {
-		if (useSpeakerAction->isChecked()){
-			speech->say("Opening File");
-		}
+	if (useSpeakerAction->isChecked()){
+		speech->say("Opening File");
+	}
+	
+	QFileInfo fileInfo(newFile);
+	QFile file(newFile);
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QMessageBox newWarningBox;
+		newWarningBox.setIcon(QMessageBox::Warning);
+		newWarningBox.setText(tr("Cannot open file: %1").arg(file.errorString()));
+		newWarningBox.setWindowTitle(tr("Error"));
+		newWarningBox.setFont(textEdit->font());
+		newWarningBox.exec();
+		isOpeningFile = false;
+		return;
+	}
+	
+	bool ret = checkForLargeFile(&file);
+	
+	if (!ret){
+		isOpeningFile = false;
+		return;
+	}
+	
+	fileName = newFile;
 
-		setLangOffFilename(fileName, false);
-		unsaved = false;
+	setLangOffFilename(fileName, false);
+	unsaved = false;
+	QString fileNameName = fileInfo.fileName();
 
-		QFileInfo fileInfo(fileName);
-		QString fileNameName = fileInfo.fileName();
+	windowName = "CodeWizard V"+versionNumber+" - "+fileNameName+" - "+fileName;
 
-		windowName = "CodeWizard V"+versionNumber+" - "+fileNameName+" - "+fileName;
+	QTextStream in(&file);
+	QString fileContent = in.readAll();
+	previousLineCount = 1;
+	savedText = fileContent;
 
-		QFile file(fileName);
-		if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-			QMessageBox newWarningBox;
-			newWarningBox.setIcon(QMessageBox::Warning);
-			newWarningBox.setText(tr("Cannot open file: %1").arg(file.errorString()));
-			newWarningBox.setWindowTitle(tr("Error"));
-			newWarningBox.setFont(textEdit->font());
-			newWarningBox.exec();
-			isOpeningFile = false;
-			return;
-		}
+	setupSyntaxTreeOnOpen(fileContent); // must be before setPlainText - don't ask why - I could tell you though...
 
-		QTextStream in(&file);
-		QString fileContent = in.readAll();
-		previousLineCount = 1;
-		savedText = fileContent;
+	textEdit->setPlainText(fileContent);
+	previousLineCount = fileContent.count('\xa')+1;
+	file.close();
 
-		setupSyntaxTreeOnOpen(fileContent); // must be before setPlainText - don't ask why - I could tell you though...
+	int cnt = fileContent.count('\n') + 1;
+	updateLineNumbers(cnt);
 
-		textEdit->setPlainText(fileContent);
-		previousLineCount = fileContent.count('\xa')+1;
-		file.close();
+	updateExtraWordsList();
 
-		int cnt = fileContent.count('\n') + 1;
-		updateLineNumbers(cnt);
+	setWindowTitle(windowName);
 
-		updateExtraWordsList();
+	addFileToRecentList(fileName);
 
-		setWindowTitle(windowName);
+	if (!dontUpdateFileTree){
+		fileModel->setRootPath(fileInfo.absolutePath());
+		QSettings settings("FoundationTechnologies", "CodeWizard");
+		settings.setValue("mostRecentFolder", fileInfo.absolutePath());
 
-		addFileToRecentList(fileName);
+		fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
+	}
 
-		if (!dontUpdateFileTree){
-			fileModel->setRootPath(fileInfo.absolutePath());
-			QSettings settings("FoundationTechnologies", "CodeWizard");
-			settings.setValue("mostRecentFolder", fileInfo.absolutePath());
+	if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())){
+		fileTree->show();
+	}else{
+		fileTree->hide();
+	}
 
-			fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
-		}
+	auto it = storedLineNumbers.find(fileName);
+	if (it != storedLineNumbers.end()) {
+		textEdit->verticalScrollBar()->setValue(it->second);
+	}
 
-		if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())){
-			fileTree->show();
-		}else{
-			fileTree->hide();
-		}
+	lspMutex.lock();
+	setupLSP(oldFile);
+	lspMutex.unlock();
 
-		auto it = storedLineNumbers.find(fileName);
-		if (it != storedLineNumbers.end()) {
-			textEdit->verticalScrollBar()->setValue(it->second);
-		}
-
-		lspMutex.lock();
-		setupLSP(oldFile);
-		lspMutex.unlock();
-
-		if (useSpeakerAction->isChecked()){
-			speech->say("File Opened");
-		}
+	if (useSpeakerAction->isChecked()){
+		speech->say("File Opened");
 	}
 
 	isOpeningFile = false;
@@ -4759,6 +4821,7 @@ void MainWindow::updateLineNumbers(int count) // good enough
 	QString text = lineNumbers.join("<br>");
 
 	lineNumberTextEdit->setHtml("<p align=\"right\">"+text);
+	updateMargins();
 	lineNumberTextEdit->blockSignals(false);
 }
 
@@ -5553,77 +5616,84 @@ void MainWindow::openRecentFile(QString newFile){
 		pullUpSaveDialogue();
 	}
 
-	if (!newFile.isEmpty()){
-		fileName = newFile;
-	}else{
+	if (newFile.isEmpty()){
 		isOpeningFile = false;
 		return;
 	}
 
-	storedLineNumbers[fileName] = textEdit->verticalScrollBar()->value();
-
-	if (!fileName.isEmpty()) {
-		setLangOffFilename(fileName, false);
-		unsaved = false;
-
-		QFileInfo fileInfo(fileName);
-		QString fileDir = fileInfo.absolutePath();
-		QString fileNameName = fileInfo.fileName();
-
-		windowName = "CodeWizard V"+versionNumber+" - "+fileNameName+" - "+fileName;
-		QFile file(fileName);
-		if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-			QMessageBox newWarningBox;
-			newWarningBox.setIcon(QMessageBox::Warning);
-			newWarningBox.setText(tr("Cannot open file: %1").arg(file.errorString()));
-			newWarningBox.setWindowTitle(tr("Error"));
-			newWarningBox.setFont(textEdit->font());
-			newWarningBox.exec();
-			isOpeningFile = false;
-			return;
-		}
-
-		QTextStream in(&file);
-		QString fileContent = in.readAll();
-		previousLineCount = 1;
-		savedText = fileContent;
-
-		setupSyntaxTreeOnOpen(fileContent);
-
-		textEdit->setPlainText(fileContent);
-		previousLineCount = fileContent.count('\xa')+1;
-		file.close();
-
-		addFileToRecentList(fileName);
-
-		int cnt = fileContent.count('\n') + 1;
-		updateLineNumbers(cnt);
-
-		updateExtraWordsList();
-
-		setWindowTitle(windowName);
-
-		fileModel->setRootPath(fileInfo.absolutePath());
-		QSettings settings("FoundationTechnologies", "CodeWizard");
-		settings.setValue("mostRecentFolder", fileInfo.absolutePath());
-
-		fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
-
-		if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())){ // BACK TO HERE YO
-			fileTree->show();
-		}else{
-			fileTree->hide();
-		}
-
-		auto it = storedLineNumbers.find(fileName);
-		if (it != storedLineNumbers.end()) {
-			textEdit->verticalScrollBar()->setValue(it->second);
-		}
-
-		lspMutex.lock();
-		setupLSP(oldFile);
-		lspMutex.unlock();
+	storedLineNumbers[newFile] = textEdit->verticalScrollBar()->value();
+	
+	QFileInfo fileInfo(newFile);
+	QFile file(newFile);
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QMessageBox newWarningBox;
+		newWarningBox.setIcon(QMessageBox::Warning);
+		newWarningBox.setText(tr("Cannot open file: %1").arg(file.errorString()));
+		newWarningBox.setWindowTitle(tr("Error"));
+		newWarningBox.setFont(textEdit->font());
+		newWarningBox.exec();
+		isOpeningFile = false;
+		return;
 	}
+	
+	bool ret = checkForLargeFile(&file);
+	
+	if (!ret){
+		isOpeningFile = false;
+		return;
+	}
+	
+	fileName = newFile;
+
+	setLangOffFilename(fileName, false);
+	unsaved = false;
+
+	QString fileDir = fileInfo.absolutePath();
+	QString fileNameName = fileInfo.fileName();
+
+	windowName = "CodeWizard V"+versionNumber+" - "+fileNameName+" - "+fileName;
+
+	QTextStream in(&file);
+	QString fileContent = in.readAll();
+	previousLineCount = 1;
+	savedText = fileContent;
+
+	setupSyntaxTreeOnOpen(fileContent);
+
+	textEdit->setPlainText(fileContent);
+	
+	previousLineCount = fileContent.count('\xa')+1;
+	file.close();
+
+	addFileToRecentList(fileName);
+
+	int cnt = fileContent.count('\n') + 1;
+	updateLineNumbers(cnt);
+
+	updateExtraWordsList();
+
+	setWindowTitle(windowName);
+
+	fileModel->setRootPath(fileInfo.absolutePath());
+	QSettings settings("FoundationTechnologies", "CodeWizard");
+	settings.setValue("mostRecentFolder", fileInfo.absolutePath());
+
+	fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
+
+	if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())){ // BACK TO HERE YO
+		fileTree->show();
+	}else{
+		fileTree->hide();
+	}
+
+	auto it = storedLineNumbers.find(fileName);
+	if (it != storedLineNumbers.end()) {
+		textEdit->verticalScrollBar()->setValue(it->second);
+	}
+
+	lspMutex.lock();
+	setupLSP(oldFile);
+	lspMutex.unlock();
 
 	if (useSpeakerAction->isChecked()){
 		speech->say("File Opened");

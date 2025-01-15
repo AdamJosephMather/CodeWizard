@@ -35,12 +35,19 @@ protected:
 		}
 	}
 	void wheelEvent(QWheelEvent *event) override;
+	
+	void resizeEvent(QResizeEvent* event) override {
+		QTextEdit::resizeEvent(event);
+		// Call your function here
+		emit handleSizeChange();
+	}
 
 signals:
 	void mousePositionChanged(QPoint pos);
 	void gotoDefinitionActionTriggered();
 	void mouseClicked(QPoint pos);                 // New signal for mouse clicks
 	void mouseClickedAtCursor(QTextCursor cursor); // New signal with cursor info
+	void handleSizeChange();
 };
 
 #endif // MYTEXTEDIT_H

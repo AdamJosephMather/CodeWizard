@@ -44,7 +44,8 @@ constexpr auto qt_meta_stringdata_CLASSMyTextEditENDCLASS = QtMocHelpers::string
     "mouseClicked",
     "mouseClickedAtCursor",
     "QTextCursor",
-    "cursor"
+    "cursor",
+    "handleSizeChange"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
 #error "qtmochelpers.h not found or too old."
@@ -57,24 +58,26 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMyTextEditENDCLASS[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   14, // methods
+       5,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       4,       // signalCount
+       5,       // signalCount
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    1,   38,    2, 0x06,    1 /* Public */,
-       4,    0,   41,    2, 0x06,    3 /* Public */,
-       5,    1,   42,    2, 0x06,    4 /* Public */,
-       6,    1,   45,    2, 0x06,    6 /* Public */,
+       1,    1,   44,    2, 0x06,    1 /* Public */,
+       4,    0,   47,    2, 0x06,    3 /* Public */,
+       5,    1,   48,    2, 0x06,    4 /* Public */,
+       6,    1,   51,    2, 0x06,    6 /* Public */,
+       9,    0,   54,    2, 0x06,    8 /* Public */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::QPoint,    3,
     QMetaType::Void,
     QMetaType::Void, QMetaType::QPoint,    3,
     QMetaType::Void, 0x80000000 | 7,    8,
+    QMetaType::Void,
 
        0        // eod
 };
@@ -98,7 +101,9 @@ Q_CONSTINIT const QMetaObject MyTextEdit::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<QPoint, std::false_type>,
         // method 'mouseClickedAtCursor'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        QtPrivate::TypeAndForceComplete<QTextCursor, std::false_type>
+        QtPrivate::TypeAndForceComplete<QTextCursor, std::false_type>,
+        // method 'handleSizeChange'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
     nullptr
 } };
@@ -113,6 +118,7 @@ void MyTextEdit::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 1: _t->gotoDefinitionActionTriggered(); break;
         case 2: _t->mouseClicked((*reinterpret_cast< std::add_pointer_t<QPoint>>(_a[1]))); break;
         case 3: _t->mouseClickedAtCursor((*reinterpret_cast< std::add_pointer_t<QTextCursor>>(_a[1]))); break;
+        case 4: _t->handleSizeChange(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -145,6 +151,13 @@ void MyTextEdit::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
                 return;
             }
         }
+        {
+            using _t = void (MyTextEdit::*)();
+            if (_t _q_method = &MyTextEdit::handleSizeChange; *reinterpret_cast<_t *>(_a[1]) == _q_method) {
+                *result = 4;
+                return;
+            }
+        }
     }
 }
 
@@ -167,13 +180,13 @@ int MyTextEdit::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 5)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 5;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 4)
+        if (_id < 5)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 4;
+        _id -= 5;
     }
     return _id;
 }
@@ -203,5 +216,11 @@ void MyTextEdit::mouseClickedAtCursor(QTextCursor _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
     QMetaObject::activate(this, &staticMetaObject, 3, _a);
+}
+
+// SIGNAL 4
+void MyTextEdit::handleSizeChange()
+{
+    QMetaObject::activate(this, &staticMetaObject, 4, nullptr);
 }
 QT_WARNING_POP

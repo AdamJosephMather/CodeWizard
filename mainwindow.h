@@ -4,6 +4,7 @@
 #include <QListWidgetItem>
 #include <QMainWindow>
 
+#include <qdir.h>
 #include <tree_sitter/api.h>
 
 QT_BEGIN_NAMESPACE
@@ -23,6 +24,8 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void updateMargins();
+	bool checkForLargeFile(QFile *file);
 	void clearTSSyntaxHighlighting();
 	void changeFindSectionVisibility(bool visible);
 	void checkForFixitDialogue();
