@@ -8,12 +8,15 @@ CodeWizard is a custom Code Editor / IDE designed by Adam Mather. The main point
 
 ## Screenshots
 
-<img width="1128" alt="image" src="https://github.com/user-attachments/assets/49cb11af-2087-4b83-a517-0252afcf2495" />
-
+<img width="1128" alt="FullWFiletree" src="https://github.com/user-attachments/assets/e326ef1a-5cf3-4ba4-98ba-ca5a6bd718c6" />
 
 CodeWizard has an optional filetree on the left. Here's an example without.
 
-<img width="564" alt="image" src="https://github.com/user-attachments/assets/2f355013-3dd9-4e0d-a927-a46e3bfa191f" />
+<img width="564" alt="HalfWBottom" src="https://github.com/user-attachments/assets/03625ed1-bb6a-4bc7-b233-a13e0f567d6d" />
+
+Furthermore, the bottom bar can be closed and the filetree can be closed in fullscreen.
+
+<img width="1128" alt="LargeWoutFiletreeWoutBottom" src="https://github.com/user-attachments/assets/c11f404c-3a74-4b77-9fe1-b5c5cf98718d" />
 
 ## Why use CodeWizard?
 
