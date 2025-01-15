@@ -39,7 +39,7 @@ protected:
 	void resizeEvent(QResizeEvent* event) override {
 		QTextEdit::resizeEvent(event);
 		// Call your function here
-		emit handleSizeChange();
+		emit handleSizeChange(false);
 	}
 
 signals:
@@ -47,7 +47,7 @@ signals:
 	void gotoDefinitionActionTriggered();
 	void mouseClicked(QPoint pos);                 // New signal for mouse clicks
 	void mouseClickedAtCursor(QTextCursor cursor); // New signal with cursor info
-	void handleSizeChange();
+	void handleSizeChange(bool force);
 };
 
 #endif // MYTEXTEDIT_H

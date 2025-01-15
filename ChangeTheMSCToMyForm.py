@@ -171,4 +171,4 @@ for i in fulls:
 
 import pyperclip
 pyperclip.copy(out[:-2])
-print(out[:-2])
+print(out[:-2]

@@ -84,6 +84,8 @@ QList<QTextCharFormat> coloredFormats;
 
 QColor normalColor = QColor(255, 255, 255);
 
+int marginBottomSize = 0;
+
 QTextCharFormat c1Format;
 QTextCharFormat c2Format;
 QTextCharFormat c3Format;
@@ -851,26 +853,26 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	recordingLight = new RecordingLight(textEdit);
 	recordingLight->hide();
 	
-	updateMargins();
+	updateMargins(false);
 }
 
-void MainWindow::updateMargins() {
-	qDebug() << "updateMargins";
+void MainWindow::updateMargins(bool force) {
+	qDebug() << "updateMargins - " << force;
 	
 	QFontMetrics metrics(textEdit->font());
 	
-	int size = textEdit->height()-metrics.height()*2;
-	if (size < 0){
-		size = 0;
+	marginBottomSize = textEdit->height()-metrics.height()*2;
+	if (marginBottomSize < 0){
+		marginBottomSize = 0;
 	}
 	
-	auto format = textDocument->rootFrame()->frameFormat();
-	format.setBottomMargin(size);
-	textDocument->rootFrame()->setFrameFormat(format);
+	qDebug() << marginBottomSize;
 	
-	auto format2 = lineNumberTextEdit->document()->rootFrame()->frameFormat();
-	format2.setBottomMargin(size);
-	lineNumberTextEdit->document()->rootFrame()->setFrameFormat(format2);
+	if (textDocument->blockCount() < 200 || force){ // I do this for performance issues with opening and closing the find menu/resizing menu. It resets the ENTIRE html
+		auto format = textDocument->rootFrame()->frameFormat();
+		format.setBottomMargin(marginBottomSize);
+		textDocument->rootFrame()->setFrameFormat(format);
+	}
 }
 
 void MainWindow::on_actionSet_Syntax_Colors_triggered() {
@@ -998,7 +1000,7 @@ void MainWindow::syntaxColorsOffImage(){
 			}
 
 			if (first && z == 7){ // max number of retries
-				if (useSpeakerAction->isCheckable()){
+				if (useSpeakerAction->isChecked()){
 					speech->say("This image did not play nicely with this feature.");
 				}
 
@@ -1071,7 +1073,7 @@ void MainWindow::validateAndConvert(){
 		if (match.hasMatch()) {
 			hexEdits.append(LE->text());
 		} else {
-			if (useSpeakerAction->isCheckable()){
+			if (useSpeakerAction->isChecked()){
 				speech->say("Hex code invalid.");
 			}
 			label->setText("ERROR: Hex code invalid: \""+LE->text()+"\"");
@@ -1095,7 +1097,7 @@ void MainWindow::validateAndConvert(){
 
 	rehighlightFullDoc();
 
-	if (useSpeakerAction->isCheckable()){
+	if (useSpeakerAction->isChecked()){
 		speech->say("Succeeded!");
 	}
 
@@ -1450,6 +1452,8 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		lspMutex.lock();
 		setupLSP(oldFile);
 		lspMutex.unlock();
+		
+		updateMargins(true); // called on open - every time
 
 		if (useSpeakerAction->isChecked()){
 			speech->say("File Opened");
@@ -1472,7 +1476,7 @@ bool MainWindow::checkForLargeFile(QFile *file){
 	
 		QMessageBox dialog;
 		dialog.setWindowTitle("CodeWizard");
-		dialog.setText("Opening large file - continue?");
+		dialog.setText("Opening large file ("+QString::number(kb/1000)+" mb) - continue?");
 		dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 		dialog.setDefaultButton(QMessageBox::Yes);
 		dialog.setFont(textEdit->font());
@@ -2654,15 +2658,17 @@ MainWindow::~MainWindow()
 void MainWindow::updateScrollBarValue(int value)
 {
 //	qDebug() << "updateScrollBarValue";
-
 	lineNumberTextEdit->verticalScrollBar()->setValue(value);
 }
 
 void MainWindow::updateScrollBarValue2(int value)
 {
 //	qDebug() << "updateScrollBarValue2";
-
-	textEdit->verticalScrollBar()->setValue(value);
+	if (value <= textEdit->verticalScrollBar()->maximum()){
+		textEdit->verticalScrollBar()->setValue(value);
+	}else{
+		lineNumberTextEdit->verticalScrollBar()->setValue(textEdit->verticalScrollBar()->maximum());
+	}
 }
 
 void MainWindow::findTriggered()
@@ -2853,7 +2859,7 @@ void MainWindow::clearTSSyntaxHighlighting(){
 }
 
 void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
-{
+{	
 	qDebug() << "setupSyntaxTreeOnOpen";
 
 	treeParserSyntaxHighlighter.colormap = currentLang.colorMapTS;
@@ -3021,6 +3027,8 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	lspMutex.lock();
 	setupLSP(oldFile);
 	lspMutex.unlock();
+	
+	updateMargins(true); // called on open - every time
 
 	if (useSpeakerAction->isChecked()){
 		speech->say("File Opened");
@@ -4092,6 +4100,8 @@ void MainWindow::on_actionSave_triggered()
 		windowName = "CodeWizard V"+versionNumber+" - "+fileNameName+" - "+fileName;
 
 		addFileToRecentList(fileName);
+		
+		updateMargins(true); // called on open - every time
 	}
 	saveToFile(textEdit->toPlainText());
 	savedText = textEdit->toPlainText();
@@ -4474,6 +4484,8 @@ void MainWindow::on_actionSave_As_triggered()
 	lspMutex.lock();
 	setupLSP(oldFile);
 	lspMutex.unlock();
+	
+	updateMargins(true); // called on open - every time
 }
 
 void MainWindow::on_actionFix_It_triggered(){ // THE FIX IT BUTTON
@@ -4816,12 +4828,15 @@ void MainWindow::updateLineNumbers(int count) // good enough
 	QStringList lineNumbers;
 
 	for (int i = 1; i < count; ++i) {
-		lineNumbers << QString::number(i); // Collect line numbers in a list
+		QString nm = QString::number(i);
+		int spaces = countDigits-nm.length();
+		
+		lineNumbers << QString(spaces, ' ')+nm;
 	}
-	QString text = lineNumbers.join("<br>");
+	
+	QString text = lineNumbers.join("\n") + QString(1000, '\n');
 
-	lineNumberTextEdit->setHtml("<p align=\"right\">"+text);
-	updateMargins();
+	lineNumberTextEdit->setPlainText(text);
 	lineNumberTextEdit->blockSignals(false);
 }
 
@@ -5694,6 +5709,8 @@ void MainWindow::openRecentFile(QString newFile){
 	lspMutex.lock();
 	setupLSP(oldFile);
 	lspMutex.unlock();
+	
+	updateMargins(true); // called on open - every time
 
 	if (useSpeakerAction->isChecked()){
 		speech->say("File Opened");

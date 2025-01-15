@@ -24,7 +24,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
-	void updateMargins();
+	void updateMargins(bool force);
 	bool checkForLargeFile(QFile *file);
 	void clearTSSyntaxHighlighting();
 	void changeFindSectionVisibility(bool visible);
