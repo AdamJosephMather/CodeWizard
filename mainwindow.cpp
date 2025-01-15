@@ -80,6 +80,8 @@ QColor c3 = QColor(38, 175, 199);
 QColor c4 = QColor(38, 143, 199);
 QColor c5 = QColor(160, 160, 160);
 
+QString defaultSyntaxNumbers = "186,143,63|122,122,122|212,72,81|204,125,55|124,147,153|136,64,237|115,115,115|69,143,222";
+
 QList<QTextCharFormat> coloredFormats;
 
 QColor normalColor = QColor(255, 255, 255);
@@ -296,7 +298,6 @@ bool isOpeningFile = false;
 QPoint suggestedPosition;
 QMenu* fileTreeContextMenu;
 
-bool ctrlDown = false;
 bool holdingAnEvent = false;
 
 QTextToSpeech *speech;
@@ -374,7 +375,6 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	bool thm = wantedTheme(); // must happen before any posibility of setting the saveWantedTheme
 
 	textEdit->setWordWrapMode(QTextOption::NoWrap);
-	textEdit->setFocus();
 	textDocument = textEdit->document();
 	
 	QFont monacoFont("Monaco");
@@ -854,6 +854,11 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	recordingLight->hide();
 	
 	updateMargins(false);
+	
+	
+	
+	
+	textEdit->setFocus();
 }
 
 void MainWindow::updateMargins(bool force) {
@@ -1034,20 +1039,30 @@ void MainWindow::syntaxColorsOffImage(){
 	validateAndConvert();
 }
 
-void MainWindow::resetSyntaxColors(){
-	qDebug() << "resetSyntaxColors";
-
+void MainWindow::setFormatsFromMyList(QString str){
+	qDebug() << "setFormatsFromMyList";
+	
 	coloredFormats = {};
 	coloredFormats.append(QTextCharFormat());
-
-	QString str = "186,143,63|122,122,122|212,72,81|204,125,55|124,147,153|136,64,237|115,115,115|69,143,222";
-
+	QStringList defaultNums = defaultSyntaxNumbers.split("|");
+	
+	int i = 0;
 	for(const QString color : str.split("|")){
 		QStringList nums = color.split(",");
 		QTextCharFormat form = QTextCharFormat();
-		form.setForeground(QColor(nums[0].toInt(), nums[1].toInt(), nums[2].toInt()));
+		QColor col(nums[0].toInt(), nums[1].toInt(), nums[2].toInt());
+		
+		qDebug() << i << defaultNums[i] << color << darkmode;
+		
+		form.setForeground(col);
 		coloredFormats.append(form);
 	}
+}
+
+void MainWindow::resetSyntaxColors(){
+	qDebug() << "resetSyntaxColors";
+	
+	setFormatsFromMyList(defaultSyntaxNumbers);
 
 	for (int i = 1; i < 9; ++i) {
 		hexColorsList[i-1]->setText(coloredFormats[i].foreground().color().name());
@@ -1094,13 +1109,13 @@ void MainWindow::validateAndConvert(){
 		treeParserSyntaxHighlighter.setFormats(coloredFormats);
 		saveWantedTheme();
 	}
-
+	
 	rehighlightFullDoc();
-
+	
 	if (useSpeakerAction->isChecked()){
 		speech->say("Succeeded!");
 	}
-
+	
 	label->setText("Succeeded!");
 	layout->addWidget(label);
 	diag.setLayout(layout);
@@ -1197,7 +1212,7 @@ void MainWindow::printTree(TSNode node, int depth) {
 void MainWindow::mouseClicked(){
 	qDebug() << "mouseClicked";
 
-	if (ctrlDown) {
+	if (QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier) {
 		gotoDefinitionActionTriggered();
 	}
 }
@@ -2055,8 +2070,6 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 QString MainWindow::plaintextToHtml(QString plaintext) {
 	qDebug() << "plaintextToHtml";
 	
-	qDebug() << plaintext;
-
 	QString html = plaintext;
 	
 	html.replace("&", "&amp;");
@@ -2076,8 +2089,6 @@ QString MainWindow::plaintextToHtml(QString plaintext) {
 	html.replace("\n", "<br>");
 	
 	html = "<p>"+html+"</p>";
-	
-	qDebug() << html;
 
 	return "<div style=\"white-space: pre;\">"+html+"</div>";
 }
@@ -2145,8 +2156,6 @@ QString MainWindow::markdownToHtml(QString markdown) {
 	html = html.trimmed();
 	html.replace("\n", "<br>");
 	html.replace("`", "");
-	
-	qDebug() << html;
 
 	return "<div style=\"white-space: pre;\">"+html+"</div>";
 }
@@ -2209,7 +2218,11 @@ void MainWindow::updateFonts()
 	font.setPointSize(fontSize);
 	font.setItalic(false);
 	font.setBold(false);
+	font.setStyleHint(QFont::Monospace);
+	
 	textEdit->setFont(font);
+	
+	QApplication::setFont(font);
 
 	QFontMetrics metrics(textEdit->font());
 
@@ -2499,7 +2512,9 @@ void MainWindow::saveWantedTheme()
 
 	QString str = strLst.join("|");
 
+	qDebug() << "attempting set str";
 	if (coloredFormats.length() == 9){
+		qDebug() << "setting " << str;
 		settings.setValue("syntaxColors", str);
 	}
 
@@ -2571,29 +2586,17 @@ bool MainWindow::wantedTheme()
 		csharpLSP = settings.value("csharpLSP", "").toString();
 		javaLSP = settings.value("javaLSP", "").toString();
 		cLSP = settings.value("cLSP", "").toString();
-
-		QString numbers = settings.value("syntaxColors", "186,143,63|122,122,122|212,72,81|204,125,55|124,147,153|136,64,237|115,115,115|69,143,222").toString();
+		
+		QString numbers = settings.value("syntaxColors", defaultSyntaxNumbers).toString();
 		
 		if (numbers == "38,175,199|38,143,199|50,168,160|222,123,2|41,171,47|217,159,0|160,160,160|245,120,66"){
-			numbers = "186,143,63|122,122,122|212,72,81|204,125,55|124,147,153|136,64,237|115,115,115|69,143,222";
+			numbers = defaultSyntaxNumbers;
+		}else if (numbers.count("|") != 7){
+			numbers = defaultSyntaxNumbers;
 		}
 		
-		qDebug() << numbers;
+		setFormatsFromMyList(numbers);
 		
-		coloredFormats = {};
-		coloredFormats.append(QTextCharFormat());
-
-		if (numbers.count("|") != 7){
-			numbers = "186,143,63|122,122,122|212,72,81|204,125,55|124,147,153|136,64,237|115,115,115|69,143,222";
-		}
-
-		for(const QString color : numbers.split("|")){
-			QStringList nums = color.split(",");
-			QTextCharFormat form = QTextCharFormat();
-			form.setForeground(QColor(nums[0].toInt(), nums[1].toInt(), nums[2].toInt()));
-			coloredFormats.append(form);
-		}
-
 		showWarnings->setChecked(settings.value("showWarnings", true).toBool());
 		showErrors->setChecked(settings.value("showErrors", true).toBool());
 		showOther->setChecked(settings.value("showOther", true).toBool());
@@ -3293,23 +3296,9 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 	process->startDetached("cmd.exe", arguments);
 }
 
-void MainWindow::keyReleaseEvent(QKeyEvent *event)
-{
-	qDebug() << "keyReleaseEvent";
-
-	if(event->key() == Qt::Key_Control)
-	{
-		ctrlDown = false;
-	}
-}
-
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
 	qDebug() << "keyPressEvent";
-
-	if (event->key() == Qt::Key_Control){
-		ctrlDown = true;
-	}
 
 	if(event->key() == Qt::Key_F5)
 	{
@@ -4410,7 +4399,7 @@ void MainWindow::on_actionDark_Mode_triggered()
 void MainWindow::on_actionLight_Mode_triggered()
 {
 	qDebug() << "on_actionLight_Mode_triggered";
-
+	
 	darkmode = false;
 	changeTheme(darkmode);
 	saveWantedTheme();
@@ -5052,47 +5041,47 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 
 	if (darkmode){
 		QPalette palette = textEdit->palette();
-		palette.setColor(QPalette::Base, QColor(28, 28, 28));
+		palette.setColor(QPalette::Base, QColor(23, 23, 23));
 		textEdit->setPalette(palette);
 
 		palette = lineNumberTextEdit->palette();
-		palette.setColor(QPalette::Base, QColor(35, 35, 35));
+		palette.setColor(QPalette::Base, QColor(32, 32, 32));
 		lineNumberTextEdit->setPalette(palette);
 
 		palette = fileTree->palette();
-		palette.setColor(QPalette::Base, QColor(35, 35, 35));
+		palette.setColor(QPalette::Base, QColor(32, 32, 32));
 		fileTree->setPalette(palette);
 
 		palette = replaceTextEdit->palette();
-		palette.setColor(QPalette::Base, QColor(35, 35, 35));
+		palette.setColor(QPalette::Base, QColor(32, 32, 32));
 		replaceTextEdit->setPalette(palette);
 
 		palette = findTextEdit->palette();
-		palette.setColor(QPalette::Base, QColor(35, 35, 35));
+		palette.setColor(QPalette::Base, QColor(32, 32, 32));
 		findTextEdit->setPalette(palette);
 
 		palette = lineEdit->palette();
-		palette.setColor(QPalette::Base, QColor(35, 35, 35));
+		palette.setColor(QPalette::Base, QColor(32, 32, 32));
 		lineEdit->setPalette(palette);
 
 		palette = findButton->palette();
-		palette.setColor(QPalette::Button, QColor(35, 35, 35));
+		palette.setColor(QPalette::Button, QColor(32, 32, 32));
 		findButton->setPalette(palette);
 
 		palette = replaceButton->palette();
-		palette.setColor(QPalette::Button, QColor(35, 35, 35));
+		palette.setColor(QPalette::Button, QColor(32, 32, 32));
 		replaceButton->setPalette(palette);
 
 		palette = replaceAllButton->palette();
-		palette.setColor(QPalette::Button, QColor(35, 35, 35));
+		palette.setColor(QPalette::Button, QColor(32, 32, 32));
 		replaceAllButton->setPalette(palette);
 
 		palette = nextButton->palette();
-		palette.setColor(QPalette::Button, QColor(35, 35, 35));
+		palette.setColor(QPalette::Button, QColor(32, 32, 32));
 		nextButton->setPalette(palette);
 	} else {
 		QPalette palette = textEdit->palette();
-		palette.setColor(QPalette::Base, QColor(240, 240, 240));
+		palette.setColor(QPalette::Base, QColor(230, 230, 230));
 		textEdit->setPalette(palette);
 
 		palette = lineNumberTextEdit->palette();
@@ -5140,7 +5129,7 @@ void MainWindow::changeTheme(bool darkMode)
 	// Dark theme style
 	QString contextMenuSheet = R"(
 		QMenu {
-			background-color: rgb(30, 30, 30);
+			background-color: rgb(25, 25, 25);
 			color: white;
 			border: 1px solid rgb(45, 45, 45);
 			border-radius: 8px;
@@ -5203,7 +5192,7 @@ void MainWindow::changeTheme(bool darkMode)
 		// Use Fusion style on Windows 10
 		qApp->setStyle(QStyleFactory::create("Fusion"));
 	}
-
+	
 	if (darkMode) {
 		// Optionally modify the palette for light mode
 		QPalette lightPalette = qApp->palette();
@@ -5215,7 +5204,7 @@ void MainWindow::changeTheme(bool darkMode)
 
 		// Customize the palette as needed
 
-		lightPalette.setColor(QPalette::Window, QColor(30, 30, 30));
+		lightPalette.setColor(QPalette::Window, QColor(25, 25, 25));
 		lightPalette.setColor(QPalette::WindowText, Qt::white);
 		lightPalette.setColor(QPalette::Base, QColor(45, 45, 45));
 		lightPalette.setColor(QPalette::ButtonText, Qt::white);
@@ -5248,7 +5237,7 @@ void MainWindow::changeTheme(bool darkMode)
 
 		qApp->setPalette(lightPalette);
 		normalColor = QColor(255, 255, 255);
-	} else {
+	}else{
 		// Optionally modify the palette for light mode
 		QPalette lightPalette = qApp->palette();
 
@@ -5359,7 +5348,7 @@ void MainWindow::updateFontSelection()
 
 	QFont font = textEdit->font();
 
-	font.setItalic(false); // these 2 are probably not neccecarry
+	font.setItalic(false); // these 2 are probably not neccecarry but they sure do look pretty
 	font.setBold(false);
 	font.setFamily(currentFont);
 

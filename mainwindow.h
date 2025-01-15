@@ -24,6 +24,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void setFormatsFromMyList(QString str);
 	void updateMargins(bool force);
 	bool checkForLargeFile(QFile *file);
 	void clearTSSyntaxHighlighting();
@@ -154,7 +155,6 @@ private slots:
 
 protected:
 	void keyPressEvent(QKeyEvent *) override;
-	void keyReleaseEvent(QKeyEvent *) override;
 
 private:
 	Ui::MainWindow *ui;
