@@ -8,7 +8,7 @@
 #include <qboxlayout.h>
 
 QList<QTextCharFormat> formats = {QTextCharFormat(), QTextCharFormat(), QTextCharFormat(), QTextCharFormat(), QTextCharFormat(), QTextCharFormat(), QTextCharFormat(), QTextCharFormat(), QTextCharFormat()};
-std::unordered_map<QString, int> knownTypes = {{"true",8}, {"false", 8}};
+std::unordered_map<QString, int> knownTypes = {{"true",8}, {"false", 8}, {"none", 8}};
 QRegularExpression *regex = new QRegularExpression("[a-zA-Z0-9]");
 QSet<QString> naughtyTypes = {"escape_sequence"};
 QString curLang = "Python";
@@ -367,6 +367,6 @@ QTextCharFormat SyntaxHighlighter::getFormatForType(const QString& lotsOinfo) {
 	if (it3 != knownTypes.end()) {
 		return formats[it3->second];  // Access the value of the iterator (which is the key for formats)
 	}
-
+	
 	return QTextCharFormat();  // Return a default QTextCharFormat if not found
 }
