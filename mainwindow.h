@@ -24,6 +24,8 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void saveSyntaxColorsToFile();
+	void loadSyntaxColorsFromFile();
 	void setFormatsFromMyList(QString str);
 	void updateMargins(bool force);
 	bool checkForLargeFile(QFile *file);

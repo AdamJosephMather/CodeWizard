@@ -54,7 +54,7 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 
-QString versionNumber = "8.7.4";
+QString versionNumber = "8.7.5";
 
 QPoint mousePos;
 
@@ -731,11 +731,6 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	}
 	changeHighlightColors(thm);
 
-	if (!argFileName.isEmpty()){
-		globalArgFileName = argFileName;
-		on_actionOpen_triggered();
-	}
-
 	MainWindow::setupCompleter();
 
 	suggestionBox = new QListWidget(this);
@@ -856,9 +851,15 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	updateMargins(false);
 	
 	
+	//MUST BE ON END
 	
 	
 	textEdit->setFocus();
+	
+	if (!argFileName.isEmpty()){
+		globalArgFileName = argFileName;
+		on_actionOpen_triggered();
+	}
 }
 
 void MainWindow::updateMargins(bool force) {
@@ -889,7 +890,7 @@ void MainWindow::on_actionSet_Syntax_Colors_triggered() {
 
 	// Create 8 QLineEdit widgets for hex strings
 
-	QList<QString> labelText = {"String Hex:", "Comment Hex:", "Variable Hex:", "Types Hex:", "Function Hex:", "Extra Hex:", "Character Hex:", "Literal Hex:"};
+	QList<QString> labelText = {"String Hex:", "Comment Hex:", "Variable Hex:", "Types Hex:", "Function Hex:", "Keywords Hex:", "Character Hex:", "Literal Hex:"};
 
 	for (int i = 0; i < 8; ++i) {
 		QLabel *label = new QLabel(this);
@@ -919,17 +920,120 @@ void MainWindow::on_actionSet_Syntax_Colors_triggered() {
 
 	QPushButton *resetButton = new QPushButton("Reset to default", this);
 	resetButton->setFont(textEdit->font());
+	
+	QPushButton *saveToFileButton = new QPushButton("Save To File", this);
+	saveToFileButton->setFont(textEdit->font());
+	
+	QPushButton *loadFromFileButton = new QPushButton("Load From File", this);
+	loadFromFileButton->setFont(textEdit->font());
 
 	connect(validateButton, &QPushButton::clicked, this, &MainWindow::validateAndConvert);
 	connect(resetButton, &QPushButton::clicked, this, &MainWindow::resetSyntaxColors);
 	connect(imageButton, &QPushButton::clicked, this, &MainWindow::syntaxColorsOffImage);
+	connect(saveToFileButton, &QPushButton::clicked, this, &MainWindow::saveSyntaxColorsToFile);
+	connect(loadFromFileButton, &QPushButton::clicked, this, &MainWindow::loadSyntaxColorsFromFile);
 
 	layout->addWidget(validateButton);
 	layout->addWidget(imageButton);
 	layout->addWidget(resetButton);
+	layout->addWidget(saveToFileButton);
+	layout->addWidget(loadFromFileButton);
 
 	diag.setLayout(layout);
 	diag.exec();
+}
+
+void MainWindow::saveSyntaxColorsToFile(){
+	QString saveFile = QFileDialog::getSaveFileName(this, tr("Save File"), "syntaxColors.cdwzrd", tr("All Files (*);"));
+	
+	if (saveFile.isEmpty()){
+		return;
+	}
+	
+	if (!saveFile.endsWith(".cdwzrd")){
+		saveFile += ".cdwzrd";
+	}
+	
+	QFile file(saveFile);
+	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+		openHelpMenu("Failed to open file to save syntax colors.");
+		if (useSpeakerAction->isChecked()){
+			speech->say("Failed to open file to save syntax colors.");
+		}
+		return;
+	}
+	
+	QStringList listOData;
+	
+	for (int i = 0; i < hexColorsList.length(); i++){
+		listOData.push_back(hexColorsList[i]->text());
+	}
+	
+	QString data = "CodeWizard - SyntaxColors\n\n"+listOData.join(",");
+	
+	QTextStream out(&file);
+	out << data;
+	file.close();
+	
+	openHelpMenu("Completed.");
+}
+
+void MainWindow::loadSyntaxColorsFromFile(){
+	QString filePath = QFileDialog::getOpenFileName(this, "Open CodeWizard File", "", "CodeWizard Files (*.cdwzrd);");
+
+	if (filePath.isEmpty()) {
+		return; // Return an empty string if no file is selected
+	}
+
+	QFile file(filePath);
+
+	// Attempt to open the file in read-only mode
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		openHelpMenu("Failed to open file.");
+		if (useSpeakerAction->isChecked()){
+			speech->say("Failed to open file.");
+		}
+		return;
+	}
+
+	// Read the contents of the file
+	QTextStream in(&file);
+	QString fileContents = in.readAll();
+	file.close();
+	
+	qDebug() << "Got: " << fileContents;
+	
+	QString expectedHeader = "CodeWizard - SyntaxColors\n\n";
+	
+	if (!fileContents.startsWith(expectedHeader)){
+		openHelpMenu("File does not match specification.");
+		if (useSpeakerAction->isChecked()){
+			speech->say("File does not match specification.");
+		}
+		return;
+	}
+	
+	QString content = fileContents.mid(expectedHeader.length(), fileContents.length()-expectedHeader.length());
+	
+	qDebug() << "Content: " << content;
+	
+	QStringList hex = content.split(",");
+	
+	qDebug() << "Hex: " << hex;
+	
+	if (hex.length() != 8){
+		openHelpMenu("File does not match specification.");
+		if (useSpeakerAction->isChecked()){
+			speech->say("File does not match specification.");
+		}
+		return;
+	}
+	
+	for (int i = 0; i < hex.length(); i++){
+		hexColorsList[i]->setText(hex[i]);
+	}
+	
+	validateAndConvert();
 }
 
 int MainWindow::colorDifference(QColor c1, QColor c2){

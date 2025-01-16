@@ -39,10 +39,12 @@ int main(int argc, char *argv[])
 		// Handle font loading error
 		qWarning("Failed to load font!");
 	}
+	
+	qDebug() << "Arg count: " << argc << "Argv: " << argv;
 
 	QString fileName;
 	if (argc > 1) {
-		fileName = argv[1];
+		fileName = a.arguments().at(1);
 	}
 
 	a.setWindowIcon(QIcon(":/resources/Python.ico"));

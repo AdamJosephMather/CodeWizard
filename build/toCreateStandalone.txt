@@ -1,4 +1,10 @@
 copy the exe from the vs code folder to the exe folder, deleting anything in the exe folder
 
-C:\Qt\Tools\QtDesignStudio\qt6_design_studio_reduced_version\bin\windeployqt.exe CodeWizard.exe
 cd C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\build\CodeWizard
+C:\Qt\Tools\QtDesignStudio\qt6_design_studio_reduced_version\bin\windeployqt.exe CodeWizard.exe
+
+Then we use the inno installer creator with the setup wizard (read all option) then we add this:
+
+Root: HKCR; Subkey: "Applications\{#MyAppExeName}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""; Flags: uninsdeletekey
+
+to the registry section so that open with works for CodeWizard.
