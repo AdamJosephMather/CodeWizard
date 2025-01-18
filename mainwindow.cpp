@@ -25,6 +25,7 @@
 #include "highlightdata.h"
 #include <QTextToSpeech>
 #include "recordinglight.h"
+#include "groqai.h"
 
 extern "C" {
 	TSLanguage* tree_sitter_cpp(void);
@@ -43,7 +44,6 @@ extern "C" {
 }
 
 int numberOfBlocksColored = 0;
-
 QList<QLineEdit*> hexColorsList;
 
 bool isErrorHighlighted = false;
@@ -54,7 +54,10 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 
-QString versionNumber = "8.7.6";
+QString versionNumber = "8.8.0";
+
+GroqAI *groq;
+QString groqApiKey;
 
 QPoint mousePos;
 
@@ -310,8 +313,10 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	ui->setupUi(this);
 
 	setWindowTitle(windowName);
-
 	statusBar()->hide();
+	
+	groq = new GroqAI(this);
+	groq->setModel("llama-3.3-70b-versatile");
 
 	findButton = ui->pushButton_4;
 	nextButton = ui->pushButton_3;
@@ -369,6 +374,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	lineEdit = ui->textEdit_5;
 
 	textEdit = ui->textEdit;
+	groq->setTextEdit(textEdit);
 
 	lineNumberTextEdit = ui->textEdit_4;
 
@@ -776,6 +782,13 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(useFileTree, &QAction::toggled, this, &MainWindow::fileTreeToggled);
 	connect(useFileTreeIfFullscreen, &QAction::toggled, this, &MainWindow::fileTreeToggled);
 	connect(fileTree, &QTreeView::doubleClicked, this, &MainWindow::fileTreeOpened);
+	
+	connect(groq, &GroqAI::responseReceived, this, [this](const QString &response) {
+		qDebug() << "AI Response:" << response;
+		QTextCursor c = textEdit->textCursor();
+		c.insertText(changeToTabs(response));
+		textEdit->setTextCursor(c);
+	});
 
 	updateLineNumbers(1);
 
@@ -860,6 +873,45 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		globalArgFileName = argFileName;
 		on_actionOpen_triggered();
 	}
+}
+
+QString MainWindow::changeToTabs(QString text){
+	QStringList lines = text.split("\n");
+	QStringList newLines;
+	
+	for (QString line : lines){
+		int seen = 0;
+		QString rest = "";
+		bool doneSeen = false;
+		
+		for (QChar c : line){
+			if (c == ' ' && !doneSeen){
+				seen ++;
+			}else{
+				doneSeen = true;
+				rest += c;
+			}
+		}
+		
+		int tabs = seen/4;
+		int spaces = seen%4;
+		
+		QString outLine = "";
+		
+		for (int i = 0; i < tabs; i++){
+			outLine += "	";
+		}
+		
+		for (int i = 0; i < spaces; i++){
+			outLine += " ";
+		}
+		
+		outLine += rest;
+		
+		newLines.push_back(outLine);
+	}
+	
+	return newLines.join("\n");
 }
 
 void MainWindow::updateMargins(bool force) {
@@ -2621,7 +2673,8 @@ void MainWindow::saveWantedTheme()
 		qDebug() << "setting " << str;
 		settings.setValue("syntaxColors", str);
 	}
-
+	
+	settings.setValue("groqApiKey", groqApiKey);
 	settings.setValue("fontSize", fontSize);
 	settings.setValue("darkModeEnabled", darkmode);
 	settings.setValue("currentFont", currentFont);
@@ -2691,6 +2744,9 @@ bool MainWindow::wantedTheme()
 		javaLSP = settings.value("javaLSP", "").toString();
 		cLSP = settings.value("cLSP", "").toString();
 		
+		groqApiKey = settings.value("groqApiKey", "").toString();
+		groq->setApiKey(groqApiKey);
+		
 		QString numbers = settings.value("syntaxColors", defaultSyntaxNumbers).toString();
 		
 		if (numbers == "38,175,199|38,143,199|50,168,160|222,123,2|41,171,47|217,159,0|160,160,160|245,120,66"){
@@ -2738,6 +2794,24 @@ bool MainWindow::wantedTheme()
 		QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", QSettings::NativeFormat);
 		return settings.value("AppsUseLightTheme").toInt() == 0;
 	}
+}
+
+void MainWindow::on_actionSet_Groq_AI_API_Key_triggered(){
+	QInputDialog dialog;
+	dialog.setFont(textEdit->font());  // Set the font to match textEdit's font
+	dialog.setWindowTitle("CodeWizard - AI");
+	dialog.setLabelText("Groq API Key?");
+	dialog.setTextValue(groqApiKey);  // Default text value can be an empty string
+	dialog.setTextEchoMode(QLineEdit::Normal);  // You can change this to Password if needed
+	dialog.exec();
+
+	if (dialog.result() != QDialog::Accepted) {
+		return;
+	}
+
+	groqApiKey = dialog.textValue();
+	groq->setApiKey(groqApiKey);
+	saveWantedTheme();
 }
 
 MainWindow::~MainWindow()
@@ -3744,6 +3818,17 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				lspMutex.unlock();
 				return true;
 			}
+		}else if (key_sequence == QKeySequence("Alt+A")) {
+			QString textCopied = textEdit->toPlainText();
+			QTextCursor c = textEdit->textCursor();
+			int pos = c.position();
+			textCopied.insert(pos, "[INSERT_CODE_HERE]");
+			
+			QList<QPair<QString, QString>> conversation = {
+				{"user", "Please create just the code which should be inserted at the specified point (the specified point is '[INSERT_CODE_HERE]'). Do not include any other text with you response. Just pick up exactly where was left off. If there is no code which makes sense to insert at that point, just do your best to create code which could fit there, never include text other than the code in your response. Also your response should be plaintext, not markdown. Do not include the name of the language you are writing. ONLY the text to insert at that position. Here's the current code:\n\n"+textCopied}
+			};
+			groq->generateResponse(conversation);
+			return true;
 		}
 
 		if (suggestionBox->isVisible() && !suggestion.isEmpty()) {

@@ -182,6 +182,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         highlightdata.h highlightdata.cpp
         resources.qrc
         recordinglight.h recordinglight.cpp
+        groqai.h groqai.cpp
     )
 
 # Define target properties for Android with Qt 6 as:

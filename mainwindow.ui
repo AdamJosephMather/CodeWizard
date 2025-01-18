@@ -252,7 +252,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>0</x>
      <y>0</y>
      <width>702</width>
-     <height>17</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -332,6 +332,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     </property>
     <addaction name="actionFix_It"/>
     <addaction name="actionChange_to_IDLE_format"/>
+    <addaction name="actionSet_Groq_AI_API_Key"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -890,6 +891,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </property>
    <property name="text">
     <string>Use Speaker</string>
+   </property>
+  </action>
+  <action name="actionSet_Groq_AI_API_Key">
+   <property name="text">
+    <string>Set Groq AI API Key</string>
    </property>
   </action>
  </widget>

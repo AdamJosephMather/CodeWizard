@@ -24,6 +24,8 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	QString changeToTabs(QString text);
+	void on_actionSet_Groq_AI_API_Key_triggered();
 	void saveSyntaxColorsToFile();
 	void loadSyntaxColorsFromFile();
 	void setFormatsFromMyList(QString str);

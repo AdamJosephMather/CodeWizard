@@ -116,6 +116,7 @@ public:
     QAction *actionUse_File_Tree_If_Fullscreen;
     QAction *actionSet_Syntax_Colors;
     QAction *actionUse_Speaker;
+    QAction *actionSet_Groq_AI_API_Key;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
@@ -344,6 +345,8 @@ public:
         actionUse_Speaker = new QAction(MainWindow);
         actionUse_Speaker->setObjectName("actionUse_Speaker");
         actionUse_Speaker->setCheckable(true);
+        actionSet_Groq_AI_API_Key = new QAction(MainWindow);
+        actionSet_Groq_AI_API_Key->setObjectName("actionSet_Groq_AI_API_Key");
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         QSizePolicy sizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::Minimum);
@@ -478,7 +481,7 @@ public:
         MainWindow->setStatusBar(statusbar);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName("menuBar");
-        menuBar->setGeometry(QRect(0, 0, 702, 17));
+        menuBar->setGeometry(QRect(0, 0, 702, 21));
         sizePolicy2.setHeightForWidth(menuBar->sizePolicy().hasHeightForWidth());
         menuBar->setSizePolicy(sizePolicy2);
         menuOp1 = new QMenu(menuBar);
@@ -553,6 +556,7 @@ public:
         menuSilly->addAction(actionUse_Speaker);
         menuFixit->addAction(actionFix_It);
         menuFixit->addAction(actionChange_to_IDLE_format);
+        menuFixit->addAction(actionSet_Groq_AI_API_Key);
         menuView->addAction(actionIncrease_Text_Size);
         menuView->addAction(actionDecrease_Text_Size);
         menuView->addAction(actionSet_Text_Size);
@@ -690,6 +694,7 @@ public:
         actionUse_File_Tree_If_Fullscreen->setText(QCoreApplication::translate("MainWindow", "Use File Tree If Fullscreen", nullptr));
         actionSet_Syntax_Colors->setText(QCoreApplication::translate("MainWindow", "Set Syntax Colors", nullptr));
         actionUse_Speaker->setText(QCoreApplication::translate("MainWindow", "Use Speaker", nullptr));
+        actionSet_Groq_AI_API_Key->setText(QCoreApplication::translate("MainWindow", "Set Groq AI API Key", nullptr));
         textEdit_4->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
