@@ -23,7 +23,8 @@ Furthermore, the bottom bar can be closed and the filetree can be closed in full
 CodeWizard offers a couple of major improvements on the existing editors:  
 1. System resource usage. CodeWizard clocks in at 20 MB of RAM usage on my machine. Compare that to VSCode which consumes upwards of 600 MB of RAM when opened.  
 2. Simplicity. CodeWizard is ideal for people used to and or wanting the IDLE like experience without excess bloat. Of course it does support the more complicated features like LSPs and whatnot, but it's an optional addon.  
-3. Fun features. For example, CodeWizard will let you select an image to theme it off of. This themeing will apply to the syntax colors it uses. More info in the Syntax Highlighting section.
+3. AI. CodeWizard can connect to Groq AI with an API key provided by the user for code generation.  
+4. Fun features. For example, CodeWizard will let you select an image to theme it off of. This themeing will apply to the syntax colors it uses. More info in the Syntax Highlighting section.
 
 ## Language Server Protocol
 
@@ -32,6 +33,10 @@ CodeWizard Version 8.0.0 and onwards support LSPs. Specifically, you can specify
 ## Syntax Highlighting
 
 Version 8.5.0 now utilizes tree-sitter with incremental updates to highlight your code. You can now customize the colors CodeWizard will use to highlight your code under View->Set Syntax Colors. Furthermore, it all comes preinstalled and at no cost to performance. Note: Plaintext documents do not receive syntax highlighting. By far the best part is getting to have CodeWizard select colors from an image to use as the syntax highlighting colors. Again under the same menu.
+
+## AI
+
+Version 8.8.0 can now request code generation by a 70 billion paramater model at Groq AI. It's very fast, and it works well. To provide the API key goto [Groq AI](https://groq.com/) and get a free API key. Then put the code into CodeWizard at Fix It -> Set Groq AI API Key. Once that has been finished you can press Alt+A to generate code at the cursor position.
 
 ## Other
 
