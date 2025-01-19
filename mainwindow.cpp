@@ -26,6 +26,7 @@
 #include <QTextToSpeech>
 #include "recordinglight.h"
 #include "groqai.h"
+#include "myers.h"
 
 extern "C" {
 	TSLanguage* tree_sitter_cpp(void);
@@ -305,12 +306,17 @@ bool holdingAnEvent = false;
 
 QTextToSpeech *speech;
 QAction *useSpeakerAction;
+Myers* diffAlgo;
 
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
 	qDebug() << "MainWindow";
 
 	ui->setupUi(this);
+	
+	diffAlgo = new Myers();
+	
+	qDebug() << diffAlgo->getDiff("test\nimgood\nslfdkja", "imgood\nthatsbad");
 
 	setWindowTitle(windowName);
 	statusBar()->hide();
@@ -873,6 +879,92 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		globalArgFileName = argFileName;
 		on_actionOpen_triggered();
 	}
+}
+
+void MainWindow::on_actionCompare_2_Files_triggered(){
+	if (isSettingUpLSP){
+		showWeDontFuckWithTheLSP();
+		return;
+	}
+
+	if (isOpeningFile){
+		showHoldYourHorses();
+		return;
+	}
+	
+	if (unsaved && fileName != ""){
+		pullUpSaveDialogue();
+	}
+	
+	QString newFile = QFileDialog::getOpenFileName(this, tr("Open File"), fileName, tr("All Files (*);"));
+	
+	QFileInfo fileInfo(newFile);
+	QFile file(newFile);
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QMessageBox newWarningBox;
+		newWarningBox.setIcon(QMessageBox::Warning);
+		newWarningBox.setText(tr("Cannot open file: %1").arg(file.errorString()));
+		newWarningBox.setWindowTitle(tr("Error"));
+		newWarningBox.setFont(textEdit->font());
+		newWarningBox.exec();
+		isOpeningFile = false;
+		return;
+	}
+	
+	fileName = "";
+	
+	isOpeningFile = true;
+	
+	QTextStream in(&file);
+	QString fileContent = in.readAll();
+	
+	QString newFile2 = QFileDialog::getOpenFileName(this, tr("Open File"), fileName, tr("All Files (*);"));
+	
+	QFileInfo fileInfo2(newFile2);
+	QFile file2(newFile2);
+	if (!file2.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QMessageBox newWarningBox;
+		newWarningBox.setIcon(QMessageBox::Warning);
+		newWarningBox.setText(tr("Cannot open file: %1").arg(file2.errorString()));
+		newWarningBox.setWindowTitle(tr("Error"));
+		newWarningBox.setFont(textEdit->font());
+		newWarningBox.exec();
+		isOpeningFile = false;
+		return;
+	}
+	
+	setLangOffFilename(fileName, false);
+	
+	QTextStream in2(&file2);
+	QString fileContent2 = in2.readAll();
+	
+	auto differences = diffAlgo->getDiff(fileContent, fileContent2);
+	
+	fileContent = "";
+	
+	for (int i = 0; i < differences.length(); i++){
+		fileContent += differences[i][0] + " " + differences[i][1] + "\n";
+	}
+	
+	windowName = "CodeWizard V"+versionNumber+" - New File";
+
+	previousLineCount = 1;
+	savedText = fileContent;
+
+	setupSyntaxTreeOnOpen(fileContent); // must be before setPlainText - don't ask why - I could tell you though...
+
+	textEdit->setPlainText(fileContent);
+	previousLineCount = fileContent.count('\xa')+1;
+	file.close();
+
+	int cnt = fileContent.count('\n') + 1;
+	updateLineNumbers(cnt);
+
+	updateExtraWordsList();
+
+	setWindowTitle(windowName);
+
+	isOpeningFile = false;
 }
 
 QString MainWindow::changeToTabs(QString text){

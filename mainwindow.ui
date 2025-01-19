@@ -252,7 +252,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>0</x>
      <y>0</y>
      <width>702</width>
-     <height>21</height>
+     <height>17</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -277,6 +277,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="menuOpen_Recent"/>
     <addaction name="actionSave"/>
     <addaction name="actionSave_As"/>
+    <addaction name="actionCompare_2_Files"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuRun">
@@ -896,6 +897,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionSet_Groq_AI_API_Key">
    <property name="text">
     <string>Set Groq AI API Key</string>
+   </property>
+  </action>
+  <action name="actionCompare_2_Files">
+   <property name="text">
+    <string>Compare 2 Files</string>
    </property>
   </action>
  </widget>

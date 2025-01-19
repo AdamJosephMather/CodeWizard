@@ -25,6 +25,7 @@ public:
 
 private slots:
 	QString changeToTabs(QString text);
+	void on_actionCompare_2_Files_triggered();
 	void on_actionSet_Groq_AI_API_Key_triggered();
 	void saveSyntaxColorsToFile();
 	void loadSyntaxColorsFromFile();
