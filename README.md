@@ -18,6 +18,11 @@ Furthermore, the bottom bar can be closed and the filetree can be closed in full
 
 <img width="1128" alt="LargeWoutFiletreeWoutBottom" src="https://github.com/user-attachments/assets/c11f404c-3a74-4b77-9fe1-b5c5cf98718d" />
 
+Here, I am demonstrating the comparison function in CodeWizard.
+
+<img width="1128" alt="image" src="https://github.com/user-attachments/assets/eb7eef86-95e3-4757-981c-9f4c542f492f" />
+
+
 ## Why use CodeWizard?
 
 CodeWizard offers a couple of major improvements on the existing editors:  
