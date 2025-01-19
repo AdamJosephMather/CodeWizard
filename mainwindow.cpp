@@ -3616,6 +3616,24 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 			}
 		}else if (event->key() == Qt::Key_O){
 			on_actionOpen_triggered();
+		}else if (event->key() == Qt::Key_B){
+			if (isFullScreen() || isMaximized()){
+				if (useFileTree->isChecked()){
+					useFileTree->setChecked(false);
+					useFileTreeIfFullscreen->setChecked(false);
+				}else if (useFileTreeIfFullscreen->isChecked()){
+					useFileTreeIfFullscreen->setChecked(false);
+					return;
+				}else{
+					useFileTreeIfFullscreen->setChecked(true);
+				}
+			}else{
+				if (useFileTree->isChecked()){
+					useFileTree->setChecked(false);
+				}else{
+					useFileTree->setChecked(true);
+				}
+			}
 		}else if (event->key() == Qt::Key_N){
 			on_actionNew_triggered();
 		}else if (event->key() == Qt::Key_BracketLeft){
