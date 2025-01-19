@@ -55,7 +55,7 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 
-QString versionNumber = "8.8.5";
+QString versionNumber = "8.8.6";
 
 GroqAI *groq;
 QString groqApiKey;
@@ -314,14 +314,14 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	qDebug() << "MainWindow";
 
 	ui->setupUi(this);
-	
+
 	diffAlgo = new Myers();
-	
-	qDebug() << diffAlgo->getDiff("test\nimgood\nslfdkja", "imgood\nthatsbad");
+
+	qDebug() << diffAlgo->getDiff("a\nb\nc", "a\na\nb");
 
 	setWindowTitle(windowName);
 	statusBar()->hide();
-	
+
 	groq = new GroqAI(this);
 	groq->setModel("llama-3.3-70b-versatile");
 
@@ -389,7 +389,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	textEdit->setWordWrapMode(QTextOption::NoWrap);
 	textDocument = textEdit->document();
-	
+
 	QFont monacoFont("Monaco");
 	textEdit->setFont(monacoFont);
 
@@ -444,7 +444,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	form.setUnderlineColor(c4);
 	form.setForeground(c4);
 	errorFormats.append(form);
-	
+
 	QTextCharFormat gFormComp;
 	gFormComp.setForeground(QColor(0, 255, 0));
 	compFormats.append(gFormComp);
@@ -700,7 +700,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	lineNumberTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	lineNumberTextEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn); // So that it can't get out of sync w/ main textedit
 	lineNumberTextEdit->setAlignment(Qt::AlignRight);
-	
+
 	textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
 	findTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -799,7 +799,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(useFileTree, &QAction::toggled, this, &MainWindow::fileTreeToggled);
 	connect(useFileTreeIfFullscreen, &QAction::toggled, this, &MainWindow::fileTreeToggled);
 	connect(fileTree, &QTreeView::doubleClicked, this, &MainWindow::fileTreeOpened);
-	
+
 	connect(groq, &GroqAI::responseReceived, this, [this](const QString &response) {
 		qDebug() << "AI Response:" << response;
 		QTextCursor c = textEdit->textCursor();
@@ -877,15 +877,13 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	recordingLight = new RecordingLight(textEdit);
 	recordingLight->hide();
-	
+
 	updateMargins(false);
-	
-	
+
 	//MUST BE ON END
-	
-	
+
 	textEdit->setFocus();
-	
+
 	if (!argFileName.isEmpty()){
 		globalArgFileName = argFileName;
 		on_actionOpen_triggered();
@@ -902,13 +900,13 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 		showHoldYourHorses();
 		return;
 	}
-	
+
 	if (unsaved && fileName != ""){
 		pullUpSaveDialogue();
 	}
-	
+
 	QString newFile = QFileDialog::getOpenFileName(this, tr("Open File"), fileName, tr("All Files (*);"));
-	
+
 	QFileInfo fileInfo(newFile);
 	QFile file(newFile);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -921,16 +919,16 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 		isOpeningFile = false;
 		return;
 	}
-	
+
 	fileName = "";
-	
+
 	isOpeningFile = true;
-	
+
 	QTextStream in(&file);
 	QString fileContent = in.readAll();
-	
+
 	QString newFile2 = QFileDialog::getOpenFileName(this, tr("Open File"), fileName, tr("All Files (*);"));
-	
+
 	QFileInfo fileInfo2(newFile2);
 	QFile file2(newFile2);
 	if (!file2.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -943,20 +941,20 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 		isOpeningFile = false;
 		return;
 	}
-	
+
 	setLangOffFilename(newFile, false);
-	
+
 	QTextStream in2(&file2);
 	QString fileContent2 = in2.readAll();
-	
+
 	auto differences = diffAlgo->getDiff(fileContent, fileContent2);
-	
+
 	QStringList fileContentLst;
-	
+
 	for (int i = 0; i < differences.length(); i++){
 		fileContentLst << differences[i][1];
 	}
-	
+
 	fileContent = fileContentLst.join("\n");
 	windowName = "CodeWizard V"+versionNumber+" - Comparison";
 
@@ -973,26 +971,26 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 	updateLineNumbers(cnt);
 	QString linesText = lineNumberTextEdit->toPlainText();
 	QStringList linesList = linesText.split("\n");
-	
+
 	for (int i = 0; i < differences.length(); i++){
 		linesList[i] += " " + differences[i][0];
 	}
-	
+
 	lineNumberTextEdit->setPlainText(linesList.join("\n"));
-	
+
 	QFontMetrics metrics(textEdit->font());
 
 	int charCount = QString::number(globalLineCount).length()+2;
 	int width = metrics.horizontalAdvance('M') * charCount+15;
-	
+
 	lineNumberTextEdit->setMinimumWidth(width);
 	lineNumberTextEdit->setMaximumWidth(width);
 	lineNumberTextEdit->setFixedWidth(width);
-	
+
 	updateExtraWordsList();
 
 	setWindowTitle(windowName);
-	
+
 	rehighlightFullDoc();
 	highlightComparisons();
 	updateMargins(true);
@@ -1003,12 +1001,12 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 QString MainWindow::changeToTabs(QString text){
 	QStringList lines = text.split("\n");
 	QStringList newLines;
-	
+
 	for (QString line : lines){
 		int seen = 0;
 		QString rest = "";
 		bool doneSeen = false;
-		
+
 		for (QChar c : line){
 			if (c == ' ' && !doneSeen){
 				seen ++;
@@ -1017,40 +1015,40 @@ QString MainWindow::changeToTabs(QString text){
 				rest += c;
 			}
 		}
-		
+
 		int tabs = seen/4;
 		int spaces = seen%4;
-		
+
 		QString outLine = "";
-		
+
 		for (int i = 0; i < tabs; i++){
 			outLine += "	";
 		}
-		
+
 		for (int i = 0; i < spaces; i++){
 			outLine += " ";
 		}
-		
+
 		outLine += rest;
-		
+
 		newLines.push_back(outLine);
 	}
-	
+
 	return newLines.join("\n");
 }
 
 void MainWindow::updateMargins(bool force) {
 	qDebug() << "updateMargins - " << force;
-	
+
 	QFontMetrics metrics(textEdit->font());
-	
+
 	marginBottomSize = textEdit->height()-metrics.height()*2;
 	if (marginBottomSize < 0){
 		marginBottomSize = 0;
 	}
-	
+
 	qDebug() << marginBottomSize;
-	
+
 	if (textDocument->blockCount() < 200 || force){ // I do this for performance issues with opening and closing the find menu/resizing menu. It resets the ENTIRE html
 		auto format = textDocument->rootFrame()->frameFormat();
 		format.setBottomMargin(marginBottomSize);
@@ -1097,10 +1095,10 @@ void MainWindow::on_actionSet_Syntax_Colors_triggered() {
 
 	QPushButton *resetButton = new QPushButton("Reset to default", this);
 	resetButton->setFont(textEdit->font());
-	
+
 	QPushButton *saveToFileButton = new QPushButton("Save To File", this);
 	saveToFileButton->setFont(textEdit->font());
-	
+
 	QPushButton *loadFromFileButton = new QPushButton("Load From File", this);
 	loadFromFileButton->setFont(textEdit->font());
 
@@ -1122,15 +1120,15 @@ void MainWindow::on_actionSet_Syntax_Colors_triggered() {
 
 void MainWindow::saveSyntaxColorsToFile(){
 	QString saveFile = QFileDialog::getSaveFileName(this, tr("Save File"), "syntaxColors.cdwzrd", tr("All Files (*);"));
-	
+
 	if (saveFile.isEmpty()){
 		return;
 	}
-	
+
 	if (!saveFile.endsWith(".cdwzrd")){
 		saveFile += ".cdwzrd";
 	}
-	
+
 	QFile file(saveFile);
 	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		openHelpMenu("Failed to open file to save syntax colors.");
@@ -1139,19 +1137,19 @@ void MainWindow::saveSyntaxColorsToFile(){
 		}
 		return;
 	}
-	
+
 	QStringList listOData;
-	
+
 	for (int i = 0; i < hexColorsList.length(); i++){
 		listOData.push_back(hexColorsList[i]->text());
 	}
-	
+
 	QString data = "CodeWizard - SyntaxColors\n\n"+listOData.join(",");
-	
+
 	QTextStream out(&file);
 	out << data;
 	file.close();
-	
+
 	openHelpMenu("Completed.");
 }
 
@@ -1177,11 +1175,11 @@ void MainWindow::loadSyntaxColorsFromFile(){
 	QTextStream in(&file);
 	QString fileContents = in.readAll();
 	file.close();
-	
+
 	qDebug() << "Got: " << fileContents;
-	
+
 	QString expectedHeader = "CodeWizard - SyntaxColors\n\n";
-	
+
 	if (!fileContents.startsWith(expectedHeader)){
 		openHelpMenu("File does not match specification.");
 		if (useSpeakerAction->isChecked()){
@@ -1189,15 +1187,15 @@ void MainWindow::loadSyntaxColorsFromFile(){
 		}
 		return;
 	}
-	
+
 	QString content = fileContents.mid(expectedHeader.length(), fileContents.length()-expectedHeader.length());
-	
+
 	qDebug() << "Content: " << content;
-	
+
 	QStringList hex = content.split(",");
-	
+
 	qDebug() << "Hex: " << hex;
-	
+
 	if (hex.length() != 8){
 		openHelpMenu("File does not match specification.");
 		if (useSpeakerAction->isChecked()){
@@ -1205,11 +1203,11 @@ void MainWindow::loadSyntaxColorsFromFile(){
 		}
 		return;
 	}
-	
+
 	for (int i = 0; i < hex.length(); i++){
 		hexColorsList[i]->setText(hex[i]);
 	}
-	
+
 	validateAndConvert();
 }
 
@@ -1322,19 +1320,19 @@ void MainWindow::syntaxColorsOffImage(){
 
 void MainWindow::setFormatsFromMyList(QString str){
 	qDebug() << "setFormatsFromMyList";
-	
+
 	coloredFormats = {};
 	coloredFormats.append(QTextCharFormat());
 	QStringList defaultNums = defaultSyntaxNumbers.split("|");
-	
+
 	int i = 0;
 	for(const QString color : str.split("|")){
 		QStringList nums = color.split(",");
 		QTextCharFormat form = QTextCharFormat();
 		QColor col(nums[0].toInt(), nums[1].toInt(), nums[2].toInt());
-		
+
 		qDebug() << i << defaultNums[i] << color << darkmode;
-		
+
 		form.setForeground(col);
 		coloredFormats.append(form);
 	}
@@ -1342,7 +1340,7 @@ void MainWindow::setFormatsFromMyList(QString str){
 
 void MainWindow::resetSyntaxColors(){
 	qDebug() << "resetSyntaxColors";
-	
+
 	setFormatsFromMyList(defaultSyntaxNumbers);
 
 	for (int i = 1; i < 9; ++i) {
@@ -1390,13 +1388,13 @@ void MainWindow::validateAndConvert(){
 		treeParserSyntaxHighlighter.setFormats(coloredFormats);
 		saveWantedTheme();
 	}
-	
+
 	rehighlightFullDoc();
-	
+
 	if (useSpeakerAction->isChecked()){
 		speech->say("Succeeded!");
 	}
-	
+
 	label->setText("Succeeded!");
 	layout->addWidget(label);
 	diag.setLayout(layout);
@@ -1420,7 +1418,7 @@ void MainWindow::applyEditToTree(int startByte, int oldEndByte, int newEndByte, 
 
 void MainWindow::rehighlightFullDoc(){
 	qDebug() << "rehighlightFullDoc";
-	
+
 	treeParserSyntaxHighlighter.setLanguage(currentLang.name);
 
 	if (!tree){
@@ -1643,7 +1641,7 @@ void MainWindow::checkForFixitDialogue(){
 	messageBox.setText("Detected space-based indenting in file. Run Fix-It?");
 	messageBox.setIcon(QMessageBox::Information);
 	messageBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-	
+
 	messageBox.setFont(textEdit->font());
 
 	// Execute and check the user's choice
@@ -1688,7 +1686,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		if (unsaved && fileName != ""){
 			pullUpSaveDialogue();
 		}
-		
+
 		QFileInfo fileInfo(newFile);
 		QFile file(newFile);
 		if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -1701,9 +1699,9 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 			isOpeningFile = false;
 			return;
 		}
-		
+
 		bool ret = checkForLargeFile(&file);
-		
+
 		if (!ret){
 			isOpeningFile = false;
 			return;
@@ -1748,7 +1746,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		lspMutex.lock();
 		setupLSP(oldFile);
 		lspMutex.unlock();
-		
+
 		updateMargins(true); // called on open - every time
 
 		if (useSpeakerAction->isChecked()){
@@ -1764,25 +1762,25 @@ bool MainWindow::checkForLargeFile(QFile *file){
 	qint64 fileSize = file->size(); // bytes
 	qint64 kb = fileSize/1024; // 1000 of these per mb
 	qDebug() << "Size of KB: " << kb;
-	
+
 	if (kb > 1000){ // 1mb I think
 		if (useSpeakerAction->isChecked()){
 			speech->say("That's a large file ("+QString::number(kb/1000)+" mb). Open anyways?");
 		}
-	
+
 		QMessageBox dialog;
 		dialog.setWindowTitle("CodeWizard");
 		dialog.setText("Opening large file ("+QString::number(kb/1000)+" mb) - continue?");
 		dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 		dialog.setDefaultButton(QMessageBox::Yes);
 		dialog.setFont(textEdit->font());
-	
+
 		int response = dialog.exec();
 		if (response == QMessageBox::No) {
 			return false;
 		}
 	}
-	
+
 	return true;
 }
 
@@ -2350,9 +2348,9 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 
 QString MainWindow::plaintextToHtml(QString plaintext) {
 	qDebug() << "plaintextToHtml";
-	
+
 	QString html = plaintext;
-	
+
 	html.replace("&", "&amp;");
 	html.replace(">", "&gt;");
 	html.replace("<", "&lt;");
@@ -2368,7 +2366,7 @@ QString MainWindow::plaintextToHtml(QString plaintext) {
 	}
 
 	html.replace("\n", "<br>");
-	
+
 	html = "<p>"+html+"</p>";
 
 	return "<div style=\"white-space: pre;\">"+html+"</div>";
@@ -2382,7 +2380,7 @@ QString MainWindow::markdownToHtml(QString markdown) {
 	while (html.contains("\n\n\n")){
 		html.replace("\n\n\n", "\n\n");
 	}
-	
+
 	html.replace("&", "&amp;");
 	html.replace(">", "&gt;");
 	html.replace("<", "&lt;");
@@ -2500,9 +2498,9 @@ void MainWindow::updateFonts()
 	font.setItalic(false);
 	font.setBold(false);
 	font.setStyleHint(QFont::Monospace);
-	
+
 	textEdit->setFont(font);
-	
+
 	QApplication::setFont(font);
 
 	QFontMetrics metrics(textEdit->font());
@@ -2798,7 +2796,7 @@ void MainWindow::saveWantedTheme()
 		qDebug() << "setting " << str;
 		settings.setValue("syntaxColors", str);
 	}
-	
+
 	settings.setValue("groqApiKey", groqApiKey);
 	settings.setValue("fontSize", fontSize);
 	settings.setValue("darkModeEnabled", darkmode);
@@ -2868,20 +2866,20 @@ bool MainWindow::wantedTheme()
 		csharpLSP = settings.value("csharpLSP", "").toString();
 		javaLSP = settings.value("javaLSP", "").toString();
 		cLSP = settings.value("cLSP", "").toString();
-		
+
 		groqApiKey = settings.value("groqApiKey", "").toString();
 		groq->setApiKey(groqApiKey);
-		
+
 		QString numbers = settings.value("syntaxColors", defaultSyntaxNumbers).toString();
-		
+
 		if (numbers == "38,175,199|38,143,199|50,168,160|222,123,2|41,171,47|217,159,0|160,160,160|245,120,66"){
 			numbers = defaultSyntaxNumbers;
 		}else if (numbers.count("|") != 7){
 			numbers = defaultSyntaxNumbers;
 		}
-		
+
 		setFormatsFromMyList(numbers);
-		
+
 		showWarnings->setChecked(settings.value("showWarnings", true).toBool());
 		showErrors->setChecked(settings.value("showErrors", true).toBool());
 		showOther->setChecked(settings.value("showOther", true).toBool());
@@ -3115,17 +3113,17 @@ void MainWindow::replaceAllTriggered(){
 
 	while (!docCursor.isNull() && !docCursor.atEnd()) {
 		auto c = textDocument->find(re, docCursor);
-		
+
 		if (c.isNull()){
 			break;
 		}
-		
+
 		docCursor.setPosition(c.position(), QTextCursor::MoveAnchor);
 		docCursor.setPosition(c.anchor(), QTextCursor::KeepAnchor);
-		
+
 		docCursor.insertText(replace);
 	}
-	
+
 	docCursor.endEditBlock();
 }
 
@@ -3136,11 +3134,11 @@ void MainWindow::on_actionExit_triggered(){
 
 void MainWindow::clearTSSyntaxHighlighting(){
 	qDebug() << "clearTSSyntaxHighlighting";
-	
+
 	QTextBlock block = textEdit->document()->firstBlock();
 	QTextCharFormat form = QTextCharFormat();
 	form.setForeground(normalColor);
-	
+
 	while (block.isValid()){
 		QTextLayout* layout = block.layout();
 
@@ -3157,15 +3155,15 @@ void MainWindow::clearTSSyntaxHighlighting(){
 		QVector<QTextLayout::FormatRange> formats = layout->formats();
 		formats.append(range);
 		layout->setFormats(formats);
-		
+
 		block = block.next();
 	}
-	
+
 	textDocument->markContentsDirty(0, textDocument->characterCount());
 }
 
 void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
-{	
+{
 	qDebug() << "setupSyntaxTreeOnOpen";
 
 	treeParserSyntaxHighlighter.colormap = currentLang.colorMapTS;
@@ -3262,7 +3260,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	if (useSpeakerAction->isChecked()){
 		speech->say("Opening File");
 	}
-	
+
 	QFileInfo fileInfo(newFile);
 	QFile file(newFile);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -3275,14 +3273,14 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 		isOpeningFile = false;
 		return;
 	}
-	
+
 	bool ret = checkForLargeFile(&file);
-	
+
 	if (!ret){
 		isOpeningFile = false;
 		return;
 	}
-	
+
 	fileName = newFile;
 
 	setLangOffFilename(fileName, false);
@@ -3333,7 +3331,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	lspMutex.lock();
 	setupLSP(oldFile);
 	lspMutex.unlock();
-	
+
 	updateMargins(true); // called on open - every time
 
 	if (useSpeakerAction->isChecked()){
@@ -3540,7 +3538,7 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 	if (!tmpDir.exists()) {
 		tmpDir.mkpath(tmpDirPath);
 	}
-	
+
 	// Define the batch file path
 	QString batFilePath = tmpDirPath + "/run_script.bat";
 	qDebug() << batFilePath;
@@ -3868,7 +3866,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 	QKeyEvent *key_event = dynamic_cast<QKeyEvent*>(event);
 	QKeySequence key_sequence{static_cast<int>(key_event->modifiers()) + key_event->key()};
-	
+
 	if (watched == textEdit){
 		if (isSettingUpLSP || isOpeningFile){
 			return false;
@@ -3948,7 +3946,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			QTextCursor c = textEdit->textCursor();
 			int pos = c.position();
 			textCopied.insert(pos, "[INSERT_CODE_HERE]");
-			
+
 			QList<QPair<QString, QString>> conversation = {
 				{"user", "Please create just the code which should be inserted at the specified point (the specified point is '[INSERT_CODE_HERE]'). Do not include any other text with you response. Just pick up exactly where was left off. If there is no code which makes sense to insert at that point, just do your best to create code which could fit there, never include text other than the code in your response. Also your response should be plaintext, not markdown. Do not include the name of the language you are writing. ONLY the text to insert at that position. Here's the current code:\n\n"+textCopied}
 			};
@@ -4023,7 +4021,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				return true;
 			}
 		}
-		
+
 		if(!suggestionBox->isVisible() && !actionBox->isVisible() && key_event->key() == Qt::Key_Escape){
 			changeFindSectionVisibility(false);
 		}
@@ -4056,7 +4054,7 @@ void MainWindow::changeFindSectionVisibility(bool visible){
 	for (int i = 0; i < findLayout->count(); ++i) {
 		QWidget* widget = findLayout->itemAt(i)->widget();
 		auto* layoutItm = findLayout->itemAt(i)->layout();
-		
+
 		if (widget) {
 			if (visible){
 				widget->show();
@@ -4064,11 +4062,11 @@ void MainWindow::changeFindSectionVisibility(bool visible){
 				widget->hide();
 			}
 		}
-		
+
 		if (layoutItm) {
 			for (int j = 0; j < layoutItm->count(); ++j) {
 				QWidget* widget2 = layoutItm->itemAt(j)->widget();
-				
+
 				if (widget2) {
 					if (visible){
 						widget2->show();
@@ -4403,7 +4401,7 @@ void MainWindow::on_actionSave_triggered()
 		windowName = "CodeWizard V"+versionNumber+" - "+fileNameName+" - "+fileName;
 
 		addFileToRecentList(fileName);
-		
+
 		updateMargins(true); // called on open - every time
 	}
 	saveToFile(textEdit->toPlainText());
@@ -4713,7 +4711,7 @@ void MainWindow::on_actionDark_Mode_triggered()
 void MainWindow::on_actionLight_Mode_triggered()
 {
 	qDebug() << "on_actionLight_Mode_triggered";
-	
+
 	darkmode = false;
 	changeTheme(darkmode);
 	saveWantedTheme();
@@ -4787,7 +4785,7 @@ void MainWindow::on_actionSave_As_triggered()
 	lspMutex.lock();
 	setupLSP(oldFile);
 	lspMutex.unlock();
-	
+
 	updateMargins(true); // called on open - every time
 }
 
@@ -4973,21 +4971,21 @@ void MainWindow::on_actionChange_to_IDLE_format_triggered(){
 void MainWindow::highlightComparisons()
 {
 	qDebug() << "highlightComparisons";
-	
+
 	QTextBlock block = lineNumberTextEdit->document()->firstBlock();
-	
+
 	int ln = QString::number(globalLineCount).length()+2;
-	
+
 	while (block.isValid()) {
 		QTextLayout* layout = block.layout();
 		if (!layout) {
 			continue;
 		}
-		
+
 		QString blockText = block.text();
 
 		QTextLayout::FormatRange range;
-		
+
 		if (blockText.endsWith("+")){
 			range.format = compFormats[0];
 		}else if (blockText.endsWith("-")){
@@ -4995,24 +4993,24 @@ void MainWindow::highlightComparisons()
 		}else if (blockText.endsWith("=")){
 			range.format = compFormats[2];
 		}
-		
+
 		range.start = 0;
 		range.length = ln;
 
 		QVector<QTextLayout::FormatRange> formats = layout->formats();
 		formats.append(range);
 		layout->setFormats(formats);
-		
+
 		block = block.next();
 	}
-	
+
 	lineNumberTextEdit->document()->markContentsDirty(0, textDocument->characterCount());
 }
 
 void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to get right - don't touch a single line of this shit
 {
 	qDebug() << "highlightDiagnostics";
-	
+
 	textEdit->blockSignals(true);
 
 	QTextCursor blckcursor = textEdit->textCursor();
@@ -5089,7 +5087,7 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 					endC += 1;
 				}
 			}
-			
+
 			QTextBlock block = textDocument->findBlockByNumber(startLine);
 
 			// Process each block in the range
@@ -5097,19 +5095,19 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 				if (!block.isValid()) {
 					break;
 				}
-				
+
 				QTextLayout* layout = block.layout();
 				if (!layout) {
 					continue;
 				}
-				
+
 				HighlightData* data = static_cast<HighlightData*>(block.userData());
 				if (!data) {
 					data = new HighlightData();
 					const_cast<QTextBlock&>(block).setUserData(data);
 				}
 				data->hasHighlight = true;
-				
+
 				int blockLen = block.length();
 				int blockPos = block.position();
 
@@ -5137,8 +5135,8 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 				layout->setFormats(formats);
 				textDocument->markContentsDirty(blockPos, blockLen);
 				numberOfBlocksColored += 1;
-				
-				if (currentLine != endLine){ 
+
+				if (currentLine != endLine){
 					block = block.next();
 				}
 			}
@@ -5166,16 +5164,16 @@ void MainWindow::updateLineNumbers(int count) // good enough
 	if (globalDigits != countDigits) {
 		updateFonts();
 	}
-	
+
 	QStringList lineNumbers;
 
 	for (int i = 1; i < count; ++i) {
 		QString nm = QString::number(i);
 		int spaces = countDigits-nm.length();
-		
+
 		lineNumbers << QString(spaces, ' ')+nm;
 	}
-	
+
 	QString text = lineNumbers.join("\n") + QString(1000, '\n');
 
 	lineNumberTextEdit->setPlainText(text);
@@ -5545,7 +5543,7 @@ void MainWindow::changeTheme(bool darkMode)
 		// Use Fusion style on Windows 10
 		qApp->setStyle(QStyleFactory::create("Fusion"));
 	}
-	
+
 	if (darkMode) {
 		// Optionally modify the palette for light mode
 		QPalette lightPalette = qApp->palette();
@@ -5979,7 +5977,7 @@ void MainWindow::openRecentFile(QString newFile){
 	}
 
 	storedLineNumbers[newFile] = textEdit->verticalScrollBar()->value();
-	
+
 	QFileInfo fileInfo(newFile);
 	QFile file(newFile);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -5992,14 +5990,14 @@ void MainWindow::openRecentFile(QString newFile){
 		isOpeningFile = false;
 		return;
 	}
-	
+
 	bool ret = checkForLargeFile(&file);
-	
+
 	if (!ret){
 		isOpeningFile = false;
 		return;
 	}
-	
+
 	fileName = newFile;
 
 	setLangOffFilename(fileName, false);
@@ -6018,7 +6016,7 @@ void MainWindow::openRecentFile(QString newFile){
 	setupSyntaxTreeOnOpen(fileContent);
 
 	textEdit->setPlainText(fileContent);
-	
+
 	previousLineCount = fileContent.count('\xa')+1;
 	file.close();
 
@@ -6051,7 +6049,7 @@ void MainWindow::openRecentFile(QString newFile){
 	lspMutex.lock();
 	setupLSP(oldFile);
 	lspMutex.unlock();
-	
+
 	updateMargins(true); // called on open - every time
 
 	if (useSpeakerAction->isChecked()){

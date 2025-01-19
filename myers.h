@@ -10,8 +10,8 @@ public:
 	Myers();
 	QList<QStringList> getDiff(const QString& string1, const QString& string2);
 
-private:
-	qfloat16 getScore(const QList<QList<int>>& path);
+//private:
+	//int recurse(int at, int x, int y, int lenL1, int lenL2, QVector<bool>* cacheReady, QVector<int>* bestGotos, QVector<int>* bestScores, QList<int>* runsStartX, QList<int>* runsStartY, QList<int>* runsEndX, QList<int>* runsEndY);
 };
 
 #endif // MYERS_H
