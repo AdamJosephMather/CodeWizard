@@ -55,7 +55,7 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 
-QString versionNumber = "8.8.0";
+QString versionNumber = "8.8.5";
 
 GroqAI *groq;
 QString groqApiKey;
@@ -100,6 +100,7 @@ QTextCharFormat c5Format;
 QTextCharFormat c6Format;
 QTextCharFormat normalColorFormat;
 QList<QTextCharFormat> errorFormats;
+QList<QTextCharFormat> compFormats;
 
 Language pythonLang;
 Language rustLang;
@@ -443,6 +444,16 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	form.setUnderlineColor(c4);
 	form.setForeground(c4);
 	errorFormats.append(form);
+	
+	QTextCharFormat gFormComp;
+	gFormComp.setForeground(QColor(0, 255, 0));
+	compFormats.append(gFormComp);
+	QTextCharFormat rFormComp;
+	rFormComp.setForeground(QColor(255, 0, 0));
+	compFormats.append(rFormComp);
+	QTextCharFormat bFormComp;
+	bFormComp.setForeground(QColor(0, 0, 255));
+	compFormats.append(bFormComp);
 
 	colormapPythonTS = {{"identifier", 3}, {"decorator", 5}, {"decorator/.CodeWiz./identifier", 5}, {"call", 5}, {"call/.CodeWiz./identifier", 5}, {"abs", 5}, {"abs/.CodeWiz./all", 5}, {"all", 5}, {"all/.CodeWiz./any", 5}, {"any", 5}, {"any/.CodeWiz./ascii", 5}, {"ascii", 5}, {"ascii/.CodeWiz./bin", 5}, {"bin", 5}, {"bin/.CodeWiz./bool", 5}, {"bool", 5}, {"bool/.CodeWiz./breakpoint", 5}, {"breakpoint", 5}, {"breakpoint/.CodeWiz./bytearray", 5}, {"bytearray", 5}, {"bytearray/.CodeWiz./bytes", 5}, {"bytes", 5}, {"bytes/.CodeWiz./callable", 5}, {"callable", 5}, {"callable/.CodeWiz./chr", 5}, {"chr", 5}, {"chr/.CodeWiz./classmethod", 5}, {"classmethod", 5}, {"classmethod/.CodeWiz./compile", 5}, {"compile", 5}, {"compile/.CodeWiz./complex", 5}, {"complex", 5}, {"complex/.CodeWiz./delattr", 5}, {"delattr", 5}, {"delattr/.CodeWiz./dict", 5}, {"dict", 5}, {"dict/.CodeWiz./dir", 5}, {"dir", 5}, {"dir/.CodeWiz./divmod", 5}, {"divmod", 5}, {"divmod/.CodeWiz./enumerate", 5}, {"enumerate", 5}, {"enumerate/.CodeWiz./eval", 5}, {"eval", 5}, {"eval/.CodeWiz./exec", 5}, {"exec", 5}, {"exec/.CodeWiz./filter", 5}, {"filter", 5}, {"filter/.CodeWiz./float", 5}, {"float", 5}, {"float/.CodeWiz./format", 5}, {"format", 5}, {"format/.CodeWiz./frozenset", 5}, {"frozenset", 5}, {"frozenset/.CodeWiz./getattr", 5}, {"getattr", 5}, {"getattr/.CodeWiz./globals", 5}, {"globals", 5}, {"globals/.CodeWiz./hasattr", 5}, {"hasattr", 5}, {"hasattr/.CodeWiz./hash", 5}, {"hash", 5}, {"hash/.CodeWiz./help", 5}, {"help", 5}, {"help/.CodeWiz./hex", 5}, {"hex", 5}, {"hex/.CodeWiz./id", 5}, {"id", 5}, {"id/.CodeWiz./input", 5}, {"input", 5}, {"input/.CodeWiz./int", 5}, {"int", 5}, {"int/.CodeWiz./isinstance", 5}, {"isinstance", 5}, {"isinstance/.CodeWiz./issubclass", 5}, {"issubclass", 5}, {"issubclass/.CodeWiz./iter", 5}, {"iter", 5}, {"iter/.CodeWiz./len", 5}, {"len", 5}, {"len/.CodeWiz./list", 5}, {"list", 5}, {"list/.CodeWiz./locals", 5}, {"locals", 5}, {"locals/.CodeWiz./map", 5}, {"map", 5}, {"map/.CodeWiz./max", 5}, {"max", 5}, {"max/.CodeWiz./memoryview", 5}, {"memoryview", 5}, {"memoryview/.CodeWiz./min", 5}, {"min", 5}, {"min/.CodeWiz./next", 5}, {"next", 5}, {"next/.CodeWiz./object", 5}, {"object", 5}, {"object/.CodeWiz./oct", 5}, {"oct", 5}, {"oct/.CodeWiz./open", 5}, {"open", 5}, {"open/.CodeWiz./ord", 5}, {"ord", 5}, {"ord/.CodeWiz./pow", 5}, {"pow", 5}, {"pow/.CodeWiz./print", 5}, {"print", 5}, {"print/.CodeWiz./property", 5}, {"property", 5}, {"property/.CodeWiz./range", 5}, {"range", 5}, {"range/.CodeWiz./repr", 5}, {"repr", 5}, {"repr/.CodeWiz./reversed", 5}, {"reversed", 5}, {"reversed/.CodeWiz./round", 5}, {"round", 5}, {"round/.CodeWiz./set", 5}, {"set", 5}, {"set/.CodeWiz./setattr", 5}, {"setattr", 5}, {"setattr/.CodeWiz./slice", 5}, {"slice", 5}, {"slice/.CodeWiz./sorted", 5}, {"sorted", 5}, {"sorted/.CodeWiz./staticmethod", 5}, {"staticmethod", 5}, {"staticmethod/.CodeWiz./str", 5}, {"str", 5}, {"str/.CodeWiz./sum", 5}, {"sum", 5}, {"sum/.CodeWiz./super", 5}, {"super", 5}, {"super/.CodeWiz./tuple", 5}, {"tuple", 5}, {"tuple/.CodeWiz./type", 5}, {"type", 5}, {"type/.CodeWiz./vars", 5}, {"vars", 5}, {"vars/.CodeWiz./zip", 5}, {"zip", 5}, {"zip/.CodeWiz./__import__", 5}, {"__import__", 5}, {"__import__/.CodeWiz./function_definition", 5}, {"function_definition", 5}, {"function_definition/.CodeWiz./identifier", 5}, {"none/.CodeWiz./true", 3}, {"true/.CodeWiz./false", 3}, {"integer", 8}, {"integer/.CodeWiz./float", 8}, {"comment", 2}, {"string", 1}, {"escape_sequence", 1}, {"interpolation", 7}, {"interpolation/.CodeWiz./{", 7}, {"{", 7}, {"}", 7}, {"-", 7}, {"-/.CodeWiz./-=", 7}, {"-=", 7}, {"-=/.CodeWiz./!=", 7}, {"!=", 7}, {"!=/.CodeWiz./*", 7}, {"*", 7}, {"*/.CodeWiz./**", 7}, {"**", 7}, {"**/.CodeWiz./**=", 7}, {"**=", 7}, {"**=/.CodeWiz./*=", 7}, {"*=", 7}, {"*=/.CodeWiz.//", 7}, {"/", 7}, {"//.CodeWiz.///", 7}, {"//", 7}, {"///.CodeWiz.///=", 7}, {"//=", 7}, {"//=/.CodeWiz.//=", 7}, {"/=", 7}, {"/=/.CodeWiz./&", 7}, {"&", 7}, {"&/.CodeWiz./&=", 7}, {"&=", 7}, {"&=/.CodeWiz./%", 7}, {"%", 7}, {"%/.CodeWiz./%=", 7}, {"%=", 7}, {"%=/.CodeWiz./^", 7}, {"^", 7}, {"^/.CodeWiz./^=", 7}, {"^=", 7}, {"^=/.CodeWiz./+", 7}, {"+", 7}, {"+/.CodeWiz./->", 7}, {"->", 7}, {"->/.CodeWiz./+=", 7}, {"+=", 7}, {"+=/.CodeWiz./<", 7}, {"<", 7}, {"</.CodeWiz./<<", 7}, {"<<", 7}, {"<</.CodeWiz./<<=", 7}, {"<<=", 7}, {"<<=/.CodeWiz./<=", 7}, {"<=", 7}, {"<=/.CodeWiz./<>", 7}, {"<>", 7}, {"<>/.CodeWiz./=", 7}, {"=", 7}, {"=/.CodeWiz./:=", 7}, {":=", 7}, {":=/.CodeWiz./==", 7}, {"==", 7}, {"==/.CodeWiz./>", 7}, {">", 7}, {">/.CodeWiz./>=", 7}, {">=", 7}, {">=/.CodeWiz./>>", 7}, {">>", 7}, {">>/.CodeWiz./>>=", 7}, {">>=", 7}, {">>=/.CodeWiz./|", 7}, {"|", 7}, {"|/.CodeWiz./|=", 7}, {"|=", 7}, {"|=/.CodeWiz./~", 7}, {"~", 7}, {"~/.CodeWiz./@=", 7}, {"@=", 7}, {"@=/.CodeWiz./and", 7}, {"and", 7}, {"and/.CodeWiz./in", 7}, {"in", 7}, {"in/.CodeWiz./is", 7}, {"is", 7}, {"is/.CodeWiz./not", 7}, {"not", 7}, {"not/.CodeWiz./or", 7}, {"or", 7}, {"or/.CodeWiz./is not", 7}, {"is not", 7}, {"is not/.CodeWiz./not in", 7}, {"not in", 7}, {"as", 6}, {"as/.CodeWiz./assert", 6}, {"assert", 6}, {"assert/.CodeWiz./async", 6}, {"async", 6}, {"async/.CodeWiz./await", 6}, {"await", 6}, {"await/.CodeWiz./break", 6}, {"break", 6}, {"break/.CodeWiz./class", 6}, {"class", 6}, {"class/.CodeWiz./continue", 6}, {"continue", 6}, {"continue/.CodeWiz./def", 6}, {"def", 6}, {"def/.CodeWiz./del", 6}, {"del", 6}, {"del/.CodeWiz./elif", 6}, {"elif", 6}, {"elif/.CodeWiz./else", 6}, {"else", 6}, {"else/.CodeWiz./except", 6}, {"except", 6}, {"except/.CodeWiz./exec", 6}, {"exec/.CodeWiz./finally", 6}, {"finally", 6}, {"finally/.CodeWiz./for", 6}, {"for", 6}, {"for/.CodeWiz./from", 6}, {"from", 6}, {"from/.CodeWiz./global", 6}, {"global", 6}, {"global/.CodeWiz./if", 6}, {"if", 6}, {"if/.CodeWiz./import", 6}, {"import", 6}, {"import/.CodeWiz./lambda", 6}, {"lambda", 6}, {"lambda/.CodeWiz./nonlocal", 6}, {"nonlocal", 6}, {"nonlocal/.CodeWiz./pass", 6}, {"pass", 6}, {"pass/.CodeWiz./print", 6}, {"print/.CodeWiz./raise", 6}, {"raise", 6}, {"raise/.CodeWiz./return", 6}, {"return", 6}, {"return/.CodeWiz./try", 6}, {"try", 6}, {"try/.CodeWiz./while", 6}, {"while", 6}, {"while/.CodeWiz./with", 6}, {"with", 6}, {"with/.CodeWiz./yield", 6}, {"yield", 6}, {"yield/.CodeWiz./match", 6}, {"match", 6}, {"match/.CodeWiz./case", 6}, {"case", 6}};
 	colormapRustTS = {{"type_identifier", 4}, {"primitive_type", 4}, {"field_identifier", 4}, {"identifier", 3}, {"scoped_identifier", 4}, {"scoped_identifier/.CodeWiz./identifier", 4}, {"scoped_type_identifier", 4}, {"scoped_type_identifier/.CodeWiz./identifier", 4}, {"scoped_type_identifier/.CodeWiz./scoped_identifier", 4}, {"struct_pattern/.CodeWiz./scoped_type_identifier", 3}, {"scoped_type_identifier/.CodeWiz./type_identifier", 3}, {"call_expression", 5}, {"call_expression/.CodeWiz./identifier", 5}, {"call_expression/.CodeWiz./field_expression", 5}, {"field_expression/.CodeWiz./field_identifier", 5}, {"call_expression/.CodeWiz./scoped_identifier", 5}, {"scoped_identifier/.CodeWiz./::", 5}, {"::", 5}, {"::/.CodeWiz./identifier", 5}, {"generic_function", 5}, {"generic_function/.CodeWiz./identifier", 5}, {"generic_function/.CodeWiz./scoped_identifier", 5}, {"generic_function/.CodeWiz./field_expression", 5}, {"macro_invocation", 5}, {"macro_invocation/.CodeWiz./identifier", 5}, {"!", 5}, {"line_comment", 2}, {"block_comment", 2}, {"doc_comment", 2}, {"(", 7}, {")", 7}, {"[", 7}, {"]", 7}, {"{", 7}, {"}", 7}, {"type_arguments", 7}, {"type_arguments/.CodeWiz./<", 7}, {"<", 7}, {">", 7}, {"type_parameters", 7}, {"type_parameters/.CodeWiz./<", 7}, {":", 7}, {".", 7}, {",", 7}, {";", 7}, {"as", 6}, {"async", 6}, {"await", 6}, {"break", 6}, {"const", 6}, {"continue", 6}, {"default", 6}, {"dyn", 6}, {"else", 6}, {"enum", 6}, {"extern", 6}, {"fn", 6}, {"for", 6}, {"gen", 6}, {"if", 6}, {"impl", 6}, {"in", 6}, {"let", 6}, {"loop", 6}, {"macro_rules!", 6}, {"match", 6}, {"mod", 6}, {"move", 6}, {"pub", 6}, {"raw", 6}, {"ref", 6}, {"return", 6}, {"static", 6}, {"struct", 6}, {"trait", 6}, {"type", 6}, {"union", 6}, {"unsafe", 6}, {"use", 6}, {"where", 6}, {"while", 6}, {"yield", 6}, {"crate", 6}, {"mutable_specifier", 6}, {"self", 6}, {"super", 6}, {"char_literal", 1}, {"string_literal", 1}, {"raw_string_literal", 1}, {"boolean_literal", 3}, {"integer_literal", 3}, {"float_literal", 3}, {"escape_sequence", 1}, {"attribute_item", 4}, {"inner_attribute_item", 4}, {"*", 7}, {"&", 7}, {"'", 7}};
@@ -933,20 +944,21 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 		return;
 	}
 	
-	setLangOffFilename(fileName, false);
+	setLangOffFilename(newFile, false);
 	
 	QTextStream in2(&file2);
 	QString fileContent2 = in2.readAll();
 	
 	auto differences = diffAlgo->getDiff(fileContent, fileContent2);
 	
-	fileContent = "";
+	QStringList fileContentLst;
 	
 	for (int i = 0; i < differences.length(); i++){
-		fileContent += differences[i][0] + " " + differences[i][1] + "\n";
+		fileContentLst << differences[i][1];
 	}
 	
-	windowName = "CodeWizard V"+versionNumber+" - New File";
+	fileContent = fileContentLst.join("\n");
+	windowName = "CodeWizard V"+versionNumber+" - Comparison";
 
 	previousLineCount = 1;
 	savedText = fileContent;
@@ -959,10 +971,31 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 
 	int cnt = fileContent.count('\n') + 1;
 	updateLineNumbers(cnt);
+	QString linesText = lineNumberTextEdit->toPlainText();
+	QStringList linesList = linesText.split("\n");
+	
+	for (int i = 0; i < differences.length(); i++){
+		linesList[i] += " " + differences[i][0];
+	}
+	
+	lineNumberTextEdit->setPlainText(linesList.join("\n"));
+	
+	QFontMetrics metrics(textEdit->font());
 
+	int charCount = QString::number(globalLineCount).length()+2;
+	int width = metrics.horizontalAdvance('M') * charCount+15;
+	
+	lineNumberTextEdit->setMinimumWidth(width);
+	lineNumberTextEdit->setMaximumWidth(width);
+	lineNumberTextEdit->setFixedWidth(width);
+	
 	updateExtraWordsList();
 
 	setWindowTitle(windowName);
+	
+	rehighlightFullDoc();
+	highlightComparisons();
+	updateMargins(true);
 
 	isOpeningFile = false;
 }
@@ -4935,6 +4968,45 @@ void MainWindow::on_actionChange_to_IDLE_format_triggered(){
 	connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 
 	updateSyntax();
+}
+
+void MainWindow::highlightComparisons()
+{
+	qDebug() << "highlightComparisons";
+	
+	QTextBlock block = lineNumberTextEdit->document()->firstBlock();
+	
+	int ln = QString::number(globalLineCount).length()+2;
+	
+	while (block.isValid()) {
+		QTextLayout* layout = block.layout();
+		if (!layout) {
+			continue;
+		}
+		
+		QString blockText = block.text();
+
+		QTextLayout::FormatRange range;
+		
+		if (blockText.endsWith("+")){
+			range.format = compFormats[0];
+		}else if (blockText.endsWith("-")){
+			range.format = compFormats[1];
+		}else if (blockText.endsWith("=")){
+			range.format = compFormats[2];
+		}
+		
+		range.start = 0;
+		range.length = ln;
+
+		QVector<QTextLayout::FormatRange> formats = layout->formats();
+		formats.append(range);
+		layout->setFormats(formats);
+		
+		block = block.next();
+	}
+	
+	lineNumberTextEdit->document()->markContentsDirty(0, textDocument->characterCount());
 }
 
 void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to get right - don't touch a single line of this shit

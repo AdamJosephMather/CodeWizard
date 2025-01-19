@@ -8,11 +8,10 @@ class Myers
 {
 public:
 	Myers();
-	QList<QStringList> getDiff(QString string1, QString string2);
+	QList<QStringList> getDiff(const QString& string1, const QString& string2);
 
 private:
-	qfloat16 getScore(QList<QList<int>> path);
-
+	qfloat16 getScore(const QList<QList<int>>& path);
 };
 
 #endif // MYERS_H

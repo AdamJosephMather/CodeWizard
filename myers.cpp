@@ -1,117 +1,95 @@
 #include "myers.h"
-#include <qcontainerfwd.h>
 #include <QString>
 #include <QStringList>
-#include <queue>
-#include <set>
-#include <tuple>
+#include <vector>
+#include <unordered_map>
 
 Myers::Myers() {}
 
-qfloat16 Myers::getScore(QList<QList<int>> path) {
+qfloat16 Myers::getScore(const QList<QList<int>>& path) {
 	qfloat16 score = 0;
-	
 	for (int i = 1; i < path.length(); i++) {
-		if (path[i][0] == -1) {  // deletion
-			score += 0.99;
-		} else if (path[i][0] == 1) {  // addition
-			score += 1.01;
-		}
+		score += (path[i][0] == -1) ? 0.99f : (path[i][0] == 1 ? 1.01f : 0);
 	}
-	
 	return score;
 }
 
-QList<QStringList> Myers::getDiff(QString string1, QString string2) {
+QList<QStringList> Myers::getDiff(const QString& string1, const QString& string2) {
 	QStringList lines1 = string1.split("\n");
 	QStringList lines2 = string2.split("\n");
 	
-	// Priority queue using tuple of (priority, state)
-	// where state is (x, y, path)
-	using State = std::tuple<int, int, QList<QList<int>>>;
-	using PQEntry = std::pair<qfloat16, State>;
-	std::priority_queue<PQEntry, std::vector<PQEntry>, std::greater<PQEntry>> q;
+	const int N = lines1.length();
+	const int M = lines2.length();
 	
-	// Initialize queue with starting state
-	q.push({0, {0, 0, QList<QList<int>>()}});
+	// Use vector instead of QList for better performance
+	std::vector<std::vector<int>> dp(N + 1, std::vector<int>(M + 1, INT_MAX));
+	std::vector<std::vector<std::pair<int, int>>> prev(N + 1, std::vector<std::pair<int, int>>(M + 1));
 	
-	int fX = lines1.length();
-	int fY = lines2.length();
-	QList<QList<int>> finalPath;
+	// Initialize base cases
+	dp[0][0] = 0;
 	
-	// Using set to track seen states
-	std::set<std::tuple<int, int, int>> seen;
-	
-	const qfloat16 speed = 1.4;  // Adjust as needed
-	
-	while (!q.empty()) {
-		auto [priority, state] = q.top();
-		q.pop();
-		
-		auto [x, y, path] = state;
-		
-		// Create state tuple for seen check
-		auto seenState = std::make_tuple(path.length(), x, y);
-		if (seen.find(seenState) != seen.end()) {
-			continue;
+	// Custom hash for state tuples
+	struct StateHash {
+		std::size_t operator()(const std::tuple<int, int>& t) const {
+			auto [x, y] = t;
+			return std::hash<int>()(x) ^ (std::hash<int>()(y) << 1);
 		}
-		seen.insert(seenState);
-		
-		if (x == fX && y == fY) {
-			finalPath = path;
-			break;
+	};
+	
+	// Use unordered_map instead of set for O(1) lookups
+	std::unordered_map<std::tuple<int, int>, bool, StateHash> seen;
+	
+	// Pre-compute string equality
+	std::vector<std::vector<bool>> equal(N, std::vector<bool>(M));
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			equal[i][j] = (lines1[i] == lines2[j]);
 		}
-		
-		// Check for matching lines
-		if (x < fX && y < fY) {
-			if (lines1[x] == lines2[y]) {
-				int nx = x + 1;
-				int ny = y + 1;
-				QList<QList<int>> newPath = path;
-				newPath.append({2, x, y});  // 2 represents '='
-				qfloat16 newPriority = getScore(newPath) * speed + (fX - nx) + (fY - ny);
-				q.push({newPriority, {nx, ny, newPath}});
+	}
+	
+	// Dynamic programming approach
+	for (int i = 0; i <= N; i++) {
+		for (int j = 0; j <= M; j++) {
+			if (i < N && j < M && equal[i][j]) {
+				if (dp[i][j] + 1 < dp[i + 1][j + 1]) {
+					dp[i + 1][j + 1] = dp[i][j] + 1;
+					prev[i + 1][j + 1] = {i, j};
+				}
 			}
-		}
-		
-		// Check deletion and addition cases
-		const std::vector<std::tuple<int, int, int>> operations = {
-			{-1, 1, 0},  // deletion
-			{1, 0, 1}    // addition
-		};
-		
-		for (const auto& [type, ax, ay] : operations) {
-			int nx = x + ax;
-			int ny = y + ay;
-			
-			if (nx <= fX && ny <= fY) {
-				QList<QList<int>> newPath = path;
-				newPath.append({type, x, y});
-				qfloat16 newPriority = getScore(newPath) * speed + (fX - nx) + (fY - ny);
-				q.push({newPriority, {nx, ny, newPath}});
+			if (i < N) {
+				if (dp[i][j] + 1 < dp[i + 1][j]) {
+					dp[i + 1][j] = dp[i][j] + 1;
+					prev[i + 1][j] = {i, j};
+				}
+			}
+			if (j < M) {
+				if (dp[i][j] + 1 < dp[i][j + 1]) {
+					dp[i][j + 1] = dp[i][j] + 1;
+					prev[i][j + 1] = {i, j};
+				}
 			}
 		}
 	}
 	
-	// Process final changes
+	// Reconstruct the path
 	QList<QStringList> finalChanges;
-	QStringList newStr = lines1;
-	int loc = 0;
+	int i = N, j = M;
 	
-	for (const QList<int>& change : finalPath) {
+	while (i > 0 || j > 0) {
 		QStringList changeEntry;
-		if (change[0] == 2) {  // Equal
-			changeEntry << "=" << newStr[loc];
-			loc++;
-		} else if (change[0] == -1) {  // Deletion
-			changeEntry << "-" << newStr[loc];
-			newStr.removeAt(loc);
-		} else if (change[0] == 1) {  // Addition
-			changeEntry << "+" << lines2[change[2]];
-			newStr.insert(loc, lines2[change[2]]);
-			loc++;
+		auto [pi, pj] = prev[i][j];
+		
+		if (pi < i && pj < j) {
+			changeEntry << "=" << lines1[pi];
+		} else if (pi < i) {
+			changeEntry << "-" << lines1[pi];
+		} else {
+			changeEntry << "+" << lines2[pj];
 		}
-		finalChanges.append(changeEntry);
+		
+		finalChanges.prepend(changeEntry);
+		i = pi;
+		j = pj;
 	}
 	
 	return finalChanges;
