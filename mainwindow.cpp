@@ -317,8 +317,6 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	diffAlgo = new Myers();
 
-	qDebug() << diffAlgo->getDiff("a\nb\nc", "a\na\nb");
-
 	setWindowTitle(windowName);
 	statusBar()->hide();
 
