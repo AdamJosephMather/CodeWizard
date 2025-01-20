@@ -153,8 +153,6 @@ set(PROJECT_SOURCES
     syntaxhighlighter.cpp
     language.h
     language.cpp
-    highlightdata.h
-    highlightdata.cpp
     languageserverclient.h
     languageserverclient.cpp
     recordinglight.h
@@ -179,7 +177,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         language.h language.cpp
         languageserverclient.h languageserverclient.cpp
         syntaxhighlighter.h syntaxhighlighter.cpp
-        highlightdata.h highlightdata.cpp
+
         resources.qrc
         recordinglight.h recordinglight.cpp
         groqai.h groqai.cpp

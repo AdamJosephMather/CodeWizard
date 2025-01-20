@@ -22,7 +22,6 @@
 #include <QRegularExpression>
 #include <tree_sitter/api.h>
 #include "syntaxhighlighter.h"
-#include "highlightdata.h"
 #include <QTextToSpeech>
 #include "recordinglight.h"
 #include "groqai.h"
@@ -5048,25 +5047,22 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 					continue;
 				}
 				
-				HighlightData* data = static_cast<HighlightData*>(block.userData());
-				if (data && data->hasHighlight) {
-					QTextLayout* layout = block.layout();
-	
-					if (!layout) {
-						continue;
-					}
-	
-					QTextLayout::FormatRange range;
-					range.format = errorFormats[0];
-					range.start = 0;
-					range.length = block.length();
-	
-					QVector<QTextLayout::FormatRange> formats = layout->formats();
-					formats.append(range);
-					layout->setFormats(formats);
-					textDocument->markContentsDirty(block.position() + range.start, range.length);
-					data->hasHighlight = false;
+				
+				QTextLayout* layout = block.layout();
+
+				if (!layout) {
+					continue;
 				}
+
+				QTextLayout::FormatRange range;
+				range.format = errorFormats[0];
+				range.start = 0;
+				range.length = block.length();
+
+				QVector<QTextLayout::FormatRange> formats = layout->formats();
+				formats.append(range);
+				layout->setFormats(formats);
+				textDocument->markContentsDirty(block.position() + range.start, range.length);
 			}catch(...){
 				qDebug() << "Caught";
 			}
@@ -5126,13 +5122,6 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 				}
 				
 				errHighlightedBlocks.push_back(block);
-
-				HighlightData* data = static_cast<HighlightData*>(block.userData());
-				if (!data) {
-					data = new HighlightData();
-					const_cast<QTextBlock&>(block).setUserData(data);
-				}
-				data->hasHighlight = true;
 
 				int blockLen = block.length();
 				int blockPos = block.position();
