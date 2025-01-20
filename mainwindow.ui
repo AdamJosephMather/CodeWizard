@@ -348,6 +348,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="actionUse_File_Tree_If_Fullscreen"/>
     <addaction name="separator"/>
     <addaction name="actionSet_Syntax_Colors"/>
+    <addaction name="separator"/>
+    <addaction name="actionOpen_Find_Menu"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -908,6 +910,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionKeybindings">
    <property name="text">
     <string>Keybindings</string>
+   </property>
+  </action>
+  <action name="actionOpen_Find_Menu">
+   <property name="text">
+    <string>Open Find Menu (Ctrl+F)</string>
    </property>
   </action>
  </widget>

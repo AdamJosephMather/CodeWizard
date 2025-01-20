@@ -55,7 +55,7 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 
-QString versionNumber = "8.8.6";
+QString versionNumber = "8.8.7";
 
 GroqAI *groq;
 QString groqApiKey;
@@ -267,7 +267,7 @@ int currentSelectionAction = 1;
 
 int windowsVersion = -1;
 
-QString currentFont = "Monaco";
+QString currentFont = "Source Code Pro";
 
 QStringList recentFiles;
 
@@ -746,10 +746,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	qDebug() << "Windows version: " << windowsVersion;
 
-	if (thm != settingsThm || windowsVersion != 11)
-	{
-		changeTheme(thm);
-	}
+	changeTheme(thm);
 	changeHighlightColors(thm);
 
 	MainWindow::setupCompleter();
@@ -2908,7 +2905,7 @@ bool MainWindow::wantedTheme()
 		if (fontSize <= 0){
 			fontSize = 11;
 		}
-		currentFont = settings.value("currentFont", "Monaco").toString();
+		currentFont = settings.value("currentFont", "Source Code Pro").toString();
 		tabWidth = settings.value("tabWidth", 4).toInt();
 		return settings.value("darkModeEnabled", false).toBool(); // Default to false if not found
 	}else{
@@ -3680,10 +3677,6 @@ void MainWindow::openFind()
 	findTextEdit->setTextCursor(cursor); // Optional: Reset the cursor to the QTextEdit
 
 	connect(findTextEdit, &QTextEdit::textChanged, this, &MainWindow::findTextEditChanged);
-
-	if (!selectedText.isEmpty()){
-		nextTriggered();
-	}
 }
 
 void removeOneTabAndAddChar(QString characterToAdd)
@@ -4045,9 +4038,10 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		if (key_sequence == QKeySequence("Return")) {
 			handleTabs();
 		}
-	}else if (watched == findTextEdit) {
+	}else if (watched == findTextEdit || watched == replaceTextEdit) {
 		if (key_event->key() == Qt::Key_Escape) {
 			textEdit->setFocus();
+			changeFindSectionVisibility(false);
 			return true;
 		}else if (key_sequence == QKeySequence("Shift+Return")){
 			previousTriggered();
@@ -4064,6 +4058,11 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 	}
 
 	return false;
+}
+
+void MainWindow::on_actionOpen_Find_Menu_triggered(){
+	changeFindSectionVisibility(true);
+	openFind();
 }
 
 void MainWindow::changeFindSectionVisibility(bool visible){
@@ -5581,12 +5580,15 @@ void MainWindow::changeTheme(bool darkMode)
 		lightPalette.setColor(QPalette::ToolTipBase, QColor(201, 201, 201));
 		lightPalette.setColor(QPalette::Light, QColor(255, 255, 255));
 		lightPalette.setColor(QPalette::Dark, QColor(100, 100, 100));
-
+		
 		QString menubarSheet = "QMenuBar {background-color: rgb(30, 30, 30); color: white; }"
 							   "QMenu { background-color: rgb(20, 20, 20); color: white; }"
-							   "QMenu::item:selected { background-color: rgb(45, 45, 45)); color: white; }"
-							   "QMenu::separator {height: 1px;background-color: rgb(255, 255, 255);margin: 2px 4px;}"
-							   "QMenuBar::item:hover { background-color: rgb(70, 70, 70); }";
+							   "QMenu::item:selected { background-color: rgb(45, 45, 45); color: white; }"
+							   "QMenu::separator {height: 1px;background-color: rgb(255, 255, 255); margin: 2px 4px;}"
+							   "QMenuBar::item { background-color: rgb(30, 30, 30); padding: 2px 4px; border-radius: 4px; margin: 3px 3px 2px 3px; }"
+							   "QMenuBar::item:hover { background-color: rgb(70, 70, 70); }"
+							   "QMenuBar::item:selected { background-color: rgb(70, 70, 70); }";
+		
 		ui->menuBar->setStyleSheet(menubarSheet);
 
 		QList<QMenu*> menus = ui->menuBar->findChildren<QMenu*>();
@@ -5627,8 +5629,10 @@ void MainWindow::changeTheme(bool darkMode)
 		QString menubarSheet = "QMenuBar {background-color: rgb(251, 251, 251); color: black; }"
 								"QMenu { background-color: rgb(251, 251, 251); color: black; }"
 								"QMenu::item:selected { background-color: rgb(150, 150, 150); color: black; }"
-								"QMenu::separator {height: 1px;background-color: rgb(0, 0, 0);margin: 2px 4px;}"
-								"QMenuBar::item:hover { background-color: rgb(200, 200, 200); }";
+								"QMenu::separator {height: 1px; background-color: rgb(0, 0, 0); margin: 2px 4px;}"
+								"QMenuBar::item { background-color: rgb(251, 251, 251); padding: 2px 4px; border-radius: 4px; margin: 3px 3px 2px 3px; }"
+								"QMenuBar::item:hover { background-color: rgb(200, 200, 200); }"
+								"QMenuBar::item:selected { background-color: rgb(200, 200, 200); }";
 		ui->menuBar->setStyleSheet(menubarSheet);
 
 		QList<QMenu*> menus = ui->menuBar->findChildren<QMenu*>();
