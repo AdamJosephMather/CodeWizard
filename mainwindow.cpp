@@ -292,7 +292,7 @@ QAction* noAutocomplete;
 QAction* hoverAction;
 
 QAction* autoSaveAct;
-
+QList<QTextBlock> errHighlightedBlocks;
 QAction* randomSelectFileTypeAct;
 
 bool unsaved = false;
@@ -5042,28 +5042,37 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 
 		// Only clear blocks that were highlighted
 		QTextBlock block = textDocument->begin();
-		while (block.isValid()) {
-			HighlightData* data = static_cast<HighlightData*>(block.userData());
-			if (data && data->hasHighlight) {
-				QTextLayout* layout = block.layout();
-
-				if (!layout) {
+		for (QTextBlock block : errHighlightedBlocks) {
+			try{
+				if (!block.isValid()){
 					continue;
 				}
-
-				QTextLayout::FormatRange range;
-				range.format = errorFormats[0];
-				range.start = 0;
-				range.length = block.length();
-
-				QVector<QTextLayout::FormatRange> formats = layout->formats();
-				formats.append(range);
-				layout->setFormats(formats);
-				textDocument->markContentsDirty(block.position() + range.start, range.length);
-				data->hasHighlight = false;
+				
+				HighlightData* data = static_cast<HighlightData*>(block.userData());
+				if (data && data->hasHighlight) {
+					QTextLayout* layout = block.layout();
+	
+					if (!layout) {
+						continue;
+					}
+	
+					QTextLayout::FormatRange range;
+					range.format = errorFormats[0];
+					range.start = 0;
+					range.length = block.length();
+	
+					QVector<QTextLayout::FormatRange> formats = layout->formats();
+					formats.append(range);
+					layout->setFormats(formats);
+					textDocument->markContentsDirty(block.position() + range.start, range.length);
+					data->hasHighlight = false;
+				}
+			}catch(...){
+				qDebug() << "Caught";
 			}
-			block = block.next();
 		}
+		
+		errHighlightedBlocks.clear();
 	}else{
 		numberOfBlocksColored = 0;
 
@@ -5115,6 +5124,8 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 				if (!layout) {
 					continue;
 				}
+				
+				errHighlightedBlocks.push_back(block);
 
 				HighlightData* data = static_cast<HighlightData*>(block.userData());
 				if (!data) {
