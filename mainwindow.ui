@@ -252,7 +252,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>0</x>
      <y>0</y>
      <width>702</width>
-     <height>17</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -360,6 +360,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="actionMacros"/>
     <addaction name="actionLSP_2"/>
     <addaction name="actionExtras"/>
+    <addaction name="actionKeybindings"/>
    </widget>
    <widget class="QMenu" name="menuLanguage">
     <property name="title">
@@ -902,6 +903,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionCompare_2_Files">
    <property name="text">
     <string>Compare 2 Files</string>
+   </property>
+  </action>
+  <action name="actionKeybindings">
+   <property name="text">
+    <string>Keybindings</string>
    </property>
   </action>
  </widget>

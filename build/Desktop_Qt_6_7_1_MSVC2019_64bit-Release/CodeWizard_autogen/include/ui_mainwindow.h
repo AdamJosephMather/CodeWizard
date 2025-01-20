@@ -118,6 +118,7 @@ public:
     QAction *actionUse_Speaker;
     QAction *actionSet_Groq_AI_API_Key;
     QAction *actionCompare_2_Files;
+    QAction *actionKeybindings;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
@@ -350,6 +351,8 @@ public:
         actionSet_Groq_AI_API_Key->setObjectName("actionSet_Groq_AI_API_Key");
         actionCompare_2_Files = new QAction(MainWindow);
         actionCompare_2_Files->setObjectName("actionCompare_2_Files");
+        actionKeybindings = new QAction(MainWindow);
+        actionKeybindings->setObjectName("actionKeybindings");
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         QSizePolicy sizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::Minimum);
@@ -484,7 +487,7 @@ public:
         MainWindow->setStatusBar(statusbar);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName("menuBar");
-        menuBar->setGeometry(QRect(0, 0, 702, 17));
+        menuBar->setGeometry(QRect(0, 0, 702, 21));
         sizePolicy2.setHeightForWidth(menuBar->sizePolicy().hasHeightForWidth());
         menuBar->setSizePolicy(sizePolicy2);
         menuOp1 = new QMenu(menuBar);
@@ -577,6 +580,7 @@ public:
         menuHelp->addAction(actionMacros);
         menuHelp->addAction(actionLSP_2);
         menuHelp->addAction(actionExtras);
+        menuHelp->addAction(actionKeybindings);
         menuLanguage->addAction(actionPython_2);
         menuLanguage->addAction(actionC);
         menuLanguage->addAction(actionC_2);
@@ -700,6 +704,7 @@ public:
         actionUse_Speaker->setText(QCoreApplication::translate("MainWindow", "Use Speaker", nullptr));
         actionSet_Groq_AI_API_Key->setText(QCoreApplication::translate("MainWindow", "Set Groq AI API Key", nullptr));
         actionCompare_2_Files->setText(QCoreApplication::translate("MainWindow", "Compare 2 Files", nullptr));
+        actionKeybindings->setText(QCoreApplication::translate("MainWindow", "Keybindings", nullptr));
         textEdit_4->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

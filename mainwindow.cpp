@@ -5784,6 +5784,29 @@ void MainWindow::on_actionLSP_2_triggered(){
 	openHelpMenu("Language Server Protocol:\n\nFrom CodeWizard V8.0.0 onwards we now support users setting their own Language Server. First set the language you want to set the LSP for, then press Language->Set LSP for language. To specify the LSP to use, type the command needed to run said language server. For example:\n\n   Python - \"jedi-language-server.exe\"\n      Install with \"pip install jedi-language-server\" and ensure \"C:\\Users\\USERNAME\\AppData\\Roaming\\Python\\PythonXX\\Scripts\" is in your path\n\n   C/C++ - \"clangd.exe\"\n      Download from official site\n\n   Rust - \"rust-analyzer.exe\"\n      Download from official site\n\n   TypeScript/JavaScript - \"typescript-language-server --stdio\"\n      Installed with \"npm install -g typescript-language-server typescript\"\n\n   Go - \"gopls\"\n      Installed with \"go install golang.org/x/tools/gopls@latest\"\n\n   HTML - \"vscode-html-language-server --stdio\"\n      Installed with \"npm i -g vscode-langservers-extracted\" (also provides vscode-css-language-server, vscode-json-language-server, vscode-eslint-language-server)\n\n\nLanguage Servers Provide the following features to CodeWizard:\n\n   1. Autocompletion\n   2. Hover for info\n   3. Goto definition\n   4. Errors/Warnings\n   5. Code Actions (error correction, formatting, etc)\n\nAll of these can be enabled/disabled under Languages->LSP Settings. There is also the option to disable LSP autocomplete but keep CodeWizard autocomplete, should you prefer it.\n\nExtra Notes:\n   1. When first setting the LSP for a language it may crash, just try again. It usually works the second time.");
 }
 
+void MainWindow::on_actionKeybindings_triggered(){
+	qDebug() << "on_actionKeybindings_triggered";
+
+	openHelpMenu("Keybindings:\n\
+  \n\
+  Ctrl+B ---- Toggle filetree\n\
+  Ctrl+S ---- Save file\n\
+  Ctrl+O ---- Open file\n\
+  Ctrl+N ---- New file\n\
+  Ctrl+'+' -- Increase text size\n\
+  Ctrl+'-' -- Decrease text size\n\
+  Alt ------- Start/End macro recording\n\
+  Ctrl+P ---- Replay Macro\n\
+  Ctrl+F/H -- Find\n\
+  Ctrl+[ ---- De-indent\n\
+  Ctrl+] ---- Indent\n\
+  Alt+Enter - Code actions (LSP)\n\
+  Alt+3 ----- Comment out section\n\
+  Alt+4 ----- De-comment out section\n\
+  Alt+A ----- Activate AI suggestion\n\
+  F5 -------- Run code");
+}
+
 void MainWindow::openHelpMenu(QString text) {
 	qDebug() << "openHelpMenu";
 
