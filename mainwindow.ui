@@ -252,7 +252,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>0</x>
      <y>0</y>
      <width>702</width>
-     <height>21</height>
+     <height>17</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -409,12 +409,27 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="actionLSP"/>
     <addaction name="menuLSP_Settings"/>
    </widget>
+   <widget class="QMenu" name="menuGit">
+    <property name="title">
+     <string>Git</string>
+    </property>
+    <widget class="QMenu" name="menuPull">
+     <property name="title">
+      <string>Pull</string>
+     </property>
+     <addaction name="actionDiscard_Local_Changes"/>
+     <addaction name="actionRegular"/>
+    </widget>
+    <addaction name="menuPull"/>
+    <addaction name="actionPush"/>
+   </widget>
    <addaction name="menuOp1"/>
    <addaction name="menuEdit"/>
    <addaction name="menuRun"/>
    <addaction name="menuView"/>
    <addaction name="menuFixit"/>
    <addaction name="menuLanguage"/>
+   <addaction name="menuGit"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionOpen">
@@ -915,6 +930,21 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionOpen_Find_Menu">
    <property name="text">
     <string>Open Find Menu (Ctrl+F)</string>
+   </property>
+  </action>
+  <action name="actionPush">
+   <property name="text">
+    <string>Push</string>
+   </property>
+  </action>
+  <action name="actionDiscard_Local_Changes">
+   <property name="text">
+    <string>Discard Local Changes</string>
+   </property>
+  </action>
+  <action name="actionRegular">
+   <property name="text">
+    <string>Regular</string>
    </property>
   </action>
  </widget>

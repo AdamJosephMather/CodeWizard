@@ -208,6 +208,7 @@ QMenu *menuView;
 QMenu *menuFonts;
 QMenu *menuHelp;
 QMenu *menuLanguage;
+QMenu *menuGit;
 QMenu *menuOpen_Recent;
 QMenu *menuLSP_Settings;
 QMenu *menuWarnings;
@@ -351,6 +352,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	menuFonts = ui->menuFonts;
 	menuHelp = ui->menuHelp;
 	menuLanguage = ui->menuLanguage;
+	menuGit = ui->menuGit;
 	menuOpen_Recent = ui->menuOpen_Recent;
 	menuLSP_Settings = ui->menuLSP_Settings;
 	menuWarnings = ui->menuWarnings;
@@ -888,6 +890,64 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		globalArgFileName = argFileName;
 		on_actionOpen_triggered();
 	}
+}
+
+void MainWindow::on_actionDiscard_Local_Changes_triggered(){
+	
+}
+
+void MainWindow::on_actionRegular_triggered(){
+	
+}
+
+void MainWindow::on_actionPush_triggered(){
+	qDebug() << "on_actionPush_triggered";
+
+	QModelIndex index = fileTree->rootIndex();
+	if (!index.isValid()){
+		openHelpMenu("Base folder not set.");
+		return;
+	}
+
+	QString filePath = fileModel->filePath(index);
+	qDebug() << filePath;
+	
+	QInputDialog dialog;
+	dialog.setFont(textEdit->font());
+	dialog.setWindowTitle("Git");
+	dialog.setLabelText("Commit message?");
+
+	dialog.exec();
+
+	QString commitmessage = "";
+
+	if (dialog.result() == QDialog::Accepted) {
+		commitmessage = dialog.textValue();
+	} else {
+		return;
+	}
+	
+	QString tmpDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/CodeWizard";
+	QString batFilePath = tmpDirPath + "/run_script.bat";
+	
+	QDir tmpDir(tmpDirPath);
+	if (!tmpDir.exists()) {
+		tmpDir.mkpath(tmpDirPath);
+	}
+	qDebug() << batFilePath;
+	
+	QFile batFile(batFilePath);
+	if (batFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+		QTextStream out(&batFile);
+		out << "cd /d \""+filePath+"\" && git add --all && git commit -m \""+commitmessage+"\" && git push";
+	}
+	
+	QStringList arguments;
+	arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
+	
+	QProcess *process = new QProcess(this);
+	process->startDetached("cmd.exe", arguments);
+	
 }
 
 void MainWindow::on_actionCompare_2_Files_triggered(){
@@ -2558,6 +2618,7 @@ void MainWindow::updateFonts()
 	menuFonts->setFont(font);
 	menuHelp->setFont(font);
 	menuLanguage->setFont(font);
+	menuGit->setFont(font);
 	menuBarItem->setFont(font);
 	menuOpen_Recent->setFont(font);
 	menuLSP_Settings->setFont(font);
@@ -3608,7 +3669,6 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 	// Use 'start cmd /k' to open a new command prompt and run the batch file, keeping the window open after execution
 	QStringList arguments;
 	arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
-
 	// Start the process
 	process->startDetached("cmd.exe", arguments);
 }

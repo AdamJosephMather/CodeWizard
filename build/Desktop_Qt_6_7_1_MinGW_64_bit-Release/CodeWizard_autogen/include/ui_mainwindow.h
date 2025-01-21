@@ -120,6 +120,9 @@ public:
     QAction *actionCompare_2_Files;
     QAction *actionKeybindings;
     QAction *actionOpen_Find_Menu;
+    QAction *actionPush;
+    QAction *actionDiscard_Local_Changes;
+    QAction *actionRegular;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
@@ -153,6 +156,8 @@ public:
     QMenu *menuLSP_Settings;
     QMenu *menuWarnings;
     QMenu *menuAutocomplete;
+    QMenu *menuGit;
+    QMenu *menuPull;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -356,6 +361,12 @@ public:
         actionKeybindings->setObjectName("actionKeybindings");
         actionOpen_Find_Menu = new QAction(MainWindow);
         actionOpen_Find_Menu->setObjectName("actionOpen_Find_Menu");
+        actionPush = new QAction(MainWindow);
+        actionPush->setObjectName("actionPush");
+        actionDiscard_Local_Changes = new QAction(MainWindow);
+        actionDiscard_Local_Changes->setObjectName("actionDiscard_Local_Changes");
+        actionRegular = new QAction(MainWindow);
+        actionRegular->setObjectName("actionRegular");
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         QSizePolicy sizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::Minimum);
@@ -490,7 +501,7 @@ public:
         MainWindow->setStatusBar(statusbar);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName("menuBar");
-        menuBar->setGeometry(QRect(0, 0, 702, 21));
+        menuBar->setGeometry(QRect(0, 0, 702, 17));
         sizePolicy2.setHeightForWidth(menuBar->sizePolicy().hasHeightForWidth());
         menuBar->setSizePolicy(sizePolicy2);
         menuOp1 = new QMenu(menuBar);
@@ -519,6 +530,10 @@ public:
         menuWarnings->setObjectName("menuWarnings");
         menuAutocomplete = new QMenu(menuLSP_Settings);
         menuAutocomplete->setObjectName("menuAutocomplete");
+        menuGit = new QMenu(menuBar);
+        menuGit->setObjectName("menuGit");
+        menuPull = new QMenu(menuGit);
+        menuPull->setObjectName("menuPull");
         MainWindow->setMenuBar(menuBar);
 
         menuBar->addAction(menuOp1->menuAction());
@@ -527,6 +542,7 @@ public:
         menuBar->addAction(menuView->menuAction());
         menuBar->addAction(menuFixit->menuAction());
         menuBar->addAction(menuLanguage->menuAction());
+        menuBar->addAction(menuGit->menuAction());
         menuBar->addAction(menuHelp->menuAction());
         menuOp1->addAction(actionNew);
         menuOp1->addAction(actionOpen);
@@ -611,6 +627,10 @@ public:
         menuWarnings->addAction(actionShow_Other);
         menuAutocomplete->addAction(actionOnly_Use_CodeWizard_Built_In);
         menuAutocomplete->addAction(actionNo_Autocomplete);
+        menuGit->addAction(menuPull->menuAction());
+        menuGit->addAction(actionPush);
+        menuPull->addAction(actionDiscard_Local_Changes);
+        menuPull->addAction(actionRegular);
 
         retranslateUi(MainWindow);
 
@@ -711,6 +731,9 @@ public:
         actionCompare_2_Files->setText(QCoreApplication::translate("MainWindow", "Compare 2 Files", nullptr));
         actionKeybindings->setText(QCoreApplication::translate("MainWindow", "Keybindings", nullptr));
         actionOpen_Find_Menu->setText(QCoreApplication::translate("MainWindow", "Open Find Menu (Ctrl+F)", nullptr));
+        actionPush->setText(QCoreApplication::translate("MainWindow", "Push", nullptr));
+        actionDiscard_Local_Changes->setText(QCoreApplication::translate("MainWindow", "Discard Local Changes", nullptr));
+        actionRegular->setText(QCoreApplication::translate("MainWindow", "Regular", nullptr));
         textEdit_4->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -744,6 +767,8 @@ public:
         menuLSP_Settings->setTitle(QCoreApplication::translate("MainWindow", "LSP Settings", nullptr));
         menuWarnings->setTitle(QCoreApplication::translate("MainWindow", "Warnings", nullptr));
         menuAutocomplete->setTitle(QCoreApplication::translate("MainWindow", "Autocomplete", nullptr));
+        menuGit->setTitle(QCoreApplication::translate("MainWindow", "Git", nullptr));
+        menuPull->setTitle(QCoreApplication::translate("MainWindow", "Pull", nullptr));
     } // retranslateUi
 
 };
