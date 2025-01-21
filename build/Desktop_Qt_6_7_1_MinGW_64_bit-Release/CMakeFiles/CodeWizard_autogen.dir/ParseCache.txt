@@ -821,6 +821,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/languageserverclient.h
  mdp:C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/wchar.h
  mdp:C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/moc_predefs.h
  mdp:C:/Users/adamj/Documents/QtProjects/CodeWizard/languageserverclient.h
+C:/Users/adamj/Documents/QtProjects/CodeWizard/highlightdata.cpp
 C:/Users/adamj/Documents/QtProjects/CodeWizard/mytextedit.h
  mmc:Q_OBJECT
  mdp:C:/Qt/6.7.1/mingw_64/include/QtCore/QDebug
@@ -1627,7 +1628,6 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/mainwindow.h
  mdp:C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/moc_predefs.h
  mdp:C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include/tree_sitter/api.h
  mdp:C:/Users/adamj/Documents/QtProjects/CodeWizard/mainwindow.h
-C:/Users/adamj/Documents/QtProjects/CodeWizard/highlightdata.cpp
 C:/Users/adamj/Documents/QtProjects/CodeWizard/recordinglight.h
  mmc:Q_OBJECT
  mdp:C:/Qt/6.7.1/mingw_64/include/QtCore/q20functional.h
@@ -1985,12 +1985,12 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/recordinglight.h
  mdp:C:/Users/adamj/Documents/QtProjects/CodeWizard/recordinglight.h
 C:/Users/adamj/Documents/QtProjects/CodeWizard/syntaxhighlighter.h
 C:/Users/adamj/Documents/QtProjects/CodeWizard/groqai.cpp
-C:/Users/adamj/Documents/QtProjects/CodeWizard/language.cpp
 C:/Users/adamj/Documents/QtProjects/CodeWizard/myers.cpp
+C:/Users/adamj/Documents/QtProjects/CodeWizard/language.cpp
 C:/Users/adamj/Documents/QtProjects/CodeWizard/languageserverclient.cpp
+C:/Users/adamj/Documents/QtProjects/CodeWizard/mytextedit.cpp
 C:/Users/adamj/Documents/QtProjects/CodeWizard/mainwindow.cpp
  uic:./ui_mainwindow.h
-C:/Users/adamj/Documents/QtProjects/CodeWizard/mytextedit.cpp
 C:/Users/adamj/Documents/QtProjects/CodeWizard/recordinglight.cpp
 C:/Users/adamj/Documents/QtProjects/CodeWizard/syntaxhighlighter.cpp
 C:/Users/adamj/Documents/QtProjects/CodeWizard/errorsmenu.h

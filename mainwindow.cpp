@@ -893,11 +893,71 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 }
 
 void MainWindow::on_actionDiscard_Local_Changes_triggered(){
+	qDebug() << "on_actionDiscard_Local_Changes_triggered";
+
+	QModelIndex index = fileTree->rootIndex();
+	if (!index.isValid()){
+		openHelpMenu("Base folder not set.");
+		return;
+	}
+
+	QString filePath = fileModel->filePath(index);
+	qDebug() << filePath;
 	
+	QString tmpDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/CodeWizard";
+	QString batFilePath = tmpDirPath + "/run_script.bat";
+	
+	QDir tmpDir(tmpDirPath);
+	if (!tmpDir.exists()) {
+		tmpDir.mkpath(tmpDirPath);
+	}
+	qDebug() << batFilePath;
+	
+	QFile batFile(batFilePath);
+	if (batFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+		QTextStream out(&batFile);
+		out << "cd /d \""+filePath+"\" && git reset --hard";
+	}
+	
+	QStringList arguments;
+	arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
+	
+	QProcess *process = new QProcess(this);
+	process->startDetached("cmd.exe", arguments);	
 }
 
 void MainWindow::on_actionRegular_triggered(){
+	qDebug() << "on_actionRegular_triggered";
+
+	QModelIndex index = fileTree->rootIndex();
+	if (!index.isValid()){
+		openHelpMenu("Base folder not set.");
+		return;
+	}
+
+	QString filePath = fileModel->filePath(index);
+	qDebug() << filePath;
 	
+	QString tmpDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/CodeWizard";
+	QString batFilePath = tmpDirPath + "/run_script.bat";
+	
+	QDir tmpDir(tmpDirPath);
+	if (!tmpDir.exists()) {
+		tmpDir.mkpath(tmpDirPath);
+	}
+	qDebug() << batFilePath;
+	
+	QFile batFile(batFilePath);
+	if (batFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+		QTextStream out(&batFile);
+		out << "cd /d \""+filePath+"\" && git pull";
+	}
+	
+	QStringList arguments;
+	arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
+	
+	QProcess *process = new QProcess(this);
+	process->startDetached("cmd.exe", arguments);	
 }
 
 void MainWindow::on_actionPush_triggered(){
@@ -946,8 +1006,7 @@ void MainWindow::on_actionPush_triggered(){
 	arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
 	
 	QProcess *process = new QProcess(this);
-	process->startDetached("cmd.exe", arguments);
-	
+	process->startDetached("cmd.exe", arguments);	
 }
 
 void MainWindow::on_actionCompare_2_Files_triggered(){
