@@ -182,6 +182,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         recordinglight.h recordinglight.cpp
         groqai.h groqai.cpp
         myers.h myers.cpp
+        errorsmenu.h errorsmenu.cpp
     )
 
 # Define target properties for Android with Qt 6 as:

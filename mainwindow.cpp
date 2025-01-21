@@ -1,3 +1,5 @@
+#pragma GCC diagnostic ignored "-Wtrigraphs"
+
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include <QFileDialog>
@@ -26,6 +28,7 @@
 #include "recordinglight.h"
 #include "groqai.h"
 #include "myers.h"
+#include "errorsmenu.h"
 
 extern "C" {
 	TSLanguage* tree_sitter_cpp(void);
@@ -279,6 +282,8 @@ QList<int> errEndC;
 QList<int> errEndL;
 QList<int> errSeverity;
 QJsonArray codeActions;
+ErrorsMenu errMenu;
+
 int expectedCompletionId = 0;
 int expectedHoverInfoId = 0;
 QMutex lspMutex;
@@ -379,6 +384,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	textEdit = ui->textEdit;
 	groq->setTextEdit(textEdit);
+	errMenu.Setup(textEdit);
 
 	lineNumberTextEdit = ui->textEdit_4;
 
@@ -793,7 +799,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(useFileTree, &QAction::toggled, this, &MainWindow::fileTreeToggled);
 	connect(useFileTreeIfFullscreen, &QAction::toggled, this, &MainWindow::fileTreeToggled);
 	connect(fileTree, &QTreeView::doubleClicked, this, &MainWindow::fileTreeOpened);
-
+	
 	connect(groq, &GroqAI::responseReceived, this, [this](const QString &response) {
 		qDebug() << "AI Response:" << response;
 		QTextCursor c = textEdit->textCursor();
@@ -885,6 +891,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 }
 
 void MainWindow::on_actionCompare_2_Files_triggered(){
+	qDebug() << "on_actionCompare_2_Files_triggered";
 	if (isSettingUpLSP){
 		showWeDontFuckWithTheLSP();
 		return;
@@ -1033,6 +1040,8 @@ QString MainWindow::changeToTabs(QString text){
 
 void MainWindow::updateMargins(bool force) {
 	qDebug() << "updateMargins - " << force;
+	
+	errMenu.reposition();
 
 	QFontMetrics metrics(textEdit->font());
 
@@ -2137,6 +2146,9 @@ void MainWindow::setupLSP(QString oldFile)
 		errEndC = endC;
 		errEndL = endL;
 		errSeverity = severity;
+		
+		errMenu.UpdateErrors(startL, messages);
+		
 		highlightDiagnostics(false);
 		isErrorHighlighted = true;
 	});
@@ -2572,6 +2584,8 @@ void MainWindow::updateFonts()
 	findTextEdit->setTextCursor(cursor); // Optional: Reset the cursor to the QTextEdit
 
 	updateLineNumbers(globalLineCount);
+	
+	errMenu.reposition();
 }
 
 void MainWindow::setupCompleter() {
@@ -3211,6 +3225,14 @@ void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
 	if (doHighlight){
 		rehighlightFullDoc();
 	}
+	
+	errMessages.clear();
+	errStartC.clear();
+	errStartL.clear();
+	errEndC.clear();
+	errEndL.clear();
+	errSeverity.clear();
+	errMenu.UpdateErrors(errStartL, errMessages);
 
 	isErrorHighlighted = false;
 }
@@ -3713,7 +3735,7 @@ void MainWindow::on_actionStart_Macro_Recording_triggered() {
 	recordingLight->move(textEdit->width() - recordingLight->width() - margin, margin);
 	recordingLight->raise();
 	recordingLight->show();
-	qDebug() << "Moved to: " << textEdit->width() - recordingLight->width() - margin, margin;
+	qDebug() << "Moved to: " << textEdit->width() - recordingLight->width() - margin;
 }
 
 void MainWindow::on_actionEnd_Macro_Recording_triggered() {

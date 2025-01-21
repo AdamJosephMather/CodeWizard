@@ -419,6 +419,12 @@
 	"HEADERS" : 
 	[
 		[
+			"C:/Users/adamj/Documents/QtProjects/CodeWizard/errorsmenu.h",
+			"MU",
+			"EWIEGA46WW/moc_errorsmenu.cpp",
+			null
+		],
+		[
 			"C:/Users/adamj/Documents/QtProjects/CodeWizard/groqai.h",
 			"MU",
 			"EWIEGA46WW/moc_groqai.cpp",
@@ -575,6 +581,11 @@
 	"SETTINGS_FILE" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/CodeWizard_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[
+			"C:/Users/adamj/Documents/QtProjects/CodeWizard/errorsmenu.cpp",
+			"MU",
+			null
+		],
 		[
 			"C:/Users/adamj/Documents/QtProjects/CodeWizard/groqai.cpp",
 			"MU",

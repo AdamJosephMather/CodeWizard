@@ -768,6 +768,8 @@ CodeWizard_autogen/timestamp: \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/3.29.3/CMakeRCCompiler.cmake \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CMakeFiles/3.29.3/CMakeSystem.cmake \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MinGW_64_bit-Release/CodeWizard_autogen/moc_predefs.h \
+	C:/Users/adamj/Documents/QtProjects/CodeWizard/errorsmenu.cpp \
+	C:/Users/adamj/Documents/QtProjects/CodeWizard/errorsmenu.h \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/extern/tree-sitter/lib/include/tree_sitter/api.h \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/groqai.cpp \
 	C:/Users/adamj/Documents/QtProjects/CodeWizard/groqai.h \
