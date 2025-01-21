@@ -24,6 +24,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void on_actionGit_Integration_triggered();
 	void on_actionDiscard_Local_Changes_triggered();
 	void on_actionRegular_triggered();
 	void on_actionPush_triggered();

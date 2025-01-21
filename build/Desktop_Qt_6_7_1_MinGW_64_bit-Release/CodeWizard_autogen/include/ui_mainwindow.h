@@ -123,6 +123,7 @@ public:
     QAction *actionPush;
     QAction *actionDiscard_Local_Changes;
     QAction *actionRegular;
+    QAction *actionGit_Integration;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
@@ -367,6 +368,8 @@ public:
         actionDiscard_Local_Changes->setObjectName("actionDiscard_Local_Changes");
         actionRegular = new QAction(MainWindow);
         actionRegular->setObjectName("actionRegular");
+        actionGit_Integration = new QAction(MainWindow);
+        actionGit_Integration->setObjectName("actionGit_Integration");
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         QSizePolicy sizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::Minimum);
@@ -602,6 +605,7 @@ public:
         menuHelp->addAction(actionLSP_2);
         menuHelp->addAction(actionExtras);
         menuHelp->addAction(actionKeybindings);
+        menuHelp->addAction(actionGit_Integration);
         menuLanguage->addAction(actionPython_2);
         menuLanguage->addAction(actionC);
         menuLanguage->addAction(actionC_2);
@@ -734,6 +738,7 @@ public:
         actionPush->setText(QCoreApplication::translate("MainWindow", "Push", nullptr));
         actionDiscard_Local_Changes->setText(QCoreApplication::translate("MainWindow", "Discard Local Changes", nullptr));
         actionRegular->setText(QCoreApplication::translate("MainWindow", "Regular", nullptr));
+        actionGit_Integration->setText(QCoreApplication::translate("MainWindow", "Git Integration", nullptr));
         textEdit_4->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

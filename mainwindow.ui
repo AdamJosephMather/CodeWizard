@@ -363,6 +363,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="actionLSP_2"/>
     <addaction name="actionExtras"/>
     <addaction name="actionKeybindings"/>
+    <addaction name="actionGit_Integration"/>
    </widget>
    <widget class="QMenu" name="menuLanguage">
     <property name="title">
@@ -945,6 +946,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionRegular">
    <property name="text">
     <string>Regular</string>
+   </property>
+  </action>
+  <action name="actionGit_Integration">
+   <property name="text">
+    <string>Git Integration</string>
    </property>
   </action>
  </widget>
