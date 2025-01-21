@@ -1892,7 +1892,7 @@ void MainWindow::handleMouseMoved(QPoint pos)
 			int eC = errEndC[i];
 			int eS = errSeverity[i];
 
-			if (line >= sL && line <= eL && column >= sC && column <= eC){
+			if (line >= sL && line <= eL && column >= sC-1 && column <= eC+1){
 				if (allowedSeverities.contains(eS)){
 					bestIndx = i;
 				}
@@ -2147,7 +2147,7 @@ void MainWindow::setupLSP(QString oldFile)
 		errEndL = endL;
 		errSeverity = severity;
 		
-		errMenu.UpdateErrors(startL, messages);
+		errMenu.UpdateErrors(startL, messages, severity);
 		
 		highlightDiagnostics(false);
 		isErrorHighlighted = true;
@@ -2308,11 +2308,11 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 	int lineCount = 0;
 	if (type == "markdown"){
 		finalString = markdownToHtml(info);
-		lineCount = finalString.count("<br>")+finalString.count("<hr>")*2;
+		lineCount = finalString.count("<br>")+finalString.count("<hr>")*3;
 		lines = finalString.split("<br>");
 	}else{
 		finalString = plaintextToHtml(info);
-		lineCount = finalString.count("<br>")+finalString.count("<hr>")*2;
+		lineCount = finalString.count("<br>")+finalString.count("<hr>")*3;
 		lines = finalString.split("<br>");
 	}
 
@@ -3232,7 +3232,7 @@ void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
 	errEndC.clear();
 	errEndL.clear();
 	errSeverity.clear();
-	errMenu.UpdateErrors(errStartL, errMessages);
+	errMenu.UpdateErrors(errStartL, errMessages, errSeverity);
 
 	isErrorHighlighted = false;
 }

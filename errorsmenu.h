@@ -14,19 +14,30 @@ public:
 	ErrorsMenu(); // Constructor
 
 	void Setup(MyTextEdit *t);
-	void UpdateErrors(QList<int> lineNumbers, QStringList messages);
+	void UpdateErrors(QList<int> lN, QStringList m, QList<int> s);
 	void reposition();
 
 private slots:
-	void clickedOverlay(QPoint pos); // Slot for handling the clicked event
+	void clickedOverlayErrors(QPoint pos);
+	void clickedOverlayWarnings(QPoint pos);
+	void clickedOverlayOther(QPoint pos);
+	
 	void onErrorItemClicked(QListWidgetItem* item);
 
 private:
+	void fillErrorsListWith(int sev);
+	QList<int> findSeverities(int s);
+	MyTextEdit* createOverlay(QString color);
 	MyTextEdit* textEdit; // Pointer to MyTextEdit
 	QStringList messages; // List of messages
 	QList<int> lineNumbers; // List of line numbers
+	QList<int> severity; // List of severities
+	int currentlyShowing;
 
-	MyTextEdit* overlayTextEdit; // Pointer to the overlay text edit
+	MyTextEdit* overlayTextEditErrors;
+	MyTextEdit* overlayTextEditWarnings;
+	MyTextEdit* overlayTextEditOther;
+	
 	QListWidget* errorsList;
 };
 
