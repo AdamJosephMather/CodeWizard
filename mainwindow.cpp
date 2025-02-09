@@ -192,7 +192,7 @@ QString GLSLLSP = "";
 QString javaLSP = "";
 QString cLSP = "";
 
-int fontSize = 11;
+float fontSize = 11.0;
 
 QPushButton *findButton;
 QPushButton *nextButton;
@@ -2568,7 +2568,7 @@ void MainWindow::on_actionIncrease_Text_Size_triggered()
 {
 	qDebug() << "on_actionIncrease_Text_Size_triggered";
 
-	fontSize += 1;
+	fontSize += 1.0;
 	updateFonts();
 	saveWantedTheme();
 }
@@ -2577,7 +2577,7 @@ void MainWindow::on_actionReset_Text_Size_triggered()
 {
 	qDebug() << "on_actionReset_Text_Size_triggered";
 
-	fontSize = 11;
+	fontSize = 11.0;
 	updateFonts();
 	saveWantedTheme();
 }
@@ -2586,8 +2586,8 @@ void MainWindow::on_actionDecrease_Text_Size_triggered()
 {
 	qDebug() << "on_actionDecrease_Text_Size_triggered";
 
-	if (fontSize > 1){
-		fontSize -= 1;
+	if (fontSize > 1.0){
+		fontSize -= 1.0;
 	}
 	updateFonts();
 	saveWantedTheme();
@@ -2597,29 +2597,32 @@ void MainWindow::on_actionSet_Text_Size_triggered()
 {
 	qDebug() << "on_actionSet_Text_Size_triggered";
 
-	QInputDialog dialog;
-	dialog.setFont(textEdit->font());  // Set the font to Arial, size 12
-	dialog.setWindowTitle("Font Size");
-	dialog.setLabelText("Text Size:");
-	dialog.setIntValue(fontSize);
-	dialog.setIntMinimum(1);
-	dialog.setIntMaximum(50);
-	dialog.setIntStep(1);
-	dialog.exec();
+	bool ok;
+	double newFontSize = QInputDialog::getDouble(
+		this,
+		"Font Size",
+		"Text Size:",
+		fontSize,   // Current font size
+		1.0,        // Minimum font size
+		50.0,       // Maximum font size
+		1,          // Step size
+		&ok         // Whether the user pressed OK or Cancel
+	);
 
-	if (dialog.result() == QDialog::Accepted) {
-		fontSize = dialog.intValue();
+	if (ok) {
+		fontSize = newFontSize;  // Update with the new floating-point font size
 		saveWantedTheme();
 		updateFonts();
 	}
 }
+
 
 void MainWindow::updateFonts()
 {
 	qDebug() << "updateFonts";
 
 	QFont font = textEdit->font();
-	font.setPointSize(fontSize);
+	font.setPointSizeF(fontSize);
 	font.setItalic(false);
 	font.setBold(false);
 	font.setStyleHint(QFont::Monospace);
@@ -3034,9 +3037,9 @@ bool MainWindow::wantedTheme()
 		recentFiles = settings.value("recentFiles", {}).toStringList();
 		updateRecentList(recentFiles);
 
-		fontSize = settings.value("fontSize", 11).toInt();
+		fontSize = settings.value("fontSize", 11.0).toFloat();
 		if (fontSize <= 0){
-			fontSize = 11;
+			fontSize = 11.0;
 		}
 		currentFont = settings.value("currentFont", "Source Code Pro").toString();
 		tabWidth = settings.value("tabWidth", 4).toInt();
@@ -3045,6 +3048,25 @@ bool MainWindow::wantedTheme()
 		QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", QSettings::NativeFormat);
 		return settings.value("AppsUseLightTheme").toInt() == 0;
 	}
+}
+
+void MainWindow::on_actionSet_Font_By_Name_triggered(){
+	// Cascadia Code
+	
+	QInputDialog dialog;
+	dialog.setFont(textEdit->font());  // Set the font to match textEdit's font
+	dialog.setWindowTitle("CodeWizard - Font Selection");
+	dialog.setLabelText("Font to use?");
+	dialog.setTextValue(currentFont);  // Default text value can be an empty string
+	dialog.setTextEchoMode(QLineEdit::Normal);  // You can change this to Password if needed
+	dialog.exec();
+
+	if (dialog.result() != QDialog::Accepted) {
+		return;
+	}
+
+	currentFont = dialog.textValue();
+	updateFontSelection();
 }
 
 void MainWindow::on_actionSet_Groq_AI_API_Key_triggered(){

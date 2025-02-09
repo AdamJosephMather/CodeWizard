@@ -124,6 +124,7 @@ public:
     QAction *actionDiscard_Local_Changes;
     QAction *actionRegular;
     QAction *actionGit_Integration;
+    QAction *actionSet_Font_By_Name;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
@@ -370,6 +371,8 @@ public:
         actionRegular->setObjectName("actionRegular");
         actionGit_Integration = new QAction(MainWindow);
         actionGit_Integration->setObjectName("actionGit_Integration");
+        actionSet_Font_By_Name = new QAction(MainWindow);
+        actionSet_Font_By_Name->setObjectName("actionSet_Font_By_Name");
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         QSizePolicy sizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::Minimum);
@@ -581,6 +584,7 @@ public:
         menuFonts->addAction(actionMonospace_2);
         menuFonts->addAction(actionSourceCodePro_2);
         menuFonts->addAction(actionUbuntuMono_2);
+        menuFonts->addAction(actionSet_Font_By_Name);
         menuSilly->addAction(actionRandomly_Choose_Program_Type_On_Save);
         menuSilly->addAction(actionUse_Speaker);
         menuFixit->addAction(actionFix_It);
@@ -739,6 +743,7 @@ public:
         actionDiscard_Local_Changes->setText(QCoreApplication::translate("MainWindow", "Discard Local Changes", nullptr));
         actionRegular->setText(QCoreApplication::translate("MainWindow", "Regular", nullptr));
         actionGit_Integration->setText(QCoreApplication::translate("MainWindow", "Git Integration", nullptr));
+        actionSet_Font_By_Name->setText(QCoreApplication::translate("MainWindow", "Set Font By Name", nullptr));
         textEdit_4->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

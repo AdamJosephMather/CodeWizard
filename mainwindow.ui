@@ -301,6 +301,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <addaction name="actionMonospace_2"/>
      <addaction name="actionSourceCodePro_2"/>
      <addaction name="actionUbuntuMono_2"/>
+     <addaction name="actionSet_Font_By_Name"/>
     </widget>
     <widget class="QMenu" name="menuSilly">
      <property name="title">
@@ -951,6 +952,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionGit_Integration">
    <property name="text">
     <string>Git Integration</string>
+   </property>
+  </action>
+  <action name="actionSet_Font_By_Name">
+   <property name="text">
+    <string>Set Font By Name</string>
    </property>
   </action>
  </widget>
