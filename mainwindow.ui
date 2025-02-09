@@ -252,7 +252,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>0</x>
      <y>0</y>
      <width>702</width>
-     <height>17</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -973,6 +973,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionVim_Modes">
    <property name="text">
     <string>Vim Modes</string>
+   </property>
+  </action>
+  <action name="actionTesting">
+   <property name="text">
+    <string>Testing</string>
    </property>
   </action>
  </widget>

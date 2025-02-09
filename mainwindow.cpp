@@ -941,7 +941,7 @@ void MainWindow::on_actionDiscard_Local_Changes_triggered(){
 	QFile batFile(batFilePath);
 	if (batFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		QTextStream out(&batFile);
-		out << "cd /d \""+filePath+"\" && git reset --hard";
+		out << "cd /d \""+filePath+"\" && git reset --hard && git pull";
 	}
 	
 	QStringList arguments;
