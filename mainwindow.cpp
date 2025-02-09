@@ -295,7 +295,7 @@ QAction* showOther;
 QAction* onlyCodeWizardBuiltIn;
 QAction* noAutocomplete;
 QAction* hoverAction;
-QAction* useVimMode; // awesome I think
+QAction* useVimMode; // awesome I think - really awesome
 
 int vimRepeater = 0;
 
