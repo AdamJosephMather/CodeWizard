@@ -125,6 +125,8 @@ public:
     QAction *actionRegular;
     QAction *actionGit_Integration;
     QAction *actionSet_Font_By_Name;
+    QAction *actionUse_Vim_Modes;
+    QAction *actionVim_Modes;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
@@ -373,6 +375,11 @@ public:
         actionGit_Integration->setObjectName("actionGit_Integration");
         actionSet_Font_By_Name = new QAction(MainWindow);
         actionSet_Font_By_Name->setObjectName("actionSet_Font_By_Name");
+        actionUse_Vim_Modes = new QAction(MainWindow);
+        actionUse_Vim_Modes->setObjectName("actionUse_Vim_Modes");
+        actionUse_Vim_Modes->setCheckable(true);
+        actionVim_Modes = new QAction(MainWindow);
+        actionVim_Modes->setObjectName("actionVim_Modes");
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         QSizePolicy sizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::Minimum);
@@ -577,6 +584,8 @@ public:
         menuEdit->addSeparator();
         menuEdit->addAction(actionAuto_Save);
         menuEdit->addAction(menuSilly->menuAction());
+        menuEdit->addSeparator();
+        menuEdit->addAction(actionUse_Vim_Modes);
         menuFonts->addAction(actionCourier_New_2);
         menuFonts->addAction(actionCourier_Prime_2);
         menuFonts->addAction(actionDroidSansMono_2);
@@ -610,6 +619,7 @@ public:
         menuHelp->addAction(actionExtras);
         menuHelp->addAction(actionKeybindings);
         menuHelp->addAction(actionGit_Integration);
+        menuHelp->addAction(actionVim_Modes);
         menuLanguage->addAction(actionPython_2);
         menuLanguage->addAction(actionC);
         menuLanguage->addAction(actionC_2);
@@ -744,6 +754,8 @@ public:
         actionRegular->setText(QCoreApplication::translate("MainWindow", "Regular", nullptr));
         actionGit_Integration->setText(QCoreApplication::translate("MainWindow", "Git Integration", nullptr));
         actionSet_Font_By_Name->setText(QCoreApplication::translate("MainWindow", "Set Font By Name", nullptr));
+        actionUse_Vim_Modes->setText(QCoreApplication::translate("MainWindow", "Use Vim Modes", nullptr));
+        actionVim_Modes->setText(QCoreApplication::translate("MainWindow", "Vim Modes", nullptr));
         textEdit_4->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

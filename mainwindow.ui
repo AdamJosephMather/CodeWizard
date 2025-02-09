@@ -327,6 +327,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="separator"/>
     <addaction name="actionAuto_Save"/>
     <addaction name="menuSilly"/>
+    <addaction name="separator"/>
+    <addaction name="actionUse_Vim_Modes"/>
    </widget>
    <widget class="QMenu" name="menuFixit">
     <property name="title">
@@ -365,6 +367,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="actionExtras"/>
     <addaction name="actionKeybindings"/>
     <addaction name="actionGit_Integration"/>
+    <addaction name="actionVim_Modes"/>
    </widget>
    <widget class="QMenu" name="menuLanguage">
     <property name="title">
@@ -957,6 +960,19 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionSet_Font_By_Name">
    <property name="text">
     <string>Set Font By Name</string>
+   </property>
+  </action>
+  <action name="actionUse_Vim_Modes">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Use Vim Modes</string>
+   </property>
+  </action>
+  <action name="actionVim_Modes">
+   <property name="text">
+    <string>Vim Modes</string>
    </property>
   </action>
  </widget>

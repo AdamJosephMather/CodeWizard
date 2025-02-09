@@ -3,6 +3,7 @@
 
 #include <QListWidgetItem>
 #include <QMainWindow>
+#include <QTextCursor>
 
 #include <qdir.h>
 #include <tree_sitter/api.h>
@@ -24,6 +25,9 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void on_actionVim_Modes_triggered();
+	void executeNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event);
+	void useVimModesTriggered();
 	void on_actionSet_Font_By_Name_triggered();
 	void on_actionGit_Integration_triggered();
 	void on_actionDiscard_Local_Changes_triggered();

@@ -295,6 +295,9 @@ QAction* showOther;
 QAction* onlyCodeWizardBuiltIn;
 QAction* noAutocomplete;
 QAction* hoverAction;
+QAction* useVimMode;
+
+int vimRepeater = 0;
 
 QAction* autoSaveAct;
 QList<QTextBlock> errHighlightedBlocks;
@@ -313,6 +316,8 @@ bool holdingAnEvent = false;
 QTextToSpeech *speech;
 QAction *useSpeakerAction;
 Myers* diffAlgo;
+
+QString currentVimMode = "i";
 
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -369,7 +374,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	onlyCodeWizardBuiltIn = ui->actionOnly_Use_CodeWizard_Built_In;
 	noAutocomplete = ui->actionNo_Autocomplete;
 	hoverAction = ui->actionHover;
-
+	useVimMode = ui->actionUse_Vim_Modes;
+	
 	autoSaveAct = ui->actionAuto_Save;
 	randomSelectFileTypeAct = ui->actionRandomly_Choose_Program_Type_On_Save;
 	useSpeakerAction = ui->actionUse_Speaker;
@@ -794,6 +800,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(onlyCodeWizardBuiltIn, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(noAutocomplete, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(hoverAction, &QAction::toggled, this, &MainWindow::saveWantedTheme);
+	connect(useVimMode, &QAction::toggled, this, &MainWindow::useVimModesTriggered);
 
 	connect(autoSaveAct, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(randomSelectFileTypeAct, &QAction::toggled, this, &MainWindow::saveWantedTheme);
@@ -890,6 +897,24 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		globalArgFileName = argFileName;
 		on_actionOpen_triggered();
 	}
+}
+
+void MainWindow::useVimModesTriggered(){
+	qDebug() << "useVimModesTriggered";
+	
+	if (!useVimMode->isChecked()){
+		currentVimMode = "i";
+		textEdit->setCursorWidth(1);
+	}else{
+		currentVimMode = "n";
+		QFontMetrics metrics(textEdit->font());
+		int charWidth = metrics.horizontalAdvance("M");
+		textEdit->setCursorWidth(charWidth);
+	}
+	
+	vimRepeater = 0;
+	
+	saveWantedTheme();
 }
 
 void MainWindow::on_actionDiscard_Local_Changes_triggered(){
@@ -2900,6 +2925,7 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("onlyCodeWizardBuiltIn", onlyCodeWizardBuiltIn->isChecked());
 	settings.setValue("noAutocomplete", noAutocomplete->isChecked());
 	settings.setValue("hoverAction", hoverAction->isChecked());
+	settings.setValue("vimMode", useVimMode->isChecked());
 	settings.setValue("useFileTree", useFileTree->isChecked());
 	settings.setValue("useFiletreeIfFullscreen",  useFileTreeIfFullscreen->isChecked());
 
@@ -3017,6 +3043,7 @@ bool MainWindow::wantedTheme()
 		onlyCodeWizardBuiltIn->setChecked(settings.value("onlyCodeWizardBuiltIn", false).toBool());
 		noAutocomplete->setChecked(settings.value("noAutocomplete", false).toBool());
 		hoverAction->setChecked(settings.value("hoverAction", true).toBool());
+		useVimMode->setChecked(settings.value("vimMode", false).toBool());
 		autoSaveAct->setChecked(settings.value("autoSaveAct", true).toBool());
 		useFileTree->setChecked(settings.value("useFileTree", false).toBool());
 		useFileTreeIfFullscreen->setChecked(settings.value("useFileTreeIfFullscreen", true).toBool());
@@ -3974,6 +4001,21 @@ void MainWindow::on_actionReplay_Macro_triggered() {
 	replayMacroButton->setEnabled(true);
 }
 
+void MainWindow::executeNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event){
+	if (vimRepeater == 0){
+		vimRepeater = 1;
+	}
+	
+	QTextCursor cursor = textEdit->textCursor();
+	if (key_event->modifiers() && Qt::ShiftModifier){
+		cursor.movePosition(move, QTextCursor::KeepAnchor, vimRepeater);
+	}else{
+		cursor.movePosition(move, QTextCursor::MoveAnchor, vimRepeater);
+	}
+	textEdit->setTextCursor(cursor);
+	vimRepeater = 0;
+}
+
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
 //	qDebug() << "eventFilter"; - we don't do it for certain functions
@@ -4042,7 +4084,58 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		if (isSettingUpLSP || isOpeningFile){
 			return false;
 		}
-
+		
+		bool isACtrl = key_event->modifiers() & Qt::ControlModifier || key_event->modifiers() & Qt::AltModifier; 
+		
+		if (!isACtrl && currentVimMode == "n"){
+			QString keyText = key_event->text();
+			
+			if (keyText.length() == 1 && keyText[0].isDigit()){
+				vimRepeater = vimRepeater*10 + keyText[0].digitValue();
+			}
+			
+			if (key_event->key() == Qt::Key_I){
+				currentVimMode = "i";
+				textEdit->setCursorWidth(1);
+				vimRepeater = 0;
+			}else if (key_event->key() == Qt::Key_J || key_event->key() == Qt::Key_Down){
+				executeNormalAct(QTextCursor::Down, key_event);
+			}else if (key_event->key() == Qt::Key_K || key_event->key() == Qt::Key_Up){
+				executeNormalAct(QTextCursor::Up, key_event);
+			}else if (key_event->key() == Qt::Key_H || key_event->key() == Qt::Key_Left){
+				executeNormalAct(QTextCursor::Left, key_event);
+			}else if (key_event->key() == Qt::Key_L || key_event->key() == Qt::Key_Right){
+				executeNormalAct(QTextCursor::Right, key_event);
+			}else if (key_event->key() == Qt::Key_E){
+				executeNormalAct(QTextCursor::WordRight, key_event);
+			}else if (key_event->key() == Qt::Key_W){
+				executeNormalAct(QTextCursor::WordLeft, key_event);
+			}else if (key_event->key() == Qt::Key_Return || key_event->key() == Qt::Key_Backspace || key_event->key() == Qt::Key_Home || key_event->key() == Qt::Key_End || key_event->key() == Qt::Key_PageUp || key_event->key() == Qt::Key_PageDown){
+				return false; // I am electing not to handle these in any special way - also CodeWizard for the win
+			}else if (key_event->key() == Qt::Key_O){
+				currentVimMode = "i";
+				textEdit->setCursorWidth(1);
+				vimRepeater = 0;
+				executeNormalAct(QTextCursor::EndOfLine, key_event);
+				QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier, "");
+				QCoreApplication::postEvent(textEdit, event);
+			}
+			
+			return true; // always handle inputs in normal mode - normal is a strange term for this but whatever - it'll work.
+		}
+		
+		if (key_sequence == QKeySequence(".")){
+			updateExtraWordsList();
+		}else if (key_sequence == QKeySequence("(")){
+			updateExtraWordsList();
+		}else if (key_sequence == QKeySequence(";")){
+			updateExtraWordsList();
+		}else if (key_sequence == QKeySequence(" ")){
+			updateExtraWordsList();
+		}else if (key_sequence == QKeySequence("\t")){
+			updateExtraWordsList();
+		}
+		
 		if (client && !noAutocomplete->isChecked() && !onlyCodeWizardBuiltIn->isChecked()) {
 			QString keyStr = key_sequence.toString(QKeySequence::NativeText);
 
@@ -4055,18 +4148,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 					callCompleteOponUpdate = true;
 				}
 			}
-		}
-
-		if (key_sequence == QKeySequence(".")){
-			updateExtraWordsList();
-		}else if (key_sequence == QKeySequence("(")){
-			updateExtraWordsList();
-		}else if (key_sequence == QKeySequence(";")){
-			updateExtraWordsList();
-		}else if (key_sequence == QKeySequence(" ")){
-			updateExtraWordsList();
-		}else if (key_sequence == QKeySequence("\t")){
-			updateExtraWordsList();
 		}
 
 		if (key_sequence == QKeySequence("Shift+Return")) {
@@ -4195,6 +4276,13 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 		if(!suggestionBox->isVisible() && !actionBox->isVisible() && key_event->key() == Qt::Key_Escape){
 			changeFindSectionVisibility(false);
+			if (useVimMode->isChecked()){
+				QFontMetrics metrics(textEdit->font());
+				int charWidth = metrics.horizontalAdvance("M");
+				textEdit->setCursorWidth(charWidth);
+				currentVimMode = "n";
+				vimRepeater = 0;
+			}
 		}
 
 		if (key_sequence == QKeySequence("Return")) {
@@ -5908,6 +5996,12 @@ void MainWindow::on_actionRunning_Files_triggered(){
 				 "\n"
 				 "3. Errors:\n"
 				 "	a. If CodeWizard fails to run your program it is likely due to it being blocked by an antivirus or windows defender. The solution is to run it as administrator.");
+}
+
+void MainWindow::on_actionVim_Modes_triggered(){
+	qDebug() << "on_actionVim_Modes_triggered";
+	
+	openHelpMenu("Vim Modes\n\nAs of CodeWizard V8.9.0 we now support a modified set of the vim actions. Namely, when enabled, CodeWizard has a 'Normal' mode and an 'Insert' mode.\nIn normal mode there are a set of commands which work - which will be listed below. In insert mode, all keys are the same as regular (unless you press escape under the right circumstances to enter normal mode.)\n\nHere is the list of shortcuts which work in normal mode:\n    1. H - Moves left\n    2. J - Moves Down\n    3. K - Moves Up\n    4. L - Moves Right\n    5. W - Equivalent to Ctrl+Left\n    6. E - Equivalent to Ctrl+Right\n    7. All commands containing 'Ctrl' - Normal\n    8. All commands containing 'Alt' - Normal\n    9. Return/Enter/Backspace - Normal\n    10. PageDown, PageUp, Home, End - Normal");
 }
 
 void MainWindow::on_actionThe_Fix_It_Button_triggered(){
