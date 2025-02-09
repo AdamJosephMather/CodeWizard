@@ -57,7 +57,7 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 
-QString versionNumber = "8.8.8";
+QString versionNumber = "8.8.9";
 
 GroqAI *groq;
 QString groqApiKey;
