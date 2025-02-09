@@ -29,6 +29,7 @@
 #include "groqai.h"
 #include "myers.h"
 #include "errorsmenu.h"
+#include <windows.h>
 
 extern "C" {
 	TSLanguage* tree_sitter_cpp(void);
@@ -78,6 +79,8 @@ QTextEdit *lineEdit;
 MyTextEdit *lineNumberTextEdit;
 QTextEdit *findTextEdit;
 QTextEdit *replaceTextEdit;
+QTextEdit *builtinTerminalTextEdit;
+MyTextEdit *terminalInputLine;
 
 QColor recColor = QColor(255, 70, 0);
 QColor c1 = QColor(217, 159, 0);
@@ -147,7 +150,7 @@ bool darkmode = true;
 int previousTextLen = 0;
 int tabWidth = 4;
 
-QString defPythonTag = "python \"[filename]\"";
+QString defPythonTag = "python -u \"[filename]\"";
 QString defRustTag = "cargo run";
 QString defWGSLTag = "cargo run";
 QString defCppTag = "call \"C:\\Program Files\\Microsoft Visual Studio\\[VERSION_NUMBER]\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat\" x64\ncl /EHsc \"[filename]\" && \"[filenameWoutExt].exe\"";
@@ -295,7 +298,11 @@ QAction* showOther;
 QAction* onlyCodeWizardBuiltIn;
 QAction* noAutocomplete;
 QAction* hoverAction;
-QAction* useVimMode; // awesome I think - really awesome
+QAction* useVimMode;
+QAction* useBuiltinTerminal;
+
+
+QString inputLineToTerminal;
 
 int vimRepeater = 0;
 
@@ -318,6 +325,9 @@ QAction *useSpeakerAction;
 Myers* diffAlgo;
 
 QString currentVimMode = "i";
+QProcess *activeTerminal;
+QStringList sentCommands;
+int indexInSentCommands = -1;
 
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -340,9 +350,21 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	findTextEdit = ui->textEdit_2;
 	replaceTextEdit = ui->textEdit_3;
+	builtinTerminalTextEdit = ui->textEdit_6;
+	terminalInputLine = ui->textEdit_7;
 	findTextEdit->setAcceptRichText(false);
 	replaceTextEdit->setAcceptRichText(false);
-
+	terminalInputLine->setAcceptRichText(false);
+	builtinTerminalTextEdit->setReadOnly(true);
+	
+	activeTerminal = new QProcess(this);
+	
+	connect(activeTerminal, &QProcess::readyReadStandardOutput, this, &MainWindow::handleTerminalStdout);
+	
+	// Start cmd with a command that will keep the prompt open
+	activeTerminal->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal.");
+	
+	
 	findBar = ui->textEdit_2;
 	replaceBar = ui->textEdit_3;
 	findLayout = ui->findLayout;
@@ -375,7 +397,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	noAutocomplete = ui->actionNo_Autocomplete;
 	hoverAction = ui->actionHover;
 	useVimMode = ui->actionUse_Vim_Modes;
-	
+	useBuiltinTerminal = ui->actionUse_Builtin_Terminal;
+
 	autoSaveAct = ui->actionAuto_Save;
 	randomSelectFileTypeAct = ui->actionRandomly_Choose_Program_Type_On_Save;
 	useSpeakerAction = ui->actionUse_Speaker;
@@ -717,6 +740,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	findTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	replaceTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	lineEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	terminalInputLine->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 	connect(textEdit->verticalScrollBar(), &QScrollBar::valueChanged,
 			this, &MainWindow::updateScrollBarValue);
@@ -727,6 +751,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	textEdit->installEventFilter(this);
 	findTextEdit->installEventFilter(this);
 	replaceTextEdit->installEventFilter(this);
+	builtinTerminalTextEdit->installEventFilter(this);
+	terminalInputLine->installEventFilter(this);
 	this->installEventFilter(this); // for the fullscreen
 
 	darkmode = thm;
@@ -801,6 +827,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(noAutocomplete, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(hoverAction, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(useVimMode, &QAction::toggled, this, &MainWindow::useVimModesTriggered);
+	connect(useBuiltinTerminal, &QAction::toggled, this, &MainWindow::useBuiltinTerminalTriggered);
 
 	connect(autoSaveAct, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(randomSelectFileTypeAct, &QAction::toggled, this, &MainWindow::saveWantedTheme);
@@ -823,7 +850,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	QTimer* autoSaveTimer = new QTimer(this);
 	connect(autoSaveTimer, &QTimer::timeout, this, &MainWindow::autoSave);
 	autoSaveTimer->start(10000);
-
+	
 	// filetree
 
 	fileTree->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -899,6 +926,13 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	}
 }
 
+void MainWindow::handleTerminalStdout(){
+	QByteArray output = activeTerminal->readAll();
+	qDebug() << "Process Output:" << output;
+	builtinTerminalTextEdit->insertPlainText(QString::fromLocal8Bit(output));
+	builtinTerminalTextEdit->verticalScrollBar()->setValue(builtinTerminalTextEdit->verticalScrollBar()->maximum());
+}
+
 void MainWindow::useVimModesTriggered(){
 	qDebug() << "useVimModesTriggered";
 	
@@ -913,6 +947,21 @@ void MainWindow::useVimModesTriggered(){
 	}
 	
 	vimRepeater = 0;
+	
+	saveWantedTheme();
+}
+
+
+void MainWindow::useBuiltinTerminalTriggered(){
+	qDebug() << "useBuiltinTerminalTriggered";
+	
+	if (useBuiltinTerminal->isChecked()){
+		builtinTerminalTextEdit->show();
+		terminalInputLine->show();
+	}else{
+		builtinTerminalTextEdit->hide();
+		terminalInputLine->hide();
+	}
 	
 	saveWantedTheme();
 }
@@ -2673,6 +2722,14 @@ void MainWindow::updateFonts()
 	replaceTextEdit->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
 	replaceTextEdit->setMinimumHeight(adjustedHeight);
 	replaceTextEdit->setMaximumHeight(adjustedHeight);
+	
+	terminalInputLine->setFont(font);
+	terminalInputLine->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
+	terminalInputLine->setMinimumHeight(adjustedHeight);
+	terminalInputLine->setMaximumHeight(adjustedHeight);
+	
+	builtinTerminalTextEdit->setFont(font);
+	builtinTerminalTextEdit->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
 
 	fileTreeContextMenu->setFont(font);
 
@@ -2926,6 +2983,7 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("noAutocomplete", noAutocomplete->isChecked());
 	settings.setValue("hoverAction", hoverAction->isChecked());
 	settings.setValue("vimMode", useVimMode->isChecked());
+	settings.setValue("builtinTerminal", useBuiltinTerminal->isChecked());
 	settings.setValue("useFileTree", useFileTree->isChecked());
 	settings.setValue("useFiletreeIfFullscreen",  useFileTreeIfFullscreen->isChecked());
 
@@ -3044,10 +3102,19 @@ bool MainWindow::wantedTheme()
 		noAutocomplete->setChecked(settings.value("noAutocomplete", false).toBool());
 		hoverAction->setChecked(settings.value("hoverAction", true).toBool());
 		useVimMode->setChecked(settings.value("vimMode", false).toBool());
+		useBuiltinTerminal->setChecked(settings.value("builtinTerminal", false).toBool());
 		autoSaveAct->setChecked(settings.value("autoSaveAct", true).toBool());
 		useFileTree->setChecked(settings.value("useFileTree", false).toBool());
 		useFileTreeIfFullscreen->setChecked(settings.value("useFileTreeIfFullscreen", true).toBool());
-
+		
+		if (useBuiltinTerminal->isChecked()){
+			builtinTerminalTextEdit->show();
+			terminalInputLine->show();
+		}else{
+			builtinTerminalTextEdit->hide();
+			terminalInputLine->hide();
+		}
+		
 		bool defaultRandomSelect = false;
 		QString name = qgetenv("USER"); // this env is LINUX - might as well right?
 		if (name.isEmpty()){
@@ -3697,20 +3764,34 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 	qDebug() << "on_actionRun_Module_F5_triggered";
 
 	on_actionSave_triggered();
-	QProcess *process = new QProcess(this);
+	
+	builtinTerminalTextEdit->insertPlainText("\nRequesting process gracefully stop.");
+	activeTerminal->terminate();
+	if (!activeTerminal->waitForFinished(1000)) {
+		builtinTerminalTextEdit->insertPlainText("\nForcing process to terminate.");
+		activeTerminal->kill();
+	}
+	
+	delete activeTerminal;
+	
+	builtinTerminalTextEdit->insertPlainText("\n\nHard Reset CodeWizard Builtin Terminal\n\n");
+	
+	activeTerminal = new QProcess(this);
 
-	QObject::connect(process, &QProcess::readyReadStandardOutput, [process]() {
-		QString output = process->readAllStandardOutput();
-	});
-
-	QObject::connect(process, &QProcess::readyReadStandardError, [process]() {
-		QString error = process->readAllStandardError();
-	});
-
-	QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-					 [process](int exitCode, QProcess::ExitStatus exitStatus) {
-						 process->deleteLater(); // Clean up the process object
-					 });
+	connect(activeTerminal, &QProcess::readyReadStandardOutput, this, &MainWindow::handleTerminalStdout);
+	
+	QProcess *process;
+	
+	if (!useBuiltinTerminal->isChecked()){
+		process = new QProcess(this);
+	
+		QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+						 [process](int exitCode, QProcess::ExitStatus exitStatus) {
+							 process->deleteLater(); // Clean up the process object
+						 });
+	}else{
+		terminalInputLine->setFocus();
+	}
 
 	// Get the file information and path
 	QFileInfo fileInfo(fileName);
@@ -3727,6 +3808,8 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 	// Define the batch file path
 	QString batFilePath = tmpDirPath + "/run_script.bat";
 	qDebug() << batFilePath;
+	
+	QString finalRun;
 
 	// Write the command to the .bat file
 	QFile batFile(batFilePath);
@@ -3765,20 +3848,29 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 		} else if (currentLang.name == "C"){
 			intermediateTag = cTag;
 		}
-
+		
 		intermediateTag.replace("[filename]", fileNameName).replace("[filenameWoutExt]", fileNameName.split('.')[0]);
 
 		out << "cd /d " << fileDir << "\n";
 		out << intermediateTag;
+		
+		finalRun = intermediateTag;
 
 		batFile.close();
 	}
-
-	// Use 'start cmd /k' to open a new command prompt and run the batch file, keeping the window open after execution
-	QStringList arguments;
-	arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
-	// Start the process
-	process->startDetached("cmd.exe", arguments);
+	
+	if (!useBuiltinTerminal->isChecked()){
+		QStringList arguments;
+		arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
+		process->startDetached("cmd.exe", arguments);
+	}else{
+		QStringList arguments;
+		arguments << "/c" << "start" << "cmd" << "/k";
+		QString moveD = "cd /d "+fileDir+"\n"+finalRun+"\n";
+		
+		activeTerminal->start("cmd.exe");
+		activeTerminal->write(moveD.toUtf8());
+	}
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -3812,12 +3904,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 					useFileTreeIfFullscreen->setChecked(true);
 				}
 			}else{
-				if (useFileTree->isChecked()){
-					useFileTree->setChecked(false);
-				}else{
-					useFileTree->setChecked(true);
-				}
+				useFileTree->toggle();
 			}
+		}else if(event->key() == Qt::Key_T){
+			useBuiltinTerminal->toggle();
 		}else if (event->key() == Qt::Key_N){
 			on_actionNew_triggered();
 		}else if (event->key() == Qt::Key_BracketLeft){
@@ -4023,6 +4113,75 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 	if (event->type()==QEvent::WindowStateChange){
 		onWindowStateChanged();
 	}
+	
+	if (watched == terminalInputLine) {
+		if (event->type() == QEvent::KeyPress){
+			QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+			QKeySequence key_sequence{static_cast<int>(keyEvent->modifiers()) + keyEvent->key()};
+			
+			QTextCursor cursor = terminalInputLine->textCursor();
+			QString selectedText = cursor.selectedText();
+			
+			if (key_sequence == QKeySequence("Ctrl+C") && selectedText.isEmpty()){
+				activeTerminal->kill();
+				
+				activeTerminal = new QProcess(this);
+	
+				connect(activeTerminal, &QProcess::readyReadStandardOutput, this, &MainWindow::handleTerminalStdout);
+				
+				QFileInfo fileInfo(fileName);
+				QString fileDir = fileInfo.absolutePath();
+				activeTerminal->setWorkingDirectory(fileDir);
+				
+				builtinTerminalTextEdit->insertPlainText("\n\n");
+				activeTerminal->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal.");
+				
+				qDebug() << "Sending Ctrl+C -> " << fileDir;
+			}
+			
+			if (keyEvent->key() == Qt::Key_Escape){
+				textEdit->setFocus();
+			}if (keyEvent->key() == Qt::Key_Up){
+				indexInSentCommands += 1;
+				QString toset;
+				
+				if (indexInSentCommands >= sentCommands.length()){
+					indexInSentCommands = -1;
+					toset = "";
+				}else{
+					toset = sentCommands[indexInSentCommands];
+				}
+				
+				terminalInputLine->setText(toset);
+			}if (keyEvent->key() == Qt::Key_Down){
+				indexInSentCommands -= 1;
+				QString toset;
+				
+				if (indexInSentCommands < -1){
+					indexInSentCommands = sentCommands.length()-1;
+				}
+				
+				if (indexInSentCommands == -1){
+					toset = "";
+				}else{
+					toset = sentCommands[indexInSentCommands];
+				}
+				
+				terminalInputLine->setText(toset);
+			}
+			
+			if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter){
+				QString lineToSend = terminalInputLine->toPlainText() + "\n";
+				sentCommands.push_front(terminalInputLine->toPlainText());
+				indexInSentCommands = -1;
+				activeTerminal->write(lineToSend.toUtf8());
+				builtinTerminalTextEdit->insertPlainText(lineToSend);
+				terminalInputLine->setPlainText("");
+				return true;
+			}
+		}
+		return false;
+	}
 
 	if (recordingMacro && (event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease)) {
 		QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
@@ -4110,7 +4269,10 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				executeNormalAct(QTextCursor::WordRight, key_event);
 			}else if (key_event->key() == Qt::Key_W){
 				executeNormalAct(QTextCursor::WordLeft, key_event);
-			}else if (key_event->key() == Qt::Key_Return || key_event->key() == Qt::Key_Backspace || key_event->key() == Qt::Key_Home || key_event->key() == Qt::Key_End || key_event->key() == Qt::Key_PageUp || key_event->key() == Qt::Key_PageDown){
+			}else if (key_event->key() == Qt::Key_Return){
+				handleTabs();
+				return false;
+			}else if (key_event->key() == Qt::Key_Backspace || key_event->key() == Qt::Key_Home || key_event->key() == Qt::Key_End || key_event->key() == Qt::Key_PageUp || key_event->key() == Qt::Key_PageDown){
 				return false; // I am electing not to handle these in any special way - also CodeWizard for the win
 			}else if (key_event->key() == Qt::Key_O){
 				currentVimMode = "i";
@@ -5672,6 +5834,14 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		palette = replaceTextEdit->palette();
 		palette.setColor(QPalette::Base, QColor(32, 32, 32));
 		replaceTextEdit->setPalette(palette);
+		
+		palette = builtinTerminalTextEdit->palette();
+		palette.setColor(QPalette::Base, QColor(32, 32, 32));
+		builtinTerminalTextEdit->setPalette(palette);
+		
+		palette = terminalInputLine->palette();
+		palette.setColor(QPalette::Base, QColor(32, 32, 32));
+		terminalInputLine->setPalette(palette);
 
 		palette = findTextEdit->palette();
 		palette.setColor(QPalette::Base, QColor(32, 32, 32));
@@ -5712,6 +5882,14 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		palette = replaceTextEdit->palette();
 		palette.setColor(QPalette::Base, QColor(245, 245, 245));
 		replaceTextEdit->setPalette(palette);
+		
+		palette = builtinTerminalTextEdit->palette();
+		palette.setColor(QPalette::Base, QColor(245, 245, 245));
+		builtinTerminalTextEdit->setPalette(palette);
+		
+		palette = terminalInputLine->palette();
+		palette.setColor(QPalette::Base, QColor(245, 245, 245));
+		terminalInputLine->setPalette(palette);
 
 		palette = findTextEdit->palette();
 		palette.setColor(QPalette::Base, QColor(245, 245, 245));
@@ -6028,7 +6206,7 @@ void MainWindow::on_actionSettings_triggered(){
 void MainWindow::on_actionExtras_triggered(){
 	qDebug() << "on_actionExtras_triggered";
 
-	openHelpMenu("Notable Extras:\n\nAuto Save - Runs every 10 seconds, can be disabled with Edit->Auto Save");
+	openHelpMenu("Notable Extras:\n\nAuto Save - Runs every 10 seconds, can be disabled with Edit->Auto Save\nBuiltin Terminal - CodeWizard has a limited builtin terminal. I would not advise you use it. View->Use Builtin Terminal");
 }
 
 void MainWindow::on_actionMacros_triggered(){
@@ -6055,6 +6233,7 @@ void MainWindow::on_actionKeybindings_triggered(){
 	openHelpMenu("Keybindings:\n\
   \n\
   Ctrl+B ---- Toggle filetree\n\
+  Ctrl+T ---- Toggle builtin terminal\n\
   Ctrl+S ---- Save file\n\
   Ctrl+O ---- Open file\n\
   Ctrl+N ---- New file\n\

@@ -37,8 +37,10 @@ namespace {
 struct qt_meta_stringdata_CLASSMainWindowENDCLASS_t {};
 constexpr auto qt_meta_stringdata_CLASSMainWindowENDCLASS = QtMocHelpers::stringData(
     "MainWindow",
-    "on_actionVim_Modes_triggered",
+    "handleTerminalStdout",
     "",
+    "useBuiltinTerminalTriggered",
+    "on_actionVim_Modes_triggered",
     "executeNormalAct",
     "QTextCursor::MoveOperation",
     "move",
@@ -240,7 +242,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-     147,   14, // methods
+     149,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -248,157 +250,161 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,  896,    2, 0x08,    1 /* Private */,
-       3,    2,  897,    2, 0x08,    2 /* Private */,
-       8,    0,  902,    2, 0x08,    5 /* Private */,
-       9,    0,  903,    2, 0x08,    6 /* Private */,
-      10,    0,  904,    2, 0x08,    7 /* Private */,
-      11,    0,  905,    2, 0x08,    8 /* Private */,
-      12,    0,  906,    2, 0x08,    9 /* Private */,
-      13,    0,  907,    2, 0x08,   10 /* Private */,
-      14,    0,  908,    2, 0x08,   11 /* Private */,
-      15,    0,  909,    2, 0x08,   12 /* Private */,
-      16,    0,  910,    2, 0x08,   13 /* Private */,
-      17,    1,  911,    2, 0x08,   14 /* Private */,
-      19,    0,  914,    2, 0x08,   16 /* Private */,
-      20,    0,  915,    2, 0x08,   17 /* Private */,
-      21,    0,  916,    2, 0x08,   18 /* Private */,
-      22,    0,  917,    2, 0x08,   19 /* Private */,
-      23,    1,  918,    2, 0x08,   20 /* Private */,
-      25,    1,  921,    2, 0x08,   22 /* Private */,
-      27,    1,  924,    2, 0x08,   24 /* Private */,
-      30,    0,  927,    2, 0x08,   26 /* Private */,
-      31,    1,  928,    2, 0x08,   27 /* Private */,
-      33,    0,  931,    2, 0x08,   29 /* Private */,
-      34,    1,  932,    2, 0x08,   30 /* Private */,
-      36,    3,  935,    2, 0x08,   32 /* Private */,
-      40,    0,  942,    2, 0x08,   36 /* Private */,
-      41,    1,  943,    2, 0x08,   37 /* Private */,
-      42,    2,  946,    2, 0x08,   39 /* Private */,
-      45,    0,  951,    2, 0x08,   42 /* Private */,
-      46,    0,  952,    2, 0x08,   43 /* Private */,
-      47,    0,  953,    2, 0x08,   44 /* Private */,
-      48,    0,  954,    2, 0x08,   45 /* Private */,
-      49,    2,  955,    2, 0x08,   46 /* Private */,
-      49,    1,  960,    2, 0x28,   49 /* Private | MethodCloned */,
-      53,    2,  963,    2, 0x08,   51 /* Private */,
-      53,    1,  968,    2, 0x28,   54 /* Private | MethodCloned */,
-      56,    3,  971,    2, 0x08,   56 /* Private */,
-      60,    9,  978,    2, 0x08,   60 /* Private */,
-      70,    0,  997,    2, 0x08,   70 /* Private */,
-      71,    0,  998,    2, 0x08,   71 /* Private */,
-      72,    0,  999,    2, 0x08,   72 /* Private */,
-      73,    0, 1000,    2, 0x08,   73 /* Private */,
-      74,    1, 1001,    2, 0x08,   74 /* Private */,
-      76,    1, 1004,    2, 0x08,   76 /* Private */,
-      78,    1, 1007,    2, 0x08,   78 /* Private */,
-      80,    1, 1010,    2, 0x08,   80 /* Private */,
-      82,    0, 1013,    2, 0x08,   82 /* Private */,
-      83,    0, 1014,    2, 0x08,   83 /* Private */,
-      84,    0, 1015,    2, 0x08,   84 /* Private */,
-      85,    1, 1016,    2, 0x08,   85 /* Private */,
-      88,    1, 1019,    2, 0x08,   87 /* Private */,
-      90,    1, 1022,    2, 0x08,   89 /* Private */,
-      92,    0, 1025,    2, 0x08,   91 /* Private */,
-      93,    1, 1026,    2, 0x08,   92 /* Private */,
-      94,    0, 1029,    2, 0x08,   94 /* Private */,
-      95,    3, 1030,    2, 0x08,   95 /* Private */,
-      99,    1, 1037,    2, 0x08,   99 /* Private */,
-     100,    0, 1040,    2, 0x08,  101 /* Private */,
-     101,    0, 1041,    2, 0x08,  102 /* Private */,
-     102,    0, 1042,    2, 0x08,  103 /* Private */,
-     103,    0, 1043,    2, 0x08,  104 /* Private */,
-     104,    0, 1044,    2, 0x08,  105 /* Private */,
-     105,    0, 1045,    2, 0x08,  106 /* Private */,
-     106,    1, 1046,    2, 0x08,  107 /* Private */,
-     108,    1, 1049,    2, 0x08,  109 /* Private */,
-     109,    0, 1052,    2, 0x08,  111 /* Private */,
-     110,    0, 1053,    2, 0x08,  112 /* Private */,
-     111,    0, 1054,    2, 0x08,  113 /* Private */,
-     112,    0, 1055,    2, 0x08,  114 /* Private */,
-     113,    0, 1056,    2, 0x08,  115 /* Private */,
-     114,    1, 1057,    2, 0x08,  116 /* Private */,
-     114,    0, 1060,    2, 0x28,  118 /* Private | MethodCloned */,
-     116,    0, 1061,    2, 0x08,  119 /* Private */,
-     117,    0, 1062,    2, 0x08,  120 /* Private */,
-     118,    0, 1063,    2, 0x08,  121 /* Private */,
-     119,    0, 1064,    2, 0x08,  122 /* Private */,
-     120,    0, 1065,    2, 0x08,  123 /* Private */,
-     121,    0, 1066,    2, 0x08,  124 /* Private */,
-     122,    0, 1067,    2, 0x08,  125 /* Private */,
-     123,    0, 1068,    2, 0x08,  126 /* Private */,
-     124,    0, 1069,    2, 0x08,  127 /* Private */,
-     125,    0, 1070,    2, 0x08,  128 /* Private */,
-     126,    0, 1071,    2, 0x08,  129 /* Private */,
-     127,    0, 1072,    2, 0x08,  130 /* Private */,
-     128,    0, 1073,    2, 0x08,  131 /* Private */,
-     129,    0, 1074,    2, 0x08,  132 /* Private */,
-     130,    0, 1075,    2, 0x08,  133 /* Private */,
-     131,    0, 1076,    2, 0x08,  134 /* Private */,
-     132,    0, 1077,    2, 0x08,  135 /* Private */,
-     133,    0, 1078,    2, 0x08,  136 /* Private */,
-     134,    0, 1079,    2, 0x08,  137 /* Private */,
-     135,    0, 1080,    2, 0x08,  138 /* Private */,
-     136,    0, 1081,    2, 0x08,  139 /* Private */,
-     137,    0, 1082,    2, 0x08,  140 /* Private */,
-     138,    0, 1083,    2, 0x08,  141 /* Private */,
-     139,    0, 1084,    2, 0x08,  142 /* Private */,
-     140,    0, 1085,    2, 0x08,  143 /* Private */,
-     141,    0, 1086,    2, 0x08,  144 /* Private */,
-     142,    0, 1087,    2, 0x08,  145 /* Private */,
-     143,    0, 1088,    2, 0x08,  146 /* Private */,
-     144,    0, 1089,    2, 0x08,  147 /* Private */,
-     145,    0, 1090,    2, 0x08,  148 /* Private */,
-     146,    0, 1091,    2, 0x08,  149 /* Private */,
-     147,    0, 1092,    2, 0x08,  150 /* Private */,
-     148,    0, 1093,    2, 0x08,  151 /* Private */,
-     149,    0, 1094,    2, 0x08,  152 /* Private */,
-     150,    0, 1095,    2, 0x08,  153 /* Private */,
-     151,    0, 1096,    2, 0x08,  154 /* Private */,
-     152,    0, 1097,    2, 0x08,  155 /* Private */,
-     153,    0, 1098,    2, 0x08,  156 /* Private */,
-     154,    0, 1099,    2, 0x08,  157 /* Private */,
-     155,    0, 1100,    2, 0x08,  158 /* Private */,
-     156,    0, 1101,    2, 0x08,  159 /* Private */,
-     157,    0, 1102,    2, 0x08,  160 /* Private */,
-     158,    0, 1103,    2, 0x08,  161 /* Private */,
-     159,    0, 1104,    2, 0x08,  162 /* Private */,
-     160,    0, 1105,    2, 0x08,  163 /* Private */,
-     161,    0, 1106,    2, 0x08,  164 /* Private */,
-     162,    0, 1107,    2, 0x08,  165 /* Private */,
-     163,    0, 1108,    2, 0x08,  166 /* Private */,
-     164,    0, 1109,    2, 0x08,  167 /* Private */,
-     165,    0, 1110,    2, 0x08,  168 /* Private */,
-     166,    1, 1111,    2, 0x08,  169 /* Private */,
-     167,    1, 1114,    2, 0x08,  171 /* Private */,
-     168,    1, 1117,    2, 0x08,  173 /* Private */,
-     169,    1, 1120,    2, 0x08,  175 /* Private */,
-     170,    0, 1123,    2, 0x08,  177 /* Private */,
-     171,    0, 1124,    2, 0x08,  178 /* Private */,
-     172,    0, 1125,    2, 0x08,  179 /* Private */,
-     173,    0, 1126,    2, 0x08,  180 /* Private */,
-     174,    0, 1127,    2, 0x08,  181 /* Private */,
-     175,    0, 1128,    2, 0x08,  182 /* Private */,
-     176,    0, 1129,    2, 0x08,  183 /* Private */,
-     177,    0, 1130,    2, 0x08,  184 /* Private */,
-     178,    0, 1131,    2, 0x08,  185 /* Private */,
-     179,    0, 1132,    2, 0x08,  186 /* Private */,
-     180,    0, 1133,    2, 0x08,  187 /* Private */,
-     181,    0, 1134,    2, 0x08,  188 /* Private */,
-     182,    0, 1135,    2, 0x08,  189 /* Private */,
-     183,    0, 1136,    2, 0x08,  190 /* Private */,
-     184,    1, 1137,    2, 0x08,  191 /* Private */,
-     185,    1, 1140,    2, 0x08,  193 /* Private */,
-     186,    2, 1143,    2, 0x08,  195 /* Private */,
-     187,    1, 1148,    2, 0x08,  198 /* Private */,
-     188,    1, 1151,    2, 0x08,  200 /* Private */,
-     189,    1, 1154,    2, 0x08,  202 /* Private */,
-     190,    0, 1157,    2, 0x08,  204 /* Private */,
-     191,    1, 1158,    2, 0x08,  205 /* Private */,
+       1,    0,  908,    2, 0x08,    1 /* Private */,
+       3,    0,  909,    2, 0x08,    2 /* Private */,
+       4,    0,  910,    2, 0x08,    3 /* Private */,
+       5,    2,  911,    2, 0x08,    4 /* Private */,
+      10,    0,  916,    2, 0x08,    7 /* Private */,
+      11,    0,  917,    2, 0x08,    8 /* Private */,
+      12,    0,  918,    2, 0x08,    9 /* Private */,
+      13,    0,  919,    2, 0x08,   10 /* Private */,
+      14,    0,  920,    2, 0x08,   11 /* Private */,
+      15,    0,  921,    2, 0x08,   12 /* Private */,
+      16,    0,  922,    2, 0x08,   13 /* Private */,
+      17,    0,  923,    2, 0x08,   14 /* Private */,
+      18,    0,  924,    2, 0x08,   15 /* Private */,
+      19,    1,  925,    2, 0x08,   16 /* Private */,
+      21,    0,  928,    2, 0x08,   18 /* Private */,
+      22,    0,  929,    2, 0x08,   19 /* Private */,
+      23,    0,  930,    2, 0x08,   20 /* Private */,
+      24,    0,  931,    2, 0x08,   21 /* Private */,
+      25,    1,  932,    2, 0x08,   22 /* Private */,
+      27,    1,  935,    2, 0x08,   24 /* Private */,
+      29,    1,  938,    2, 0x08,   26 /* Private */,
+      32,    0,  941,    2, 0x08,   28 /* Private */,
+      33,    1,  942,    2, 0x08,   29 /* Private */,
+      35,    0,  945,    2, 0x08,   31 /* Private */,
+      36,    1,  946,    2, 0x08,   32 /* Private */,
+      38,    3,  949,    2, 0x08,   34 /* Private */,
+      42,    0,  956,    2, 0x08,   38 /* Private */,
+      43,    1,  957,    2, 0x08,   39 /* Private */,
+      44,    2,  960,    2, 0x08,   41 /* Private */,
+      47,    0,  965,    2, 0x08,   44 /* Private */,
+      48,    0,  966,    2, 0x08,   45 /* Private */,
+      49,    0,  967,    2, 0x08,   46 /* Private */,
+      50,    0,  968,    2, 0x08,   47 /* Private */,
+      51,    2,  969,    2, 0x08,   48 /* Private */,
+      51,    1,  974,    2, 0x28,   51 /* Private | MethodCloned */,
+      55,    2,  977,    2, 0x08,   53 /* Private */,
+      55,    1,  982,    2, 0x28,   56 /* Private | MethodCloned */,
+      58,    3,  985,    2, 0x08,   58 /* Private */,
+      62,    9,  992,    2, 0x08,   62 /* Private */,
+      72,    0, 1011,    2, 0x08,   72 /* Private */,
+      73,    0, 1012,    2, 0x08,   73 /* Private */,
+      74,    0, 1013,    2, 0x08,   74 /* Private */,
+      75,    0, 1014,    2, 0x08,   75 /* Private */,
+      76,    1, 1015,    2, 0x08,   76 /* Private */,
+      78,    1, 1018,    2, 0x08,   78 /* Private */,
+      80,    1, 1021,    2, 0x08,   80 /* Private */,
+      82,    1, 1024,    2, 0x08,   82 /* Private */,
+      84,    0, 1027,    2, 0x08,   84 /* Private */,
+      85,    0, 1028,    2, 0x08,   85 /* Private */,
+      86,    0, 1029,    2, 0x08,   86 /* Private */,
+      87,    1, 1030,    2, 0x08,   87 /* Private */,
+      90,    1, 1033,    2, 0x08,   89 /* Private */,
+      92,    1, 1036,    2, 0x08,   91 /* Private */,
+      94,    0, 1039,    2, 0x08,   93 /* Private */,
+      95,    1, 1040,    2, 0x08,   94 /* Private */,
+      96,    0, 1043,    2, 0x08,   96 /* Private */,
+      97,    3, 1044,    2, 0x08,   97 /* Private */,
+     101,    1, 1051,    2, 0x08,  101 /* Private */,
+     102,    0, 1054,    2, 0x08,  103 /* Private */,
+     103,    0, 1055,    2, 0x08,  104 /* Private */,
+     104,    0, 1056,    2, 0x08,  105 /* Private */,
+     105,    0, 1057,    2, 0x08,  106 /* Private */,
+     106,    0, 1058,    2, 0x08,  107 /* Private */,
+     107,    0, 1059,    2, 0x08,  108 /* Private */,
+     108,    1, 1060,    2, 0x08,  109 /* Private */,
+     110,    1, 1063,    2, 0x08,  111 /* Private */,
+     111,    0, 1066,    2, 0x08,  113 /* Private */,
+     112,    0, 1067,    2, 0x08,  114 /* Private */,
+     113,    0, 1068,    2, 0x08,  115 /* Private */,
+     114,    0, 1069,    2, 0x08,  116 /* Private */,
+     115,    0, 1070,    2, 0x08,  117 /* Private */,
+     116,    1, 1071,    2, 0x08,  118 /* Private */,
+     116,    0, 1074,    2, 0x28,  120 /* Private | MethodCloned */,
+     118,    0, 1075,    2, 0x08,  121 /* Private */,
+     119,    0, 1076,    2, 0x08,  122 /* Private */,
+     120,    0, 1077,    2, 0x08,  123 /* Private */,
+     121,    0, 1078,    2, 0x08,  124 /* Private */,
+     122,    0, 1079,    2, 0x08,  125 /* Private */,
+     123,    0, 1080,    2, 0x08,  126 /* Private */,
+     124,    0, 1081,    2, 0x08,  127 /* Private */,
+     125,    0, 1082,    2, 0x08,  128 /* Private */,
+     126,    0, 1083,    2, 0x08,  129 /* Private */,
+     127,    0, 1084,    2, 0x08,  130 /* Private */,
+     128,    0, 1085,    2, 0x08,  131 /* Private */,
+     129,    0, 1086,    2, 0x08,  132 /* Private */,
+     130,    0, 1087,    2, 0x08,  133 /* Private */,
+     131,    0, 1088,    2, 0x08,  134 /* Private */,
+     132,    0, 1089,    2, 0x08,  135 /* Private */,
+     133,    0, 1090,    2, 0x08,  136 /* Private */,
+     134,    0, 1091,    2, 0x08,  137 /* Private */,
+     135,    0, 1092,    2, 0x08,  138 /* Private */,
+     136,    0, 1093,    2, 0x08,  139 /* Private */,
+     137,    0, 1094,    2, 0x08,  140 /* Private */,
+     138,    0, 1095,    2, 0x08,  141 /* Private */,
+     139,    0, 1096,    2, 0x08,  142 /* Private */,
+     140,    0, 1097,    2, 0x08,  143 /* Private */,
+     141,    0, 1098,    2, 0x08,  144 /* Private */,
+     142,    0, 1099,    2, 0x08,  145 /* Private */,
+     143,    0, 1100,    2, 0x08,  146 /* Private */,
+     144,    0, 1101,    2, 0x08,  147 /* Private */,
+     145,    0, 1102,    2, 0x08,  148 /* Private */,
+     146,    0, 1103,    2, 0x08,  149 /* Private */,
+     147,    0, 1104,    2, 0x08,  150 /* Private */,
+     148,    0, 1105,    2, 0x08,  151 /* Private */,
+     149,    0, 1106,    2, 0x08,  152 /* Private */,
+     150,    0, 1107,    2, 0x08,  153 /* Private */,
+     151,    0, 1108,    2, 0x08,  154 /* Private */,
+     152,    0, 1109,    2, 0x08,  155 /* Private */,
+     153,    0, 1110,    2, 0x08,  156 /* Private */,
+     154,    0, 1111,    2, 0x08,  157 /* Private */,
+     155,    0, 1112,    2, 0x08,  158 /* Private */,
+     156,    0, 1113,    2, 0x08,  159 /* Private */,
+     157,    0, 1114,    2, 0x08,  160 /* Private */,
+     158,    0, 1115,    2, 0x08,  161 /* Private */,
+     159,    0, 1116,    2, 0x08,  162 /* Private */,
+     160,    0, 1117,    2, 0x08,  163 /* Private */,
+     161,    0, 1118,    2, 0x08,  164 /* Private */,
+     162,    0, 1119,    2, 0x08,  165 /* Private */,
+     163,    0, 1120,    2, 0x08,  166 /* Private */,
+     164,    0, 1121,    2, 0x08,  167 /* Private */,
+     165,    0, 1122,    2, 0x08,  168 /* Private */,
+     166,    0, 1123,    2, 0x08,  169 /* Private */,
+     167,    0, 1124,    2, 0x08,  170 /* Private */,
+     168,    1, 1125,    2, 0x08,  171 /* Private */,
+     169,    1, 1128,    2, 0x08,  173 /* Private */,
+     170,    1, 1131,    2, 0x08,  175 /* Private */,
+     171,    1, 1134,    2, 0x08,  177 /* Private */,
+     172,    0, 1137,    2, 0x08,  179 /* Private */,
+     173,    0, 1138,    2, 0x08,  180 /* Private */,
+     174,    0, 1139,    2, 0x08,  181 /* Private */,
+     175,    0, 1140,    2, 0x08,  182 /* Private */,
+     176,    0, 1141,    2, 0x08,  183 /* Private */,
+     177,    0, 1142,    2, 0x08,  184 /* Private */,
+     178,    0, 1143,    2, 0x08,  185 /* Private */,
+     179,    0, 1144,    2, 0x08,  186 /* Private */,
+     180,    0, 1145,    2, 0x08,  187 /* Private */,
+     181,    0, 1146,    2, 0x08,  188 /* Private */,
+     182,    0, 1147,    2, 0x08,  189 /* Private */,
+     183,    0, 1148,    2, 0x08,  190 /* Private */,
+     184,    0, 1149,    2, 0x08,  191 /* Private */,
+     185,    0, 1150,    2, 0x08,  192 /* Private */,
+     186,    1, 1151,    2, 0x08,  193 /* Private */,
+     187,    1, 1154,    2, 0x08,  195 /* Private */,
+     188,    2, 1157,    2, 0x08,  197 /* Private */,
+     189,    1, 1162,    2, 0x08,  200 /* Private */,
+     190,    1, 1165,    2, 0x08,  202 /* Private */,
+     191,    1, 1168,    2, 0x08,  204 /* Private */,
+     192,    0, 1171,    2, 0x08,  206 /* Private */,
+     193,    1, 1172,    2, 0x08,  207 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 4, 0x80000000 | 6,    5,    7,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 6, 0x80000000 | 8,    7,    9,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -408,65 +414,65 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::QString, QMetaType::QString,   18,
+    QMetaType::QString, QMetaType::QString,   20,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString,   24,
-    QMetaType::Void, QMetaType::Bool,   26,
-    QMetaType::Bool, 0x80000000 | 28,   29,
+    QMetaType::Void, QMetaType::QString,   26,
+    QMetaType::Void, QMetaType::Bool,   28,
+    QMetaType::Bool, 0x80000000 | 30,   31,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Bool,   32,
+    QMetaType::Void, QMetaType::Bool,   34,
     QMetaType::Void,
-    QMetaType::Int, QMetaType::QString,   35,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::QString,   37,   38,   39,
-    QMetaType::Void,
-    QMetaType::Void, QMetaType::Bool,    2,
-    QMetaType::Int, QMetaType::QColor, QMetaType::QColor,   43,   44,
-    QMetaType::Void,
-    QMetaType::Void,
-    QMetaType::Void,
-    QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 50, QMetaType::Int,   51,   52,
-    QMetaType::Void, 0x80000000 | 50,   51,
-    QMetaType::Void, QMetaType::QString, QMetaType::Bool,   54,   55,
-    QMetaType::Void, QMetaType::QString,   54,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int,   57,   58,   59,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int,   61,   62,   63,   64,   65,   66,   67,   68,   69,
-    QMetaType::Void,
-    QMetaType::Void,
-    QMetaType::Void,
-    QMetaType::Void,
-    QMetaType::Void, QMetaType::QPoint,   75,
-    0x80000000 | 77, QMetaType::QString,    2,
-    QMetaType::Void, QMetaType::QString,   79,
-    QMetaType::QString, QMetaType::QString,   81,
-    QMetaType::Void,
-    QMetaType::Void,
-    QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 86,   87,
-    QMetaType::QString, QMetaType::QString,   89,
-    QMetaType::Void, QMetaType::QStringList,   91,
+    QMetaType::Int, QMetaType::QString,   37,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::QString,   39,   40,   41,
     QMetaType::Void,
     QMetaType::Void, QMetaType::Bool,    2,
+    QMetaType::Int, QMetaType::QColor, QMetaType::QColor,   45,   46,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QPoint, QMetaType::QString, QMetaType::QString,   96,   97,   98,
-    QMetaType::Void, QMetaType::QPoint,   75,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 52, QMetaType::Int,   53,   54,
+    QMetaType::Void, 0x80000000 | 52,   53,
+    QMetaType::Void, QMetaType::QString, QMetaType::Bool,   56,   57,
+    QMetaType::Void, QMetaType::QString,   56,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int,   59,   60,   61,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int,   63,   64,   65,   66,   67,   68,   69,   70,   71,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::QPoint,   77,
+    0x80000000 | 79, QMetaType::QString,    2,
+    QMetaType::Void, QMetaType::QString,   81,
+    QMetaType::QString, QMetaType::QString,   83,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 88,   89,
+    QMetaType::QString, QMetaType::QString,   91,
+    QMetaType::Void, QMetaType::QStringList,   93,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Bool,    2,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::QPoint, QMetaType::QString, QMetaType::QString,   98,   99,  100,
+    QMetaType::Void, QMetaType::QPoint,   77,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Bool,
     QMetaType::Bool,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 107,    2,
-    QMetaType::Void, 0x80000000 | 107,    2,
+    QMetaType::Void, 0x80000000 | 109,    2,
+    QMetaType::Void, 0x80000000 | 109,    2,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Bool,  115,
+    QMetaType::Void, QMetaType::Bool,  117,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -557,6 +563,10 @@ Q_CONSTINIT const QMetaObject MainWindow::staticMetaObject = { {
     qt_incomplete_metaTypeArray<qt_meta_stringdata_CLASSMainWindowENDCLASS_t,
         // Q_OBJECT / Q_GADGET
         QtPrivate::TypeAndForceComplete<MainWindow, std::true_type>,
+        // method 'handleTerminalStdout'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'useBuiltinTerminalTriggered'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'on_actionVim_Modes_triggered'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'executeNormalAct'
@@ -920,171 +930,173 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         auto *_t = static_cast<MainWindow *>(_o);
         (void)_t;
         switch (_id) {
-        case 0: _t->on_actionVim_Modes_triggered(); break;
-        case 1: _t->executeNormalAct((*reinterpret_cast< std::add_pointer_t<QTextCursor::MoveOperation>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QKeyEvent*>>(_a[2]))); break;
-        case 2: _t->useVimModesTriggered(); break;
-        case 3: _t->on_actionSet_Font_By_Name_triggered(); break;
-        case 4: _t->on_actionGit_Integration_triggered(); break;
-        case 5: _t->on_actionDiscard_Local_Changes_triggered(); break;
-        case 6: _t->on_actionRegular_triggered(); break;
-        case 7: _t->on_actionPush_triggered(); break;
-        case 8: _t->on_actionKeybindings_triggered(); break;
-        case 9: _t->on_actionOpen_Find_Menu_triggered(); break;
-        case 10: _t->highlightComparisons(); break;
-        case 11: { QString _r = _t->changeToTabs((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
+        case 0: _t->handleTerminalStdout(); break;
+        case 1: _t->useBuiltinTerminalTriggered(); break;
+        case 2: _t->on_actionVim_Modes_triggered(); break;
+        case 3: _t->executeNormalAct((*reinterpret_cast< std::add_pointer_t<QTextCursor::MoveOperation>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QKeyEvent*>>(_a[2]))); break;
+        case 4: _t->useVimModesTriggered(); break;
+        case 5: _t->on_actionSet_Font_By_Name_triggered(); break;
+        case 6: _t->on_actionGit_Integration_triggered(); break;
+        case 7: _t->on_actionDiscard_Local_Changes_triggered(); break;
+        case 8: _t->on_actionRegular_triggered(); break;
+        case 9: _t->on_actionPush_triggered(); break;
+        case 10: _t->on_actionKeybindings_triggered(); break;
+        case 11: _t->on_actionOpen_Find_Menu_triggered(); break;
+        case 12: _t->highlightComparisons(); break;
+        case 13: { QString _r = _t->changeToTabs((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = std::move(_r); }  break;
-        case 12: _t->on_actionCompare_2_Files_triggered(); break;
-        case 13: _t->on_actionSet_Groq_AI_API_Key_triggered(); break;
-        case 14: _t->saveSyntaxColorsToFile(); break;
-        case 15: _t->loadSyntaxColorsFromFile(); break;
-        case 16: _t->setFormatsFromMyList((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 17: _t->updateMargins((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
-        case 18: { bool _r = _t->checkForLargeFile((*reinterpret_cast< std::add_pointer_t<QFile*>>(_a[1])));
+        case 14: _t->on_actionCompare_2_Files_triggered(); break;
+        case 15: _t->on_actionSet_Groq_AI_API_Key_triggered(); break;
+        case 16: _t->saveSyntaxColorsToFile(); break;
+        case 17: _t->loadSyntaxColorsFromFile(); break;
+        case 18: _t->setFormatsFromMyList((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 19: _t->updateMargins((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 20: { bool _r = _t->checkForLargeFile((*reinterpret_cast< std::add_pointer_t<QFile*>>(_a[1])));
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
-        case 19: _t->clearTSSyntaxHighlighting(); break;
-        case 20: _t->changeFindSectionVisibility((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
-        case 21: _t->checkForFixitDialogue(); break;
-        case 22: { int _r = _t->convertTheVersionNumber((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
+        case 21: _t->clearTSSyntaxHighlighting(); break;
+        case 22: _t->changeFindSectionVisibility((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 23: _t->checkForFixitDialogue(); break;
+        case 24: { int _r = _t->convertTheVersionNumber((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast< int*>(_a[0]) = std::move(_r); }  break;
-        case 23: _t->gotoDefinitionReceived((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
-        case 24: _t->rehighlightFullDoc(); break;
-        case 25: _t->changeOnlyEditsTheme((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
-        case 26: { int _r = _t->colorDifference((*reinterpret_cast< std::add_pointer_t<QColor>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QColor>>(_a[2])));
+        case 25: _t->gotoDefinitionReceived((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
+        case 26: _t->rehighlightFullDoc(); break;
+        case 27: _t->changeOnlyEditsTheme((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 28: { int _r = _t->colorDifference((*reinterpret_cast< std::add_pointer_t<QColor>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QColor>>(_a[2])));
             if (_a[0]) *reinterpret_cast< int*>(_a[0]) = std::move(_r); }  break;
-        case 27: _t->syntaxColorsOffImage(); break;
-        case 28: _t->resetSyntaxColors(); break;
-        case 29: _t->validateAndConvert(); break;
-        case 30: _t->on_actionSet_Syntax_Colors_triggered(); break;
-        case 31: _t->printTree((*reinterpret_cast< std::add_pointer_t<TSNode>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2]))); break;
-        case 32: _t->printTree((*reinterpret_cast< std::add_pointer_t<TSNode>>(_a[1]))); break;
-        case 33: _t->setupSyntaxTreeOnOpen((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
-        case 34: _t->setupSyntaxTreeOnOpen((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 35: _t->onContentsChange((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[3]))); break;
-        case 36: _t->applyEditToTree((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[5])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[6])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[7])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[8])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[9]))); break;
-        case 37: _t->onOpenInExplorer(); break;
-        case 38: _t->onCopyPath(); break;
-        case 39: _t->onOpenOutside(); break;
-        case 40: _t->mouseClicked(); break;
-        case 41: _t->openFileTreeContextMenu((*reinterpret_cast< std::add_pointer_t<QPoint>>(_a[1]))); break;
-        case 42: { std::tuple<QString,QString,QString,QStringList> _r = _t->getTabDetails((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
+        case 29: _t->syntaxColorsOffImage(); break;
+        case 30: _t->resetSyntaxColors(); break;
+        case 31: _t->validateAndConvert(); break;
+        case 32: _t->on_actionSet_Syntax_Colors_triggered(); break;
+        case 33: _t->printTree((*reinterpret_cast< std::add_pointer_t<TSNode>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2]))); break;
+        case 34: _t->printTree((*reinterpret_cast< std::add_pointer_t<TSNode>>(_a[1]))); break;
+        case 35: _t->setupSyntaxTreeOnOpen((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
+        case 36: _t->setupSyntaxTreeOnOpen((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 37: _t->onContentsChange((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[3]))); break;
+        case 38: _t->applyEditToTree((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[5])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[6])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[7])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[8])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[9]))); break;
+        case 39: _t->onOpenInExplorer(); break;
+        case 40: _t->onCopyPath(); break;
+        case 41: _t->onOpenOutside(); break;
+        case 42: _t->mouseClicked(); break;
+        case 43: _t->openFileTreeContextMenu((*reinterpret_cast< std::add_pointer_t<QPoint>>(_a[1]))); break;
+        case 44: { std::tuple<QString,QString,QString,QStringList> _r = _t->getTabDetails((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast< std::tuple<QString,QString,QString,QStringList>*>(_a[0]) = std::move(_r); }  break;
-        case 43: _t->setupLSP((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 44: { QString _r = _t->plaintextToHtml((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
+        case 45: _t->setupLSP((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 46: { QString _r = _t->plaintextToHtml((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = std::move(_r); }  break;
-        case 45: _t->showWeDontFuckWithTheLSP(); break;
-        case 46: _t->showHoldYourHorses(); break;
-        case 47: _t->fileTreeToggled(); break;
-        case 48: _t->fileTreeOpened((*reinterpret_cast< std::add_pointer_t<QModelIndex>>(_a[1]))); break;
-        case 49: { QString _r = _t->convertLeadingSpacesToTabs((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
+        case 47: _t->showWeDontFuckWithTheLSP(); break;
+        case 48: _t->showHoldYourHorses(); break;
+        case 49: _t->fileTreeToggled(); break;
+        case 50: _t->fileTreeOpened((*reinterpret_cast< std::add_pointer_t<QModelIndex>>(_a[1]))); break;
+        case 51: { QString _r = _t->convertLeadingSpacesToTabs((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = std::move(_r); }  break;
-        case 50: _t->ShowSuggestionsWithSuperSet((*reinterpret_cast< std::add_pointer_t<QStringList>>(_a[1]))); break;
-        case 51: _t->gotoDefinitionActionTriggered(); break;
-        case 52: _t->highlightDiagnostics((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
-        case 53: _t->autoSave(); break;
-        case 54: _t->moveHoverBox((*reinterpret_cast< std::add_pointer_t<QPoint>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
-        case 55: _t->handleMouseMoved((*reinterpret_cast< std::add_pointer_t<QPoint>>(_a[1]))); break;
-        case 56: _t->on_actionLSP_triggered(); break;
-        case 57: _t->on_actionLSP_2_triggered(); break;
-        case 58: { bool _r = _t->insertCompletion();
+        case 52: _t->ShowSuggestionsWithSuperSet((*reinterpret_cast< std::add_pointer_t<QStringList>>(_a[1]))); break;
+        case 53: _t->gotoDefinitionActionTriggered(); break;
+        case 54: _t->highlightDiagnostics((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 55: _t->autoSave(); break;
+        case 56: _t->moveHoverBox((*reinterpret_cast< std::add_pointer_t<QPoint>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
+        case 57: _t->handleMouseMoved((*reinterpret_cast< std::add_pointer_t<QPoint>>(_a[1]))); break;
+        case 58: _t->on_actionLSP_triggered(); break;
+        case 59: _t->on_actionLSP_2_triggered(); break;
+        case 60: { bool _r = _t->insertCompletion();
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
-        case 59: { bool _r = _t->activateCodeAction();
+        case 61: { bool _r = _t->activateCodeAction();
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
-        case 60: _t->pullUpSaveDialogue(); break;
-        case 61: _t->onWindowStateChanged(); break;
-        case 62: _t->onSuggestionItemClicked((*reinterpret_cast< std::add_pointer_t<QListWidgetItem*>>(_a[1]))); break;
-        case 63: _t->onActionsItemClicked((*reinterpret_cast< std::add_pointer_t<QListWidgetItem*>>(_a[1]))); break;
-        case 64: _t->on_actionOpen_Folder_triggered(); break;
-        case 65: _t->on_actionStart_Macro_Recording_triggered(); break;
-        case 66: _t->on_actionEnd_Macro_Recording_triggered(); break;
-        case 67: _t->on_actionReplay_Macro_triggered(); break;
-        case 68: _t->on_actionExit_triggered(); break;
-        case 69: _t->on_actionOpen_triggered((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
-        case 70: _t->on_actionOpen_triggered(); break;
-        case 71: _t->on_actionSave_triggered(); break;
-        case 72: _t->on_actionSave_As_triggered(); break;
-        case 73: _t->on_actionNew_triggered(); break;
-        case 74: _t->on_actionRun_Module_F5_triggered(); break;
-        case 75: _t->on_actionIncrement_Ctrl_triggered(); break;
-        case 76: _t->on_actionDe_Increment_Ctrl_triggered(); break;
-        case 77: _t->on_actionFix_It_triggered(); break;
-        case 78: _t->on_actionComment_Ctrl_Alt_triggered(); break;
-        case 79: _t->on_actionUn_Comment_Alt_5_triggered(); break;
-        case 80: _t->on_actionIncrease_Text_Size_triggered(); break;
-        case 81: _t->on_actionDecrease_Text_Size_triggered(); break;
-        case 82: _t->on_actionSet_Text_Size_triggered(); break;
-        case 83: _t->on_actionReset_Text_Size_triggered(); break;
-        case 84: _t->on_actionChange_to_IDLE_format_triggered(); break;
-        case 85: _t->on_actionTab_Width_triggered(); break;
-        case 86: _t->on_actionSettings_triggered(); break;
-        case 87: _t->on_actionExtras_triggered(); break;
-        case 88: _t->on_actionMacros_triggered(); break;
-        case 89: _t->on_actionCourier_New_2_triggered(); break;
-        case 90: _t->on_actionDroidSansMono_2_triggered(); break;
-        case 91: _t->on_actionMonaco_2_triggered(); break;
-        case 92: _t->on_actionMonospace_2_triggered(); break;
-        case 93: _t->on_actionCourier_Prime_2_triggered(); break;
-        case 94: _t->on_actionSourceCodePro_2_triggered(); break;
-        case 95: _t->on_actionUbuntuMono_2_triggered(); break;
-        case 96: _t->on_actionRunning_Files_triggered(); break;
-        case 97: _t->on_actionThe_Fix_It_Button_triggered(); break;
-        case 98: _t->on_actionCodeWizard_triggered(); break;
-        case 99: _t->on_actionPython_2_triggered(); break;
-        case 100: _t->on_actionJavaScript_triggered(); break;
-        case 101: _t->on_actionTypeScript_triggered(); break;
-        case 102: _t->on_actionHTML_triggered(); break;
-        case 103: _t->on_actionGo_triggered(); break;
-        case 104: _t->on_actionC_triggered(); break;
-        case 105: _t->on_actionC_2_triggered(); break;
-        case 106: _t->on_actionC_3_triggered(); break;
-        case 107: _t->on_actionRust_triggered(); break;
-        case 108: _t->on_actionWGSL_triggered(); break;
-        case 109: _t->on_actionGLSL_triggered(); break;
-        case 110: _t->on_actionPlaintext_triggered(); break;
-        case 111: _t->on_actionLua_triggered(); break;
-        case 112: _t->on_actionJava_triggered(); break;
-        case 113: _t->updateTagLine(); break;
-        case 114: _t->updateDefaultWordLists(); break;
-        case 115: _t->updateSyntax(); break;
-        case 116: _t->findTriggered(); break;
-        case 117: _t->nextTriggered(); break;
-        case 118: _t->previousTriggered(); break;
-        case 119: _t->replaceTriggered(); break;
-        case 120: _t->replaceAllTriggered(); break;
-        case 121: _t->updateLineNumbers((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 122: _t->updateScrollBarValue((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 123: _t->updateScrollBarValue2((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 124: _t->changeTheme((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
-        case 125: _t->on_actionDark_Mode_triggered(); break;
-        case 126: _t->on_actionLight_Mode_triggered(); break;
-        case 127: { bool _r = _t->wantedTheme();
+        case 62: _t->pullUpSaveDialogue(); break;
+        case 63: _t->onWindowStateChanged(); break;
+        case 64: _t->onSuggestionItemClicked((*reinterpret_cast< std::add_pointer_t<QListWidgetItem*>>(_a[1]))); break;
+        case 65: _t->onActionsItemClicked((*reinterpret_cast< std::add_pointer_t<QListWidgetItem*>>(_a[1]))); break;
+        case 66: _t->on_actionOpen_Folder_triggered(); break;
+        case 67: _t->on_actionStart_Macro_Recording_triggered(); break;
+        case 68: _t->on_actionEnd_Macro_Recording_triggered(); break;
+        case 69: _t->on_actionReplay_Macro_triggered(); break;
+        case 70: _t->on_actionExit_triggered(); break;
+        case 71: _t->on_actionOpen_triggered((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 72: _t->on_actionOpen_triggered(); break;
+        case 73: _t->on_actionSave_triggered(); break;
+        case 74: _t->on_actionSave_As_triggered(); break;
+        case 75: _t->on_actionNew_triggered(); break;
+        case 76: _t->on_actionRun_Module_F5_triggered(); break;
+        case 77: _t->on_actionIncrement_Ctrl_triggered(); break;
+        case 78: _t->on_actionDe_Increment_Ctrl_triggered(); break;
+        case 79: _t->on_actionFix_It_triggered(); break;
+        case 80: _t->on_actionComment_Ctrl_Alt_triggered(); break;
+        case 81: _t->on_actionUn_Comment_Alt_5_triggered(); break;
+        case 82: _t->on_actionIncrease_Text_Size_triggered(); break;
+        case 83: _t->on_actionDecrease_Text_Size_triggered(); break;
+        case 84: _t->on_actionSet_Text_Size_triggered(); break;
+        case 85: _t->on_actionReset_Text_Size_triggered(); break;
+        case 86: _t->on_actionChange_to_IDLE_format_triggered(); break;
+        case 87: _t->on_actionTab_Width_triggered(); break;
+        case 88: _t->on_actionSettings_triggered(); break;
+        case 89: _t->on_actionExtras_triggered(); break;
+        case 90: _t->on_actionMacros_triggered(); break;
+        case 91: _t->on_actionCourier_New_2_triggered(); break;
+        case 92: _t->on_actionDroidSansMono_2_triggered(); break;
+        case 93: _t->on_actionMonaco_2_triggered(); break;
+        case 94: _t->on_actionMonospace_2_triggered(); break;
+        case 95: _t->on_actionCourier_Prime_2_triggered(); break;
+        case 96: _t->on_actionSourceCodePro_2_triggered(); break;
+        case 97: _t->on_actionUbuntuMono_2_triggered(); break;
+        case 98: _t->on_actionRunning_Files_triggered(); break;
+        case 99: _t->on_actionThe_Fix_It_Button_triggered(); break;
+        case 100: _t->on_actionCodeWizard_triggered(); break;
+        case 101: _t->on_actionPython_2_triggered(); break;
+        case 102: _t->on_actionJavaScript_triggered(); break;
+        case 103: _t->on_actionTypeScript_triggered(); break;
+        case 104: _t->on_actionHTML_triggered(); break;
+        case 105: _t->on_actionGo_triggered(); break;
+        case 106: _t->on_actionC_triggered(); break;
+        case 107: _t->on_actionC_2_triggered(); break;
+        case 108: _t->on_actionC_3_triggered(); break;
+        case 109: _t->on_actionRust_triggered(); break;
+        case 110: _t->on_actionWGSL_triggered(); break;
+        case 111: _t->on_actionGLSL_triggered(); break;
+        case 112: _t->on_actionPlaintext_triggered(); break;
+        case 113: _t->on_actionLua_triggered(); break;
+        case 114: _t->on_actionJava_triggered(); break;
+        case 115: _t->updateTagLine(); break;
+        case 116: _t->updateDefaultWordLists(); break;
+        case 117: _t->updateSyntax(); break;
+        case 118: _t->findTriggered(); break;
+        case 119: _t->nextTriggered(); break;
+        case 120: _t->previousTriggered(); break;
+        case 121: _t->replaceTriggered(); break;
+        case 122: _t->replaceAllTriggered(); break;
+        case 123: _t->updateLineNumbers((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 124: _t->updateScrollBarValue((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 125: _t->updateScrollBarValue2((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 126: _t->changeTheme((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 127: _t->on_actionDark_Mode_triggered(); break;
+        case 128: _t->on_actionLight_Mode_triggered(); break;
+        case 129: { bool _r = _t->wantedTheme();
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
-        case 128: _t->saveWantedTheme(); break;
-        case 129: _t->openFind(); break;
-        case 130: _t->findTextEditChanged(); break;
-        case 131: _t->centerCursor(); break;
-        case 132: _t->updateFonts(); break;
-        case 133: _t->setupCompleter(); break;
-        case 134: { QString _r = _t->getCurrentWord();
+        case 130: _t->saveWantedTheme(); break;
+        case 131: _t->openFind(); break;
+        case 132: _t->findTextEditChanged(); break;
+        case 133: _t->centerCursor(); break;
+        case 134: _t->updateFonts(); break;
+        case 135: _t->setupCompleter(); break;
+        case 136: { QString _r = _t->getCurrentWord();
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = std::move(_r); }  break;
-        case 135: _t->updateExtraWordsList(); break;
-        case 136: _t->fillSuggestions(); break;
-        case 137: _t->fillActionsBox(); break;
-        case 138: _t->updateFontSelection(); break;
-        case 139: _t->changeHighlightColors((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
-        case 140: _t->openHelpMenu((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 141: _t->setLangOffFilename((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
-        case 142: _t->addFileToRecentList((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 143: _t->updateRecentList((*reinterpret_cast< std::add_pointer_t<QStringList>>(_a[1]))); break;
-        case 144: _t->openRecentFile((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 145: _t->handleTabs(); break;
-        case 146: { QString _r = _t->markdownToHtml((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
+        case 137: _t->updateExtraWordsList(); break;
+        case 138: _t->fillSuggestions(); break;
+        case 139: _t->fillActionsBox(); break;
+        case 140: _t->updateFontSelection(); break;
+        case 141: _t->changeHighlightColors((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 142: _t->openHelpMenu((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 143: _t->setLangOffFilename((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
+        case 144: _t->addFileToRecentList((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 145: _t->updateRecentList((*reinterpret_cast< std::add_pointer_t<QStringList>>(_a[1]))); break;
+        case 146: _t->openRecentFile((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 147: _t->handleTabs(); break;
+        case 148: { QString _r = _t->markdownToHtml((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = std::move(_r); }  break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         switch (_id) {
         default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
-        case 18:
+        case 20:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
             case 0:
@@ -1114,13 +1126,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 147)
+        if (_id < 149)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 147;
+        _id -= 149;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 147)
+        if (_id < 149)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 147;
+        _id -= 149;
     }
     return _id;
 }

@@ -25,6 +25,8 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void handleTerminalStdout();
+	void useBuiltinTerminalTriggered();
 	void on_actionVim_Modes_triggered();
 	void executeNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event);
 	void useVimModesTriggered();
