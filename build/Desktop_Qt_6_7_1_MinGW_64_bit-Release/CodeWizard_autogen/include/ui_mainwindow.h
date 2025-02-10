@@ -548,7 +548,7 @@ public:
         MainWindow->setStatusBar(statusbar);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName("menuBar");
-        menuBar->setGeometry(QRect(0, 0, 702, 17));
+        menuBar->setGeometry(QRect(0, 0, 702, 21));
         sizePolicy2.setHeightForWidth(menuBar->sizePolicy().hasHeightForWidth());
         menuBar->setSizePolicy(sizePolicy2);
         menuOp1 = new QMenu(menuBar);
