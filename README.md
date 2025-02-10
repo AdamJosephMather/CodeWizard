@@ -48,3 +48,11 @@ Version 8.8.0 can now request code generation by a 70 billion paramater model at
 **Running Code**
 
 When CodeWizard attempts to execute the program you have created, it will first create a .bat file in a temporary folder. This .bat file will be written with the appropriate commands to run the program. After it is created, CodeWizard will run it. I tried so hard to not have to use a .bat file, but whatever.
+
+**Vim mode**
+
+CodeWizard has an optional vim mode which enables a modal setup with both a normal and insert mode. It is worth noting that it is a modification to a subset of Vim bindings. 
+
+**Builtin Terminal**
+
+CodeWizard now has an optional builtin terminal. It's far from perfect, and I don't recommend using it for a wide variety of tasks. If you're program does not do what is expected when using the builtin terminal, it is probably because of the stdio buffering issue. Look for an option to disable buffering or buffer by line (in Python the fix is the -u argument in the CodeWizard tagline).
