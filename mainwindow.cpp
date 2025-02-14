@@ -4380,7 +4380,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				handleTabs();
 				handleBracketsOnEnter();
 				return false;
-			}else if (key_event->key() == Qt::Key_Backspace || key_event->key() == Qt::Key_Home || key_event->key() == Qt::Key_End || key_event->key() == Qt::Key_PageUp || key_event->key() == Qt::Key_PageDown){
+			}else if (key_event->key() == Qt::Key_Backspace || key_event->key() == Qt::Key_Home || key_event->key() == Qt::Key_End || key_event->key() == Qt::Key_PageUp || key_event->key() == Qt::Key_PageDown || key_event->key() == Qt::Key_F5){
 				return false; // I am electing not to handle these in any special way - also CodeWizard for the win
 			}else if (key_event->key() == Qt::Key_O){
 				currentVimMode = "i";
