@@ -57,8 +57,9 @@ TSParser *parser = ts_parser_new();
 QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
+int updateSyntaxPosition = -1;
 
-QString versionNumber = "8.8.9";
+QString versionNumber = "8.9.0";
 
 GroqAI *groq;
 QString groqApiKey;
@@ -217,6 +218,7 @@ QMenu *menuLSP_Settings;
 QMenu *menuWarnings;
 QMenu *menuAutocomplete;
 QMenu *menuSilly;
+QMenu *menuSubFonts;
 QTreeView *fileTree;
 
 QHBoxLayout *horizontalLayout;
@@ -300,7 +302,7 @@ QAction* noAutocomplete;
 QAction* hoverAction;
 QAction* useVimMode;
 QAction* useBuiltinTerminal;
-
+QAction* autoAddBrackets;
 
 QString inputLineToTerminal;
 
@@ -329,6 +331,9 @@ QProcess *activeTerminal;
 QStringList sentCommands;
 int indexInSentCommands = -1;
 
+QStringList fontFamilies;
+QListWidget *fontList;
+
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
 	qDebug() << "MainWindow";
@@ -356,15 +361,16 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	replaceTextEdit->setAcceptRichText(false);
 	terminalInputLine->setAcceptRichText(false);
 	builtinTerminalTextEdit->setReadOnly(true);
-	
+
 	activeTerminal = new QProcess(this);
-	
+	activeTerminal->setProcessChannelMode(QProcess::MergedChannels);
+
 	connect(activeTerminal, &QProcess::readyReadStandardOutput, this, &MainWindow::handleTerminalStdout);
-	
+	connect(activeTerminal, &QProcess::readyReadStandardError, this, &MainWindow::handleTerminalStdout);
+
 	// Start cmd with a command that will keep the prompt open
 	activeTerminal->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal.");
-	
-	
+
 	findBar = ui->textEdit_2;
 	replaceBar = ui->textEdit_3;
 	findLayout = ui->findLayout;
@@ -385,7 +391,32 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	menuWarnings = ui->menuWarnings;
 	menuAutocomplete = ui->menuAutocomplete;
 	menuSilly = ui->menuSilly;
-
+	
+	menuSubFonts = menuFonts->addMenu("Browse Installed Fonts");
+	QFontDatabase fontDatabase;
+	fontFamilies = fontDatabase.families();
+	fontList = new QListWidget();
+	
+	fontList->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	fontList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	fontList->setFixedSize(350, 500);
+		
+	for (const QString &font : fontFamilies) {
+		fontList->addItem(font);
+	}
+	
+	connect(fontList, &QListWidget::itemClicked, this, [this](QListWidgetItem *item) {
+		qDebug() << "Selected font:" << item->text();
+		currentFont = item->text();
+		updateFontSelection();
+	});
+	
+	QWidgetAction *fontAction = new QWidgetAction(this);
+	fontAction->setDefaultWidget(fontList);
+	menuSubFonts->addAction(fontAction);
+	
+	qDebug() << fontFamilies;
+	
 	useFileTree = ui->actionUse_File_Tree;
 	useFileTreeIfFullscreen = ui->actionUse_File_Tree_If_Fullscreen;
 	fileTree = ui->treeView;
@@ -398,6 +429,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	hoverAction = ui->actionHover;
 	useVimMode = ui->actionUse_Vim_Modes;
 	useBuiltinTerminal = ui->actionUse_Builtin_Terminal;
+	autoAddBrackets = ui->actionAuto_Add_Brackets;
 
 	autoSaveAct = ui->actionAuto_Save;
 	randomSelectFileTypeAct = ui->actionRandomly_Choose_Program_Type_On_Save;
@@ -494,7 +526,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	colormapWGSLTS = {{"int_literal", 8}, {"float_literal", 8}, {"bool_literal", 8}, {"bool/.CodeWiz./u32", 4}, {"u32/.CodeWiz./i32", 4}, {"i32/.CodeWiz./f16", 4}, {"f16/.CodeWiz./f32", 4}, {"type_declaration", 4}, {"function_declaration", 5}, {"function_declaration/.CodeWiz./identifier", 5}, {"identifier", 5}, {"parameter", 4}, {"parameter/.CodeWiz./identifier", 4}, {"struct_declaration", 3}, {"struct_declaration/.CodeWiz./identifier", 3}, {"attribute", 4}, {"attribute/.CodeWiz./identifier", 4}, {"type_constructor_or_function_call_expression", 5}, {"type_constructor_or_function_call_expression/.CodeWiz./type_declaration", 5}, {"struct", 6}, {"struct/.CodeWiz./bitcast", 6}, {"bitcast", 6}, {"bitcast/.CodeWiz./discard", 6}, {"discard", 6}, {"discard/.CodeWiz./enable", 6}, {"enable", 6}, {"enable/.CodeWiz./fallthrough", 6}, {"fallthrough", 6}, {"fallthrough/.CodeWiz./let", 6}, {"let", 6}, {"let/.CodeWiz./type", 6}, {"type", 6}, {"type/.CodeWiz./var", 6}, {"var", 6}, {"var/.CodeWiz./override", 6}, {"override", 6}, {"override/.CodeWiz./texel_format", 6}, {"texel_format", 6}, {"private", 4}, {"private/.CodeWiz./storage", 4}, {"storage", 4}, {"storage/.CodeWiz./uniform", 4}, {"uniform", 4}, {"uniform/.CodeWiz./workgroup", 4}, {"workgroup", 4}, {"read", 4}, {"read/.CodeWiz./read_write", 4}, {"read_write", 4}, {"read_write/.CodeWiz./write", 4}, {"write", 4}, {"fn", 6}, {"return", 6}, {",/.CodeWiz./.", 7}, {"./.CodeWiz./:", 7}, {":/.CodeWiz./;", 7}, {";/.CodeWiz./->", 7}, {"(/.CodeWiz./)", 7}, {")/.CodeWiz./[", 7}, {"[/.CodeWiz./]", 7}, {"]/.CodeWiz./{", 7}, {"{/.CodeWiz./}", 7}, {"loop", 5}, {"loop/.CodeWiz./for", 5}, {"for", 5}, {"for/.CodeWiz./while", 5}, {"while", 5}, {"while/.CodeWiz./break", 5}, {"break", 5}, {"break/.CodeWiz./continue", 5}, {"continue", 5}, {"continue/.CodeWiz./continuing", 5}, {"continuing", 5}, {"if", 6}, {"if/.CodeWiz./else", 6}, {"else", 6}, {"else/.CodeWiz./switch", 6}, {"switch", 6}, {"switch/.CodeWiz./case", 6}, {"case", 6}, {"case/.CodeWiz./default", 6}, {"default", 6}, {"&", 7}, {"&/.CodeWiz./&&", 7}, {"&&", 7}, {"&&/.CodeWiz.//", 7}, {"/", 7}, {"//.CodeWiz./!", 7}, {"!", 7}, {"!/.CodeWiz./=", 7}, {"=", 7}, {"=/.CodeWiz./==", 7}, {"==", 7}, {"==/.CodeWiz./!=", 7}, {"!=", 7}, {"!=/.CodeWiz./>", 7}, {">", 7}, {">/.CodeWiz./>=", 7}, {">=", 7}, {">=/.CodeWiz./>>", 7}, {">>", 7}, {">>/.CodeWiz./<", 7}, {"<", 7}, {"</.CodeWiz./<=", 7}, {"<=", 7}, {"<=/.CodeWiz./<<", 7}, {"<<", 7}, {"<</.CodeWiz./%", 7}, {"%", 7}, {"%/.CodeWiz./-", 7}, {"-", 7}, {"-/.CodeWiz./+", 7}, {"+", 7}, {"+/.CodeWiz./|", 7}, {"|", 7}, {"|/.CodeWiz./||", 7}, {"||", 7}, {"||/.CodeWiz./*", 7}, {"*", 7}, {"*/.CodeWiz./~", 7}, {"~", 7}, {"~/.CodeWiz./^", 7}, {"^", 7}, {"^/.CodeWiz./@", 7}, {"@", 7}, {"@/.CodeWiz./++", 7}, {"++", 7}, {"++/.CodeWiz./--", 7}, {"--", 7}, {"line_comment", 2}, {"line_comment/.CodeWiz./block_comment", 2}, {"block_comment", 2}, {"ERROR", 6}};
 	colormapCppTS = {{"call_expression/.CodeWiz./qualified_identifier", 5}, {"qualified_identifier/.CodeWiz./identifier", 5}, {"template_function/.CodeWiz./identifier", 5}, {"template_method/.CodeWiz./field_identifier", 5}, {"function_declarator/.CodeWiz./qualified_identifier", 5}, {"function_declarator", 5}, {"function_declarator/.CodeWiz./field_identifier", 5}, {"field_identifier", 5}, {"namespace_identifier", 4}, {"auto", 4}, {"this", 3}, {"nullptr", 3}, {"catch", 6}, {"catch/.CodeWiz./class", 6}, {"class", 6}, {"class/.CodeWiz./co_await", 6}, {"co_await", 6}, {"co_await/.CodeWiz./co_return", 6}, {"co_return", 6}, {"co_return/.CodeWiz./co_yield", 6}, {"co_yield", 6}, {"co_yield/.CodeWiz./constexpr", 6}, {"constexpr", 6}, {"constexpr/.CodeWiz./constinit", 6}, {"constinit", 6}, {"constinit/.CodeWiz./consteval", 6}, {"consteval", 6}, {"consteval/.CodeWiz./delete", 6}, {"delete", 6}, {"delete/.CodeWiz./explicit", 6}, {"explicit", 6}, {"explicit/.CodeWiz./final", 6}, {"final", 6}, {"final/.CodeWiz./friend", 6}, {"friend", 6}, {"friend/.CodeWiz./mutable", 6}, {"mutable", 6}, {"mutable/.CodeWiz./namespace", 6}, {"namespace", 6}, {"namespace/.CodeWiz./noexcept", 6}, {"noexcept", 6}, {"noexcept/.CodeWiz./new", 6}, {"new", 6}, {"new/.CodeWiz./override", 6}, {"override", 6}, {"override/.CodeWiz./private", 6}, {"private", 6}, {"private/.CodeWiz./protected", 6}, {"protected", 6}, {"protected/.CodeWiz./public", 6}, {"public", 6}, {"public/.CodeWiz./template", 6}, {"template", 6}, {"template/.CodeWiz./throw", 6}, {"throw", 6}, {"throw/.CodeWiz./try", 6}, {"try", 6}, {"try/.CodeWiz./typename", 6}, {"typename", 6}, {"typename/.CodeWiz./using", 6}, {"using", 6}, {"using/.CodeWiz./concept", 6}, {"concept", 6}, {"concept/.CodeWiz./requires", 6}, {"requires", 6}, {"requires/.CodeWiz./virtual", 6}, {"virtual", 6}, {"raw_string_literal", 1}, {"identifier", 3}, {"break", 6}, {"case", 6}, {"const", 6}, {"continue", 6}, {"default", 6}, {"do", 6}, {"else", 6}, {"enum", 6}, {"extern", 6}, {"for", 6}, {"if", 6}, {"inline", 6}, {"return", 6}, {"sizeof", 6}, {"static", 6}, {"struct", 6}, {"switch", 6}, {"typedef", 6}, {"union", 6}, {"volatile", 6}, {"while", 6}, {"#define", 6}, {"#elif", 6}, {"#else", 6}, {"#endif", 6}, {"#if", 6}, {"#ifdef", 6}, {"#ifndef", 6}, {"#include", 6}, {"preproc_directive", 6}, {"--", 7}, {"-", 7}, {"-=", 7}, {"->", 7}, {"=", 7}, {"!=", 7}, {"*", 7}, {"&", 7}, {"&&", 7}, {"+", 7}, {"++", 7}, {"+=", 7}, {"<", 7}, {"==", 7}, {">", 7}, {"||", 7}, {".", 7}, {";", 7}, {"string_literal", 1}, {"system_lib_string", 1}, {"null", 3}, {"number_literal", 8}, {"char_literal", 8}, {"statement_identifier", 4}, {"type_identifier", 4}, {"primitive_type", 4}, {"sized_type_specifier", 4}, {"call_expression", 5}, {"call_expression/.CodeWiz./identifier", 5}, {"call_expression/.CodeWiz./field_expression", 5}, {"field_expression/.CodeWiz./field_identifier", 5}, {"function_declarator/.CodeWiz./identifier", 5}, {"preproc_function_def/.CodeWiz./identifier", 5}, {"comment", 2}};
 	colormapTxtTS = {};
-	colormapJsTS = {{"identifier", 3}, {"property_identifier", 4}, {"function_expression/.CodeWiz./identifier", 5}, {"function_declaration/.CodeWiz./identifier", 5}, {"method_definition/.CodeWiz./property_identifier", 5}, {"pair", 5}, {"pair/.CodeWiz./property_identifier", 5}, {"function_expression/.CodeWiz./arrow_function", 5}, {"arrow_function/.CodeWiz./assignment_expression", 5}, {"assignment_expression/.CodeWiz./member_expression", 5}, {"member_expression/.CodeWiz./property_identifier", 5}, {"arrow_function/.CodeWiz./variable_declarator", 5}, {"variable_declarator/.CodeWiz./identifier", 5}, {"assignment_expression/.CodeWiz./identifier", 5}, {"arrow_function/.CodeWiz./call_expression", 5}, {"call_expression/.CodeWiz./identifier", 5}, {"call_expression/.CodeWiz./member_expression", 5}, {"identifier/.CodeWiz./shorthand_property_identifier", 3}, {"shorthand_property_identifier/.CodeWiz./shorthand_property_identifier_pattern", 3}, {"arguments", 3}, {"arguments/.CodeWiz./module", 3}, {"module", 3}, {"module/.CodeWiz./console", 3}, {"console", 3}, {"console/.CodeWiz./window", 3}, {"window", 3}, {"window/.CodeWiz./document", 3}, {"document", 3}, {"require", 5}, {"this", 3}, {"super", 3}, {"true/.CodeWiz./false", 3}, {"false/.CodeWiz./null", 3}, {"null/.CodeWiz./undefined", 3}, {"comment", 2}, {"string", 1}, {"string/.CodeWiz./template_string", 1}, {"template_string", 1}, {"regex", 1}, {"number", 8}, {";", 7}, {";/.CodeWiz./optional_chain", 7}, {"optional_chain", 7}, {"optional_chain/.CodeWiz./.", 7}, {".", 7}, {"./.CodeWiz./,", 7}, {",", 7}, {"-", 7}, {"-/.CodeWiz./--", 7}, {"--", 7}, {"--/.CodeWiz./-=", 7}, {"-=", 7}, {"-=/.CodeWiz./+", 7}, {"+", 7}, {"+/.CodeWiz./++", 7}, {"++", 7}, {"++/.CodeWiz./+=", 7}, {"+=", 7}, {"+=/.CodeWiz./*", 7}, {"*", 7}, {"*/.CodeWiz./*=", 7}, {"*=", 7}, {"*=/.CodeWiz./**", 7}, {"**", 7}, {"**/.CodeWiz./**=", 7}, {"**=", 7}, {"**=/.CodeWiz.//", 7}, {"/", 7}, {"//.CodeWiz.//=", 7}, {"/=", 7}, {"/=/.CodeWiz./%", 7}, {"%", 7}, {"%/.CodeWiz./%=", 7}, {"%=", 7}, {"%=/.CodeWiz./<", 7}, {"<", 7}, {"</.CodeWiz./<=", 7}, {"<=", 7}, {"<=/.CodeWiz./<<", 7}, {"<<", 7}, {"<</.CodeWiz./<<=", 7}, {"<<=", 7}, {"<<=/.CodeWiz./=", 7}, {"=", 7}, {"=/.CodeWiz./==", 7}, {"==", 7}, {"==/.CodeWiz./===", 7}, {"===", 7}, {"===/.CodeWiz./!", 7}, {"!", 7}, {"!/.CodeWiz./!=", 7}, {"!=", 7}, {"!=/.CodeWiz./!==", 7}, {"!==", 7}, {"!==/.CodeWiz./=>", 7}, {"=>", 7}, {"=>/.CodeWiz./>", 7}, {">", 7}, {">/.CodeWiz./>=", 7}, {">=", 7}, {">=/.CodeWiz./>>", 7}, {">>", 7}, {">>/.CodeWiz./>>=", 7}, {">>=", 7}, {">>=/.CodeWiz./>>>", 7}, {">>>", 7}, {">>>/.CodeWiz./>>>=", 7}, {">>>=", 7}, {">>>=/.CodeWiz./~", 7}, {"~", 7}, {"~/.CodeWiz./^", 7}, {"^", 7}, {"^/.CodeWiz./&", 7}, {"&", 7}, {"&/.CodeWiz./|", 7}, {"|", 7}, {"|/.CodeWiz./^=", 7}, {"^=", 7}, {"^=/.CodeWiz./&=", 7}, {"&=", 7}, {"&=/.CodeWiz./|=", 7}, {"|=", 7}, {"|=/.CodeWiz./&&", 7}, {"&&", 7}, {"&&/.CodeWiz./||", 7}, {"||", 7}, {"||/.CodeWiz./??", 7}, {"??", 7}, {"??/.CodeWiz./&&=", 7}, {"&&=", 7}, {"&&=/.CodeWiz./||=", 7}, {"||=", 7}, {"||=/.CodeWiz./??=", 7}, {"??=", 7}, {"(", 7}, {"(/.CodeWiz./)", 7}, {")", 7}, {")/.CodeWiz./[", 7}, {"[", 7}, {"[/.CodeWiz./]", 7}, {"]", 7}, {"]/.CodeWiz./{", 7}, {"{", 7}, {"{/.CodeWiz./}", 7}, {"}", 7}, {"template_substitution", 7}, {"template_substitution/.CodeWiz./${", 7}, {"${", 7}, {"as", 6}, {"as/.CodeWiz./async", 6}, {"async", 6}, {"async/.CodeWiz./await", 6}, {"await", 6}, {"await/.CodeWiz./break", 6}, {"break", 6}, {"break/.CodeWiz./case", 6}, {"case", 6}, {"case/.CodeWiz./catch", 6}, {"catch", 6}, {"catch/.CodeWiz./class", 6}, {"class", 6}, {"class/.CodeWiz./const", 6}, {"const", 6}, {"const/.CodeWiz./continue", 6}, {"continue", 6}, {"continue/.CodeWiz./debugger", 6}, {"debugger", 6}, {"debugger/.CodeWiz./default", 6}, {"default", 6}, {"default/.CodeWiz./delete", 6}, {"delete", 6}, {"delete/.CodeWiz./do", 6}, {"do", 6}, {"do/.CodeWiz./else", 6}, {"else", 6}, {"else/.CodeWiz./export", 6}, {"export", 6}, {"export/.CodeWiz./extends", 6}, {"extends", 6}, {"extends/.CodeWiz./finally", 6}, {"finally", 6}, {"finally/.CodeWiz./for", 6}, {"for", 6}, {"for/.CodeWiz./from", 6}, {"from", 6}, {"from/.CodeWiz./function", 6}, {"function", 6}, {"function/.CodeWiz./get", 6}, {"get", 6}, {"get/.CodeWiz./if", 6}, {"if", 6}, {"if/.CodeWiz./import", 6}, {"import", 6}, {"import/.CodeWiz./in", 6}, {"in", 6}, {"in/.CodeWiz./instanceof", 6}, {"instanceof", 6}, {"instanceof/.CodeWiz./let", 6}, {"let", 6}, {"let/.CodeWiz./new", 6}, {"new", 6}, {"new/.CodeWiz./of", 6}, {"of", 6}, {"of/.CodeWiz./return", 6}, {"return", 6}, {"return/.CodeWiz./set", 6}, {"set", 6}, {"set/.CodeWiz./static", 6}, {"static", 6}, {"static/.CodeWiz./switch", 6}, {"switch", 6}, {"switch/.CodeWiz./target", 6}, {"target", 6}, {"target/.CodeWiz./throw", 6}, {"throw", 6}, {"throw/.CodeWiz./try", 6}, {"try", 6}, {"try/.CodeWiz./typeof", 6}, {"typeof", 6}, {"typeof/.CodeWiz./var", 6}, {"var", 6}, {"var/.CodeWiz./void", 6}, {"void", 6}, {"void/.CodeWiz./while", 6}, {"while", 6}, {"while/.CodeWiz./with", 6}, {"with", 6}, {"with/.CodeWiz./yield", 6}, {"yield", 6}};
+	colormapJsTS = {{"identifier", 3}, {"property_identifier", 4}, {"function_expression/.CodeWiz./identifier", 5}, {"function_declaration/.CodeWiz./identifier", 5}, {"method_definition/.CodeWiz./property_identifier", 5}, {"pair", 5}, {"pair/.CodeWiz./property_identifier", 5}, {"function_expression/.CodeWiz./arrow_function", 5}, {"arrow_function/.CodeWiz./assignment_expression", 5}, {"assignment_expression/.CodeWiz./member_expression", 5}, {"member_expression/.CodeWiz./property_identifier", 5}, {"arrow_function/.CodeWiz./variable_declarator", 5}, {"variable_declarator/.CodeWiz./identifier", 5}, {"assignment_expression/.CodeWiz./identifier", 5}, {"arrow_function/.CodeWiz./call_expression", 5}, {"call_expression/.CodeWiz./identifier", 5}, {"call_expression/.CodeWiz./member_expression", 5}, {"identifier/.CodeWiz./shorthand_property_identifier", 3}, {"shorthand_property_identifier/.CodeWiz./shorthand_property_identifier_pattern", 3}, {"arguments", 3}, {"arguments/.CodeWiz./module", 3}, {"module", 3}, {"module/.CodeWiz./console", 3}, {"console", 3}, {"console/.CodeWiz./window", 3}, {"window", 3}, {"window/.CodeWiz./document", 3}, {"document", 3}, {"require", 5}, {"this", 3}, {"super", 3}, {"true/.CodeWiz./false", 3}, {"false/.CodeWiz./null", 3}, {"null/.CodeWiz./undefined", 3}, {"comment", 2}, {"string", 1}, {"string/.CodeWiz./template_string", 1}, {"template_string", 1}, {"regex", 1}, {"number", 8}, {";", 7}, {";/.CodeWiz./optional_chain", 7}, {"optional_chain", 7}, {"optional_chain/.CodeWiz./.", 7}, {".", 7}, {"./.CodeWiz./,", 7}, {",", 7}, {"-", 7}, {"-/.CodeWiz./--", 7}, {"--", 7}, {"--/.CodeWiz./-=", 7}, {"-=", 7}, {"-=/.CodeWiz./+", 7}, {"+", 7}, {"+/.CodeWiz./++", 7}, {"++", 7}, {"++/.CodeWiz./+=", 7}, {"+=", 7}, {"+=/.CodeWiz./*", 7}, {"*", 7}, {"*/.CodeWiz./*=", 7}, {"*=", 7}, {"*=/.CodeWiz./**", 7}, {"**", 7}, {"**/.CodeWiz./**=", 7}, {"**=", 7}, {"**=/.CodeWiz.//", 7}, {"/", 7}, {"//.CodeWiz.//=", 7}, {"/=", 7}, {"/=/.CodeWiz./%", 7}, {"%", 7}, {"%/.CodeWiz./%=", 7}, {"%=", 7}, {"%=/.CodeWiz./<", 7}, {"<", 7}, {"</.CodeWiz./<=", 7}, {"<=", 7}, {"<=/.CodeWiz./<<", 7}, {"<<", 7}, {"<</.CodeWiz./<<=", 7}, {"<<=", 7}, {"<<=/.CodeWiz./=", 7}, {"=", 7}, {"=/.CodeWiz./==", 7}, {"==", 7}, {"==/.CodeWiz./===", 7}, {"===", 7}, {"===/.CodeWiz./!", 7}, {"!", 7}, {"!/.CodeWiz./!=", 7}, {"!=", 7}, {"!=/.CodeWiz./!==", 7}, {"!==", 7}, {"!==/.CodeWiz./=>", 7}, {"=>", 7}, {"=>/.CodeWiz./>", 7}, {">", 7}, {">/.CodeWiz./>=", 7}, {">=", 7}, {">=/.CodeWiz./>>", 7}, {">>", 7}, {">>/.CodeWiz./>>=", 7}, {">>=", 7}, {">>=/.CodeWiz./>>>", 7}, {">>>", 7}, {">>>/.CodeWiz./>>>=", 7}, {">>>=", 7}, {">>>=/.CodeWiz./~", 7}, {"~", 7}, {"~/.CodeWiz./^", 7}, {"^", 7}, {"^/.CodeWiz./&", 7}, {"&", 7}, {"&/.CodeWiz./|", 7}, {"|", 7}, {"|/.CodeWiz./^=", 7}, {"^=", 7}, {"^=/.CodeWiz./&=", 7}, {"&=", 7}, {"&=/.CodeWiz./|=", 7}, {"|=", 7}, {"|=/.CodeWiz./&&", 7}, {"&&", 7}, {"&&/.CodeWiz./||", 7}, {"||", 7}, {"||/.CodeWiz./??", 7}, {"??", 7}, {"??/.CodeWiz./&&=", 7}, {"&&=", 7}, {"&&=/.CodeWiz./||=", 7}, {"||=", 7}, {"||=/.CodeWiz./??=", 7}, {"??=", 7}, {"(", 7}, {"(/.CodeWiz./)", 7}, {")", 7}, {")/.CodeWiz./[", 7}, {"[", 7}, {"[/.CodeWiz./]", 7}, {"]", 7}, {"]/.CodeWiz./{", 7}, {"{", 7}, {"{/.CodeWiz./}", 7}, {"}", 7}, {"template_substitution", 7}, {"template_substitution/.CodeWiz./${", 7}, {"${", 7}, {"as", 6}, {"as/.CodeWiz./async", 6}, {"async", 6}, {"async/.CodeWiz./await", 6}, {"await", 6}, {"await/.CodeWiz./break", 6}, {"break", 6}, {"break/.CodeWiz./case", 6}, {"case", 6}, {"case/.CodeWiz./catch", 6}, {"catch", 6}, {"catch/.CodeWiz./class", 6}, {"class", 6}, {"class/.CodeWiz./const", 6}, {"const", 6}, {"const/.CodeWiz./continue", 6}, {"continue", 6}, {"continue/.CodeWiz./debugger", 6}, {"debugger", 6}, {"debugger/.CodeWiz./default", 6}, {"default", 6}, {"default/.CodeWiz./delete", 6}, {"delete", 6}, {"delete/.CodeWiz./do", 6}, {"do", 6}, {"do/.CodeWiz./else", 6}, {"else", 6}, {"else/.CodeWiz./export", 6}, {"export", 6}, {"export/.CodeWiz./extends", 6}, {"extends", 6}, {"extends/.CodeWiz./finally", 6}, {"finally", 6}, {"finally/.CodeWiz./for", 6}, {"for", 6}, {"for/.CodeWiz./from", 6}, {"from", 6}, {"from/.CodeWiz./function", 6}, {"function", 6}, {"function/.CodeWiz./get", 6}, {"get", 6}, {"get/.CodeWiz./if", 6}, {"if", 6}, {"if/.CodeWiz./import", 6}, {"import", 6}, {"import/.CodeWiz./in", 6}, {"in", 6}, {"in/.CodeWiz./instanceof", 6}, {"instanceof", 6}, {"instanceof/.CodeWiz./let", 6}, {"let", 6}, {"let/.CodeWiz./new", 6}, {"new", 6}, {"new/.CodeWiz./of", 6}, {"of", 6}, {"of/.CodeWiz./return", 6}, {"return", 6}, {"return/.CodeWiz./set", 6}, {"set", 6}, {"set/.CodeWiz./static", 6}, {"static", 6}, {"static/.CodeWiz./switch", 6}, {"switch", 6}, {"switch/.CodeWiz./target", 6}, {"target", 6}, {"target/.CodeWiz./throw", 6}, {"throw", 6}, {"throw/.CodeWiz./try", 6}, {"try", 6}, {"try/.CodeWiz./typeof", 6}, {"typeof", 6}, {"typeof/.CodeWiz./var", 6}, {"var", 6}, {"var/.CodeWiz./void", 6}, {"void", 6}, {"void/.CodeWiz./while", 6}, {"while", 6}, {"while/.CodeWiz./with", 6}, {"with", 6}, {"with/.CodeWiz./yield", 6}, {"yield", 6}, {"expression_statement/.CodeWiz./undefined", 6}};
 	colormapHTMLTS = {{"tag_name", 6}, {"erroneous_end_tag_name", 6}, {"doctype", 3}, {"attribute_name", 4}, {"attribute_value", 1}, {"comment", 2}, {"<", 7}, {"</.CodeWiz./>", 7}, {">", 7}, {">/.CodeWiz./</", 7}, {"</", 7}, {"<//.CodeWiz.//>", 7}, {"/>", 7}};
 	colormapGoTS = {{"call_expression", 5}, {"call_expression/.CodeWiz./identifier", 5}, {"identifier", 5}, {"append", 5}, {"append/.CodeWiz./cap", 5}, {"cap", 5}, {"cap/.CodeWiz./close", 5}, {"close", 5}, {"close/.CodeWiz./complex", 5}, {"complex", 5}, {"complex/.CodeWiz./copy", 5}, {"copy", 5}, {"copy/.CodeWiz./delete", 5}, {"delete", 5}, {"delete/.CodeWiz./imag", 5}, {"imag", 5}, {"imag/.CodeWiz./len", 5}, {"len", 5}, {"len/.CodeWiz./make", 5}, {"make", 5}, {"make/.CodeWiz./new", 5}, {"new", 5}, {"new/.CodeWiz./panic", 5}, {"panic", 5}, {"panic/.CodeWiz./print", 5}, {"print", 5}, {"print/.CodeWiz./println", 5}, {"println", 5}, {"println/.CodeWiz./real", 5}, {"real", 5}, {"real/.CodeWiz./recover", 5}, {"recover", 5}, {"call_expression/.CodeWiz./selector_expression", 5}, {"selector_expression/.CodeWiz./field_identifier", 5}, {"function_declaration/.CodeWiz./identifier", 5}, {"method_declaration/.CodeWiz./field_identifier", 5}, {"type_identifier", 4}, {"field_identifier", 4}, {"--", 7}, {"--/.CodeWiz./-", 7}, {"-", 7}, {"-/.CodeWiz./-=", 7}, {"-=", 7}, {"-=/.CodeWiz./:=", 7}, {":=", 7}, {":=/.CodeWiz./!", 7}, {"!", 7}, {"!/.CodeWiz./!=", 7}, {"!=", 7}, {"!=/.CodeWiz./...", 7}, {"...", 7}, {".../.CodeWiz./*", 7}, {"*", 7}, {"*/.CodeWiz./*=", 7}, {"*=", 7}, {"*=/.CodeWiz.//", 7}, {"/", 7}, {"//.CodeWiz.//=", 7}, {"/=", 7}, {"/=/.CodeWiz./&", 7}, {"&", 7}, {"&/.CodeWiz./&&", 7}, {"&&", 7}, {"&&/.CodeWiz./&=", 7}, {"&=", 7}, {"&=/.CodeWiz./%", 7}, {"%", 7}, {"%/.CodeWiz./%=", 7}, {"%=", 7}, {"%=/.CodeWiz./^", 7}, {"^", 7}, {"^/.CodeWiz./^=", 7}, {"^=", 7}, {"^=/.CodeWiz./+", 7}, {"+", 7}, {"+/.CodeWiz./++", 7}, {"++", 7}, {"++/.CodeWiz./+=", 7}, {"+=", 7}, {"+=/.CodeWiz./<-", 7}, {"<-", 7}, {"<-/.CodeWiz./<", 7}, {"<", 7}, {"</.CodeWiz./<<", 7}, {"<<", 7}, {"<</.CodeWiz./<<=", 7}, {"<<=", 7}, {"<<=/.CodeWiz./<=", 7}, {"<=", 7}, {"<=/.CodeWiz./=", 7}, {"=", 7}, {"=/.CodeWiz./==", 7}, {"==", 7}, {"==/.CodeWiz./>", 7}, {">", 7}, {">/.CodeWiz./>=", 7}, {">=", 7}, {">=/.CodeWiz./>>", 7}, {">>", 7}, {">>/.CodeWiz./>>=", 7}, {">>=", 7}, {">>=/.CodeWiz./|", 7}, {"|", 7}, {"|/.CodeWiz./|=", 7}, {"|=", 7}, {"|=/.CodeWiz./||", 7}, {"||", 7}, {"||/.CodeWiz./~", 7}, {"~", 7}, {"break", 6}, {"break/.CodeWiz./case", 6}, {"case", 6}, {"case/.CodeWiz./chan", 6}, {"chan", 6}, {"chan/.CodeWiz./const", 6}, {"const", 6}, {"const/.CodeWiz./continue", 6}, {"continue", 6}, {"continue/.CodeWiz./default", 6}, {"default", 6}, {"default/.CodeWiz./defer", 6}, {"defer", 6}, {"defer/.CodeWiz./else", 6}, {"else", 6}, {"else/.CodeWiz./fallthrough", 6}, {"fallthrough", 6}, {"fallthrough/.CodeWiz./for", 6}, {"for", 6}, {"for/.CodeWiz./func", 6}, {"func", 6}, {"func/.CodeWiz./go", 6}, {"go", 6}, {"go/.CodeWiz./goto", 6}, {"goto", 6}, {"goto/.CodeWiz./if", 6}, {"if", 6}, {"if/.CodeWiz./import", 6}, {"import", 6}, {"import/.CodeWiz./interface", 6}, {"interface", 6}, {"interface/.CodeWiz./map", 6}, {"map", 6}, {"map/.CodeWiz./package", 6}, {"package", 6}, {"package/.CodeWiz./range", 6}, {"range", 6}, {"range/.CodeWiz./return", 6}, {"return", 6}, {"return/.CodeWiz./select", 6}, {"select", 6}, {"select/.CodeWiz./struct", 6}, {"struct", 6}, {"struct/.CodeWiz./switch", 6}, {"switch", 6}, {"switch/.CodeWiz./type", 6}, {"type", 6}, {"type/.CodeWiz./var", 6}, {"var", 6}, {"interpreted_string_literal/.CodeWiz./raw_string_literal", 1}, {"raw_string_literal/.CodeWiz./rune_literal", 1}, {"escape_sequence", 1}, {"int_literal/.CodeWiz./float_literal", 8}, {"float_literal/.CodeWiz./imaginary_literal", 8}, {"true/.CodeWiz./false", 3}, {"false/.CodeWiz./nil", 3}, {"nil/.CodeWiz./iota", 3}, {"comment", 2}};
 	colormapLuaTS = {{"if_start/.CodeWiz./if_then", 6}, {"if_then/.CodeWiz./if_elseif", 6}, {"if_elseif/.CodeWiz./if_else", 6}, {"if_else/.CodeWiz./if_end", 6}, {"for_start/.CodeWiz./for_in", 6}, {"for_in/.CodeWiz./for_do", 6}, {"for_do/.CodeWiz./for_end", 6}, {"while_start/.CodeWiz./while_do", 6}, {"while_do/.CodeWiz./while_end", 6}, {"repeat_start", 6}, {"repeat_start/.CodeWiz./repeat_until", 6}, {"repeat_until", 6}, {"break_statement", 6}, {"return_statement", 6}, {"return_statement/.CodeWiz./module_return_statement", 6}, {"module_return_statement", 6}, {"do_start", 6}, {"do_start/.CodeWiz./do_end", 6}, {"do_end", 6}, {"not", 6}, {"not/.CodeWiz./and", 6}, {"and", 6}, {"and/.CodeWiz./or", 6}, {"or", 6}, {"=", 7}, {"=/.CodeWiz./~=", 7}, {"~=", 7}, {"~=/.CodeWiz./==", 7}, {"==", 7}, {"==/.CodeWiz./<=", 7}, {"<=", 7}, {"<=/.CodeWiz./>=", 7}, {">=", 7}, {">=/.CodeWiz./<", 7}, {"<", 7}, {"</.CodeWiz./>", 7}, {">", 7}, {">/.CodeWiz./+", 7}, {"+", 7}, {"+/.CodeWiz./-", 7}, {"-", 7}, {"-/.CodeWiz./%", 7}, {"%", 7}, {"%/.CodeWiz.//", 7}, {"/", 7}, {"//.CodeWiz.///", 7}, {"//", 7}, {"///.CodeWiz./*", 7}, {"*", 7}, {"*/.CodeWiz./^", 7}, {"^", 7}, {"^/.CodeWiz./&", 7}, {"&", 7}, {"&/.CodeWiz./~", 7}, {"~", 7}, {"~/.CodeWiz./|", 7}, {"|", 7}, {"|/.CodeWiz./>>", 7}, {">>", 7}, {">>/.CodeWiz./<<", 7}, {"<<", 7}, {"<</.CodeWiz./..", 7}, {"..", 7}, {"../.CodeWiz./#", 7}, {"#", 7}, {",", 7}, {",/.CodeWiz./.", 7}, {".", 7}, {"left_paren", 7}, {"left_paren/.CodeWiz./right_paren", 7}, {"right_paren", 7}, {"right_paren/.CodeWiz./[", 7}, {"[", 7}, {"[/.CodeWiz./]", 7}, {"]", 7}, {"]/.CodeWiz./{", 7}, {"{", 7}, {"{/.CodeWiz./}", 7}, {"}", 7}, {"identifier", 3}, {"self", 3}, {"boolean", 8}, {"nil", 3}, {"ellipsis", 3}, {"local", 6}, {"function_call_paren", 7}, {"function_start", 6}, {"function_start/.CodeWiz./function_end", 6}, {"function_end", 6}, {"emmy_type", 4}, {"emmy_literal", 1}, {"emmy_parameter", 4}, {"emmy_parameter/.CodeWiz./identifier", 4}, {"_", 2}, {"emmy_class", 2}, {"emmy_function_parameter/.CodeWiz./_", 4}, {"emmy_note", 2}, {"emmy_see", 2}, {"emmy_return", 2}, {"emmy_header", 2}, {"emmy_ignore", 2}, {"documentation_brief", 2}, {"documentation_command", 2}, {"function_call/.CodeWiz./identifier", 3}, {"identifier/.CodeWiz./function_call_paren", 3}, {"function_call", 5}, {"string_argument", 1}, {"table_argument", 2}, {"table_argument/.CodeWiz./comment", 2}, {"comment", 2}, {"string", 1}, {"number", 8}, {"ERROR", 6}};
@@ -828,14 +860,15 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(hoverAction, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(useVimMode, &QAction::toggled, this, &MainWindow::useVimModesTriggered);
 	connect(useBuiltinTerminal, &QAction::toggled, this, &MainWindow::useBuiltinTerminalTriggered);
-
+	connect(autoAddBrackets, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(autoSaveAct, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(randomSelectFileTypeAct, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(useSpeakerAction, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(useFileTree, &QAction::toggled, this, &MainWindow::fileTreeToggled);
 	connect(useFileTreeIfFullscreen, &QAction::toggled, this, &MainWindow::fileTreeToggled);
-	connect(fileTree, &QTreeView::doubleClicked, this, &MainWindow::fileTreeOpened);
 	
+	connect(fileTree, &QTreeView::doubleClicked, this, &MainWindow::fileTreeOpened);
+
 	connect(groq, &GroqAI::responseReceived, this, [this](const QString &response) {
 		qDebug() << "AI Response:" << response;
 		QTextCursor c = textEdit->textCursor();
@@ -850,7 +883,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	QTimer* autoSaveTimer = new QTimer(this);
 	connect(autoSaveTimer, &QTimer::timeout, this, &MainWindow::autoSave);
 	autoSaveTimer->start(10000);
-	
+
 	// filetree
 
 	fileTree->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -928,14 +961,14 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 void MainWindow::handleTerminalStdout(){
 	QByteArray output = activeTerminal->readAll();
-	qDebug() << "Process Output:" << output;
+	builtinTerminalTextEdit->moveCursor(QTextCursor::End);
 	builtinTerminalTextEdit->insertPlainText(QString::fromLocal8Bit(output));
 	builtinTerminalTextEdit->verticalScrollBar()->setValue(builtinTerminalTextEdit->verticalScrollBar()->maximum());
 }
 
 void MainWindow::useVimModesTriggered(){
 	qDebug() << "useVimModesTriggered";
-	
+
 	if (!useVimMode->isChecked()){
 		currentVimMode = "i";
 		textEdit->setCursorWidth(1);
@@ -945,16 +978,15 @@ void MainWindow::useVimModesTriggered(){
 		int charWidth = metrics.horizontalAdvance("M");
 		textEdit->setCursorWidth(charWidth);
 	}
-	
+
 	vimRepeater = 0;
-	
+
 	saveWantedTheme();
 }
 
-
 void MainWindow::useBuiltinTerminalTriggered(){
 	qDebug() << "useBuiltinTerminalTriggered";
-	
+
 	if (useBuiltinTerminal->isChecked()){
 		builtinTerminalTextEdit->show();
 		terminalInputLine->show();
@@ -962,7 +994,7 @@ void MainWindow::useBuiltinTerminalTriggered(){
 		builtinTerminalTextEdit->hide();
 		terminalInputLine->hide();
 	}
-	
+
 	saveWantedTheme();
 }
 
@@ -977,27 +1009,27 @@ void MainWindow::on_actionDiscard_Local_Changes_triggered(){
 
 	QString filePath = fileModel->filePath(index);
 	qDebug() << filePath;
-	
+
 	QString tmpDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/CodeWizard";
 	QString batFilePath = tmpDirPath + "/run_script.bat";
-	
+
 	QDir tmpDir(tmpDirPath);
 	if (!tmpDir.exists()) {
 		tmpDir.mkpath(tmpDirPath);
 	}
 	qDebug() << batFilePath;
-	
+
 	QFile batFile(batFilePath);
 	if (batFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		QTextStream out(&batFile);
 		out << "cd /d \""+filePath+"\" && git reset --hard && git pull";
 	}
-	
+
 	QStringList arguments;
 	arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
-	
+
 	QProcess *process = new QProcess(this);
-	process->startDetached("cmd.exe", arguments);	
+	process->startDetached("cmd.exe", arguments);
 }
 
 void MainWindow::on_actionRegular_triggered(){
@@ -1011,27 +1043,27 @@ void MainWindow::on_actionRegular_triggered(){
 
 	QString filePath = fileModel->filePath(index);
 	qDebug() << filePath;
-	
+
 	QString tmpDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/CodeWizard";
 	QString batFilePath = tmpDirPath + "/run_script.bat";
-	
+
 	QDir tmpDir(tmpDirPath);
 	if (!tmpDir.exists()) {
 		tmpDir.mkpath(tmpDirPath);
 	}
 	qDebug() << batFilePath;
-	
+
 	QFile batFile(batFilePath);
 	if (batFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		QTextStream out(&batFile);
 		out << "cd /d \""+filePath+"\" && git pull";
 	}
-	
+
 	QStringList arguments;
 	arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
-	
+
 	QProcess *process = new QProcess(this);
-	process->startDetached("cmd.exe", arguments);	
+	process->startDetached("cmd.exe", arguments);
 }
 
 void MainWindow::on_actionPush_triggered(){
@@ -1045,7 +1077,7 @@ void MainWindow::on_actionPush_triggered(){
 
 	QString filePath = fileModel->filePath(index);
 	qDebug() << filePath;
-	
+
 	QInputDialog dialog;
 	dialog.setFont(textEdit->font());
 	dialog.setWindowTitle("Git");
@@ -1060,27 +1092,27 @@ void MainWindow::on_actionPush_triggered(){
 	} else {
 		return;
 	}
-	
+
 	QString tmpDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/CodeWizard";
 	QString batFilePath = tmpDirPath + "/run_script.bat";
-	
+
 	QDir tmpDir(tmpDirPath);
 	if (!tmpDir.exists()) {
 		tmpDir.mkpath(tmpDirPath);
 	}
 	qDebug() << batFilePath;
-	
+
 	QFile batFile(batFilePath);
 	if (batFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		QTextStream out(&batFile);
 		out << "cd /d \""+filePath+"\" && git add --all && git commit -m \""+commitmessage+"\" && git push";
 	}
-	
+
 	QStringList arguments;
 	arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
-	
+
 	QProcess *process = new QProcess(this);
-	process->startDetached("cmd.exe", arguments);	
+	process->startDetached("cmd.exe", arguments);
 }
 
 void MainWindow::on_actionCompare_2_Files_triggered(){
@@ -1233,7 +1265,7 @@ QString MainWindow::changeToTabs(QString text){
 
 void MainWindow::updateMargins(bool force) {
 	qDebug() << "updateMargins - " << force;
-	
+
 	errMenu.reposition();
 
 	QFontMetrics metrics(textEdit->font());
@@ -1658,7 +1690,7 @@ void MainWindow::onContentsChange(int position, int charsRemoved, int charsAdded
 	TSTree* newTree = ts_parser_parse_string(parser, tree, documentText, documentText.size());
 
 	treeParserSyntaxHighlighter.setLanguage(currentLang.name); // we do this because I'm too lazy to do it any other way
-	treeParserSyntaxHighlighter.updateHighlighting(textDocument, position, charsAdded, tree, newTree, charsAdded == textDocument->characterCount());
+	treeParserSyntaxHighlighter.updateHighlighting(textDocument, position, charsAdded+charsRemoved, tree, newTree, charsAdded == textDocument->characterCount());
 
 	tree = newTree;
 
@@ -2339,9 +2371,9 @@ void MainWindow::setupLSP(QString oldFile)
 		errEndC = endC;
 		errEndL = endL;
 		errSeverity = severity;
-		
+
 		errMenu.UpdateErrors(startL, messages, severity);
-		
+
 		highlightDiagnostics(false);
 		isErrorHighlighted = true;
 	});
@@ -2690,7 +2722,6 @@ void MainWindow::on_actionSet_Text_Size_triggered()
 	}
 }
 
-
 void MainWindow::updateFonts()
 {
 	qDebug() << "updateFonts";
@@ -2722,12 +2753,12 @@ void MainWindow::updateFonts()
 	replaceTextEdit->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
 	replaceTextEdit->setMinimumHeight(adjustedHeight);
 	replaceTextEdit->setMaximumHeight(adjustedHeight);
-	
+
 	terminalInputLine->setFont(font);
 	terminalInputLine->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
 	terminalInputLine->setMinimumHeight(adjustedHeight);
 	terminalInputLine->setMaximumHeight(adjustedHeight);
-	
+
 	builtinTerminalTextEdit->setFont(font);
 	builtinTerminalTextEdit->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
 
@@ -2760,6 +2791,7 @@ void MainWindow::updateFonts()
 	menuRun->setFont(font);
 	menuView->setFont(font);
 	menuFonts->setFont(font);
+	menuSubFonts->setFont(font);
 	menuHelp->setFont(font);
 	menuLanguage->setFont(font);
 	menuGit->setFont(font);
@@ -2775,6 +2807,8 @@ void MainWindow::updateFonts()
 	hoverBox->setFont(font);
 
 	fileTree->setFont(font);
+	
+	fontList->setFont(font);
 
 	//I hate this
 
@@ -2789,7 +2823,7 @@ void MainWindow::updateFonts()
 	findTextEdit->setTextCursor(cursor); // Optional: Reset the cursor to the QTextEdit
 
 	updateLineNumbers(globalLineCount);
-	
+
 	errMenu.reposition();
 }
 
@@ -2984,6 +3018,7 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("hoverAction", hoverAction->isChecked());
 	settings.setValue("vimMode", useVimMode->isChecked());
 	settings.setValue("builtinTerminal", useBuiltinTerminal->isChecked());
+	settings.setValue("autoAddBrackets", autoAddBrackets->isChecked());
 	settings.setValue("useFileTree", useFileTree->isChecked());
 	settings.setValue("useFiletreeIfFullscreen",  useFileTreeIfFullscreen->isChecked());
 
@@ -3103,10 +3138,11 @@ bool MainWindow::wantedTheme()
 		hoverAction->setChecked(settings.value("hoverAction", true).toBool());
 		useVimMode->setChecked(settings.value("vimMode", false).toBool());
 		useBuiltinTerminal->setChecked(settings.value("builtinTerminal", false).toBool());
+		autoAddBrackets->setChecked(settings.value("autoAddBrackets", false).toBool());
 		autoSaveAct->setChecked(settings.value("autoSaveAct", true).toBool());
 		useFileTree->setChecked(settings.value("useFileTree", false).toBool());
 		useFileTreeIfFullscreen->setChecked(settings.value("useFileTreeIfFullscreen", true).toBool());
-		
+
 		if (useBuiltinTerminal->isChecked()){
 			builtinTerminalTextEdit->show();
 			terminalInputLine->show();
@@ -3114,7 +3150,7 @@ bool MainWindow::wantedTheme()
 			builtinTerminalTextEdit->hide();
 			terminalInputLine->hide();
 		}
-		
+
 		bool defaultRandomSelect = false;
 		QString name = qgetenv("USER"); // this env is LINUX - might as well right?
 		if (name.isEmpty()){
@@ -3146,7 +3182,7 @@ bool MainWindow::wantedTheme()
 
 void MainWindow::on_actionSet_Font_By_Name_triggered(){
 	// Cascadia Code
-	
+
 	QInputDialog dialog;
 	dialog.setFont(textEdit->font());  // Set the font to match textEdit's font
 	dialog.setWindowTitle("CodeWizard - Font Selection");
@@ -3461,7 +3497,7 @@ void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
 	if (doHighlight){
 		rehighlightFullDoc();
 	}
-	
+
 	errMessages.clear();
 	errStartC.clear();
 	errStartL.clear();
@@ -3608,9 +3644,14 @@ void MainWindow::setLangOffFilename(QString fileName, bool rehigh){
 			}
 		}
 	}
-
-	currentLang = pythonLang;
-	lineEdit->setPlainText(pythonTag);
+	
+	if (isOpeningFile){
+		currentLang = txtLang;
+		lineEdit->setPlainText(txtTag);
+	}else{
+		currentLang = pythonLang;
+		lineEdit->setPlainText(pythonTag);
+	}
 	updateDefaultWordLists();
 }
 
@@ -3764,27 +3805,30 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 	qDebug() << "on_actionRun_Module_F5_triggered";
 
 	on_actionSave_triggered();
-	
+
 	builtinTerminalTextEdit->insertPlainText("\nRequesting process gracefully stop.");
 	activeTerminal->terminate();
-	if (!activeTerminal->waitForFinished(1000)) {
+	if (!activeTerminal->waitForFinished(100)) {
 		builtinTerminalTextEdit->insertPlainText("\nForcing process to terminate.");
 		activeTerminal->kill();
+		activeTerminal->waitForFinished();
 	}
-	
+
 	delete activeTerminal;
-	
+
 	builtinTerminalTextEdit->insertPlainText("\n\nHard Reset CodeWizard Builtin Terminal\n\n");
-	
+
 	activeTerminal = new QProcess(this);
+	activeTerminal->setProcessChannelMode(QProcess::MergedChannels);
 
 	connect(activeTerminal, &QProcess::readyReadStandardOutput, this, &MainWindow::handleTerminalStdout);
-	
+	connect(activeTerminal, &QProcess::readyReadStandardError, this, &MainWindow::handleTerminalStdout);
+
 	QProcess *process;
-	
+
 	if (!useBuiltinTerminal->isChecked()){
 		process = new QProcess(this);
-	
+
 		QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
 						 [process](int exitCode, QProcess::ExitStatus exitStatus) {
 							 process->deleteLater(); // Clean up the process object
@@ -3808,7 +3852,7 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 	// Define the batch file path
 	QString batFilePath = tmpDirPath + "/run_script.bat";
 	qDebug() << batFilePath;
-	
+
 	QString finalRun;
 
 	// Write the command to the .bat file
@@ -3848,17 +3892,17 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 		} else if (currentLang.name == "C"){
 			intermediateTag = cTag;
 		}
-		
+
 		intermediateTag.replace("[filename]", fileNameName).replace("[filenameWoutExt]", fileNameName.split('.')[0]);
 
 		out << "cd /d " << fileDir << "\n";
 		out << intermediateTag;
-		
+
 		finalRun = intermediateTag;
 
 		batFile.close();
 	}
-	
+
 	if (!useBuiltinTerminal->isChecked()){
 		QStringList arguments;
 		arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
@@ -3867,7 +3911,7 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 		QStringList arguments;
 		arguments << "/c" << "start" << "cmd" << "/k";
 		QString moveD = "cd /d "+fileDir+"\n"+finalRun+"\n";
-		
+
 		activeTerminal->start("cmd.exe");
 		activeTerminal->write(moveD.toUtf8());
 	}
@@ -4095,7 +4139,7 @@ void MainWindow::executeNormalAct(QTextCursor::MoveOperation move, QKeyEvent *ke
 	if (vimRepeater == 0){
 		vimRepeater = 1;
 	}
-	
+
 	QTextCursor cursor = textEdit->textCursor();
 	if (key_event->modifiers() && Qt::ShiftModifier){
 		cursor.movePosition(move, QTextCursor::KeepAnchor, vimRepeater);
@@ -4106,6 +4150,66 @@ void MainWindow::executeNormalAct(QTextCursor::MoveOperation move, QKeyEvent *ke
 	vimRepeater = 0;
 }
 
+int MainWindow::findMatchingBracket(int direction){
+	qDebug() << "findMatchingBracket";
+	
+	int seen = 0;
+	QTextCursor cursor = textEdit->textCursor();
+	int initPos = cursor.position();
+	int copyInitPos = cursor.position();
+	
+	QString opening = "{[(<";
+	QString closing = "}])>";
+	
+	if (direction < 0){
+		opening = "}])>";
+		closing = "{[(<";
+	}
+	
+	QString text = textEdit->toPlainText();
+	
+	int textLen = text.length();
+	
+	if (opening.contains(text.at(initPos-1))){
+		initPos = initPos-1;
+	}else{
+		if (!opening.contains(text.at(initPos))){
+			qDebug() << "Couldn't find bracket";
+			return initPos;
+		}
+	}
+	
+	QChar lookingFor = closing.at(opening.indexOf(text.at(initPos)));
+	QChar had = text.at(initPos);
+	
+	int curPos = initPos + direction;
+	
+	qDebug() << "Looking for " << lookingFor << "We have" << had << "CurPos = " << curPos;
+	
+	while (true) {
+		qDebug() << "CurPos = " << curPos << "Text at pos" << text.at(curPos) << seen;
+		
+		if (curPos < 0 || curPos >= textLen){
+			qDebug() << "Broke first";
+			break;
+		}
+		
+		if (had == text.at(curPos)){
+			seen += 1;
+		}else if (lookingFor == text.at(curPos)){
+			if (seen == 0){
+				return curPos;
+			}else{
+				seen -= 1;
+			}
+		}
+		
+		curPos += direction;
+	}
+	
+	return copyInitPos;
+}
+
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
 //	qDebug() << "eventFilter"; - we don't do it for certain functions
@@ -4113,63 +4217,66 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 	if (event->type()==QEvent::WindowStateChange){
 		onWindowStateChanged();
 	}
-	
+
 	if (watched == terminalInputLine) {
 		if (event->type() == QEvent::KeyPress){
 			QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 			QKeySequence key_sequence{static_cast<int>(keyEvent->modifiers()) + keyEvent->key()};
-			
+
 			QTextCursor cursor = terminalInputLine->textCursor();
 			QString selectedText = cursor.selectedText();
-			
+
 			if (key_sequence == QKeySequence("Ctrl+C") && selectedText.isEmpty()){
 				activeTerminal->kill();
-				
+				activeTerminal->waitForFinished();
+
 				activeTerminal = new QProcess(this);
-	
+				activeTerminal->setProcessChannelMode(QProcess::MergedChannels);
+
 				connect(activeTerminal, &QProcess::readyReadStandardOutput, this, &MainWindow::handleTerminalStdout);
-				
+				connect(activeTerminal, &QProcess::readyReadStandardError, this, &MainWindow::handleTerminalStdout);
+
 				QFileInfo fileInfo(fileName);
 				QString fileDir = fileInfo.absolutePath();
 				activeTerminal->setWorkingDirectory(fileDir);
-				
+
 				builtinTerminalTextEdit->insertPlainText("\n\n");
 				activeTerminal->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal.");
-				
+
 				qDebug() << "Sending Ctrl+C -> " << fileDir;
 			}
-			
+
 			if (keyEvent->key() == Qt::Key_Escape){
 				textEdit->setFocus();
 			}if (keyEvent->key() == Qt::Key_Up){
 				indexInSentCommands += 1;
 				QString toset;
-				
+
 				if (indexInSentCommands >= sentCommands.length()){
 					indexInSentCommands = -1;
 					toset = "";
 				}else{
 					toset = sentCommands[indexInSentCommands];
 				}
-				
+
 				terminalInputLine->setText(toset);
 			}if (keyEvent->key() == Qt::Key_Down){
 				indexInSentCommands -= 1;
 				QString toset;
-				
+
 				if (indexInSentCommands < -1){
 					indexInSentCommands = sentCommands.length()-1;
 				}
-				
+
 				if (indexInSentCommands == -1){
 					toset = "";
 				}else{
 					toset = sentCommands[indexInSentCommands];
 				}
-				
+
 				terminalInputLine->setText(toset);
 			}
-			
+
 			if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter){
 				QString lineToSend = terminalInputLine->toPlainText() + "\n";
 				sentCommands.push_front(terminalInputLine->toPlainText());
@@ -4243,16 +4350,16 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		if (isSettingUpLSP || isOpeningFile){
 			return false;
 		}
-		
-		bool isACtrl = key_event->modifiers() & Qt::ControlModifier || key_event->modifiers() & Qt::AltModifier; 
-		
+
+		bool isACtrl = key_event->modifiers() & Qt::ControlModifier || key_event->modifiers() & Qt::AltModifier;
+
 		if (!isACtrl && currentVimMode == "n"){
 			QString keyText = key_event->text();
-			
+
 			if (keyText.length() == 1 && keyText[0].isDigit()){
 				vimRepeater = vimRepeater*10 + keyText[0].digitValue();
 			}
-			
+
 			if (key_event->key() == Qt::Key_I){
 				currentVimMode = "i";
 				textEdit->setCursorWidth(1);
@@ -4271,6 +4378,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				executeNormalAct(QTextCursor::WordLeft, key_event);
 			}else if (key_event->key() == Qt::Key_Return){
 				handleTabs();
+				handleBracketsOnEnter();
 				return false;
 			}else if (key_event->key() == Qt::Key_Backspace || key_event->key() == Qt::Key_Home || key_event->key() == Qt::Key_End || key_event->key() == Qt::Key_PageUp || key_event->key() == Qt::Key_PageDown){
 				return false; // I am electing not to handle these in any special way - also CodeWizard for the win
@@ -4281,11 +4389,49 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				executeNormalAct(QTextCursor::EndOfLine, key_event);
 				QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier, "");
 				QCoreApplication::postEvent(textEdit, event);
+			}else if (key_event->key() == Qt::Key_A){
+				currentVimMode = "i";
+				textEdit->setCursorWidth(1);
+				vimRepeater = 0;
+				executeNormalAct(QTextCursor::EndOfLine, key_event);
+			}else if (key_event->key() == Qt::Key_Dollar || key_event->key() == Qt::Key_4 && key_event->modifiers() & Qt::ShiftModifier){
+				vimRepeater = 0;
+				executeNormalAct(QTextCursor::EndOfLine, new QKeyEvent(QEvent::KeyPress, Qt::Key_unknown, Qt::NoModifier));
+			}else if (key_event->key() == Qt::Key_Less || key_event->key() == Qt::Key_Comma){
+				QTextCursor cursor = textEdit->textCursor();
+				int initLoc = cursor.position();
+				int loc = findMatchingBracket(-1);
+				if (initLoc != loc){
+					cursor.setPosition(loc+1);
+					textEdit->setTextCursor(cursor);
+				}
+			}else if (key_event->key() == Qt::Key_Greater || key_event->key() == Qt::Key_Period){
+				int loc = findMatchingBracket(1);
+				QTextCursor cursor = textEdit->textCursor();
+				cursor.setPosition(loc);
+				textEdit->setTextCursor(cursor);
 			}
-			
+
 			return true; // always handle inputs in normal mode - normal is a strange term for this but whatever - it'll work.
 		}
 		
+		if (isACtrl) {
+			if (key_event->key() == Qt::Key_Less || key_event->key() == Qt::Key_Comma){
+				QTextCursor cursor = textEdit->textCursor();
+				int initLoc = cursor.position();
+				int loc = findMatchingBracket(-1);
+				if (initLoc != loc){
+					cursor.setPosition(loc+1);
+					textEdit->setTextCursor(cursor);
+				}
+			}else if (key_event->key() == Qt::Key_Greater || key_event->key() == Qt::Key_Period){
+				int loc = findMatchingBracket(1);
+				QTextCursor cursor = textEdit->textCursor();
+				cursor.setPosition(loc);
+				textEdit->setTextCursor(cursor);
+			}
+		}
+
 		if (key_sequence == QKeySequence(".")){
 			updateExtraWordsList();
 		}else if (key_sequence == QKeySequence("(")){
@@ -4297,7 +4443,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		}else if (key_sequence == QKeySequence("\t")){
 			updateExtraWordsList();
 		}
-		
+
 		if (client && !noAutocomplete->isChecked() && !onlyCodeWizardBuiltIn->isChecked()) {
 			QString keyStr = key_sequence.toString(QKeySequence::NativeText);
 
@@ -4313,8 +4459,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		}
 
 		if (key_sequence == QKeySequence("Shift+Return")) {
-			QKeyEvent *enterEvent = new QKeyEvent(
-				QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier);
+			QKeyEvent *enterEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier);
 			QApplication::postEvent(textEdit, enterEvent);
 			return true; // Mark as handled
 		}else if (key_sequence == QKeySequence("Alt+3")) {
@@ -4323,6 +4468,11 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		}else if (key_sequence == QKeySequence("Alt+4")) {
 			on_actionUn_Comment_Alt_5_triggered();
 			return true; // Mark as handled
+		}else if (key_event->key() == Qt::Key_ParenLeft || key_event->key() == Qt::Key_BracketLeft || key_event->key() == Qt::Key_Less || key_event->key() == Qt::Key_BraceLeft) {
+			if (autoAddBrackets->isChecked()){
+				updateSyntaxAdd = QString("}])>").at(QString("{[(<").indexOf(key_event->text()));
+				updateSyntaxPosition = textEdit->textCursor().position()+1;
+			}
 		}else if (key_event->key() == Qt::Key_BraceRight && currentLang.closeIndents.contains("}")){
 			removeOneTabAndAddChar("}");
 			return true; // Mark as handled
@@ -4449,6 +4599,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 		if (key_sequence == QKeySequence("Return")) {
 			handleTabs();
+			handleBracketsOnEnter();
 		}
 	}else if (watched == findTextEdit || watched == replaceTextEdit) {
 		if (key_event->key() == Qt::Key_Escape) {
@@ -4877,14 +5028,14 @@ void MainWindow::on_actionIncrement_Ctrl_triggered()
 		rawstart = cursor.selectionStart();
 		rawend = cursor.selectionEnd();
 
-		start = std::min(rawstart, rawend);
-		end = std::max(rawstart, rawend);
+		start = qMin(rawstart, rawend);
+		end = qMax(rawstart, rawend);
 	}else{
 		rawstart = cursor.position();
 		rawend = cursor.position();
 
-		start = std::min(rawstart, rawend);
-		end = std::max(rawstart, rawend);
+		start = qMin(rawstart, rawend);
+		end = qMax(rawstart, rawend);
 	}
 
 	cursor.setPosition(end);
@@ -4938,14 +5089,14 @@ void MainWindow::on_actionDe_Increment_Ctrl_triggered()
 		rawstart = cursor.selectionStart();
 		rawend = cursor.selectionEnd();
 
-		start = std::min(rawstart, rawend);
-		end = std::max(rawstart, rawend);
+		start = qMin(rawstart, rawend);
+		end = qMax(rawstart, rawend);
 	}else{
 		rawstart = cursor.position();
 		rawend = cursor.position();
 
-		start = std::min(rawstart, rawend);
-		end = std::max(rawstart, rawend);
+		start = qMin(rawstart, rawend);
+		end = qMax(rawstart, rawend);
 	}
 
 	cursor.setPosition(end);
@@ -5006,14 +5157,14 @@ void MainWindow::on_actionComment_Ctrl_Alt_triggered()
 		rawstart = cursor.selectionStart();
 		rawend = cursor.selectionEnd();
 
-		start = std::min(rawstart, rawend);
-		end = std::max(rawstart, rawend);
+		start = qMin(rawstart, rawend);
+		end = qMax(rawstart, rawend);
 	}else{
 		rawstart = cursor.position();
 		rawend = cursor.position();
 
-		start = std::min(rawstart, rawend);
-		end = std::max(rawstart, rawend);
+		start = qMin(rawstart, rawend);
+		end = qMax(rawstart, rawend);
 	}
 
 	cursor.setPosition(start);
@@ -5057,14 +5208,14 @@ void MainWindow::on_actionUn_Comment_Alt_5_triggered()
 		rawstart = cursor.selectionStart();
 		rawend = cursor.selectionEnd();
 
-		start = std::min(rawstart, rawend);
-		end = std::max(rawstart, rawend);
+		start = qMin(rawstart, rawend);
+		end = qMax(rawstart, rawend);
 	}else{
 		rawstart = cursor.position();
 		rawend = cursor.position();
 
-		start = std::min(rawstart, rawend);
-		end = std::max(rawstart, rawend);
+		start = qMin(rawstart, rawend);
+		end = qMax(rawstart, rawend);
 	}
 
 	cursor.setPosition(start);
@@ -5459,8 +5610,7 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 				if (!block.isValid()){
 					continue;
 				}
-				
-				
+
 				QTextLayout* layout = block.layout();
 
 				if (!layout) {
@@ -5480,7 +5630,7 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 				qDebug() << "Caught";
 			}
 		}
-		
+
 		errHighlightedBlocks.clear();
 	}else{
 		numberOfBlocksColored = 0;
@@ -5501,8 +5651,14 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 			textEdit->blockSignals(false);
 			return;
 		}
+		
+		int maxErrors = 100;
 
 		for (int i = 0; i < errStartL.size(); ++i) {
+			if (i >= maxErrors){
+				break;
+			}
+			
 			int startLine = errStartL[i];
 			int endLine = errEndL[i];
 			int startC = errStartC[i];
@@ -5533,7 +5689,7 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 				if (!layout) {
 					continue;
 				}
-				
+
 				errHighlightedBlocks.push_back(block);
 
 				int blockLen = block.length();
@@ -5744,6 +5900,23 @@ void MainWindow::handleTabs()
 	}
 }
 
+void MainWindow::handleBracketsOnEnter(){
+	QTextCursor cursor = textEdit->textCursor();
+	cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
+	cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, 2);
+	QString selectedText = cursor.selectedText();
+	if (selectedText == "{}" || selectedText == "()" || selectedText == "[]" || selectedText == "<>"){
+		QString nextLine = updateSyntaxAdd;
+		if (!nextLine.isEmpty() && currentLang.openIndents.contains(selectedText.at(0))){
+			nextLine.remove(0, 1);
+		}else{
+			updateSyntaxAdd += "\t";
+		}
+		updateSyntaxPosition = cursor.position()+updateSyntaxAdd.length();
+		updateSyntaxAdd += "\n"+nextLine;
+	}
+}
+
 void MainWindow::updateSyntax()
 {
 	qDebug() << "updateSyntax";
@@ -5778,6 +5951,12 @@ void MainWindow::updateSyntax()
 		cursor.insertText(updateSyntaxAdd);
 		cursor.endEditBlock();
 		updateSyntaxAdd = "";
+	}
+	
+	if (updateSyntaxPosition != -1){
+		cursor.setPosition(updateSyntaxPosition);
+		updateSyntaxPosition = -1;
+		textEdit->setTextCursor(cursor);
 	}
 
 	int lineCount = textDocument->blockCount();
@@ -5834,11 +6013,11 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		palette = replaceTextEdit->palette();
 		palette.setColor(QPalette::Base, QColor(32, 32, 32));
 		replaceTextEdit->setPalette(palette);
-		
+
 		palette = builtinTerminalTextEdit->palette();
 		palette.setColor(QPalette::Base, QColor(32, 32, 32));
 		builtinTerminalTextEdit->setPalette(palette);
-		
+
 		palette = terminalInputLine->palette();
 		palette.setColor(QPalette::Base, QColor(32, 32, 32));
 		terminalInputLine->setPalette(palette);
@@ -5882,11 +6061,11 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		palette = replaceTextEdit->palette();
 		palette.setColor(QPalette::Base, QColor(245, 245, 245));
 		replaceTextEdit->setPalette(palette);
-		
+
 		palette = builtinTerminalTextEdit->palette();
 		palette.setColor(QPalette::Base, QColor(245, 245, 245));
 		builtinTerminalTextEdit->setPalette(palette);
-		
+
 		palette = terminalInputLine->palette();
 		palette.setColor(QPalette::Base, QColor(245, 245, 245));
 		terminalInputLine->setPalette(palette);
@@ -6009,7 +6188,7 @@ void MainWindow::changeTheme(bool darkMode)
 		lightPalette.setColor(QPalette::ToolTipBase, QColor(201, 201, 201));
 		lightPalette.setColor(QPalette::Light, QColor(255, 255, 255));
 		lightPalette.setColor(QPalette::Dark, QColor(100, 100, 100));
-		
+
 		QString menubarSheet = "QMenuBar {background-color: rgb(30, 30, 30); color: white; }"
 							   "QMenu { background-color: rgb(20, 20, 20); color: white; }"
 							   "QMenu::item:selected { background-color: rgb(45, 45, 45); color: white; }"
@@ -6017,8 +6196,17 @@ void MainWindow::changeTheme(bool darkMode)
 							   "QMenuBar::item { background-color: rgb(30, 30, 30); padding: 2px 4px; border-radius: 4px; margin: 3px 3px 2px 3px; }"
 							   "QMenuBar::item:hover { background-color: rgb(70, 70, 70); }"
 							   "QMenuBar::item:selected { background-color: rgb(70, 70, 70); }";
-		
+
 		ui->menuBar->setStyleSheet(menubarSheet);
+		
+		QString listWidgetSheet = 
+		   "QListWidget{ background-color: rgb(20, 20, 20); color: white; }"
+		   "QListWidget::item:selected { background-color: rgb(45, 45, 45); color: white; }"
+		   "QListWidget::separator {height: 1px;background-color: rgb(255, 255, 255); margin: 2px 4px;}"
+		   "QListWidget::item { background-color: rgb(30, 30, 30); padding: 2px 2px; border-radius: 4px; margin: 3px 3px 2px 3px; }"
+		   "QListWidget::item:hover { background-color: rgb(70, 70, 70); }";
+		
+		fontList->setStyleSheet(listWidgetSheet);
 
 		QList<QMenu*> menus = ui->menuBar->findChildren<QMenu*>();
 
@@ -6062,7 +6250,17 @@ void MainWindow::changeTheme(bool darkMode)
 								"QMenuBar::item { background-color: rgb(251, 251, 251); padding: 2px 4px; border-radius: 4px; margin: 3px 3px 2px 3px; }"
 								"QMenuBar::item:hover { background-color: rgb(200, 200, 200); }"
 								"QMenuBar::item:selected { background-color: rgb(200, 200, 200); }";
+		
 		ui->menuBar->setStyleSheet(menubarSheet);
+
+		QString listWidgetSheet = 
+								"QListWidget{ background-color: rgb(251, 251, 251); color: black; }"
+								"QListWidget::item:selected { background-color: rgb(150, 150, 150); color: black; }"
+								"QListWidget::separator {height: 1px; background-color: rgb(0, 0, 0); margin: 2px 4px;}"
+								"QListWidget::item { background-color: rgb(251, 251, 251); padding: 2px 2px; border-radius: 4px; margin: 3px 3px 2px 3px; }"
+								"QListWidget::item:hover { background-color: rgb(200, 200, 200); }";
+		
+		fontList->setStyleSheet(listWidgetSheet);
 
 		QList<QMenu*> menus = ui->menuBar->findChildren<QMenu*>();
 		for (QMenu* menu : menus) {
@@ -6178,8 +6376,8 @@ void MainWindow::on_actionRunning_Files_triggered(){
 
 void MainWindow::on_actionVim_Modes_triggered(){
 	qDebug() << "on_actionVim_Modes_triggered";
-	
-	openHelpMenu("Vim Modes\n\nAs of CodeWizard V8.9.0 we now support a modified set of the vim actions. Namely, when enabled, CodeWizard has a 'Normal' mode and an 'Insert' mode.\nIn normal mode there are a set of commands which work - which will be listed below. In insert mode, all keys are the same as regular (unless you press escape under the right circumstances to enter normal mode.)\n\nHere is the list of shortcuts which work in normal mode:\n    1. H - Moves left\n    2. J - Moves Down\n    3. K - Moves Up\n    4. L - Moves Right\n    5. W - Equivalent to Ctrl+Left\n    6. E - Equivalent to Ctrl+Right\n    7. All commands containing 'Ctrl' - Normal\n    8. All commands containing 'Alt' - Normal\n    9. Return/Enter/Backspace - Normal\n    10. PageDown, PageUp, Home, End - Normal");
+
+	openHelpMenu("Vim Modes\n\nAs of CodeWizard V8.9.0 we now support a modified set of the vim actions. Namely, when enabled, CodeWizard has a 'Normal' mode and an 'Insert' mode.\nIn normal mode there are a set of commands which work - which will be listed below. In insert mode, all keys are the same as regular (unless you press escape under the right circumstances to enter normal mode.)\n\nHere is the list of shortcuts which work in normal mode:\n    1. H - Moves left\n    2. J - Moves Down\n    3. K - Moves Up\n    4. L - Moves Right\n    5. W - Equivalent to Ctrl+Left\n    6. E - Equivalent to Ctrl+Right\n    7. All commands containing 'Ctrl' - Normal\n    8. All commands containing 'Alt' - Normal\n    9. Return/Enter/Backspace - Normal\n    10. PageDown, PageUp, Home, End - Normal\n    11. Comma/Less Than (<) - Jumps to corresponding previous bracket to the left\n    12. Period/Greater Than (>) - Jumps to corresponding previous bracket to the right\n    13. $ - Jumps to end of line\n    14. A - Jumps to end of line and enters insert mode\n    15. O - Inserts line below current line and enters insert mode");
 }
 
 void MainWindow::on_actionThe_Fix_It_Button_triggered(){
@@ -6248,7 +6446,9 @@ void MainWindow::on_actionKeybindings_triggered(){
   Alt+3 ----- Comment out section\n\
   Alt+4 ----- De-comment out section\n\
   Alt+A ----- Activate AI suggestion\n\
-  F5 -------- Run code");
+  F5 -------- Run code\n\
+  Ctrl+, ---- Jumps to left corresponding bracket\n\
+  Ctrl+. ---- Jumps to right corresponding bracket");
 }
 
 void MainWindow::openHelpMenu(QString text) {

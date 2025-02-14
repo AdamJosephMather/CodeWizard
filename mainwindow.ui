@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>702</width>
+    <width>1130</width>
     <height>786</height>
    </rect>
   </property>
@@ -299,7 +299,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>702</width>
+     <width>1130</width>
      <height>21</height>
     </rect>
    </property>
@@ -377,6 +377,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="menuSilly"/>
     <addaction name="separator"/>
     <addaction name="actionUse_Vim_Modes"/>
+    <addaction name="actionAuto_Add_Brackets"/>
    </widget>
    <widget class="QMenu" name="menuFixit">
     <property name="title">
@@ -1031,6 +1032,14 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </property>
    <property name="text">
     <string>Use Builtin Terminal (Ctrl+T)</string>
+   </property>
+  </action>
+  <action name="actionAuto_Add_Brackets">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Auto Add Brackets</string>
    </property>
   </action>
  </widget>

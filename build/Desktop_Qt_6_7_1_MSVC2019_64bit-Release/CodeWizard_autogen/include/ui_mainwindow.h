@@ -19,6 +19,7 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -127,7 +128,8 @@ public:
     QAction *actionSet_Font_By_Name;
     QAction *actionUse_Vim_Modes;
     QAction *actionVim_Modes;
-    QAction *actionTesting;
+    QAction *actionUse_Builtin_Terminal;
+    QAction *actionAuto_Add_Brackets;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
@@ -135,6 +137,9 @@ public:
     QTreeView *treeView;
     MyTextEdit *textEdit_4;
     MyTextEdit *textEdit;
+    QVBoxLayout *verticalLayout_5;
+    QTextEdit *textEdit_6;
+    MyTextEdit *textEdit_7;
     QHBoxLayout *findLayout;
     QVBoxLayout *verticalLayout_4;
     MyTextEdit *textEdit_2;
@@ -168,7 +173,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(702, 786);
+        MainWindow->resize(1130, 786);
         actionOpen = new QAction(MainWindow);
         actionOpen->setObjectName("actionOpen");
         actionSave = new QAction(MainWindow);
@@ -381,8 +386,12 @@ public:
         actionUse_Vim_Modes->setCheckable(true);
         actionVim_Modes = new QAction(MainWindow);
         actionVim_Modes->setObjectName("actionVim_Modes");
-        actionTesting = new QAction(MainWindow);
-        actionTesting->setObjectName("actionTesting");
+        actionUse_Builtin_Terminal = new QAction(MainWindow);
+        actionUse_Builtin_Terminal->setObjectName("actionUse_Builtin_Terminal");
+        actionUse_Builtin_Terminal->setCheckable(true);
+        actionAuto_Add_Brackets = new QAction(MainWindow);
+        actionAuto_Add_Brackets->setObjectName("actionAuto_Add_Brackets");
+        actionAuto_Add_Brackets->setCheckable(true);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         QSizePolicy sizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::Minimum);
@@ -433,6 +442,32 @@ public:
 
         horizontalLayout_3->addWidget(textEdit);
 
+        verticalLayout_5 = new QVBoxLayout();
+        verticalLayout_5->setObjectName("verticalLayout_5");
+        textEdit_6 = new QTextEdit(centralwidget);
+        textEdit_6->setObjectName("textEdit_6");
+        sizePolicy1.setHeightForWidth(textEdit_6->sizePolicy().hasHeightForWidth());
+        textEdit_6->setSizePolicy(sizePolicy1);
+        textEdit_6->setMinimumSize(QSize(500, 0));
+        textEdit_6->setMaximumSize(QSize(500, 16777215));
+
+        verticalLayout_5->addWidget(textEdit_6);
+
+        textEdit_7 = new MyTextEdit(centralwidget);
+        textEdit_7->setObjectName("textEdit_7");
+        QSizePolicy sizePolicy3(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(textEdit_7->sizePolicy().hasHeightForWidth());
+        textEdit_7->setSizePolicy(sizePolicy3);
+        textEdit_7->setMinimumSize(QSize(500, 28));
+        textEdit_7->setMaximumSize(QSize(500, 28));
+
+        verticalLayout_5->addWidget(textEdit_7);
+
+
+        horizontalLayout_3->addLayout(verticalLayout_5);
+
 
         verticalLayout->addLayout(horizontalLayout_3);
 
@@ -445,11 +480,11 @@ public:
         verticalLayout_4->setObjectName("verticalLayout_4");
         textEdit_2 = new MyTextEdit(centralwidget);
         textEdit_2->setObjectName("textEdit_2");
-        QSizePolicy sizePolicy3(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Fixed);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(textEdit_2->sizePolicy().hasHeightForWidth());
-        textEdit_2->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy4(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Fixed);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(textEdit_2->sizePolicy().hasHeightForWidth());
+        textEdit_2->setSizePolicy(sizePolicy4);
         textEdit_2->setMinimumSize(QSize(0, 28));
         textEdit_2->setMaximumSize(QSize(16777215, 28));
 
@@ -457,8 +492,8 @@ public:
 
         textEdit_3 = new MyTextEdit(centralwidget);
         textEdit_3->setObjectName("textEdit_3");
-        sizePolicy3.setHeightForWidth(textEdit_3->sizePolicy().hasHeightForWidth());
-        textEdit_3->setSizePolicy(sizePolicy3);
+        sizePolicy4.setHeightForWidth(textEdit_3->sizePolicy().hasHeightForWidth());
+        textEdit_3->setSizePolicy(sizePolicy4);
         textEdit_3->setMinimumSize(QSize(0, 28));
         textEdit_3->setMaximumSize(QSize(16777215, 28));
 
@@ -517,7 +552,7 @@ public:
         MainWindow->setStatusBar(statusbar);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName("menuBar");
-        menuBar->setGeometry(QRect(0, 0, 702, 21));
+        menuBar->setGeometry(QRect(0, 0, 1130, 21));
         sizePolicy2.setHeightForWidth(menuBar->sizePolicy().hasHeightForWidth());
         menuBar->setSizePolicy(sizePolicy2);
         menuOp1 = new QMenu(menuBar);
@@ -589,6 +624,7 @@ public:
         menuEdit->addAction(menuSilly->menuAction());
         menuEdit->addSeparator();
         menuEdit->addAction(actionUse_Vim_Modes);
+        menuEdit->addAction(actionAuto_Add_Brackets);
         menuFonts->addAction(actionCourier_New_2);
         menuFonts->addAction(actionCourier_Prime_2);
         menuFonts->addAction(actionDroidSansMono_2);
@@ -613,6 +649,8 @@ public:
         menuView->addAction(actionSet_Syntax_Colors);
         menuView->addSeparator();
         menuView->addAction(actionOpen_Find_Menu);
+        menuView->addSeparator();
+        menuView->addAction(actionUse_Builtin_Terminal);
         menuHelp->addAction(actionCodeWizard);
         menuHelp->addAction(actionRunning_Files);
         menuHelp->addAction(actionThe_Fix_It_Button);
@@ -759,7 +797,8 @@ public:
         actionSet_Font_By_Name->setText(QCoreApplication::translate("MainWindow", "Set Font By Name", nullptr));
         actionUse_Vim_Modes->setText(QCoreApplication::translate("MainWindow", "Use Vim Modes", nullptr));
         actionVim_Modes->setText(QCoreApplication::translate("MainWindow", "Vim Modes", nullptr));
-        actionTesting->setText(QCoreApplication::translate("MainWindow", "Testing", nullptr));
+        actionUse_Builtin_Terminal->setText(QCoreApplication::translate("MainWindow", "Use Builtin Terminal (Ctrl+T)", nullptr));
+        actionAuto_Add_Brackets->setText(QCoreApplication::translate("MainWindow", "Auto Add Brackets", nullptr));
         textEdit_4->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

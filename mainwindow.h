@@ -25,6 +25,8 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	int findMatchingBracket(int direction);
+	void handleBracketsOnEnter();
 	void handleTerminalStdout();
 	void useBuiltinTerminalTriggered();
 	void on_actionVim_Modes_triggered();

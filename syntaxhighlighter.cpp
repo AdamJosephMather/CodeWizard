@@ -368,5 +368,7 @@ QTextCharFormat SyntaxHighlighter::getFormatForType(const QString& lotsOinfo) {
 		return formats[it3->second];  // Access the value of the iterator (which is the key for formats)
 	}
 	
+	qDebug() << "Unknown type " << parentAndType;
+	
 	return QTextCharFormat();  // Return a default QTextCharFormat if not found
 }
