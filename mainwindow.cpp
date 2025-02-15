@@ -5435,6 +5435,11 @@ void MainWindow::on_actionUn_Comment_Alt_5_triggered()
 
 			if (cursor.selectedText() == currentLang.comments[0]) {
 				cursor.removeSelectedText();
+				cursor.clearSelection();
+				cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+				if (cursor.selectedText() == " "){
+					cursor.removeSelectedText();
+				}
 			}
 			break;
 		}
@@ -5454,6 +5459,11 @@ void MainWindow::on_actionUn_Comment_Alt_5_triggered()
 
 		if (cursor.selectedText() == currentLang.comments[0]) {
 			cursor.removeSelectedText();
+			cursor.clearSelection();
+			cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+			if (cursor.selectedText() == " "){
+				cursor.removeSelectedText();
+			}
 		}else{
 			for (int i = 0; i < currentLang.comments[0].length(); i++){
 				cursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
