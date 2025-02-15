@@ -47,7 +47,6 @@ extern "C" {
 	TSLanguage* tree_sitter_go(void);
 }
 
-int numberOfBlocksColored = 0;
 QList<QLineEdit*> hexColorsList;
 
 bool isErrorHighlighted = false;
@@ -342,7 +341,7 @@ bool handlingReopen = false;
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
 	qDebug() << "MainWindow";
-
+	
 	ui->setupUi(this);
 
 	diffAlgo = new Myers();
@@ -415,7 +414,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	}
 	
 	connect(fontList, &QListWidget::itemClicked, this, [this](QListWidgetItem *item) {
-		qDebug() << "Selected font:" << item->text();
+		qDebug() << "fontListItemClicked";
 		currentFont = item->text();
 		updateFontSelection();
 	});
@@ -423,8 +422,6 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	QWidgetAction *fontAction = new QWidgetAction(this);
 	fontAction->setDefaultWidget(fontList);
 	menuSubFonts->addAction(fontAction);
-	
-	qDebug() << fontFamilies;
 	
 	useFileTree = ui->actionUse_File_Tree;
 	useFileTreeIfFullscreen = ui->actionUse_File_Tree_If_Fullscreen;
@@ -884,7 +881,6 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(fileTree, &QTreeView::doubleClicked, this, &MainWindow::fileTreeOpened);
 
 	connect(groq, &GroqAI::responseReceived, this, [this](const QString &response) {
-		qDebug() << "AI Response:" << response;
 		QTextCursor c = textEdit->textCursor();
 		c.insertText(changeToTabs(response));
 		textEdit->setTextCursor(c);
@@ -1107,7 +1103,6 @@ void MainWindow::on_actionDiscard_Local_Changes_triggered(){
 	}
 
 	QString filePath = fileModel->filePath(index);
-	qDebug() << filePath;
 
 	QString tmpDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/CodeWizard";
 	QString batFilePath = tmpDirPath + "/run_script.bat";
@@ -1116,7 +1111,6 @@ void MainWindow::on_actionDiscard_Local_Changes_triggered(){
 	if (!tmpDir.exists()) {
 		tmpDir.mkpath(tmpDirPath);
 	}
-	qDebug() << batFilePath;
 
 	QFile batFile(batFilePath);
 	if (batFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -1175,7 +1169,6 @@ void MainWindow::on_actionPush_triggered(){
 	}
 
 	QString filePath = fileModel->filePath(index);
-	qDebug() << filePath;
 
 	QInputDialog dialog;
 	dialog.setFont(textEdit->font());
@@ -1199,7 +1192,6 @@ void MainWindow::on_actionPush_triggered(){
 	if (!tmpDir.exists()) {
 		tmpDir.mkpath(tmpDirPath);
 	}
-	qDebug() << batFilePath;
 
 	QFile batFile(batFilePath);
 	if (batFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -1503,8 +1495,6 @@ void MainWindow::loadSyntaxColorsFromFile(){
 	QString fileContents = in.readAll();
 	file.close();
 
-	qDebug() << "Got: " << fileContents;
-
 	QString expectedHeader = "CodeWizard - SyntaxColors\n\n";
 
 	if (!fileContents.startsWith(expectedHeader)){
@@ -1517,11 +1507,7 @@ void MainWindow::loadSyntaxColorsFromFile(){
 
 	QString content = fileContents.mid(expectedHeader.length(), fileContents.length()-expectedHeader.length());
 
-	qDebug() << "Content: " << content;
-
 	QStringList hex = content.split(",");
-
-	qDebug() << "Hex: " << hex;
 
 	if (hex.length() != 8){
 		openHelpMenu("File does not match specification.");
@@ -1657,8 +1643,6 @@ void MainWindow::setFormatsFromMyList(QString str){
 		QStringList nums = color.split(",");
 		QTextCharFormat form = QTextCharFormat();
 		QColor col(nums[0].toInt(), nums[1].toInt(), nums[2].toInt());
-
-		qDebug() << i << defaultNums[i] << color << darkmode;
 
 		form.setForeground(col);
 		coloredFormats.append(form);
@@ -1800,7 +1784,7 @@ void MainWindow::onContentsChange(int position, int charsRemoved, int charsAdded
 void MainWindow::printTree(TSNode node, int depth) {
 	// Indent based on depth
 	QString indent = QString(depth * 2, ' ');
-	qDebug() << indent << ts_node_type(node); // DON'T REMOVE THIS ADAM (from you friendly neighborhood adam)
+	qDebug() << indent << ts_node_type(node); // DON'T REMOVE THIS ADAM (from your friendly neighborhood adam)
 
 	// Get the node type and text range
 	const char* nodeType = ts_node_type(node);
@@ -2027,9 +2011,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 			return;
 		}
 
-		bool ret = checkForLargeFile(&file);
-
-		if (!ret){
+		if (!checkForLargeFile(&file)){
 			isOpeningFile = false;
 			return;
 		}
@@ -3163,19 +3145,35 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("codewizard_version", versionNumber);
 }
 
-int MainWindow::convertTheVersionNumber(QString vnum){
-	if (vnum == ""){
-		vnum = versionNumber;
+int MainWindow::compareVersionNumbers(QString vnum1, QString vnum2){
+	if (vnum1 == ""){vnum1 = versionNumber;}
+	if (vnum2 == ""){vnum2 = versionNumber;}
+
+	if (vnum1 == "prior 6.0.0"){vnum1 = "5.9.9";}
+	if (vnum2 == "prior 6.0.0"){vnum1 = "5.9.9";}
+
+	QStringList nums1 = vnum1.split(".");
+	QStringList nums2 = vnum2.split(".");
+	
+	if (nums1.length() != nums2.length()){
+		if (nums1.length() > nums2.length()){ // we assume that if one version number has more identifiers, that it is greater than the other.
+			return 1;
+		}
+		return -1; // otherwise the other must be longer - therfore the equality is less than
 	}
-
-	if (vnum == "prior 6.0.0"){
-		vnum = "5.9.9";
+	
+	for (int i = 0; i < nums1.length(); i++){
+		int n1 = nums1[i].toInt();
+		int n2 = nums2[i].toInt();
+		
+		if (n1 > n2){
+			return 1;
+		}else if (n1 < n2){
+			return -1;
+		}
 	}
-
-	vnum = vnum.replace(".", "");
-	int intVersion = vnum.toInt();
-
-	return intVersion;
+	
+	return 0;
 }
 
 bool MainWindow::wantedTheme()
@@ -3186,10 +3184,10 @@ bool MainWindow::wantedTheme()
 	bool exists = settings.value("variablesSet", false).toBool();
 
 	if (exists){
-		int vnum = convertTheVersionNumber(settings.value("codewizard_version", "prior 6.0.0").toString());
-		qDebug() << vnum;
+		QString existingVersion = settings.value("codewizard_version", "prior 6.0.0").toString();
+		qDebug() << existingVersion;
 
-		if (vnum > 599){ // prior 6.0.0
+		if (compareVersionNumbers(existingVersion, "5.9.9") > 0){ // more than v599
 			pythonTag = settings.value("pythonTag", defPythonTag).toString();
 			rustTag = settings.value("rustTag", defRustTag).toString();
 			WGSLTag = settings.value("WGSLTag", defWGSLTag).toString();
@@ -3205,7 +3203,7 @@ bool MainWindow::wantedTheme()
 			javaTag = settings.value("javaTag", defJavaTag).toString();
 			cTag = settings.value("cTag", defCTag).toString();
 		}
-		if (vnum < 863){
+		if (compareVersionNumbers(existingVersion, "8.6.3") < 0){ // less than v863
 			CppTag = defCppTag;
 			cTag = defCTag;
 		}
@@ -5740,11 +5738,6 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 	if (reverseTheProcess){
 		isErrorHighlighted = false;
 
-		if (numberOfBlocksColored == 0){
-			textEdit->blockSignals(false);
-			return;
-		}
-
 		// Only clear blocks that were highlighted
 		QTextBlock block = textDocument->begin();
 		for (QTextBlock block : errHighlightedBlocks) {
@@ -5775,8 +5768,6 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 
 		errHighlightedBlocks.clear();
 	}else{
-		numberOfBlocksColored = 0;
-
 		QList<int> allowedSeverities;
 		if (showErrors->isChecked()){
 			allowedSeverities.append(1);
@@ -5794,7 +5785,7 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 			return;
 		}
 		
-		int maxErrors = 100;
+		int maxErrors = 40;
 
 		for (int i = 0; i < errStartL.size(); ++i) {
 			if (i >= maxErrors){
@@ -5860,7 +5851,6 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 				formats.append(range);
 				layout->setFormats(formats);
 				textDocument->markContentsDirty(blockPos, blockLen);
-				numberOfBlocksColored += 1;
 
 				if (currentLine != endLine){
 					block = block.next();

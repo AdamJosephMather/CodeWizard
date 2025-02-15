@@ -53,7 +53,7 @@ private slots:
 	void clearTSSyntaxHighlighting();
 	void changeFindSectionVisibility(bool visible);
 	void checkForFixitDialogue();
-	int convertTheVersionNumber(QString vnum);
+	int compareVersionNumbers(QString vnum1, QString vnum2);
 	void gotoDefinitionReceived(int line, int character, QString uri);
 	void rehighlightFullDoc();
 	void changeOnlyEditsTheme(bool);
