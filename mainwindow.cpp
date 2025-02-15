@@ -4255,7 +4255,6 @@ int MainWindow::findMatchingBracket(int direction){
 		initPos = initPos-1;
 	}else{
 		if (!opening.contains(text.at(initPos))){
-			qDebug() << "Couldn't find bracket";
 			return initPos;
 		}
 	}
@@ -4265,13 +4264,8 @@ int MainWindow::findMatchingBracket(int direction){
 	
 	int curPos = initPos + direction;
 	
-	qDebug() << "Looking for " << lookingFor << "We have" << had << "CurPos = " << curPos;
-	
 	while (true) {
-		qDebug() << "CurPos = " << curPos << "Text at pos" << text.at(curPos) << seen;
-		
 		if (curPos < 0 || curPos >= textLen){
-			qDebug() << "Broke first";
 			break;
 		}
 		
