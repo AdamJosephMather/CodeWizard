@@ -81,7 +81,9 @@ MyTextEdit *lineNumberTextEdit;
 QTextEdit *findTextEdit;
 QTextEdit *replaceTextEdit;
 QTextEdit *builtinTerminalTextEdit;
+QTextEdit *builtinTerminalTextEditHORZ;
 MyTextEdit *terminalInputLine;
+MyTextEdit *terminalInputLineHORZ;
 
 QColor recColor = QColor(255, 70, 0);
 QColor c1 = QColor(217, 159, 0);
@@ -302,6 +304,7 @@ QAction* noAutocomplete;
 QAction* hoverAction;
 QAction* useVimMode;
 QAction* useBuiltinTerminal;
+QAction* preferHorizontalTerminal;
 QAction* autoAddBrackets;
 
 QString inputLineToTerminal;
@@ -356,11 +359,15 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	findTextEdit = ui->textEdit_2;
 	replaceTextEdit = ui->textEdit_3;
 	builtinTerminalTextEdit = ui->textEdit_6;
+	builtinTerminalTextEditHORZ = ui->textEdit_8;
 	terminalInputLine = ui->textEdit_7;
+	terminalInputLineHORZ = ui->textEdit_9;
 	findTextEdit->setAcceptRichText(false);
 	replaceTextEdit->setAcceptRichText(false);
 	terminalInputLine->setAcceptRichText(false);
 	builtinTerminalTextEdit->setReadOnly(true);
+	terminalInputLineHORZ->setAcceptRichText(false);
+	builtinTerminalTextEditHORZ->setReadOnly(true);
 
 	activeTerminal = new QProcess(this);
 	activeTerminal->setProcessChannelMode(QProcess::MergedChannels);
@@ -429,6 +436,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	hoverAction = ui->actionHover;
 	useVimMode = ui->actionUse_Vim_Modes;
 	useBuiltinTerminal = ui->actionUse_Builtin_Terminal;
+	preferHorizontalTerminal = ui->actionPrefer_Horizontal_Terminal;
 	autoAddBrackets = ui->actionAuto_Add_Brackets;
 
 	autoSaveAct = ui->actionAuto_Save;
@@ -773,6 +781,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	replaceTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	lineEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	terminalInputLine->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	terminalInputLineHORZ->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 	connect(textEdit->verticalScrollBar(), &QScrollBar::valueChanged,
 			this, &MainWindow::updateScrollBarValue);
@@ -784,7 +793,9 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	findTextEdit->installEventFilter(this);
 	replaceTextEdit->installEventFilter(this);
 	builtinTerminalTextEdit->installEventFilter(this);
+	builtinTerminalTextEditHORZ->installEventFilter(this);
 	terminalInputLine->installEventFilter(this);
+	terminalInputLineHORZ->installEventFilter(this);
 	this->installEventFilter(this); // for the fullscreen
 
 	darkmode = thm;
@@ -860,6 +871,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(hoverAction, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(useVimMode, &QAction::toggled, this, &MainWindow::useVimModesTriggered);
 	connect(useBuiltinTerminal, &QAction::toggled, this, &MainWindow::useBuiltinTerminalTriggered);
+	connect(preferHorizontalTerminal, &QAction::toggled, this, &MainWindow::switchTerminalType);
 	connect(autoAddBrackets, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(autoSaveAct, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(randomSelectFileTypeAct, &QAction::toggled, this, &MainWindow::saveWantedTheme);
@@ -964,6 +976,10 @@ void MainWindow::handleTerminalStdout(){
 	builtinTerminalTextEdit->moveCursor(QTextCursor::End);
 	builtinTerminalTextEdit->insertPlainText(QString::fromLocal8Bit(output));
 	builtinTerminalTextEdit->verticalScrollBar()->setValue(builtinTerminalTextEdit->verticalScrollBar()->maximum());
+	
+	builtinTerminalTextEditHORZ->moveCursor(QTextCursor::End);
+	builtinTerminalTextEditHORZ->insertPlainText(QString::fromLocal8Bit(output));
+	builtinTerminalTextEditHORZ->verticalScrollBar()->setValue(builtinTerminalTextEditHORZ->verticalScrollBar()->maximum());
 }
 
 void MainWindow::useVimModesTriggered(){
@@ -984,15 +1000,51 @@ void MainWindow::useVimModesTriggered(){
 	saveWantedTheme();
 }
 
+void MainWindow::switchTerminalType(){
+	qDebug() << "switchTerminalType";
+	
+	if (useBuiltinTerminal->isChecked()){
+		if (preferHorizontalTerminal->isChecked()){
+			builtinTerminalTextEditHORZ->show();
+			terminalInputLineHORZ->show();
+			builtinTerminalTextEdit->hide();
+			terminalInputLine->hide();
+		}else{
+			builtinTerminalTextEditHORZ->hide();
+			terminalInputLineHORZ->hide();
+			builtinTerminalTextEdit->show();
+			terminalInputLine->show();
+		}
+	}else{
+		builtinTerminalTextEdit->hide();
+		builtinTerminalTextEditHORZ->hide();
+		terminalInputLine->hide();
+		terminalInputLineHORZ->hide();
+	}
+	
+	saveWantedTheme();
+}
+
 void MainWindow::useBuiltinTerminalTriggered(){
 	qDebug() << "useBuiltinTerminalTriggered";
 
 	if (useBuiltinTerminal->isChecked()){
-		builtinTerminalTextEdit->show();
-		terminalInputLine->show();
+		if (preferHorizontalTerminal->isChecked()){
+			builtinTerminalTextEditHORZ->show();
+			terminalInputLineHORZ->show();
+			builtinTerminalTextEdit->hide();
+			terminalInputLine->hide();
+		}else{
+			builtinTerminalTextEditHORZ->hide();
+			terminalInputLineHORZ->hide();
+			builtinTerminalTextEdit->show();
+			terminalInputLine->show();
+		}
 	}else{
 		builtinTerminalTextEdit->hide();
+		builtinTerminalTextEditHORZ->hide();
 		terminalInputLine->hide();
+		terminalInputLineHORZ->hide();
 	}
 
 	saveWantedTheme();
@@ -2758,9 +2810,17 @@ void MainWindow::updateFonts()
 	terminalInputLine->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
 	terminalInputLine->setMinimumHeight(adjustedHeight);
 	terminalInputLine->setMaximumHeight(adjustedHeight);
+	
+	terminalInputLineHORZ->setFont(font);
+	terminalInputLineHORZ->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
+	terminalInputLineHORZ->setMinimumHeight(adjustedHeight);
+	terminalInputLineHORZ->setMaximumHeight(adjustedHeight);
 
 	builtinTerminalTextEdit->setFont(font);
 	builtinTerminalTextEdit->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
+	
+	builtinTerminalTextEditHORZ->setFont(font);
+	builtinTerminalTextEditHORZ->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
 
 	fileTreeContextMenu->setFont(font);
 
@@ -3018,6 +3078,7 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("hoverAction", hoverAction->isChecked());
 	settings.setValue("vimMode", useVimMode->isChecked());
 	settings.setValue("builtinTerminal", useBuiltinTerminal->isChecked());
+	settings.setValue("preferHorizontalTerminal", preferHorizontalTerminal->isChecked());
 	settings.setValue("autoAddBrackets", autoAddBrackets->isChecked());
 	settings.setValue("useFileTree", useFileTree->isChecked());
 	settings.setValue("useFiletreeIfFullscreen",  useFileTreeIfFullscreen->isChecked());
@@ -3138,17 +3199,29 @@ bool MainWindow::wantedTheme()
 		hoverAction->setChecked(settings.value("hoverAction", true).toBool());
 		useVimMode->setChecked(settings.value("vimMode", false).toBool());
 		useBuiltinTerminal->setChecked(settings.value("builtinTerminal", false).toBool());
+		preferHorizontalTerminal->setChecked(settings.value("preferHorizontalTerminal", false).toBool());
 		autoAddBrackets->setChecked(settings.value("autoAddBrackets", false).toBool());
 		autoSaveAct->setChecked(settings.value("autoSaveAct", true).toBool());
 		useFileTree->setChecked(settings.value("useFileTree", false).toBool());
 		useFileTreeIfFullscreen->setChecked(settings.value("useFileTreeIfFullscreen", true).toBool());
 
 		if (useBuiltinTerminal->isChecked()){
-			builtinTerminalTextEdit->show();
-			terminalInputLine->show();
+			if (preferHorizontalTerminal->isChecked()){
+				builtinTerminalTextEditHORZ->show();
+				terminalInputLineHORZ->show();
+				builtinTerminalTextEdit->hide();
+				terminalInputLine->hide();
+			}else{
+				builtinTerminalTextEditHORZ->hide();
+				terminalInputLineHORZ->hide();
+				builtinTerminalTextEdit->show();
+				terminalInputLine->show();
+			}
 		}else{
 			builtinTerminalTextEdit->hide();
+			builtinTerminalTextEditHORZ->hide();
 			terminalInputLine->hide();
+			terminalInputLineHORZ->hide();
 		}
 
 		bool defaultRandomSelect = false;
@@ -3807,9 +3880,12 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 	on_actionSave_triggered();
 
 	builtinTerminalTextEdit->insertPlainText("\nRequesting process gracefully stop.");
+	builtinTerminalTextEditHORZ->insertPlainText("\nRequesting process gracefully stop.");
+	
 	activeTerminal->terminate();
 	if (!activeTerminal->waitForFinished(100)) {
 		builtinTerminalTextEdit->insertPlainText("\nForcing process to terminate.");
+		builtinTerminalTextEditHORZ->insertPlainText("\nForcing process to terminate.");
 		activeTerminal->kill();
 		activeTerminal->waitForFinished();
 	}
@@ -3817,7 +3893,8 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 	delete activeTerminal;
 
 	builtinTerminalTextEdit->insertPlainText("\n\nHard Reset CodeWizard Builtin Terminal\n\n");
-
+	builtinTerminalTextEditHORZ->insertPlainText("\n\nHard Reset CodeWizard Builtin Terminal\n\n");
+	
 	activeTerminal = new QProcess(this);
 	activeTerminal->setProcessChannelMode(QProcess::MergedChannels);
 
@@ -3834,7 +3911,11 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 							 process->deleteLater(); // Clean up the process object
 						 });
 	}else{
-		terminalInputLine->setFocus();
+		if (preferHorizontalTerminal->isChecked()){
+			terminalInputLineHORZ->setFocus();
+		}else{
+			terminalInputLine->setFocus();
+		}
 	}
 
 	// Get the file information and path
@@ -4218,12 +4299,19 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		onWindowStateChanged();
 	}
 
-	if (watched == terminalInputLine) {
+	if (watched == terminalInputLine || watched == terminalInputLineHORZ) {
 		if (event->type() == QEvent::KeyPress){
 			QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 			QKeySequence key_sequence{static_cast<int>(keyEvent->modifiers()) + keyEvent->key()};
-
-			QTextCursor cursor = terminalInputLine->textCursor();
+			
+			QTextCursor cursor;
+			
+			if (watched == terminalInputLine){
+				cursor = terminalInputLine->textCursor();
+			}else{
+				cursor = terminalInputLineHORZ->textCursor();
+			}
+			
 			QString selectedText = cursor.selectedText();
 
 			if (key_sequence == QKeySequence("Ctrl+C") && selectedText.isEmpty()){
@@ -4241,6 +4329,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				activeTerminal->setWorkingDirectory(fileDir);
 
 				builtinTerminalTextEdit->insertPlainText("\n\n");
+				builtinTerminalTextEditHORZ->insertPlainText("\n\n");
 				activeTerminal->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal.");
 
 				qDebug() << "Sending Ctrl+C -> " << fileDir;
@@ -4260,6 +4349,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				}
 
 				terminalInputLine->setText(toset);
+				terminalInputLineHORZ->setText(toset);
 			}if (keyEvent->key() == Qt::Key_Down){
 				indexInSentCommands -= 1;
 				QString toset;
@@ -4275,15 +4365,26 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				}
 
 				terminalInputLine->setText(toset);
+				terminalInputLineHORZ->setText(toset);
 			}
 
 			if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter){
-				QString lineToSend = terminalInputLine->toPlainText() + "\n";
-				sentCommands.push_front(terminalInputLine->toPlainText());
+				QString lineToSend;
+				
+				if (watched == terminalInputLine){
+					lineToSend = terminalInputLine->toPlainText() + "\n";
+					sentCommands.push_front(terminalInputLine->toPlainText());
+				}else{
+					lineToSend = terminalInputLineHORZ->toPlainText() + "\n";
+					sentCommands.push_front(terminalInputLineHORZ->toPlainText());
+				}
+				
 				indexInSentCommands = -1;
 				activeTerminal->write(lineToSend.toUtf8());
 				builtinTerminalTextEdit->insertPlainText(lineToSend);
+				builtinTerminalTextEditHORZ->insertPlainText(lineToSend);
 				terminalInputLine->setPlainText("");
+				terminalInputLineHORZ->setPlainText("");
 				return true;
 			}
 		}
@@ -6021,6 +6122,14 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		palette = terminalInputLine->palette();
 		palette.setColor(QPalette::Base, QColor(32, 32, 32));
 		terminalInputLine->setPalette(palette);
+		
+		palette = builtinTerminalTextEditHORZ->palette();
+		palette.setColor(QPalette::Base, QColor(32, 32, 32));
+		builtinTerminalTextEditHORZ->setPalette(palette);
+
+		palette = terminalInputLineHORZ->palette();
+		palette.setColor(QPalette::Base, QColor(32, 32, 32));
+		terminalInputLineHORZ->setPalette(palette);
 
 		palette = findTextEdit->palette();
 		palette.setColor(QPalette::Base, QColor(32, 32, 32));
@@ -6069,6 +6178,14 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		palette = terminalInputLine->palette();
 		palette.setColor(QPalette::Base, QColor(245, 245, 245));
 		terminalInputLine->setPalette(palette);
+		
+		palette = builtinTerminalTextEditHORZ->palette();
+		palette.setColor(QPalette::Base, QColor(245, 245, 245));
+		builtinTerminalTextEditHORZ->setPalette(palette);
+
+		palette = terminalInputLineHORZ->palette();
+		palette.setColor(QPalette::Base, QColor(245, 245, 245));
+		terminalInputLineHORZ->setPalette(palette);
 
 		palette = findTextEdit->palette();
 		palette.setColor(QPalette::Base, QColor(245, 245, 245));

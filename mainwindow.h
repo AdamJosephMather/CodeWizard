@@ -25,6 +25,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void switchTerminalType();
 	int findMatchingBracket(int direction);
 	void handleBracketsOnEnter();
 	void handleTerminalStdout();
