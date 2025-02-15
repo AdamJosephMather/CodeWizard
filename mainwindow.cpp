@@ -58,7 +58,7 @@ QTextDocument *textDocument;
 QString updateSyntaxAdd = "";
 int updateSyntaxPosition = -1;
 
-QString versionNumber = "8.9.1";
+QString versionNumber = "8.9.2";
 
 GroqAI *groq;
 QString groqApiKey;
@@ -4086,6 +4086,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 			on_actionDe_Increment_Ctrl_triggered();
 		}else if (event->key() == Qt::Key_BracketRight){
 			on_actionIncrement_Ctrl_triggered();
+		}else if (event->key() == Qt::Key_Slash){
+			on_actionToggleComments_triggered();
 		}else if (event->key() == Qt::Key_F || event->key() == Qt::Key_H){
 			changeFindSectionVisibility(true);
 			openFind();
@@ -5332,6 +5334,53 @@ void MainWindow::on_actionComment_Ctrl_Alt_triggered()
 	updateSyntax();
 	cursor.endEditBlock();
 	connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
+}
+
+void MainWindow::on_actionToggleComments_triggered(){
+	qDebug() << "on_actionToggleComments_triggered";
+	
+	QTextCursor cursor = textEdit->textCursor();
+	int start;
+	int end;
+	int rawstart;
+	int rawend;
+	if (cursor.hasSelection()) {
+		rawstart = cursor.selectionStart();
+		rawend = cursor.selectionEnd();
+
+		start = qMin(rawstart, rawend);
+		end = qMax(rawstart, rawend);
+	}else{
+		rawstart = cursor.position();
+		rawend = cursor.position();
+
+		start = qMin(rawstart, rawend);
+		end = qMax(rawstart, rawend);
+	}
+	
+	cursor.setPosition(start);
+	cursor.movePosition(QTextCursor::StartOfLine);
+	
+	
+	while (true){
+		cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+		if (cursor.selectedText() != " " && cursor.selectedText() != "\t"){
+			cursor.movePosition(QTextCursor::PreviousCharacter);
+			break;
+		}
+		cursor.clearSelection();
+	}
+
+	for (int i = 0; i < currentLang.comments[0].length(); i++){
+		cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+	}
+
+	if (cursor.selectedText() == currentLang.comments[0]) {
+		on_actionUn_Comment_Alt_5_triggered();
+	}else{
+		on_actionComment_Ctrl_Alt_triggered();
+	}
+	
 }
 
 void MainWindow::on_actionUn_Comment_Alt_5_triggered()

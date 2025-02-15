@@ -25,6 +25,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void on_actionToggleComments_triggered();
 	void pullUpReloadDialogue(QString message);
 	void switchTerminalType();
 	int findMatchingBracket(int direction);
