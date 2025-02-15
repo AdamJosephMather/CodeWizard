@@ -25,6 +25,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void pullUpReloadDialogue(QString message);
 	void switchTerminalType();
 	int findMatchingBracket(int direction);
 	void handleBracketsOnEnter();
@@ -177,6 +178,7 @@ private slots:
 
 protected:
 	void keyPressEvent(QKeyEvent *) override;
+	void changeEvent(QEvent *event) override;
 
 private:
 	Ui::MainWindow *ui;

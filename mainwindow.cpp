@@ -337,6 +337,8 @@ int indexInSentCommands = -1;
 QStringList fontFamilies;
 QListWidget *fontList;
 
+bool handlingReopen = false;
+
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
 	qDebug() << "MainWindow";
@@ -941,17 +943,11 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	speech = new QTextToSpeech(this);
 
 	QList<QVoice> voices = speech->availableVoices();
-	qDebug() << "Available voices:";
-
-	for (const QVoice &voice : voices) {
-		qDebug() << "Name:" << voice.name() << "| Gender:" << voice.gender() << "| Age:" << voice.age();
-	}
 
 	// Select a male voice, if available
 	for (const QVoice &voice : voices) {
 		if (voice.gender() == QVoice::Male) {
 			speech->setVoice(voice);
-			qDebug() << "Selected male voice:" << voice.name();
 			break;
 		}
 	}
@@ -967,6 +963,57 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	if (!argFileName.isEmpty()){
 		globalArgFileName = argFileName;
+		on_actionOpen_triggered();
+	}
+}
+
+void MainWindow::changeEvent(QEvent *event) {
+	if (event->type() == QEvent::ActivationChange) {
+		if (this->isActiveWindow()) {
+			qDebug() << "returnedToCodeWizard";
+			
+			if (handlingReopen){
+				return;
+			}
+			
+			handlingReopen = true;
+			
+			if (fileName.isEmpty()){
+				handlingReopen = false;
+				return;
+			}
+			
+			QFileInfo fileInfo(fileName);
+			QFile file(fileName);
+			if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+				handlingReopen = false;
+				return;
+			}
+			
+			QTextStream in(&file);
+			QString fileContent = in.readAll();
+			
+			if (fileContent != textEdit->toPlainText()){
+				pullUpReloadDialogue("Detected change in file, reload?");
+			}
+			
+			handlingReopen = false;
+		}
+	}
+	QMainWindow::changeEvent(event);
+}
+
+void MainWindow::pullUpReloadDialogue(QString message){
+	QMessageBox dialog;
+	dialog.setWindowTitle("Reload");
+	dialog.setText(message);
+	dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	dialog.setDefaultButton(QMessageBox::Yes);
+	dialog.setFont(textEdit->font());
+
+	int response = dialog.exec();
+	if (response == QMessageBox::Yes) {
+		globalArgFileName = fileName;
 		on_actionOpen_triggered();
 	}
 }
