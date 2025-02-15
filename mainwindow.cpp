@@ -953,7 +953,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	updateMargins(false);
 
-	//MUST BE ON END
+	//MUST BE ON END - why?
 
 	textEdit->setFocus();
 
@@ -990,6 +990,9 @@ void MainWindow::changeEvent(QEvent *event) {
 			QString fileContent = in.readAll();
 			
 			if (fileContent != textEdit->toPlainText()){
+				if (useSpeakerAction->isChecked()){
+					speech->say("Detected change in file, reload?");
+				}
 				pullUpReloadDialogue("Detected change in file, reload?");
 			}
 			
@@ -1039,7 +1042,6 @@ void MainWindow::useVimModesTriggered(){
 	}
 
 	vimRepeater = 0;
-
 	saveWantedTheme();
 }
 
