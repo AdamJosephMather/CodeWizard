@@ -337,7 +337,7 @@ QStringList fontFamilies;
 QListWidget *fontList;
 
 bool handlingReopen = false;
-QString toCompareTo;
+QString toCompareTo = "NOCOMPARISONYET_CODEWIZARD_WARNING - <THEENDISNIGH>";
 
 QSplitter *splitter;
 QSplitter *splitter2;
@@ -1238,7 +1238,7 @@ void MainWindow::changeEvent(QEvent *event) {
 			QTextStream in(&file);
 			QString fileContent = in.readAll();
 			
-			if (fileContent != toCompareTo){
+			if (fileContent != toCompareTo && toCompareTo != "NOCOMPARISONYET_CODEWIZARD_WARNING - <THEENDISNIGH>"){
 				if (useSpeakerAction->isChecked()){
 					speech->say("Detected change in file, reload?");
 				}
