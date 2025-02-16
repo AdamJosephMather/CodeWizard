@@ -58,7 +58,7 @@ QTextDocument *textDocument;
 QString updateSyntaxAdd = "";
 int updateSyntaxPosition = -1;
 
-QString versionNumber = "8.9.2";
+QString versionNumber = "8.9.3";
 
 GroqAI *groq;
 QString groqApiKey;
@@ -1577,6 +1577,7 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 	setupSyntaxTreeOnOpen(fileContent); // must be before setPlainText - don't ask why - I could tell you though...
 
 	textEdit->setPlainText(fileContent);
+	toCompareTo = fileContent;
 	previousLineCount = fileContent.count('\xa')+1;
 	file.close();
 
@@ -2331,6 +2332,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		setupSyntaxTreeOnOpen(fileContent);
 
 		textEdit->setPlainText(fileContent);
+		toCompareTo = fileContent;
 
 		previousLineCount = fileContent.count('\xa')+1;
 		file.close();
@@ -3987,6 +3989,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	setupSyntaxTreeOnOpen(fileContent); // must be before setPlainText - don't ask why - I could tell you though...
 
 	textEdit->setPlainText(fileContent);
+	toCompareTo = fileContent;
 	previousLineCount = fileContent.count('\xa')+1;
 	file.close();
 
@@ -5419,6 +5422,8 @@ void MainWindow::on_actionSave_triggered()
 		client->documentSaved(textEdit->toPlainText());
 	}
 	lspMutex.unlock();
+	
+	toCompareTo = textEdit->toPlainText();
 }
 
 void MainWindow::centerCursor() {
@@ -7194,6 +7199,7 @@ void MainWindow::openRecentFile(QString newFile){
 	setupSyntaxTreeOnOpen(fileContent);
 
 	textEdit->setPlainText(fileContent);
+	toCompareTo = fileContent;
 
 	previousLineCount = fileContent.count('\xa')+1;
 	file.close();
