@@ -407,9 +407,6 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	
 	delete placeholderWidget;
 	
-//	splitter->adjustSize();  // Ensure splitter is properly sized
-//	splitter->parentWidget()->layout()->update();  // Force layout to update
-	
 	// SPLITTER FOR THE SECOND TERMINAL - MUST BE DONE AFTER FIRST SPLITTER - NO I'M NOT GOING TO TELL YOU WHY, GFL FIGURING OUT WHY
 	
 	placeholderWidget = ui->verticalLayout_7;  // Get the widget holding the layout
@@ -467,9 +464,6 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	
 	delete placeholderWidget;
 	
-//	splitter2->adjustSize();  // Ensure splitter is properly sized
-//	splitter2->parentWidget()->layout()->update();  // Force layout to update
-	
 	// Ensure all elements are non-collapsible
 	
 	for (int i = 0; i < splitter->count(); ++i) {
@@ -478,11 +472,6 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	for (int i = 0; i < splitter2->count(); ++i) {
 		splitter2->setCollapsible(i, false);  // Set each widget to be non-collapsible
 	}
-	
-	// TESTING SIZES
-	
-	qDebug() << splitter->sizes();
-	qDebug() << splitter2->sizes();
 	
 	// Rest
 
@@ -1119,8 +1108,6 @@ void MainWindow::updateSplitsWidths(){
 	
 	if (totalWidth == 0 || totalHeight == 0){return;}
 	
-	qDebug() << splitWidths[0] << splitWidths[1] << splitWidths[2];
-	
 	int ftW = totalWidth*splitWidths[0];
 	int btW = totalWidth*splitWidths[1];
 	int btH = totalHeight*splitWidths[2];
@@ -1129,36 +1116,27 @@ void MainWindow::updateSplitsWidths(){
 	
 	QList<int> sizes;
 	
-	qDebug() << "Set 0 to" << ftW;
 	sizes.push_back(ftW);
 	sizes.push_back(teW);
 	
 	if (!(useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized()))){
 		teW += ftW;
 		sizes[1] += ftW;
-		qDebug() << "adding 1";
 	}
 	
 	if (useBuiltinTerminal->isChecked() && !preferHorizontalTerminal->isChecked()){
 		sizes.push_back(btW);
-		qDebug() << "Set 2 to" << btW;
 	}else{
 		teW += btW;
 		sizes[1] += btW;
 	}
 	
 	splitter->setSizes(sizes);
-	qDebug() << "Set 1 to" << teW;
-	
 	sizes.clear();
-	qDebug() << "NEXT";
-	
 	sizes.push_back(teH);
-	qDebug() << "Set 0 to" << teH;
 	
 	if (useBuiltinTerminal->isChecked() && preferHorizontalTerminal->isChecked()){
 		sizes.push_back(btH);
-		qDebug() << "Set 1 to" << btH;
 		splitter2->setSizes(sizes);
 	}
 }
@@ -1182,8 +1160,6 @@ void MainWindow::storeResizeOfSplitters(){
 	splitWidths[0] = (float)fileTree->width()/(float)totalWidth;
 	splitWidths[1] = (float)builtinTerminalTextEdit->width()/(float)totalWidth;
 	splitWidths[2] = (float)builtinTerminalTextEditHORZ->height()/(float)totalHeight;
-	
-	qDebug() << splitWidths[0] << splitWidths[1] << splitWidths[2];
 	
 	saveWantedTheme();
 }
@@ -1271,6 +1247,7 @@ void MainWindow::changeEvent(QEvent *event) {
 			
 			handlingReopen = false;
 		}else{
+			qDebug() << "leftCodeWizard";
 			if (fileName.isEmpty()){
 				handlingReopen = false;
 				return;
@@ -1433,7 +1410,6 @@ void MainWindow::on_actionRegular_triggered(){
 	}
 
 	QString filePath = fileModel->filePath(index);
-	qDebug() << filePath;
 
 	QString tmpDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/CodeWizard";
 	QString batFilePath = tmpDirPath + "/run_script.bat";
@@ -1442,7 +1418,6 @@ void MainWindow::on_actionRegular_triggered(){
 	if (!tmpDir.exists()) {
 		tmpDir.mkpath(tmpDirPath);
 	}
-	qDebug() << batFilePath;
 
 	QFile batFile(batFilePath);
 	if (batFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -1664,8 +1639,6 @@ void MainWindow::updateMargins(bool force) {
 	if (marginBottomSize < 0){
 		marginBottomSize = 0;
 	}
-
-	qDebug() << marginBottomSize;
 
 	if (textDocument->blockCount() < 200 || force){ // I do this for performance issues with opening and closing the find menu/resizing menu. It resets the ENTIRE html
 		auto format = textDocument->rootFrame()->frameFormat();
@@ -2236,7 +2209,7 @@ void MainWindow::showHoldYourHorses(){
 }
 
 void MainWindow::checkForFixitDialogue(){
-	qDebug() << "showHoldYourHorses";
+	qDebug() << "checkForFixitDialogue";
 
 	if (!textEdit->toPlainText().contains("\n    ")){
 		return;
@@ -2277,10 +2250,8 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 
 	isOpeningFile = true;
 
-	qDebug() << "Setting";
 	storedLineNumbers[fileName] = textEdit->verticalScrollBar()->value();
-	qDebug() << "Set";
-
+	
 	if (!index.model()->hasChildren(index)) {
 		QString newFile = index.data(QFileSystemModel::FilePathRole).toString();
 
@@ -2370,7 +2341,6 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 bool MainWindow::checkForLargeFile(QFile *file){
 	qint64 fileSize = file->size(); // bytes
 	qint64 kb = fileSize/1024; // 1000 of these per mb
-	qDebug() << "Size of KB: " << kb;
 
 	if (kb > 1000){ // 1mb I think
 		if (useSpeakerAction->isChecked()){
@@ -2440,6 +2410,11 @@ void MainWindow::handleMouseMoved(QPoint pos)
 //	qDebug() << "handleMouseMoved"; - we don't do it for certain functions
 
 	QPoint difference = pos - mousePos;
+	
+	QTextCursor cursor = textEdit->cursorForPosition(pos); // Get cursor at mouse position
+	QRect cursorRect = textEdit->cursorRect(cursor);
+	QPoint cursorPos = cursorRect.topLeft();
+	suggestedPosition = cursorRect.bottomLeft();
 
 	if (qAbs(difference.x()) < 30 && qAbs(difference.y()) < 30){
 		return;
@@ -2457,20 +2432,10 @@ void MainWindow::handleMouseMoved(QPoint pos)
 	if (!client){
 		return;
 	}
-
-	QTextCursor cursor = textEdit->cursorForPosition(pos); // Get cursor at mouse position
-
-	QPoint cursorPos = textEdit->cursorRect(cursor).topLeft();
-
+	
 	if (qAbs(cursorPos.x() - pos.x()) > 15 || qAbs(cursorPos.y() - pos.y()) > 15){
 		return;
 	}
-
-	QRect cursorRect = textEdit->cursorRect(cursor);
-	QFontMetrics metrics(textEdit->font());
-	int offsetY = metrics.height() * -1;
-	int offsetX = metrics.horizontalAdvance("M") * -4;
-	suggestedPosition = textEdit->mapToParent(cursorRect.bottomLeft() + QPoint(offsetX, offsetY));
 
 	// here we determine if it's over a diagnostic to check out - otherwise we request the help of the LSP for info
 
@@ -2938,14 +2903,10 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 	QPoint newPos = givenPos;
 	if (givenPos.x() + maxWidth > textEdit->width()) { // If it goes beyond the right edge
 		newPos.setX(givenPos.x() - maxWidth); // Move it to the left side
-	} else {
-		newPos.setX(givenPos.x()); // Otherwise, stay on the right
 	}
 
 	if (givenPos.y() + maxHeight > textEdit->height()) {
-		newPos.setY(givenPos.y() - maxHeight + metrics.height()); // for some reason it starts above the cursor so we move it up less than we do down
-	} else {
-		newPos.setY(givenPos.y() + metrics.height());
+		newPos.setY(givenPos.y() - maxHeight - metrics.height());
 	}
 
 	hoverBox->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
@@ -3433,9 +3394,7 @@ void MainWindow::saveWantedTheme()
 
 	QString str = strLst.join("|");
 
-	qDebug() << "attempting set str";
 	if (coloredFormats.length() == 9){
-		qDebug() << "setting " << str;
 		settings.setValue("syntaxColors", str);
 	}
 
@@ -3487,7 +3446,6 @@ bool MainWindow::wantedTheme()
 
 	if (exists){
 		QString existingVersion = settings.value("codewizard_version", "prior 6.0.0").toString();
-		qDebug() << existingVersion;
 
 		if (compareVersionNumbers(existingVersion, "5.9.9") > 0){ // more than v599
 			pythonTag = settings.value("pythonTag", defPythonTag).toString();
@@ -4663,8 +4621,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				builtinTerminalTextEdit->insertPlainText("\n\n");
 				builtinTerminalTextEditHORZ->insertPlainText("\n\n");
 				activeTerminal->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal.");
-
-				qDebug() << "Sending Ctrl+C -> " << fileDir;
 			}
 
 			if (keyEvent->key() == Qt::Key_Escape){
@@ -5408,6 +5364,11 @@ void MainWindow::on_actionSave_triggered()
 		setLangOffFilename(fileName, true);
 		setupSyntaxTreeOnOpen(textEdit->toPlainText());
 		onContentsChange(0, 0, 0);
+		
+		fileModel->setRootPath(fileInfo.absolutePath());
+		QSettings settings("FoundationTechnologies", "CodeWizard");
+		settings.setValue("mostRecentFolder", fileInfo.absolutePath());
+		fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
 
 		windowName = "CodeWizard V"+versionNumber+" - "+fileNameName+" - "+fileName;
 
@@ -5846,6 +5807,11 @@ void MainWindow::on_actionSave_As_triggered()
 	setupSyntaxTreeOnOpen(textEdit->toPlainText());
 	onContentsChange(0, 0, 0);
 	addFileToRecentList(fileName);
+	
+	fileModel->setRootPath(fileInfo.absolutePath());
+	QSettings settings("FoundationTechnologies", "CodeWizard");
+	settings.setValue("mostRecentFolder", fileInfo.absolutePath());
+	fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
 
 	windowName = "CodeWizard V"+versionNumber+" - " + fileNameName + " - " + fileName;
 	setWindowTitle(windowName);
