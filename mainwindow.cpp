@@ -6496,7 +6496,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		builtinTerminalTextEdit->setPalette(palette);
 
 		palette = terminalInputLine->palette();
-		palette.setColor(QPalette::Base, QColor(32, 32, 32));
+		palette.setColor(QPalette::Base, QColor(23, 23, 23));
 		terminalInputLine->setPalette(palette);
 		
 		palette = builtinTerminalTextEditHORZ->palette();
@@ -6504,7 +6504,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		builtinTerminalTextEditHORZ->setPalette(palette);
 
 		palette = terminalInputLineHORZ->palette();
-		palette.setColor(QPalette::Base, QColor(32, 32, 32));
+		palette.setColor(QPalette::Base, QColor(23, 23, 23));
 		terminalInputLineHORZ->setPalette(palette);
 
 		palette = findTextEdit->palette();
@@ -6552,7 +6552,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		builtinTerminalTextEdit->setPalette(palette);
 
 		palette = terminalInputLine->palette();
-		palette.setColor(QPalette::Base, QColor(245, 245, 245));
+		palette.setColor(QPalette::Base, QColor(230, 230, 230));
 		terminalInputLine->setPalette(palette);
 		
 		palette = builtinTerminalTextEditHORZ->palette();
@@ -6560,7 +6560,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		builtinTerminalTextEditHORZ->setPalette(palette);
 
 		palette = terminalInputLineHORZ->palette();
-		palette.setColor(QPalette::Base, QColor(245, 245, 245));
+		palette.setColor(QPalette::Base, QColor(230, 230, 230));
 		terminalInputLineHORZ->setPalette(palette);
 
 		palette = findTextEdit->palette();
