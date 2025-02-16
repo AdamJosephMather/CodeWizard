@@ -1069,6 +1069,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	fileTree->hideColumn(1);  // Hide column at index 1 (Size)
 	fileTree->hideColumn(2);  // Hide column at index 2 (Type)
 	fileTree->hideColumn(3);
+	
+	fileTree->header()->hide();
 
 	if (useFileTree->isChecked() && mostRecentPath != ""){
 		fileTree->show();
