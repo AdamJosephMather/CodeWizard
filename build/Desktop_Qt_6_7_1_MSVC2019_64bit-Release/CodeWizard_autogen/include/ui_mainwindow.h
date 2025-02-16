@@ -134,12 +134,15 @@ public:
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
+    QWidget *horizontalLayout_4;
     QHBoxLayout *horizontalLayout_3;
     QTreeView *treeView;
+    QWidget *verticalLayout_7;
     QVBoxLayout *verticalLayout_6;
     QHBoxLayout *horizontalLayout;
     MyTextEdit *textEdit_4;
     MyTextEdit *textEdit;
+    QVBoxLayout *verticalLayout_8;
     QTextEdit *textEdit_8;
     MyTextEdit *textEdit_9;
     QVBoxLayout *verticalLayout_5;
@@ -178,7 +181,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(1130, 786);
+        MainWindow->resize(1134, 786);
         actionOpen = new QAction(MainWindow);
         actionOpen->setObjectName("actionOpen");
         actionSave = new QAction(MainWindow);
@@ -414,38 +417,39 @@ public:
         verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(2);
         verticalLayout->setObjectName("verticalLayout");
-        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_4 = new QWidget(centralwidget);
+        horizontalLayout_4->setObjectName("horizontalLayout_4");
+        horizontalLayout_3 = new QHBoxLayout(horizontalLayout_4);
         horizontalLayout_3->setObjectName("horizontalLayout_3");
-        treeView = new QTreeView(centralwidget);
+        treeView = new QTreeView(horizontalLayout_4);
         treeView->setObjectName("treeView");
-        QSizePolicy sizePolicy1(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Expanding);
+        QSizePolicy sizePolicy1(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(treeView->sizePolicy().hasHeightForWidth());
         treeView->setSizePolicy(sizePolicy1);
-        treeView->setMinimumSize(QSize(300, 0));
-        treeView->setMaximumSize(QSize(300, 16777215));
+        treeView->setMinimumSize(QSize(0, 0));
+        treeView->setMaximumSize(QSize(16777215, 16777215));
         treeView->setDragEnabled(false);
 
         horizontalLayout_3->addWidget(treeView);
 
-        verticalLayout_6 = new QVBoxLayout();
+        verticalLayout_7 = new QWidget(horizontalLayout_4);
+        verticalLayout_7->setObjectName("verticalLayout_7");
+        verticalLayout_6 = new QVBoxLayout(verticalLayout_7);
         verticalLayout_6->setObjectName("verticalLayout_6");
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName("horizontalLayout");
-        textEdit_4 = new MyTextEdit(centralwidget);
+        textEdit_4 = new MyTextEdit(verticalLayout_7);
         textEdit_4->setObjectName("textEdit_4");
-        QSizePolicy sizePolicy2(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(textEdit_4->sizePolicy().hasHeightForWidth());
-        textEdit_4->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(textEdit_4->sizePolicy().hasHeightForWidth());
+        textEdit_4->setSizePolicy(sizePolicy1);
         textEdit_4->setMinimumSize(QSize(50, 0));
         textEdit_4->setMaximumSize(QSize(50, 16777215));
 
         horizontalLayout->addWidget(textEdit_4);
 
-        textEdit = new MyTextEdit(centralwidget);
+        textEdit = new MyTextEdit(verticalLayout_7);
         textEdit->setObjectName("textEdit");
         QFont font;
         font.setFamilies({QString::fromUtf8("Courier New")});
@@ -457,53 +461,52 @@ public:
 
         verticalLayout_6->addLayout(horizontalLayout);
 
-        textEdit_8 = new QTextEdit(centralwidget);
+        verticalLayout_8 = new QVBoxLayout();
+        verticalLayout_8->setObjectName("verticalLayout_8");
+        textEdit_8 = new QTextEdit(verticalLayout_7);
         textEdit_8->setObjectName("textEdit_8");
-        QSizePolicy sizePolicy3(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(textEdit_8->sizePolicy().hasHeightForWidth());
-        textEdit_8->setSizePolicy(sizePolicy3);
-        textEdit_8->setMinimumSize(QSize(0, 300));
-        textEdit_8->setMaximumSize(QSize(16777215, 300));
+        sizePolicy1.setHeightForWidth(textEdit_8->sizePolicy().hasHeightForWidth());
+        textEdit_8->setSizePolicy(sizePolicy1);
+        textEdit_8->setMinimumSize(QSize(0, 0));
+        textEdit_8->setMaximumSize(QSize(16777215, 16777215));
 
-        verticalLayout_6->addWidget(textEdit_8);
+        verticalLayout_8->addWidget(textEdit_8);
 
-        textEdit_9 = new MyTextEdit(centralwidget);
+        textEdit_9 = new MyTextEdit(verticalLayout_7);
         textEdit_9->setObjectName("textEdit_9");
-        QSizePolicy sizePolicy4(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Fixed);
-        sizePolicy4.setHorizontalStretch(0);
-        sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(textEdit_9->sizePolicy().hasHeightForWidth());
-        textEdit_9->setSizePolicy(sizePolicy4);
+        QSizePolicy sizePolicy2(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Fixed);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(textEdit_9->sizePolicy().hasHeightForWidth());
+        textEdit_9->setSizePolicy(sizePolicy2);
         textEdit_9->setMinimumSize(QSize(0, 28));
         textEdit_9->setMaximumSize(QSize(16777215, 28));
 
-        verticalLayout_6->addWidget(textEdit_9);
+        verticalLayout_8->addWidget(textEdit_9);
 
 
-        horizontalLayout_3->addLayout(verticalLayout_6);
+        verticalLayout_6->addLayout(verticalLayout_8);
+
+
+        horizontalLayout_3->addWidget(verticalLayout_7);
 
         verticalLayout_5 = new QVBoxLayout();
         verticalLayout_5->setObjectName("verticalLayout_5");
-        textEdit_6 = new QTextEdit(centralwidget);
+        textEdit_6 = new QTextEdit(horizontalLayout_4);
         textEdit_6->setObjectName("textEdit_6");
         sizePolicy1.setHeightForWidth(textEdit_6->sizePolicy().hasHeightForWidth());
         textEdit_6->setSizePolicy(sizePolicy1);
-        textEdit_6->setMinimumSize(QSize(500, 0));
-        textEdit_6->setMaximumSize(QSize(500, 16777215));
+        textEdit_6->setMinimumSize(QSize(0, 0));
+        textEdit_6->setMaximumSize(QSize(16777215, 16777215));
 
         verticalLayout_5->addWidget(textEdit_6);
 
-        textEdit_7 = new MyTextEdit(centralwidget);
+        textEdit_7 = new MyTextEdit(horizontalLayout_4);
         textEdit_7->setObjectName("textEdit_7");
-        QSizePolicy sizePolicy5(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
-        sizePolicy5.setHorizontalStretch(0);
-        sizePolicy5.setVerticalStretch(0);
-        sizePolicy5.setHeightForWidth(textEdit_7->sizePolicy().hasHeightForWidth());
-        textEdit_7->setSizePolicy(sizePolicy5);
-        textEdit_7->setMinimumSize(QSize(500, 28));
-        textEdit_7->setMaximumSize(QSize(500, 28));
+        sizePolicy2.setHeightForWidth(textEdit_7->sizePolicy().hasHeightForWidth());
+        textEdit_7->setSizePolicy(sizePolicy2);
+        textEdit_7->setMinimumSize(QSize(0, 28));
+        textEdit_7->setMaximumSize(QSize(16777215, 28));
 
         verticalLayout_5->addWidget(textEdit_7);
 
@@ -511,7 +514,7 @@ public:
         horizontalLayout_3->addLayout(verticalLayout_5);
 
 
-        verticalLayout->addLayout(horizontalLayout_3);
+        verticalLayout->addWidget(horizontalLayout_4);
 
         findLayout = new QHBoxLayout();
         findLayout->setSpacing(5);
@@ -522,8 +525,8 @@ public:
         verticalLayout_4->setObjectName("verticalLayout_4");
         textEdit_2 = new MyTextEdit(centralwidget);
         textEdit_2->setObjectName("textEdit_2");
-        sizePolicy4.setHeightForWidth(textEdit_2->sizePolicy().hasHeightForWidth());
-        textEdit_2->setSizePolicy(sizePolicy4);
+        sizePolicy2.setHeightForWidth(textEdit_2->sizePolicy().hasHeightForWidth());
+        textEdit_2->setSizePolicy(sizePolicy2);
         textEdit_2->setMinimumSize(QSize(0, 28));
         textEdit_2->setMaximumSize(QSize(16777215, 28));
 
@@ -531,8 +534,8 @@ public:
 
         textEdit_3 = new MyTextEdit(centralwidget);
         textEdit_3->setObjectName("textEdit_3");
-        sizePolicy4.setHeightForWidth(textEdit_3->sizePolicy().hasHeightForWidth());
-        textEdit_3->setSizePolicy(sizePolicy4);
+        sizePolicy2.setHeightForWidth(textEdit_3->sizePolicy().hasHeightForWidth());
+        textEdit_3->setSizePolicy(sizePolicy2);
         textEdit_3->setMinimumSize(QSize(0, 28));
         textEdit_3->setMaximumSize(QSize(16777215, 28));
 
@@ -591,9 +594,9 @@ public:
         MainWindow->setStatusBar(statusbar);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName("menuBar");
-        menuBar->setGeometry(QRect(0, 0, 1130, 21));
-        sizePolicy2.setHeightForWidth(menuBar->sizePolicy().hasHeightForWidth());
-        menuBar->setSizePolicy(sizePolicy2);
+        menuBar->setGeometry(QRect(0, 0, 1134, 21));
+        sizePolicy1.setHeightForWidth(menuBar->sizePolicy().hasHeightForWidth());
+        menuBar->setSizePolicy(sizePolicy1);
         menuOp1 = new QMenu(menuBar);
         menuOp1->setObjectName("menuOp1");
         menuOpen_Recent = new QMenu(menuOp1);

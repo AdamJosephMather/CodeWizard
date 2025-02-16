@@ -338,11 +338,152 @@ QListWidget *fontList;
 
 bool handlingReopen = false;
 
+QSplitter *splitter;
+QSplitter *splitter2;
+
+double splitWidths[3];
+
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
 	qDebug() << "MainWindow";
 	
 	ui->setupUi(this);
+	
+	// Replace with new splitters
+	
+	QWidget *placeholderWidget = ui->horizontalLayout_4;  // Get the widget holding the layout
+	QLayout *oldLayout = placeholderWidget->layout();
+	splitter = new QSplitter(Qt::Horizontal, this);
+	splitter->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+	splitter->setContentsMargins(0, 0, 0, 0);
+	
+	while (!oldLayout->isEmpty()){
+		QLayoutItem *item = oldLayout->takeAt(0);
+
+		if (!item) continue;
+
+		if (QWidget *widget = item->widget()) {
+			oldLayout->removeWidget(widget);
+			splitter->addWidget(widget);
+			if (widget->layout()){
+				widget->layout()->setSpacing(0);
+				widget->layout()->setContentsMargins(0, 0, 0, 0);
+			}
+		} else if (QLayout *nestedLayout = item->layout()) {
+			QWidget *container = new QWidget(splitter);
+			QLayout *containerLayout = nullptr;
+			
+			if (QVBoxLayout *vLayout = qobject_cast<QVBoxLayout *>(nestedLayout)) {
+				containerLayout = new QVBoxLayout(container);
+			} else if (QHBoxLayout *hLayout = qobject_cast<QHBoxLayout *>(nestedLayout)) {
+				containerLayout = new QHBoxLayout(container);
+			} else if (QFormLayout *fLayout = qobject_cast<QFormLayout *>(nestedLayout)) {
+				containerLayout = new QFormLayout(container);
+			} // Add more layout types as needed
+			
+			if (!containerLayout){
+				continue;
+			}
+			
+			containerLayout->setSpacing(0);
+			containerLayout->setContentsMargins(0, 0, 0, 0);
+			
+			container->setLayout(containerLayout);
+			moveWidgetsToSplitter(nestedLayout, container);  // Handle nested layout
+			splitter->addWidget(container);
+		}
+		delete item;
+	}
+	
+	splitter->setParent(placeholderWidget->parentWidget());
+
+	QLayout *mainLayout = placeholderWidget->parentWidget()->layout();
+	if (mainLayout) {
+		mainLayout->setSpacing(0);
+		mainLayout->setContentsMargins(0, 0, 0, 0);
+		mainLayout->replaceWidget(placeholderWidget, splitter);
+	}
+	
+	delete placeholderWidget;
+	
+//	splitter->adjustSize();  // Ensure splitter is properly sized
+//	splitter->parentWidget()->layout()->update();  // Force layout to update
+	
+	// SPLITTER FOR THE SECOND TERMINAL - MUST BE DONE AFTER FIRST SPLITTER - NO I'M NOT GOING TO TELL YOU WHY, GFL FIGURING OUT WHY
+	
+	placeholderWidget = ui->verticalLayout_7;  // Get the widget holding the layout
+	oldLayout = placeholderWidget->layout();
+	splitter2 = new QSplitter(Qt::Vertical, this);
+	splitter2->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+	splitter2->setContentsMargins(0, 0, 0, 0);
+	
+	while (!oldLayout->isEmpty()){
+		QLayoutItem *item = oldLayout->takeAt(0);
+
+		if (!item) continue;
+
+		if (QWidget *widget = item->widget()) {
+			oldLayout->removeWidget(widget);
+			splitter2->addWidget(widget);
+			if (widget->layout()){
+				widget->layout()->setSpacing(0);
+				widget->layout()->setContentsMargins(0, 0, 0, 0);
+			}
+		} else if (QLayout *nestedLayout = item->layout()) {
+			QWidget *container = new QWidget(splitter2);
+			QLayout *containerLayout = nullptr;
+			
+			if (QVBoxLayout *vLayout = qobject_cast<QVBoxLayout *>(nestedLayout)) {
+				containerLayout = new QVBoxLayout(container);
+			} else if (QHBoxLayout *hLayout = qobject_cast<QHBoxLayout *>(nestedLayout)) {
+				containerLayout = new QHBoxLayout(container);
+			} else if (QFormLayout *fLayout = qobject_cast<QFormLayout *>(nestedLayout)) {
+				containerLayout = new QFormLayout(container);
+			} // Add more layout types as needed
+			
+			if (!containerLayout){
+				continue;
+			}
+			
+			containerLayout->setSpacing(0);
+			containerLayout->setContentsMargins(0, 0, 0, 0);
+			
+			container->setLayout(containerLayout);
+			moveWidgetsToSplitter(nestedLayout, container);  // Handle nested layout
+			splitter2->addWidget(container);
+		}
+		delete item;
+	}
+	
+	splitter2->setParent(placeholderWidget->parentWidget());
+
+	mainLayout = placeholderWidget->parentWidget()->layout();
+	if (mainLayout) {
+		mainLayout->setSpacing(0);
+		mainLayout->setContentsMargins(0, 0, 0, 0);
+		mainLayout->replaceWidget(placeholderWidget, splitter2);
+	}
+	
+	delete placeholderWidget;
+	
+//	splitter2->adjustSize();  // Ensure splitter is properly sized
+//	splitter2->parentWidget()->layout()->update();  // Force layout to update
+	
+	// Ensure all elements are non-collapsible
+	
+	for (int i = 0; i < splitter->count(); ++i) {
+		splitter->setCollapsible(i, false);  // Set each widget to be non-collapsible
+	}
+	for (int i = 0; i < splitter2->count(); ++i) {
+		splitter2->setCollapsible(i, false);  // Set each widget to be non-collapsible
+	}
+	
+	// TESTING SIZES
+	
+	qDebug() << splitter->sizes();
+	qDebug() << splitter2->sizes();
+	
+	// Rest
 
 	diffAlgo = new Myers();
 
@@ -832,15 +973,15 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	MainWindow::setupCompleter();
 
-	suggestionBox = new QListWidget(this);
+	suggestionBox = new QListWidget(textEdit);
 	suggestionBox->setFocusPolicy(Qt::NoFocus);
 	suggestionBox->hide();
 
-	actionBox = new QListWidget(this);
+	actionBox = new QListWidget(textEdit);
 	actionBox->setFocusPolicy(Qt::NoFocus);
 	actionBox->hide();
 
-	hoverBox = new QTextEdit(this);
+	hoverBox = new QTextEdit(textEdit);
 	hoverBox->setFont(textEdit->font());
 	hoverBox->setFocusPolicy(Qt::NoFocus);
 	hoverBox->setWordWrapMode(QTextOption::NoWrap);
@@ -877,6 +1018,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(useSpeakerAction, &QAction::toggled, this, &MainWindow::saveWantedTheme);
 	connect(useFileTree, &QAction::toggled, this, &MainWindow::fileTreeToggled);
 	connect(useFileTreeIfFullscreen, &QAction::toggled, this, &MainWindow::fileTreeToggled);
+	connect(splitter, &QSplitter::splitterMoved, this, &MainWindow::storeResizeOfSplitters);
+	connect(splitter2, &QSplitter::splitterMoved, this, &MainWindow::storeResizeOfSplitters);
 	
 	connect(fileTree, &QTreeView::doubleClicked, this, &MainWindow::fileTreeOpened);
 
@@ -960,6 +1103,133 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	if (!argFileName.isEmpty()){
 		globalArgFileName = argFileName;
 		on_actionOpen_triggered();
+	}
+	
+	QTimer::singleShot(10, this, &MainWindow::updateSplitsWidths);
+}
+
+void MainWindow::updateSplitsWidths(){
+	qDebug() << "updateSplitsWidths";
+	
+	int totalWidth = splitter->width();
+	int totalHeight = splitter2->height();
+	
+	if (totalWidth == 0 || totalHeight == 0){return;}
+	
+	qDebug() << splitWidths[0] << splitWidths[1] << splitWidths[2];
+	
+	int ftW = totalWidth*splitWidths[0];
+	int btW = totalWidth*splitWidths[1];
+	int btH = totalHeight*splitWidths[2];
+	int teW = totalWidth-ftW-btW;
+	int teH = totalHeight-btH;
+	
+	QList<int> sizes;
+	
+	qDebug() << "Set 0 to" << ftW;
+	sizes.push_back(ftW);
+	sizes.push_back(teW);
+	
+	if (!(useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized()))){
+		teW += ftW;
+		sizes[1] += ftW;
+		qDebug() << "adding 1";
+	}
+	
+	if (useBuiltinTerminal->isChecked() && !preferHorizontalTerminal->isChecked()){
+		sizes.push_back(btW);
+		qDebug() << "Set 2 to" << btW;
+	}else{
+		teW += btW;
+		sizes[1] += btW;
+	}
+	
+	splitter->setSizes(sizes);
+	qDebug() << "Set 1 to" << teW;
+	
+	sizes.clear();
+	qDebug() << "NEXT";
+	
+	sizes.push_back(teH);
+	qDebug() << "Set 0 to" << teH;
+	
+	if (useBuiltinTerminal->isChecked() && preferHorizontalTerminal->isChecked()){
+		sizes.push_back(btH);
+		qDebug() << "Set 1 to" << btH;
+		splitter2->setSizes(sizes);
+	}
+}
+
+void MainWindow::storeResizeOfSplitters(){
+	qDebug() << "storeResizeOfSplitters";
+	
+	auto s1 = splitter->sizes();
+	auto s2 = splitter2->sizes();
+	
+	int totalWidth = 0;
+	for (int i = 0; i < s1.length(); i++){
+		totalWidth += s1[i];
+	}
+	
+	int totalHeight = 0;
+	for (int i = 0; i < s2.length(); i++){
+		totalHeight += s2[i];
+	}
+	
+	splitWidths[0] = (float)fileTree->width()/(float)totalWidth;
+	splitWidths[1] = (float)builtinTerminalTextEdit->width()/(float)totalWidth;
+	splitWidths[2] = (float)builtinTerminalTextEditHORZ->height()/(float)totalHeight;
+	
+	qDebug() << splitWidths[0] << splitWidths[1] << splitWidths[2];
+	
+	saveWantedTheme();
+}
+
+void MainWindow::moveWidgetsToSplitter(QLayout *layout, QWidget *toWidget) {
+	if (!layout) return;
+
+	// Iterate over all layout items
+	while (!layout->isEmpty()) {
+		QLayoutItem *item = layout->takeAt(0);
+
+		if (!item) continue;
+
+		if (QWidget *widget = item->widget()) {
+			layout->removeWidget(widget);
+			toWidget->layout()->addWidget(widget);
+			
+			if (widget->layout()){
+				widget->layout()->setSpacing(0);
+				widget->layout()->setContentsMargins(0, 0, 0, 0);
+			}
+		} 
+		else if (QLayout *nestedLayout = item->layout()) {
+			// If it's a nested layout, create a new container widget for the layout
+			QWidget *container = new QWidget(toWidget);
+			QLayout *containerLayout = nullptr;
+			
+			if (QVBoxLayout *vLayout = qobject_cast<QVBoxLayout *>(nestedLayout)) {
+				containerLayout = new QVBoxLayout(container);
+			} else if (QHBoxLayout *hLayout = qobject_cast<QHBoxLayout *>(nestedLayout)) {
+				containerLayout = new QHBoxLayout(container);
+			} else if (QFormLayout *fLayout = qobject_cast<QFormLayout *>(nestedLayout)) {
+				containerLayout = new QFormLayout(container);
+			} // Add more layout types as needed
+			
+			if (!containerLayout){
+				continue;
+			}
+			
+			containerLayout->setSpacing(0);
+			containerLayout->setContentsMargins(0, 0, 0, 0);
+			
+			container->setLayout(containerLayout);
+			moveWidgetsToSplitter(nestedLayout, container);  // Handle nested layout
+			toWidget->layout()->addWidget(container);
+		}
+
+		// Cleanup memory for the layout item (but not the widget since it's moved)
+		delete item;
 	}
 }
 
@@ -1047,51 +1317,59 @@ void MainWindow::useVimModesTriggered(){
 
 void MainWindow::switchTerminalType(){
 	qDebug() << "switchTerminalType";
-	
+	useBuiltinTerminalTriggered(); // does the same thing.
+}
+
+void MainWindow::updateTermimalViews(){
+	qDebug() << "updateTermimalViews";
 	if (useBuiltinTerminal->isChecked()){
 		if (preferHorizontalTerminal->isChecked()){
 			builtinTerminalTextEditHORZ->show();
 			terminalInputLineHORZ->show();
 			builtinTerminalTextEdit->hide();
 			terminalInputLine->hide();
+			
+			builtinTerminalTextEdit->parentWidget()->setParent(nullptr);
+			builtinTerminalTextEditHORZ->parentWidget()->setParent(nullptr);
+			
+			splitter2->addWidget(builtinTerminalTextEditHORZ->parentWidget());
 		}else{
 			builtinTerminalTextEditHORZ->hide();
 			terminalInputLineHORZ->hide();
 			builtinTerminalTextEdit->show();
 			terminalInputLine->show();
+			
+			builtinTerminalTextEdit->parentWidget()->setParent(nullptr);
+			builtinTerminalTextEditHORZ->parentWidget()->setParent(nullptr);
+
+			splitter->addWidget(builtinTerminalTextEdit->parentWidget());
 		}
 	}else{
 		builtinTerminalTextEdit->hide();
 		builtinTerminalTextEditHORZ->hide();
 		terminalInputLine->hide();
 		terminalInputLineHORZ->hide();
+		
+		builtinTerminalTextEdit->parentWidget()->setParent(nullptr);
+		builtinTerminalTextEditHORZ->parentWidget()->setParent(nullptr);
 	}
 	
-	saveWantedTheme();
+	updateSplitsWidths();
+	
+	//ensure all are non-collapsible
+	
+	for (int i = 0; i < splitter->count(); ++i) {
+		splitter->setCollapsible(i, false);  // Set each widget to be non-collapsible
+	}
+	for (int i = 0; i < splitter2->count(); ++i) {
+		splitter2->setCollapsible(i, false);  // Set each widget to be non-collapsible
+	}
 }
 
 void MainWindow::useBuiltinTerminalTriggered(){
 	qDebug() << "useBuiltinTerminalTriggered";
 
-	if (useBuiltinTerminal->isChecked()){
-		if (preferHorizontalTerminal->isChecked()){
-			builtinTerminalTextEditHORZ->show();
-			terminalInputLineHORZ->show();
-			builtinTerminalTextEdit->hide();
-			terminalInputLine->hide();
-		}else{
-			builtinTerminalTextEditHORZ->hide();
-			terminalInputLineHORZ->hide();
-			builtinTerminalTextEdit->show();
-			terminalInputLine->show();
-		}
-	}else{
-		builtinTerminalTextEdit->hide();
-		builtinTerminalTextEditHORZ->hide();
-		terminalInputLine->hide();
-		terminalInputLineHORZ->hide();
-	}
-
+	updateTermimalViews();
 	saveWantedTheme();
 }
 
@@ -1877,7 +2155,7 @@ void MainWindow::openFileTreeContextMenu(const QPoint &pos)
 void MainWindow::onWindowStateChanged(){
 	qDebug() << "onWindowStateChanged";
 
-	if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())){ // BACK TO HERE YO
+	if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())){
 		fileTree->show();
 	}else{
 		fileTree->hide();
@@ -2492,9 +2770,8 @@ void MainWindow::setupLSP(QString oldFile)
 			height = metrics.height() * (actions.length()+1);
 		}
 
-		int offset = metrics.height() * 2;
 		QRect cursorRect = textEdit->cursorRect();
-		QPoint suggestedPosition = textEdit->mapToParent(cursorRect.bottomLeft() + QPoint(0, offset));
+		QPoint suggestedPosition = cursorRect.bottomLeft();
 
 		// Get the geometry of the parent window
 		QWidget* parentWindow = textEdit->window(); // Ensure the parent is the main window
@@ -2556,9 +2833,8 @@ void MainWindow::ShowSuggestionsWithSuperSet(QStringList completions){
 			height = metrics.height() * (suggestion.length()+1);
 		}
 
-		int offset = metrics.height() * 2;
 		QRect cursorRect = textEdit->cursorRect();
-		QPoint suggestedPosition = textEdit->mapToParent(cursorRect.bottomLeft() + QPoint(0, offset));
+		QPoint suggestedPosition = cursorRect.bottomLeft();
 
 		// Get the geometry of the parent window
 		QWidget* parentWindow = textEdit->window(); // Ensure the parent is the main window
@@ -2640,16 +2916,16 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 	hoverBox->resize(maxWidth, maxHeight);
 
 	QPoint newPos = givenPos;
-	if (givenPos.x() + maxWidth + 30 > textEdit->width()) { // If it goes beyond the right edge
-		newPos.setX(givenPos.x() - maxWidth + 40); // Move it to the left side
+	if (givenPos.x() + maxWidth > textEdit->width()) { // If it goes beyond the right edge
+		newPos.setX(givenPos.x() - maxWidth); // Move it to the left side
 	} else {
-		newPos.setX(givenPos.x() + 30); // Otherwise, stay on the right
+		newPos.setX(givenPos.x()); // Otherwise, stay on the right
 	}
 
-	if (givenPos.y() + maxHeight + 50 > textEdit->height()) {
-		newPos.setY(givenPos.y() - maxHeight + 30); // for some reason it starts above the cursor so we move it up less than we do down
+	if (givenPos.y() + maxHeight > textEdit->height()) {
+		newPos.setY(givenPos.y() - maxHeight + metrics.height()); // for some reason it starts above the cursor so we move it up less than we do down
 	} else {
-		newPos.setY(givenPos.y() + 50);
+		newPos.setY(givenPos.y() + metrics.height());
 	}
 
 	hoverBox->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
@@ -3117,6 +3393,10 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("autoSaveAct", autoSaveAct->isChecked());
 	settings.setValue("randomSelectFileTypeAct",randomSelectFileTypeAct->isChecked());
 	settings.setValue("useSpeakerAction", useSpeakerAction->isChecked());
+	
+	settings.setValue("splitWidths0", splitWidths[0]);
+	settings.setValue("splitWidths1", splitWidths[1]);
+	settings.setValue("splitWidths2", splitWidths[2]);
 
 	QStringList strLst = QStringList();
 
@@ -3252,25 +3532,6 @@ bool MainWindow::wantedTheme()
 		useFileTree->setChecked(settings.value("useFileTree", false).toBool());
 		useFileTreeIfFullscreen->setChecked(settings.value("useFileTreeIfFullscreen", true).toBool());
 
-		if (useBuiltinTerminal->isChecked()){
-			if (preferHorizontalTerminal->isChecked()){
-				builtinTerminalTextEditHORZ->show();
-				terminalInputLineHORZ->show();
-				builtinTerminalTextEdit->hide();
-				terminalInputLine->hide();
-			}else{
-				builtinTerminalTextEditHORZ->hide();
-				terminalInputLineHORZ->hide();
-				builtinTerminalTextEdit->show();
-				terminalInputLine->show();
-			}
-		}else{
-			builtinTerminalTextEdit->hide();
-			builtinTerminalTextEditHORZ->hide();
-			terminalInputLine->hide();
-			terminalInputLineHORZ->hide();
-		}
-
 		bool defaultRandomSelect = false;
 		QString name = qgetenv("USER"); // this env is LINUX - might as well right?
 		if (name.isEmpty()){
@@ -3280,6 +3541,11 @@ bool MainWindow::wantedTheme()
 		if (name.toLower() == "kaihe"){ // just for you kai
 			defaultRandomSelect = true;
 		}
+		
+		splitWidths[0] = settings.value("splitWidths0", 0.25f).toDouble();
+		splitWidths[1] = settings.value("splitWidths1", 0.25f).toDouble();
+		splitWidths[2] = settings.value("splitWidths2", 0.25f).toDouble();
+		updateTermimalViews(); // also calls the update for the splitWidths.
 
 		randomSelectFileTypeAct->setChecked(settings.value("randomSelectFileTypeAct", defaultRandomSelect).toBool());
 		useSpeakerAction->setChecked(settings.value("useSpeakerAction", false).toBool());

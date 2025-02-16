@@ -6,6 +6,7 @@
 #include <QTextCursor>
 
 #include <qdir.h>
+#include <qsplitter.h>
 #include <tree_sitter/api.h>
 
 QT_BEGIN_NAMESPACE
@@ -25,6 +26,10 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void updateSplitsWidths();
+	void moveWidgetsToSplitter(QLayout *layout, QWidget *splitter);
+	void storeResizeOfSplitters();
+	void updateTermimalViews();
 	void on_actionToggleComments_triggered();
 	void pullUpReloadDialogue(QString message);
 	void switchTerminalType();

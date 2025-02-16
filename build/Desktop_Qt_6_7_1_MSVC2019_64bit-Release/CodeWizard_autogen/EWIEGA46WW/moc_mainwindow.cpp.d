@@ -175,6 +175,7 @@ C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_M
   C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qrubberband.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qsizepolicy.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qslider.h \
+  C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qsplitter.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qstyle.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qstyleoption.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qtabbar.h \
