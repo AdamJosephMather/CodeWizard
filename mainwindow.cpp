@@ -337,6 +337,7 @@ QStringList fontFamilies;
 QListWidget *fontList;
 
 bool handlingReopen = false;
+QString toCompareTo;
 
 QSplitter *splitter;
 QSplitter *splitter2;
@@ -1259,7 +1260,7 @@ void MainWindow::changeEvent(QEvent *event) {
 			QTextStream in(&file);
 			QString fileContent = in.readAll();
 			
-			if (fileContent != textEdit->toPlainText()){
+			if (fileContent != toCompareTo){
 				if (useSpeakerAction->isChecked()){
 					speech->say("Detected change in file, reload?");
 				}
@@ -1267,6 +1268,21 @@ void MainWindow::changeEvent(QEvent *event) {
 			}
 			
 			handlingReopen = false;
+		}else{
+			if (fileName.isEmpty()){
+				handlingReopen = false;
+				return;
+			}
+			
+			QFileInfo fileInfo(fileName);
+			QFile file(fileName);
+			if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+				handlingReopen = false;
+				return;
+			}
+			
+			QTextStream in(&file);
+			toCompareTo = in.readAll();
 		}
 	}
 	QMainWindow::changeEvent(event);
@@ -4108,7 +4124,9 @@ void MainWindow::updateExtraWordsList(){
 void MainWindow::pullUpSaveDialogue()
 {
 	qDebug() << "pullUpSaveDialogue";
-
+	
+	if (handlingReopen){return;}
+	
 	if (autoSaveAct->isChecked()){
 		on_actionSave_triggered();
 		return;
