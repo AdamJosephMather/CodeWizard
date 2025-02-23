@@ -1068,11 +1068,11 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	fileModel->setRootPath(mostRecentPath);
 	fileTree->setModel(fileModel);
 	fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
-	fileTree->hideColumn(1);  // Hide column at index 1 (Size)
-	fileTree->hideColumn(2);  // Hide column at index 2 (Type)
-	fileTree->hideColumn(3);
+	fileTree->hideColumn(1);    // Hide column at index 1 (Size)
+	fileTree->hideColumn(2);    // Hide column at index 2 (Type)
+	fileTree->hideColumn(3);    // Hide column at index 2 (I don't remember)
 
-	fileTree->header()->hide();
+	fileTree->header()->hide(); // Remove the 'Name' bar at top
 
 	if (useFileTree->isChecked() && mostRecentPath != ""){
 		fileTree->show();
@@ -2973,16 +2973,16 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 
 	QStringList lines;
 	int lineCount = 0;
+	
 	if (type == "markdown"){
 		finalString = markdownToHtml(info);
-		lineCount = finalString.count("<br>")+finalString.count("<hr>")*3;
-		lines = finalString.split("<br>");
 	}else{
 		finalString = plaintextToHtml(info);
-		lineCount = finalString.count("<br>")+finalString.count("<hr>")*3;
-		lines = finalString.split("<br>");
 	}
-
+	
+	lineCount = finalString.count("<br>")+finalString.count("<hr>")*4 + 2;
+	lines = finalString.split("<br>");
+	
 	int maxLength = 0;
 
 	for (const QString& line : lines) {
@@ -2990,8 +2990,8 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 	}
 
 	QFontMetrics metrics(textEdit->font());
-	int textHeight = metrics.height() * (lineCount+2); // 2 because it looks better
-	int textWidth = metrics.horizontalAdvance('M') * (maxLength + 4); // 4 so that the scrollbar is not overlapping text
+	int textHeight = metrics.height() * (lineCount);
+	int textWidth = metrics.horizontalAdvance('M') * (maxLength + 4);
 
 	int maxWidth = qMin(textEdit->width()/2, textWidth);
 	int maxHeight = qMin(textEdit->height()/3, textHeight);
@@ -4786,6 +4786,15 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 				terminalInputLine->setText(toset);
 				terminalInputLineHORZ->setText(toset);
+				
+				QTextCursor cursor = terminalInputLine->textCursor();
+				QTextCursor cursor2 = terminalInputLineHORZ->textCursor();
+				
+				cursor.movePosition(QTextCursor::EndOfLine);
+				cursor2.movePosition(QTextCursor::EndOfLine);
+				
+				terminalInputLine->setTextCursor(cursor);
+				terminalInputLineHORZ->setTextCursor(cursor2);
 			}if (keyEvent->key() == Qt::Key_Down){
 				indexInSentCommands -= 1;
 				QString toset;
@@ -4802,6 +4811,15 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 				terminalInputLine->setText(toset);
 				terminalInputLineHORZ->setText(toset);
+				
+				QTextCursor cursor = terminalInputLine->textCursor();
+				QTextCursor cursor2 = terminalInputLineHORZ->textCursor();
+				
+				cursor.movePosition(QTextCursor::EndOfLine);
+				cursor2.movePosition(QTextCursor::EndOfLine);
+				
+				terminalInputLine->setTextCursor(cursor);
+				terminalInputLineHORZ->setTextCursor(cursor2);
 			}
 
 			if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter){
@@ -4809,10 +4827,14 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 				if (watched == terminalInputLine){
 					lineToSend = terminalInputLine->toPlainText() + "\n";
-					sentCommands.push_front(terminalInputLine->toPlainText());
+					if (sentCommands.length() == 0 || sentCommands.at(0) != terminalInputLine->toPlainText()){
+						sentCommands.push_front(terminalInputLine->toPlainText());
+					}
 				}else{
 					lineToSend = terminalInputLineHORZ->toPlainText() + "\n";
-					sentCommands.push_front(terminalInputLineHORZ->toPlainText());
+					if (sentCommands.length() == 0 || sentCommands.at(0) != terminalInputLineHORZ->toPlainText()){
+						sentCommands.push_front(terminalInputLineHORZ->toPlainText());
+					}
 				}
 
 				indexInSentCommands = -1;
