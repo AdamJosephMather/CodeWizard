@@ -1,4 +1,9 @@
+#ifdef _WIN32
+#include "languageserverclient.h"
+#else
 #include "/home/adamj/QtProjects/CodeWizard/languageserverclient.h"
+#endif
+
 #include <QDebug>
 #include <QJsonArray>
 #include <QThread>

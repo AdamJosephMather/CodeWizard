@@ -1,4 +1,9 @@
+#ifdef _WIN32
+#include "mytextedit.h"
+#else
 #include "/home/adamj/QtProjects/CodeWizard/mytextedit.h"
+#endif
+
 #include <QMenu>
 #include <QAction>
 #include <QContextMenuEvent>

@@ -166,30 +166,55 @@ set(PROJECT_SOURCES
 
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(CodeWizard
-#        app.o
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-        mytextedit.h mytextedit.cpp
-        resources/Python.ico
-        fonts/Courier_New.ttf
-        fonts/DroidSansMono.ttf
-        fonts/Monaco.ttf
-        fonts/Monospace.ttf
-        fonts/Courier_Prime.ttf
-        fonts/SourceCodePro-Regular.ttf
-        fonts/UbuntuMono-R.ttf
-        language.h language.cpp
-        languageserverclient.h languageserverclient.cpp
-        syntaxhighlighter.h syntaxhighlighter.cpp
+    if (WIN32)
+        qt_add_executable(CodeWizard
+            MANUAL_FINALIZATION
+            ${PROJECT_SOURCES}
+            app.o
+            mytextedit.h mytextedit.cpp
+            resources/Python.ico
+            fonts/Courier_New.ttf
+            fonts/DroidSansMono.ttf
+            fonts/Monaco.ttf
+            fonts/Monospace.ttf
+            fonts/Courier_Prime.ttf
+            fonts/SourceCodePro-Regular.ttf
+            fonts/UbuntuMono-R.ttf
+            language.h language.cpp
+            languageserverclient.h languageserverclient.cpp
+            syntaxhighlighter.h syntaxhighlighter.cpp
 
-        resources.qrc
-        recordinglight.h recordinglight.cpp
-        groqai.h groqai.cpp
-        myers.h myers.cpp
-        errorsmenu.h errorsmenu.cpp
+            resources.qrc
+            recordinglight.h recordinglight.cpp
+            groqai.h groqai.cpp
+            myers.h myers.cpp
+            errorsmenu.h errorsmenu.cpp
 
-    )
+        )
+    else()
+        qt_add_executable(CodeWizard
+            MANUAL_FINALIZATION
+            ${PROJECT_SOURCES}
+            mytextedit.h mytextedit.cpp
+            resources/Python.ico
+            fonts/Courier_New.ttf
+            fonts/DroidSansMono.ttf
+            fonts/Monaco.ttf
+            fonts/Monospace.ttf
+            fonts/Courier_Prime.ttf
+            fonts/SourceCodePro-Regular.ttf
+            fonts/UbuntuMono-R.ttf
+            language.h language.cpp
+            languageserverclient.h languageserverclient.cpp
+            syntaxhighlighter.h syntaxhighlighter.cpp
+
+            resources.qrc
+            recordinglight.h recordinglight.cpp
+            groqai.h groqai.cpp
+            myers.h myers.cpp
+            errorsmenu.h errorsmenu.cpp
+        )
+    endif()
 
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET CodeWizard APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -204,7 +229,6 @@ else()
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
         add_executable(CodeWizard
-#            app.o
             ${PROJECT_SOURCES}
         )
     endif()
@@ -249,7 +273,7 @@ target_link_libraries(CodeWizard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
 if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.CodeWizard)
+  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.foundationtechnologies.CodeWizard)
 endif()
 set_target_properties(CodeWizard PROPERTIES
     ${BUNDLE_ID_OPTION}

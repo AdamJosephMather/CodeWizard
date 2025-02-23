@@ -24,7 +24,7 @@
 #include <QRegularExpression>
 #include <tree_sitter/api.h>
 #include "syntaxhighlighter.h"
-#ifdef Q_OS_WIN
+#ifdef _WIN32
 	#include <windows.h>
 	#include <QTextToSpeech>
 #endif
@@ -326,7 +326,7 @@ QMenu* fileTreeContextMenu;
 
 bool holdingAnEvent = false;
 
-#ifdef Q_OS_WIN
+#ifdef _WIN32
 	QTextToSpeech *speech;
 #endif
 
@@ -513,7 +513,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(activeTerminal, &QProcess::readyReadStandardError, this, &MainWindow::handleTerminalStdout);
 
 	// Start cmd with a command that will keep the prompt open
-	#ifdef Q_OS_WIN
+	#ifdef _WIN32
 		activeTerminal->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal.");
 	#else
 		activeTerminal->setEnvironment(QStringList() << "TERM=dumb");
@@ -960,7 +960,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(lineEdit, &QTextEdit::textChanged, this, &MainWindow::saveWantedTheme);
 
 	if (QOperatingSystemVersion::currentType() == QOperatingSystemVersion::Windows) {
-		#ifdef Q_OS_WIN
+		#ifdef _WIN32
 			if (QOperatingSystemVersion::current() >= QOperatingSystemVersion::Windows11) {
 				windowsVersion = 11;
 			}else{
@@ -1084,7 +1084,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		setWindowState(Qt::WindowMaximized);
 	}
 
-    #ifdef Q_OS_WIN
+	#ifdef _WIN32
 		speech = new QTextToSpeech(this);
 
 		QList<QVoice> voices = speech->availableVoices();
@@ -1112,7 +1112,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		on_actionOpen_triggered();
 	}
 
-    QTimer::singleShot(50, this, &MainWindow::updateSplitsWidths);
+	QTimer::singleShot(50, this, &MainWindow::updateSplitsWidths);
 }
 
 void MainWindow::updateSplitsWidths(){
@@ -1255,7 +1255,7 @@ void MainWindow::changeEvent(QEvent *event) {
 
 			if (fileContent != toCompareTo && toCompareTo != "NOCOMPARISONYET_CODEWIZARD_WARNING - <THEENDISNIGH>"){
 				if (useSpeakerAction->isChecked()){
-                    #ifdef Q_OS_WIN
+					#ifdef _WIN32
 						speech->say("Detected change in file, reload?");
 					#endif
 				}
@@ -1407,7 +1407,7 @@ void MainWindow::on_actionDiscard_Local_Changes_triggered(){
 		tmpDir.mkpath(tmpDirPath);
 	}
 
-	#ifdef Q_OS_WIN
+	#ifdef _WIN32
 		QString scriptFilePath = tmpDirPath + "/run_script.bat";
 		QFile scriptFile(scriptFilePath);
 		if (scriptFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -1454,7 +1454,7 @@ void MainWindow::on_actionRegular_triggered(){
 		tmpDir.mkpath(tmpDirPath);
 	}
 
-	#ifdef Q_OS_WIN
+	#ifdef _WIN32
 		QString scriptFilePath = tmpDirPath + "/run_script.bat";
 		QFile scriptFile(scriptFilePath);
 		if (scriptFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -1517,7 +1517,7 @@ void MainWindow::on_actionPush_triggered(){
 		tmpDir.mkpath(tmpDirPath);
 	}
 
-	#ifdef Q_OS_WIN
+	#ifdef _WIN32
 		QString scriptFilePath = tmpDirPath + "/run_script.bat";
 		QFile scriptFile(scriptFilePath);
 		if (scriptFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -1792,7 +1792,7 @@ void MainWindow::saveSyntaxColorsToFile(){
 	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		openHelpMenu("Failed to open file to save syntax colors.");
 		if (useSpeakerAction->isChecked()){
-            #ifdef Q_OS_WIN
+			#ifdef _WIN32
 				speech->say("Failed to open file to save syntax colors.");
 			#endif
 		}
@@ -1827,7 +1827,7 @@ void MainWindow::loadSyntaxColorsFromFile(){
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		openHelpMenu("Failed to open file.");
 		if (useSpeakerAction->isChecked()){
-            #ifdef Q_OS_WIN
+			#ifdef _WIN32
 				speech->say("Failed to open file.");
 			#endif
 		}
@@ -1844,7 +1844,7 @@ void MainWindow::loadSyntaxColorsFromFile(){
 	if (!fileContents.startsWith(expectedHeader)){
 		openHelpMenu("File does not match specification.");
 		if (useSpeakerAction->isChecked()){
-            #ifdef Q_OS_WIN
+			#ifdef _WIN32
 				speech->say("File does not match specification.");
 			#endif
 		}
@@ -1858,7 +1858,7 @@ void MainWindow::loadSyntaxColorsFromFile(){
 	if (hex.length() != 8){
 		openHelpMenu("File does not match specification.");
 		if (useSpeakerAction->isChecked()){
-            #ifdef Q_OS_WIN
+			#ifdef _WIN32
 				speech->say("File does not match specification.");
 			#endif
 		}
@@ -1946,7 +1946,7 @@ void MainWindow::syntaxColorsOffImage(){
 
 			if (first && z == 7){ // max number of retries
 				if (useSpeakerAction->isChecked()){
-                    #ifdef Q_OS_WIN
+					#ifdef _WIN32
 						speech->say("This image did not play nicely with this feature.");
 					#endif
 				}
@@ -2029,7 +2029,7 @@ void MainWindow::validateAndConvert(){
 			hexEdits.append(LE->text());
 		} else {
 			if (useSpeakerAction->isChecked()){
-                #ifdef Q_OS_WIN
+				#ifdef _WIN32
 					speech->say("Hex code invalid.");
 				#endif
 			}
@@ -2055,7 +2055,7 @@ void MainWindow::validateAndConvert(){
 	rehighlightFullDoc();
 
 	if (useSpeakerAction->isChecked()){
-        #ifdef Q_OS_WIN
+		#ifdef _WIN32
 			speech->say("Succeeded!");
 		#endif
 	}
@@ -2174,7 +2174,7 @@ void MainWindow::onOpenOutside()
 
 	// Use QProcess to open the file with the system's default application
 	QProcess process;
-	#ifdef Q_OS_WIN
+	#ifdef _WIN32
 		process.startDetached("cmd", QStringList() << "/c" << "start" << "" << QDir::toNativeSeparators(filePath));
 	#elif defined(Q_OS_MAC)
 		process.startDetached("open", QStringList() << filePath);
@@ -2264,7 +2264,7 @@ void MainWindow::showWeDontFuckWithTheLSP(){
 	qDebug() << "showWeDontFuckWithTheLSP";
 
 	if (useSpeakerAction->isChecked()){
-        #ifdef Q_OS_WIN
+		#ifdef _WIN32
 			speech->say("Action not supported while LSP is initializing.");
 		#endif
 	}
@@ -2281,7 +2281,7 @@ void MainWindow::showHoldYourHorses(){
 	qDebug() << "showHoldYourHorses";
 
 	if (useSpeakerAction->isChecked()){
-        #ifdef Q_OS_WIN
+		#ifdef _WIN32
 			speech->say("Action not supported while opening file.");
 		#endif
 	}
@@ -2302,7 +2302,7 @@ void MainWindow::checkForFixitDialogue(){
 	}
 
 	if (useSpeakerAction->isChecked()){
-        #ifdef Q_OS_WIN
+		#ifdef _WIN32
 			speech->say("Detected space based indenting in file. Fix-it recommended.");
 		#endif
 	}
@@ -2349,7 +2349,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		}
 
 		if (useSpeakerAction->isChecked()){
-            #ifdef Q_OS_WIN
+			#ifdef _WIN32
 				speech->say("Opening File");
 			#endif
 		}
@@ -2420,7 +2420,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		updateMargins(true); // called on open - every time
 
 		if (useSpeakerAction->isChecked()){
-            #ifdef Q_OS_WIN
+			#ifdef _WIN32
 				speech->say("File Opened");
 			#endif
 		}
@@ -2436,7 +2436,7 @@ bool MainWindow::checkForLargeFile(QFile *file){
 
 	if (kb > 1000){ // 1mb I think
 		if (useSpeakerAction->isChecked()){
-            #ifdef Q_OS_WIN
+			#ifdef _WIN32
 				speech->say("That's a large file ("+QString::number(kb/1000)+" mb). Open anyways?");
 			#endif
 		}
@@ -2787,7 +2787,7 @@ void MainWindow::setupLSP(QString oldFile)
 	}
 
 	if (useSpeakerAction->isChecked()){
-        #ifdef Q_OS_WIN
+		#ifdef _WIN32
 			speech->say("Initializing LSP");
 		#endif
 	}
@@ -2883,7 +2883,7 @@ void MainWindow::setupLSP(QString oldFile)
 	client->openDocument(fileName, languageId, textEdit->toPlainText());
 
 	if (useSpeakerAction->isChecked()){
-        #ifdef Q_OS_WIN
+		#ifdef _WIN32
 			speech->say("Initialized LSP");
 		#endif
 	}
@@ -3637,16 +3637,16 @@ bool MainWindow::wantedTheme()
 		tabWidth = settings.value("tabWidth", 4).toInt();
 		return settings.value("darkModeEnabled", false).toBool(); // Default to false if not found
 	}else{
-        #ifdef Q_OS_WIN
-            QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", QSettings::NativeFormat);
-            return settings.value("AppsUseLightTheme").toInt() == 0;
-        #else
-            QProcess process;
-            process.start("gsettings get org.gnome.desktop.interface gtk-theme");
-            process.waitForFinished();
-            QString output = process.readAllStandardOutput().trimmed();
-            return output.contains("dark", Qt::CaseInsensitive);
-        #endif
+		#ifdef _WIN32
+			QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", QSettings::NativeFormat);
+			return settings.value("AppsUseLightTheme").toInt() == 0;
+		#else
+			QProcess process;
+			process.start("gsettings get org.gnome.desktop.interface gtk-theme");
+			process.waitForFinished();
+			QString output = process.readAllStandardOutput().trimmed();
+			return output.contains("dark", Qt::CaseInsensitive);
+		#endif
 	}
 }
 
@@ -4016,7 +4016,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	storedLineNumbers[newFile] = textEdit->verticalScrollBar()->value();
 
 	if (useSpeakerAction->isChecked()){
-        #ifdef Q_OS_WIN
+		#ifdef _WIN32
 			speech->say("Opening File");
 		#endif
 	}
@@ -4096,7 +4096,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	updateMargins(true); // called on open - every time
 
 	if (useSpeakerAction->isChecked()){
-        #ifdef Q_OS_WIN
+		#ifdef _WIN32
 			speech->say("File Opened");
 		#endif
 	}
@@ -4206,7 +4206,7 @@ void MainWindow::pullUpSaveDialogue()
 	}
 
 	if (useSpeakerAction->isChecked()){
-        #ifdef Q_OS_WIN
+		#ifdef _WIN32
 			speech->say("Save File?");
 		#endif
 	}
@@ -4336,7 +4336,7 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 		tmpDir.mkpath(tmpDirPath);
 	}
 
-	#ifdef Q_OS_WIN
+	#ifdef _WIN32
 		// Define the batch file path for Windows
 		QString batFilePath = tmpDirPath + "/run_script.bat";
 	#else
@@ -4387,7 +4387,7 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 
 		intermediateTag.replace("[filename]", fileNameName).replace("[filenameWoutExt]", fileNameName.split('.')[0]);
 
-		#ifdef Q_OS_WIN
+		#ifdef _WIN32
 			out << "cd /d " << fileDir << "\n";
 			out << intermediateTag;
 		#else
@@ -4401,14 +4401,14 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 
 		batFile.close();
 
-		#ifndef Q_OS_WIN
+		#ifndef _WIN32
 			// Set execution permissions on Linux
 			QFile::setPermissions(batFilePath, QFileDevice::ReadOwner | QFileDevice::WriteOwner | QFileDevice::ExeOwner);
 		#endif
 	}
 
 	if (!useBuiltinTerminal->isChecked()){
-		#ifdef Q_OS_WIN
+		#ifdef _WIN32
 			QStringList arguments;
 			arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
 			process->startDetached("cmd.exe", arguments);
@@ -4418,7 +4418,7 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 			process->startDetached("gnome-terminal -- bash -c 'bash "+batFilePath+"; exec bash'");
 		#endif
 	} else {
-		#ifdef Q_OS_WIN
+		#ifdef _WIN32
 			activeTerminal->start("cmd.exe");
 		#else
 			activeTerminal->setEnvironment(QStringList() << "TERM=dumb");
@@ -4546,7 +4546,7 @@ void MainWindow::on_actionStart_Macro_Recording_triggered() {
 	endRecordMacroButton->setEnabled(true);
 	replayMacroButton->setEnabled(false);
 	if (useSpeakerAction->isChecked()){
-        #ifdef Q_OS_WIN
+		#ifdef _WIN32
 			speech->say("Started Macro Recording");
 		#endif
 	}
@@ -4565,7 +4565,7 @@ void MainWindow::on_actionEnd_Macro_Recording_triggered() {
 	endRecordMacroButton->setEnabled(false);
 	replayMacroButton->setEnabled(true);
 	if (useSpeakerAction->isChecked()){
-        #ifdef Q_OS_WIN
+		#ifdef _WIN32
 			speech->say("Ended Macro Recording");
 		#endif
 	}
@@ -4762,7 +4762,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 				builtinTerminalTextEdit->insertPlainText("\n\n");
 				builtinTerminalTextEditHORZ->insertPlainText("\n\n");
-				#ifdef Q_OS_WIN
+				#ifdef _WIN32
 					("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal.");
 				#else
 					activeTerminal->setEnvironment(QStringList() << "TERM=dumb");
@@ -7262,7 +7262,7 @@ void MainWindow::openRecentFile(QString newFile){
 	isOpeningFile = true;
 
 	if (useSpeakerAction->isChecked()){
-        #ifdef Q_OS_WIN
+		#ifdef _WIN32
 			speech->say("Opening File");
 		#endif
 	}
@@ -7354,7 +7354,7 @@ void MainWindow::openRecentFile(QString newFile){
 	updateMargins(true); // called on open - every time
 
 	if (useSpeakerAction->isChecked()){
-        #ifdef Q_OS_WIN
+		#ifdef _WIN32
 			speech->say("File Opened");
 		#endif
 	}

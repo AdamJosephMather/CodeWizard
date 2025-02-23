@@ -1,4 +1,9 @@
+#ifdef _WIN32
+#include "syntaxhighlighter.h"
+#else
 #include "/home/adamj/QtProjects/CodeWizard/syntaxhighlighter.h"
+#endif
+
 #include <QTextBlock>
 #include <QTextLayout>
 #include <QFont>
