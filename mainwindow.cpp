@@ -1121,7 +1121,10 @@ void MainWindow::updateSplitsWidths(){
 	int totalWidth = splitter->width();
 	int totalHeight = splitter2->height();
 
-	if (totalWidth == 0 || totalHeight == 0){return;}
+	if (totalWidth == 0 || totalHeight == 0){
+		QTimer::singleShot(50, this, &MainWindow::updateSplitsWidths); //reschedule it just in case
+		return;
+	}
 
 	int ftW = totalWidth*splitWidths[0];
 	int btW = totalWidth*splitWidths[1];
@@ -1171,6 +1174,8 @@ void MainWindow::storeResizeOfSplitters(){
 	for (int i = 0; i < s2.length(); i++){
 		totalHeight += s2[i];
 	}
+	
+	if (totalWidth == 0 || totalHeight == 0){return;}
 
 	splitWidths[0] = (float)fileTree->width()/(float)totalWidth;
 	splitWidths[1] = (float)builtinTerminalTextEdit->width()/(float)totalWidth;
@@ -2130,9 +2135,6 @@ void MainWindow::onContentsChange(int position, int charsRemoved, int charsAdded
 	treeParserSyntaxHighlighter.updateHighlighting(textDocument, position, charsAdded+charsRemoved, tree, newTree, charsAdded == textDocument->characterCount());
 
 	tree = newTree;
-
-	// Highlight the affected block
-	// highlightBlock(block);
 }
 
 void MainWindow::printTree(TSNode node, int depth) {
@@ -6214,7 +6216,7 @@ void MainWindow::highlightComparisons()
 
 void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to get right - don't touch a single line of this shit
 {
-	qDebug() << "highlightDiagnostics";
+	qDebug() << "highlightDiagnostics - reverse: " << reverseTheProcess;
 
 	textEdit->blockSignals(true);
 
@@ -6275,73 +6277,77 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 		int maxErrors = 40;
 
 		for (int i = 0; i < errStartL.size(); ++i) {
-			if (i >= maxErrors){
-				break;
-			}
-
-			int startLine = errStartL[i];
-			int endLine = errEndL[i];
-			int startC = errStartC[i];
-			int endC = errEndC[i];
-			int severity = errSeverity[i];
-
-			if (!allowedSeverities.contains(severity)){
-				continue;
-			}
-
-			if (startLine == endLine && startC == endC){
-				startC -= 1;
-				if (startC < 0){
-					startC = 0;
-					endC += 1;
-				}
-			}
-
-			QTextBlock block = textDocument->findBlockByNumber(startLine);
-
-			// Process each block in the range
-			for (int currentLine = startLine; currentLine <= endLine; ++currentLine) {
-				if (!block.isValid()) {
+			try{
+				if (i >= maxErrors){
 					break;
 				}
-
-				QTextLayout* layout = block.layout();
-				if (!layout) {
+	
+				int startLine = errStartL[i];
+				int endLine = errEndL[i];
+				int startC = errStartC[i];
+				int endC = errEndC[i];
+				int severity = errSeverity[i];
+	
+				if (!allowedSeverities.contains(severity)){
 					continue;
 				}
-
-				errHighlightedBlocks.push_back(block);
-
-				int blockLen = block.length();
-				int blockPos = block.position();
-
-				QTextLayout::FormatRange range;
-				range.format = errorFormats[severity];
-
-				if (currentLine == startLine) {
-					range.start = startC;
-					if (currentLine == endLine) {
-						range.length = endC-startC;
-					}else{
-						range.length = blockLen-startC;
-					}
-				}else{
-					range.start = 0;
-					if (currentLine == endLine) {
-						range.length = endC;
-					}else{
-						range.length = blockLen;
+	
+				if (startLine == endLine && startC == endC){
+					startC -= 1;
+					if (startC < 0){
+						startC = 0;
+						endC += 1;
 					}
 				}
-
-				QVector<QTextLayout::FormatRange> formats = layout->formats();
-				formats.append(range);
-				layout->setFormats(formats);
-				textDocument->markContentsDirty(blockPos, blockLen);
-
-				if (currentLine != endLine){
-					block = block.next();
+	
+				QTextBlock block = textDocument->findBlockByNumber(startLine);
+	
+				// Process each block in the range
+				for (int currentLine = startLine; currentLine <= endLine; ++currentLine) {
+					if (!block.isValid()) {
+						break;
+					}
+	
+					QTextLayout* layout = block.layout();
+					if (!layout) {
+						continue;
+					}
+	
+					errHighlightedBlocks.push_back(block);
+	
+					int blockLen = block.length();
+					int blockPos = block.position();
+	
+					QTextLayout::FormatRange range;
+					range.format = errorFormats[severity];
+	
+					if (currentLine == startLine) {
+						range.start = startC;
+						if (currentLine == endLine) {
+							range.length = endC-startC;
+						}else{
+							range.length = blockLen-startC;
+						}
+					}else{
+						range.start = 0;
+						if (currentLine == endLine) {
+							range.length = endC;
+						}else{
+							range.length = blockLen;
+						}
+					}
+	
+					QVector<QTextLayout::FormatRange> formats = layout->formats();
+					formats.append(range);
+					layout->setFormats(formats);
+					textDocument->markContentsDirty(blockPos, blockLen);
+	
+					if (currentLine != endLine){
+						block = block.next();
+					}
 				}
+			}catch(...){
+				qDebug() << "Caught2";
 			}
 		}
 	}
