@@ -1,4 +1,4 @@
-#include "LanguageServerClient.h"
+#include "/home/adamj/QtProjects/CodeWizard/languageserverclient.h"
 #include <QDebug>
 #include <QJsonArray>
 #include <QThread>
@@ -43,7 +43,11 @@ LanguageServerClient::LanguageServerClient(const QString &serverPath, QTextEdit 
 	connect(&serverProcess, &QProcess::errorOccurred, this, &LanguageServerClient::onServerErrorOccurred);
 	connect(&serverProcess, &QProcess::finished, this, &LanguageServerClient::onServerFinished);
 
-	serverProcess.start("cmd", QStringList() << "/c" << serverPath); // to send /k
+    #ifdef Q_OS_WIN
+        serverProcess.start("cmd", QStringList() << "/c" << serverPath); // to send /k
+    #else
+        serverProcess.start("/bin/sh", QStringList() << "-c" << serverPath); // to send /k
+    #endif
 
 	if (!serverProcess.waitForStarted()) {
 		failedToStart = true;

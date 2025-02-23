@@ -24,12 +24,14 @@
 #include <QRegularExpression>
 #include <tree_sitter/api.h>
 #include "syntaxhighlighter.h"
-#include <QTextToSpeech>
+#ifdef Q_OS_WIN
+	#include <windows.h>
+	#include <QTextToSpeech>
+#endif
 #include "recordinglight.h"
 #include "groqai.h"
 #include "myers.h"
 #include "errorsmenu.h"
-#include <windows.h>
 
 extern "C" {
 	TSLanguage* tree_sitter_cpp(void);
@@ -58,7 +60,7 @@ QTextDocument *textDocument;
 QString updateSyntaxAdd = "";
 int updateSyntaxPosition = -1;
 
-QString versionNumber = "8.9.3";
+QString versionNumber = "8.9.4";
 
 GroqAI *groq;
 QString groqApiKey;
@@ -324,7 +326,10 @@ QMenu* fileTreeContextMenu;
 
 bool holdingAnEvent = false;
 
-QTextToSpeech *speech;
+#ifdef Q_OS_WIN
+	QTextToSpeech *speech;
+#endif
+
 QAction *useSpeakerAction;
 Myers* diffAlgo;
 
@@ -347,17 +352,17 @@ double splitWidths[3];
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
 	qDebug() << "MainWindow";
-	
+
 	ui->setupUi(this);
-	
+
 	// Replace with new splitters
-	
+
 	QWidget *placeholderWidget = ui->horizontalLayout_4;  // Get the widget holding the layout
 	QLayout *oldLayout = placeholderWidget->layout();
 	splitter = new QSplitter(Qt::Horizontal, this);
 	splitter->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 	splitter->setContentsMargins(0, 0, 0, 0);
-	
+
 	while (!oldLayout->isEmpty()){
 		QLayoutItem *item = oldLayout->takeAt(0);
 
@@ -373,7 +378,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		} else if (QLayout *nestedLayout = item->layout()) {
 			QWidget *container = new QWidget(splitter);
 			QLayout *containerLayout = nullptr;
-			
+
 			if (QVBoxLayout *vLayout = qobject_cast<QVBoxLayout *>(nestedLayout)) {
 				containerLayout = new QVBoxLayout(container);
 			} else if (QHBoxLayout *hLayout = qobject_cast<QHBoxLayout *>(nestedLayout)) {
@@ -381,21 +386,21 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 			} else if (QFormLayout *fLayout = qobject_cast<QFormLayout *>(nestedLayout)) {
 				containerLayout = new QFormLayout(container);
 			} // Add more layout types as needed
-			
+
 			if (!containerLayout){
 				continue;
 			}
-			
+
 			containerLayout->setSpacing(0);
 			containerLayout->setContentsMargins(0, 0, 0, 0);
-			
+
 			container->setLayout(containerLayout);
 			moveWidgetsToSplitter(nestedLayout, container);  // Handle nested layout
 			splitter->addWidget(container);
 		}
 		delete item;
 	}
-	
+
 	splitter->setParent(placeholderWidget->parentWidget());
 
 	QLayout *mainLayout = placeholderWidget->parentWidget()->layout();
@@ -404,17 +409,17 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		mainLayout->setContentsMargins(0, 0, 0, 0);
 		mainLayout->replaceWidget(placeholderWidget, splitter);
 	}
-	
+
 	delete placeholderWidget;
-	
+
 	// SPLITTER FOR THE SECOND TERMINAL - MUST BE DONE AFTER FIRST SPLITTER - NO I'M NOT GOING TO TELL YOU WHY, GFL FIGURING OUT WHY
-	
+
 	placeholderWidget = ui->verticalLayout_7;  // Get the widget holding the layout
 	oldLayout = placeholderWidget->layout();
 	splitter2 = new QSplitter(Qt::Vertical, this);
 	splitter2->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 	splitter2->setContentsMargins(0, 0, 0, 0);
-	
+
 	while (!oldLayout->isEmpty()){
 		QLayoutItem *item = oldLayout->takeAt(0);
 
@@ -430,7 +435,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		} else if (QLayout *nestedLayout = item->layout()) {
 			QWidget *container = new QWidget(splitter2);
 			QLayout *containerLayout = nullptr;
-			
+
 			if (QVBoxLayout *vLayout = qobject_cast<QVBoxLayout *>(nestedLayout)) {
 				containerLayout = new QVBoxLayout(container);
 			} else if (QHBoxLayout *hLayout = qobject_cast<QHBoxLayout *>(nestedLayout)) {
@@ -438,21 +443,21 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 			} else if (QFormLayout *fLayout = qobject_cast<QFormLayout *>(nestedLayout)) {
 				containerLayout = new QFormLayout(container);
 			} // Add more layout types as needed
-			
+
 			if (!containerLayout){
 				continue;
 			}
-			
+
 			containerLayout->setSpacing(0);
 			containerLayout->setContentsMargins(0, 0, 0, 0);
-			
+
 			container->setLayout(containerLayout);
 			moveWidgetsToSplitter(nestedLayout, container);  // Handle nested layout
 			splitter2->addWidget(container);
 		}
 		delete item;
 	}
-	
+
 	splitter2->setParent(placeholderWidget->parentWidget());
 
 	mainLayout = placeholderWidget->parentWidget()->layout();
@@ -461,18 +466,18 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		mainLayout->setContentsMargins(0, 0, 0, 0);
 		mainLayout->replaceWidget(placeholderWidget, splitter2);
 	}
-	
+
 	delete placeholderWidget;
-	
+
 	// Ensure all elements are non-collapsible
-	
+
 	for (int i = 0; i < splitter->count(); ++i) {
 		splitter->setCollapsible(i, false);  // Set each widget to be non-collapsible
 	}
 	for (int i = 0; i < splitter2->count(); ++i) {
 		splitter2->setCollapsible(i, false);  // Set each widget to be non-collapsible
 	}
-	
+
 	// Rest
 
 	diffAlgo = new Myers();
@@ -508,7 +513,13 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(activeTerminal, &QProcess::readyReadStandardError, this, &MainWindow::handleTerminalStdout);
 
 	// Start cmd with a command that will keep the prompt open
-	activeTerminal->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal.");
+	#ifdef Q_OS_WIN
+		activeTerminal->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal.");
+	#else
+		activeTerminal->setEnvironment(QStringList() << "TERM=dumb");
+		activeTerminal->start("bash", QStringList() << "--login" << "-i"); //<< "echo CodeWizard Builtin Terminal.");
+		activeTerminal->write("echo CodeWizard Builtin Terminal.\n");
+	#endif
 
 	findBar = ui->textEdit_2;
 	replaceBar = ui->textEdit_3;
@@ -530,30 +541,30 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	menuWarnings = ui->menuWarnings;
 	menuAutocomplete = ui->menuAutocomplete;
 	menuSilly = ui->menuSilly;
-	
+
 	menuSubFonts = menuFonts->addMenu("Browse Installed Fonts");
 	QFontDatabase fontDatabase;
 	fontFamilies = fontDatabase.families();
 	fontList = new QListWidget();
-	
+
 	fontList->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	fontList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	fontList->setFixedSize(350, 500);
-		
+
 	for (const QString &font : fontFamilies) {
 		fontList->addItem(font);
 	}
-	
+
 	connect(fontList, &QListWidget::itemClicked, this, [this](QListWidgetItem *item) {
 		qDebug() << "fontListItemClicked";
 		currentFont = item->text();
 		updateFontSelection();
 	});
-	
+
 	QWidgetAction *fontAction = new QWidgetAction(this);
 	fontAction->setDefaultWidget(fontList);
 	menuSubFonts->addAction(fontAction);
-	
+
 	useFileTree = ui->actionUse_File_Tree;
 	useFileTreeIfFullscreen = ui->actionUse_File_Tree_If_Fullscreen;
 	fileTree = ui->treeView;
@@ -949,11 +960,13 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(lineEdit, &QTextEdit::textChanged, this, &MainWindow::saveWantedTheme);
 
 	if (QOperatingSystemVersion::currentType() == QOperatingSystemVersion::Windows) {
-		if (QOperatingSystemVersion::current() >= QOperatingSystemVersion::Windows11) {
-			windowsVersion = 11;
-		}else{
-			windowsVersion = 10;
-		}
+		#ifdef Q_OS_WIN
+			if (QOperatingSystemVersion::current() >= QOperatingSystemVersion::Windows11) {
+				windowsVersion = 11;
+			}else{
+				windowsVersion = 10;
+			}
+		#endif
 	}
 
 	qDebug() << "Windows version: " << windowsVersion;
@@ -1010,7 +1023,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(useFileTreeIfFullscreen, &QAction::toggled, this, &MainWindow::fileTreeToggled);
 	connect(splitter, &QSplitter::splitterMoved, this, &MainWindow::storeResizeOfSplitters);
 	connect(splitter2, &QSplitter::splitterMoved, this, &MainWindow::storeResizeOfSplitters);
-	
+
 	connect(fileTree, &QTreeView::doubleClicked, this, &MainWindow::fileTreeOpened);
 
 	connect(groq, &GroqAI::responseReceived, this, [this](const QString &response) {
@@ -1058,7 +1071,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	fileTree->hideColumn(1);  // Hide column at index 1 (Size)
 	fileTree->hideColumn(2);  // Hide column at index 2 (Type)
 	fileTree->hideColumn(3);
-	
+
 	fileTree->header()->hide();
 
 	if (useFileTree->isChecked() && mostRecentPath != ""){
@@ -1071,17 +1084,19 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		setWindowState(Qt::WindowMaximized);
 	}
 
-	speech = new QTextToSpeech(this);
+    #ifdef Q_OS_WIN
+		speech = new QTextToSpeech(this);
 
-	QList<QVoice> voices = speech->availableVoices();
+		QList<QVoice> voices = speech->availableVoices();
 
-	// Select a male voice, if available
-	for (const QVoice &voice : voices) {
-		if (voice.gender() == QVoice::Male) {
-			speech->setVoice(voice);
-			break;
+		// Select a male voice, if available
+		for (const QVoice &voice : voices) {
+			if (voice.gender() == QVoice::Male) {
+				speech->setVoice(voice);
+				break;
+			}
 		}
-	}
+	#endif
 
 	recordingLight = new RecordingLight(textEdit);
 	recordingLight->hide();
@@ -1096,45 +1111,45 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		globalArgFileName = argFileName;
 		on_actionOpen_triggered();
 	}
-	
-	QTimer::singleShot(10, this, &MainWindow::updateSplitsWidths);
+
+    QTimer::singleShot(50, this, &MainWindow::updateSplitsWidths);
 }
 
 void MainWindow::updateSplitsWidths(){
 	qDebug() << "updateSplitsWidths";
-	
+
 	int totalWidth = splitter->width();
 	int totalHeight = splitter2->height();
-	
+
 	if (totalWidth == 0 || totalHeight == 0){return;}
-	
+
 	int ftW = totalWidth*splitWidths[0];
 	int btW = totalWidth*splitWidths[1];
 	int btH = totalHeight*splitWidths[2];
 	int teW = totalWidth-ftW-btW;
 	int teH = totalHeight-btH;
-	
+
 	QList<int> sizes;
-	
+
 	sizes.push_back(ftW);
 	sizes.push_back(teW);
-	
+
 	if (!(useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized()))){
 		teW += ftW;
 		sizes[1] += ftW;
 	}
-	
+
 	if (useBuiltinTerminal->isChecked() && !preferHorizontalTerminal->isChecked()){
 		sizes.push_back(btW);
 	}else{
 		teW += btW;
 		sizes[1] += btW;
 	}
-	
+
 	splitter->setSizes(sizes);
 	sizes.clear();
 	sizes.push_back(teH);
-	
+
 	if (useBuiltinTerminal->isChecked() && preferHorizontalTerminal->isChecked()){
 		sizes.push_back(btH);
 		splitter2->setSizes(sizes);
@@ -1143,24 +1158,24 @@ void MainWindow::updateSplitsWidths(){
 
 void MainWindow::storeResizeOfSplitters(){
 	qDebug() << "storeResizeOfSplitters";
-	
+
 	auto s1 = splitter->sizes();
 	auto s2 = splitter2->sizes();
-	
+
 	int totalWidth = 0;
 	for (int i = 0; i < s1.length(); i++){
 		totalWidth += s1[i];
 	}
-	
+
 	int totalHeight = 0;
 	for (int i = 0; i < s2.length(); i++){
 		totalHeight += s2[i];
 	}
-	
+
 	splitWidths[0] = (float)fileTree->width()/(float)totalWidth;
 	splitWidths[1] = (float)builtinTerminalTextEdit->width()/(float)totalWidth;
 	splitWidths[2] = (float)builtinTerminalTextEditHORZ->height()/(float)totalHeight;
-	
+
 	saveWantedTheme();
 }
 
@@ -1176,17 +1191,17 @@ void MainWindow::moveWidgetsToSplitter(QLayout *layout, QWidget *toWidget) {
 		if (QWidget *widget = item->widget()) {
 			layout->removeWidget(widget);
 			toWidget->layout()->addWidget(widget);
-			
+
 			if (widget->layout()){
 				widget->layout()->setSpacing(0);
 				widget->layout()->setContentsMargins(0, 0, 0, 0);
 			}
-		} 
+		}
 		else if (QLayout *nestedLayout = item->layout()) {
 			// If it's a nested layout, create a new container widget for the layout
 			QWidget *container = new QWidget(toWidget);
 			QLayout *containerLayout = nullptr;
-			
+
 			if (QVBoxLayout *vLayout = qobject_cast<QVBoxLayout *>(nestedLayout)) {
 				containerLayout = new QVBoxLayout(container);
 			} else if (QHBoxLayout *hLayout = qobject_cast<QHBoxLayout *>(nestedLayout)) {
@@ -1194,14 +1209,14 @@ void MainWindow::moveWidgetsToSplitter(QLayout *layout, QWidget *toWidget) {
 			} else if (QFormLayout *fLayout = qobject_cast<QFormLayout *>(nestedLayout)) {
 				containerLayout = new QFormLayout(container);
 			} // Add more layout types as needed
-			
+
 			if (!containerLayout){
 				continue;
 			}
-			
+
 			containerLayout->setSpacing(0);
 			containerLayout->setContentsMargins(0, 0, 0, 0);
-			
+
 			container->setLayout(containerLayout);
 			moveWidgetsToSplitter(nestedLayout, container);  // Handle nested layout
 			toWidget->layout()->addWidget(container);
@@ -1216,35 +1231,37 @@ void MainWindow::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::ActivationChange) {
 		if (this->isActiveWindow()) {
 			qDebug() << "returnedToCodeWizard";
-			
+
 			if (handlingReopen){
 				return;
 			}
-			
+
 			handlingReopen = true;
-			
+
 			if (fileName.isEmpty()){
 				handlingReopen = false;
 				return;
 			}
-			
+
 			QFileInfo fileInfo(fileName);
 			QFile file(fileName);
 			if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
 				handlingReopen = false;
 				return;
 			}
-			
+
 			QTextStream in(&file);
 			QString fileContent = in.readAll();
-			
+
 			if (fileContent != toCompareTo && toCompareTo != "NOCOMPARISONYET_CODEWIZARD_WARNING - <THEENDISNIGH>"){
 				if (useSpeakerAction->isChecked()){
-					speech->say("Detected change in file, reload?");
+                    #ifdef Q_OS_WIN
+						speech->say("Detected change in file, reload?");
+					#endif
 				}
 				pullUpReloadDialogue("Detected change in file, reload?");
 			}
-			
+
 			handlingReopen = false;
 		}else{
 			qDebug() << "leftCodeWizard";
@@ -1252,14 +1269,14 @@ void MainWindow::changeEvent(QEvent *event) {
 				handlingReopen = false;
 				return;
 			}
-			
+
 			QFileInfo fileInfo(fileName);
 			QFile file(fileName);
 			if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
 				handlingReopen = false;
 				return;
 			}
-			
+
 			QTextStream in(&file);
 			toCompareTo = in.readAll();
 		}
@@ -1284,12 +1301,17 @@ void MainWindow::pullUpReloadDialogue(QString message){
 
 void MainWindow::handleTerminalStdout(){
 	QByteArray output = activeTerminal->readAll();
+
+	QString text = QString::fromLocal8Bit(output);
+//    QRegularExpression ansiEscapePattern("\x1B(?:[@-Z\\-_]|\\[[0-?]*[ -/]*[@-~]|\\].*?\x07)");
+//    text = text.remove(ansiEscapePattern);
+
 	builtinTerminalTextEdit->moveCursor(QTextCursor::End);
-	builtinTerminalTextEdit->insertPlainText(QString::fromLocal8Bit(output));
+	builtinTerminalTextEdit->insertPlainText(text);
 	builtinTerminalTextEdit->verticalScrollBar()->setValue(builtinTerminalTextEdit->verticalScrollBar()->maximum());
-	
+
 	builtinTerminalTextEditHORZ->moveCursor(QTextCursor::End);
-	builtinTerminalTextEditHORZ->insertPlainText(QString::fromLocal8Bit(output));
+	builtinTerminalTextEditHORZ->insertPlainText(text);
 	builtinTerminalTextEditHORZ->verticalScrollBar()->setValue(builtinTerminalTextEditHORZ->verticalScrollBar()->maximum());
 }
 
@@ -1323,17 +1345,17 @@ void MainWindow::updateTermimalViews(){
 			terminalInputLineHORZ->show();
 			builtinTerminalTextEdit->hide();
 			terminalInputLine->hide();
-			
+
 			builtinTerminalTextEdit->parentWidget()->setParent(nullptr);
 			builtinTerminalTextEditHORZ->parentWidget()->setParent(nullptr);
-			
+
 			splitter2->addWidget(builtinTerminalTextEditHORZ->parentWidget());
 		}else{
 			builtinTerminalTextEditHORZ->hide();
 			terminalInputLineHORZ->hide();
 			builtinTerminalTextEdit->show();
 			terminalInputLine->show();
-			
+
 			builtinTerminalTextEdit->parentWidget()->setParent(nullptr);
 			builtinTerminalTextEditHORZ->parentWidget()->setParent(nullptr);
 
@@ -1344,15 +1366,15 @@ void MainWindow::updateTermimalViews(){
 		builtinTerminalTextEditHORZ->hide();
 		terminalInputLine->hide();
 		terminalInputLineHORZ->hide();
-		
+
 		builtinTerminalTextEdit->parentWidget()->setParent(nullptr);
 		builtinTerminalTextEditHORZ->parentWidget()->setParent(nullptr);
 	}
-	
+
 	updateSplitsWidths();
-	
+
 	//ensure all are non-collapsible
-	
+
 	for (int i = 0; i < splitter->count(); ++i) {
 		splitter->setCollapsible(i, false);  // Set each widget to be non-collapsible
 	}
@@ -1378,26 +1400,41 @@ void MainWindow::on_actionDiscard_Local_Changes_triggered(){
 	}
 
 	QString filePath = fileModel->filePath(index);
-
 	QString tmpDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/CodeWizard";
-	QString batFilePath = tmpDirPath + "/run_script.bat";
 
 	QDir tmpDir(tmpDirPath);
 	if (!tmpDir.exists()) {
 		tmpDir.mkpath(tmpDirPath);
 	}
 
-	QFile batFile(batFilePath);
-	if (batFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-		QTextStream out(&batFile);
-		out << "cd /d \""+filePath+"\" && git reset --hard && git pull";
-	}
+	#ifdef Q_OS_WIN
+		QString scriptFilePath = tmpDirPath + "/run_script.bat";
+		QFile scriptFile(scriptFilePath);
+		if (scriptFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+			QTextStream out(&scriptFile);
+			out << "cd /d \"" + filePath + "\" && git reset --hard && git pull";
+		}
+		scriptFile.close();
 
-	QStringList arguments;
-	arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
+		QStringList arguments;
+		arguments << "/c" << "start" << "cmd" << "/k" << scriptFilePath;
 
-	QProcess *process = new QProcess(this);
-	process->startDetached("cmd.exe", arguments);
+		QProcess *process = new QProcess(this);
+		process->startDetached("cmd.exe", arguments);
+	#else
+		QString scriptFilePath = tmpDirPath + "/run_script.sh";
+		QFile scriptFile(scriptFilePath);
+		if (scriptFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+			QTextStream out(&scriptFile);
+			out << "#!bash\n";
+			out << "cd \"" + filePath + "\" && git reset --hard && git pull";
+		}
+		scriptFile.close();
+
+		QFile::setPermissions(scriptFilePath, QFile::Permissions(QFile::ExeUser | QFile::ReadUser | QFile::WriteUser));
+		QProcess *process = new QProcess(this);
+		process->startDetached("bash", QStringList() << "-c" << scriptFilePath);
+	#endif
 }
 
 void MainWindow::on_actionRegular_triggered(){
@@ -1410,26 +1447,41 @@ void MainWindow::on_actionRegular_triggered(){
 	}
 
 	QString filePath = fileModel->filePath(index);
-
 	QString tmpDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/CodeWizard";
-	QString batFilePath = tmpDirPath + "/run_script.bat";
 
 	QDir tmpDir(tmpDirPath);
 	if (!tmpDir.exists()) {
 		tmpDir.mkpath(tmpDirPath);
 	}
 
-	QFile batFile(batFilePath);
-	if (batFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-		QTextStream out(&batFile);
-		out << "cd /d \""+filePath+"\" && git pull";
-	}
+	#ifdef Q_OS_WIN
+		QString scriptFilePath = tmpDirPath + "/run_script.bat";
+		QFile scriptFile(scriptFilePath);
+		if (scriptFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+			QTextStream out(&scriptFile);
+			out << "cd /d \"" + filePath + "\" && git pull";
+		}
+		scriptFile.close();
 
-	QStringList arguments;
-	arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
+		QStringList arguments;
+		arguments << "/c" << "start" << "cmd" << "/k" << scriptFilePath;
 
-	QProcess *process = new QProcess(this);
-	process->startDetached("cmd.exe", arguments);
+		QProcess *process = new QProcess(this);
+		process->startDetached("cmd.exe", arguments);
+	#else
+		QString scriptFilePath = tmpDirPath + "/run_script.sh";
+		QFile scriptFile(scriptFilePath);
+		if (scriptFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+			QTextStream out(&scriptFile);
+			out << "#!bash\n";
+			out << "cd \"" + filePath + "\" && git pull";
+		}
+		scriptFile.close();
+
+		QFile::setPermissions(scriptFilePath, QFile::Permissions(QFile::ExeUser | QFile::ReadUser | QFile::WriteUser));
+		QProcess *process = new QProcess(this);
+		process->startDetached("bash", QStringList() << "-c" << scriptFilePath);
+	#endif
 }
 
 void MainWindow::on_actionPush_triggered(){
@@ -1459,24 +1511,40 @@ void MainWindow::on_actionPush_triggered(){
 	}
 
 	QString tmpDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/CodeWizard";
-	QString batFilePath = tmpDirPath + "/run_script.bat";
 
 	QDir tmpDir(tmpDirPath);
 	if (!tmpDir.exists()) {
 		tmpDir.mkpath(tmpDirPath);
 	}
 
-	QFile batFile(batFilePath);
-	if (batFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-		QTextStream out(&batFile);
-		out << "cd /d \""+filePath+"\" && git add --all && git commit -m \""+commitmessage+"\" && git push";
-	}
+	#ifdef Q_OS_WIN
+		QString scriptFilePath = tmpDirPath + "/run_script.bat";
+		QFile scriptFile(scriptFilePath);
+		if (scriptFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+			QTextStream out(&scriptFile);
+			out << "cd /d \"" + filePath + "\" && git add --all && git commit -m \"" + commitmessage + "\" && git push";
+		}
+		scriptFile.close();
 
-	QStringList arguments;
-	arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
+		QStringList arguments;
+		arguments << "/c" << "start" << "cmd" << "/k" << scriptFilePath;
 
-	QProcess *process = new QProcess(this);
-	process->startDetached("cmd.exe", arguments);
+		QProcess *process = new QProcess(this);
+		process->startDetached("cmd.exe", arguments);
+	#else
+		QString scriptFilePath = tmpDirPath + "/run_script.sh";
+		QFile scriptFile(scriptFilePath);
+		if (scriptFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+			QTextStream out(&scriptFile);
+			out << "#!bash\n";
+			out << "cd \"" + filePath + "\" && git add --all && git commit -m \"" + commitmessage + "\" && git push";
+		}
+		scriptFile.close();
+
+		QFile::setPermissions(scriptFilePath, QFile::Permissions(QFile::ExeUser | QFile::ReadUser | QFile::WriteUser));
+		QProcess *process = new QProcess(this);
+		process->startDetached("bash", QStringList() << "-c" << scriptFilePath);
+	#endif
 }
 
 void MainWindow::on_actionCompare_2_Files_triggered(){
@@ -1724,7 +1792,9 @@ void MainWindow::saveSyntaxColorsToFile(){
 	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		openHelpMenu("Failed to open file to save syntax colors.");
 		if (useSpeakerAction->isChecked()){
-			speech->say("Failed to open file to save syntax colors.");
+            #ifdef Q_OS_WIN
+				speech->say("Failed to open file to save syntax colors.");
+			#endif
 		}
 		return;
 	}
@@ -1757,7 +1827,9 @@ void MainWindow::loadSyntaxColorsFromFile(){
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		openHelpMenu("Failed to open file.");
 		if (useSpeakerAction->isChecked()){
-			speech->say("Failed to open file.");
+            #ifdef Q_OS_WIN
+				speech->say("Failed to open file.");
+			#endif
 		}
 		return;
 	}
@@ -1772,7 +1844,9 @@ void MainWindow::loadSyntaxColorsFromFile(){
 	if (!fileContents.startsWith(expectedHeader)){
 		openHelpMenu("File does not match specification.");
 		if (useSpeakerAction->isChecked()){
-			speech->say("File does not match specification.");
+            #ifdef Q_OS_WIN
+				speech->say("File does not match specification.");
+			#endif
 		}
 		return;
 	}
@@ -1784,7 +1858,9 @@ void MainWindow::loadSyntaxColorsFromFile(){
 	if (hex.length() != 8){
 		openHelpMenu("File does not match specification.");
 		if (useSpeakerAction->isChecked()){
-			speech->say("File does not match specification.");
+            #ifdef Q_OS_WIN
+				speech->say("File does not match specification.");
+			#endif
 		}
 		return;
 	}
@@ -1870,7 +1946,9 @@ void MainWindow::syntaxColorsOffImage(){
 
 			if (first && z == 7){ // max number of retries
 				if (useSpeakerAction->isChecked()){
-					speech->say("This image did not play nicely with this feature.");
+                    #ifdef Q_OS_WIN
+						speech->say("This image did not play nicely with this feature.");
+					#endif
 				}
 
 				openHelpMenu("This image did not play nicely with this feature. Try again (unlikely to work - we tried 8 times for you) or pick another image.");
@@ -1951,7 +2029,9 @@ void MainWindow::validateAndConvert(){
 			hexEdits.append(LE->text());
 		} else {
 			if (useSpeakerAction->isChecked()){
-				speech->say("Hex code invalid.");
+                #ifdef Q_OS_WIN
+					speech->say("Hex code invalid.");
+				#endif
 			}
 			label->setText("ERROR: Hex code invalid: \""+LE->text()+"\"");
 			layout->addWidget(label);
@@ -1975,7 +2055,9 @@ void MainWindow::validateAndConvert(){
 	rehighlightFullDoc();
 
 	if (useSpeakerAction->isChecked()){
-		speech->say("Succeeded!");
+        #ifdef Q_OS_WIN
+			speech->say("Succeeded!");
+		#endif
 	}
 
 	label->setText("Succeeded!");
@@ -2182,7 +2264,9 @@ void MainWindow::showWeDontFuckWithTheLSP(){
 	qDebug() << "showWeDontFuckWithTheLSP";
 
 	if (useSpeakerAction->isChecked()){
-		speech->say("Action not supported while LSP is initializing.");
+        #ifdef Q_OS_WIN
+			speech->say("Action not supported while LSP is initializing.");
+		#endif
 	}
 	QMessageBox messageBox;
 	messageBox.setWindowTitle("CodeWizard");
@@ -2197,7 +2281,9 @@ void MainWindow::showHoldYourHorses(){
 	qDebug() << "showHoldYourHorses";
 
 	if (useSpeakerAction->isChecked()){
-		speech->say("Action not supported while opening file.");
+        #ifdef Q_OS_WIN
+			speech->say("Action not supported while opening file.");
+		#endif
 	}
 	QMessageBox messageBox;
 	messageBox.setWindowTitle("CodeWizard");
@@ -2216,7 +2302,9 @@ void MainWindow::checkForFixitDialogue(){
 	}
 
 	if (useSpeakerAction->isChecked()){
-		speech->say("Detected space based indenting in file. Fix-it recommended.");
+        #ifdef Q_OS_WIN
+			speech->say("Detected space based indenting in file. Fix-it recommended.");
+		#endif
 	}
 
 	QMessageBox messageBox;
@@ -2251,7 +2339,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 	isOpeningFile = true;
 
 	storedLineNumbers[fileName] = textEdit->verticalScrollBar()->value();
-	
+
 	if (!index.model()->hasChildren(index)) {
 		QString newFile = index.data(QFileSystemModel::FilePathRole).toString();
 
@@ -2261,7 +2349,9 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		}
 
 		if (useSpeakerAction->isChecked()){
-			speech->say("Opening File");
+            #ifdef Q_OS_WIN
+				speech->say("Opening File");
+			#endif
 		}
 
 		if (unsaved && fileName != ""){
@@ -2330,7 +2420,9 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		updateMargins(true); // called on open - every time
 
 		if (useSpeakerAction->isChecked()){
-			speech->say("File Opened");
+            #ifdef Q_OS_WIN
+				speech->say("File Opened");
+			#endif
 		}
 	}
 	isOpeningFile = false;
@@ -2344,7 +2436,9 @@ bool MainWindow::checkForLargeFile(QFile *file){
 
 	if (kb > 1000){ // 1mb I think
 		if (useSpeakerAction->isChecked()){
-			speech->say("That's a large file ("+QString::number(kb/1000)+" mb). Open anyways?");
+            #ifdef Q_OS_WIN
+				speech->say("That's a large file ("+QString::number(kb/1000)+" mb). Open anyways?");
+			#endif
 		}
 
 		QMessageBox dialog;
@@ -2410,7 +2504,7 @@ void MainWindow::handleMouseMoved(QPoint pos)
 //	qDebug() << "handleMouseMoved"; - we don't do it for certain functions
 
 	QPoint difference = pos - mousePos;
-	
+
 	QTextCursor cursor = textEdit->cursorForPosition(pos); // Get cursor at mouse position
 	QRect cursorRect = textEdit->cursorRect(cursor);
 	QPoint cursorPos = cursorRect.topLeft();
@@ -2432,7 +2526,7 @@ void MainWindow::handleMouseMoved(QPoint pos)
 	if (!client){
 		return;
 	}
-	
+
 	if (qAbs(cursorPos.x() - pos.x()) > 15 || qAbs(cursorPos.y() - pos.y()) > 15){
 		return;
 	}
@@ -2693,7 +2787,9 @@ void MainWindow::setupLSP(QString oldFile)
 	}
 
 	if (useSpeakerAction->isChecked()){
-		speech->say("Initializing LSP");
+        #ifdef Q_OS_WIN
+			speech->say("Initializing LSP");
+		#endif
 	}
 
 	client = new LanguageServerClient(lspPath, textEdit);
@@ -2787,7 +2883,9 @@ void MainWindow::setupLSP(QString oldFile)
 	client->openDocument(fileName, languageId, textEdit->toPlainText());
 
 	if (useSpeakerAction->isChecked()){
-		speech->say("Initialized LSP");
+        #ifdef Q_OS_WIN
+			speech->say("Initialized LSP");
+		#endif
 	}
 
 	isSettingUpLSP = false;
@@ -3098,7 +3196,7 @@ void MainWindow::updateFonts()
 	terminalInputLine->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
 	terminalInputLine->setMinimumHeight(adjustedHeight);
 	terminalInputLine->setMaximumHeight(adjustedHeight);
-	
+
 	terminalInputLineHORZ->setFont(font);
 	terminalInputLineHORZ->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
 	terminalInputLineHORZ->setMinimumHeight(adjustedHeight);
@@ -3106,7 +3204,7 @@ void MainWindow::updateFonts()
 
 	builtinTerminalTextEdit->setFont(font);
 	builtinTerminalTextEdit->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
-	
+
 	builtinTerminalTextEditHORZ->setFont(font);
 	builtinTerminalTextEditHORZ->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
 
@@ -3155,7 +3253,7 @@ void MainWindow::updateFonts()
 	hoverBox->setFont(font);
 
 	fileTree->setFont(font);
-	
+
 	fontList->setFont(font);
 
 	//I hate this
@@ -3374,7 +3472,7 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("autoSaveAct", autoSaveAct->isChecked());
 	settings.setValue("randomSelectFileTypeAct",randomSelectFileTypeAct->isChecked());
 	settings.setValue("useSpeakerAction", useSpeakerAction->isChecked());
-	
+
 	settings.setValue("splitWidths0", splitWidths[0]);
 	settings.setValue("splitWidths1", splitWidths[1]);
 	settings.setValue("splitWidths2", splitWidths[2]);
@@ -3415,25 +3513,25 @@ int MainWindow::compareVersionNumbers(QString vnum1, QString vnum2){
 
 	QStringList nums1 = vnum1.split(".");
 	QStringList nums2 = vnum2.split(".");
-	
+
 	if (nums1.length() != nums2.length()){
 		if (nums1.length() > nums2.length()){ // we assume that if one version number has more identifiers, that it is greater than the other.
 			return 1;
 		}
 		return -1; // otherwise the other must be longer - therfore the equality is less than
 	}
-	
+
 	for (int i = 0; i < nums1.length(); i++){
 		int n1 = nums1[i].toInt();
 		int n2 = nums2[i].toInt();
-		
+
 		if (n1 > n2){
 			return 1;
 		}else if (n1 < n2){
 			return -1;
 		}
 	}
-	
+
 	return 0;
 }
 
@@ -3519,7 +3617,7 @@ bool MainWindow::wantedTheme()
 		if (name.toLower() == "kaihe"){ // just for you kai
 			defaultRandomSelect = true;
 		}
-		
+
 		splitWidths[0] = settings.value("splitWidths0", 0.25f).toDouble();
 		splitWidths[1] = settings.value("splitWidths1", 0.25f).toDouble();
 		splitWidths[2] = settings.value("splitWidths2", 0.25f).toDouble();
@@ -3539,8 +3637,16 @@ bool MainWindow::wantedTheme()
 		tabWidth = settings.value("tabWidth", 4).toInt();
 		return settings.value("darkModeEnabled", false).toBool(); // Default to false if not found
 	}else{
-		QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", QSettings::NativeFormat);
-		return settings.value("AppsUseLightTheme").toInt() == 0;
+        #ifdef Q_OS_WIN
+            QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", QSettings::NativeFormat);
+            return settings.value("AppsUseLightTheme").toInt() == 0;
+        #else
+            QProcess process;
+            process.start("gsettings get org.gnome.desktop.interface gtk-theme");
+            process.waitForFinished();
+            QString output = process.readAllStandardOutput().trimmed();
+            return output.contains("dark", Qt::CaseInsensitive);
+        #endif
 	}
 }
 
@@ -3910,7 +4016,9 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	storedLineNumbers[newFile] = textEdit->verticalScrollBar()->value();
 
 	if (useSpeakerAction->isChecked()){
-		speech->say("Opening File");
+        #ifdef Q_OS_WIN
+			speech->say("Opening File");
+		#endif
 	}
 
 	QFileInfo fileInfo(newFile);
@@ -3988,7 +4096,9 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	updateMargins(true); // called on open - every time
 
 	if (useSpeakerAction->isChecked()){
-		speech->say("File Opened");
+        #ifdef Q_OS_WIN
+			speech->say("File Opened");
+		#endif
 	}
 
 	isOpeningFile = false;
@@ -4009,7 +4119,7 @@ void MainWindow::setLangOffFilename(QString fileName, bool rehigh){
 			}
 		}
 	}
-	
+
 	if (isOpeningFile){
 		currentLang = txtLang;
 		lineEdit->setPlainText(txtTag);
@@ -4087,16 +4197,18 @@ void MainWindow::updateExtraWordsList(){
 void MainWindow::pullUpSaveDialogue()
 {
 	qDebug() << "pullUpSaveDialogue";
-	
+
 	if (handlingReopen){return;}
-	
+
 	if (autoSaveAct->isChecked()){
 		on_actionSave_triggered();
 		return;
 	}
 
 	if (useSpeakerAction->isChecked()){
-		speech->say("Save File?");
+        #ifdef Q_OS_WIN
+			speech->say("Save File?");
+		#endif
 	}
 
 	QMessageBox dialog;
@@ -4175,7 +4287,7 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 
 	builtinTerminalTextEdit->insertPlainText("\nRequesting process gracefully stop.");
 	builtinTerminalTextEditHORZ->insertPlainText("\nRequesting process gracefully stop.");
-	
+
 	activeTerminal->terminate();
 	if (!activeTerminal->waitForFinished(100)) {
 		builtinTerminalTextEdit->insertPlainText("\nForcing process to terminate.");
@@ -4188,7 +4300,7 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 
 	builtinTerminalTextEdit->insertPlainText("\n\nHard Reset CodeWizard Builtin Terminal\n\n");
 	builtinTerminalTextEditHORZ->insertPlainText("\n\nHard Reset CodeWizard Builtin Terminal\n\n");
-	
+
 	activeTerminal = new QProcess(this);
 	activeTerminal->setProcessChannelMode(QProcess::MergedChannels);
 
@@ -4204,10 +4316,10 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 						 [process](int exitCode, QProcess::ExitStatus exitStatus) {
 							 process->deleteLater(); // Clean up the process object
 						 });
-	}else{
+	} else {
 		if (preferHorizontalTerminal->isChecked()){
 			terminalInputLineHORZ->setFocus();
-		}else{
+		} else {
 			terminalInputLine->setFocus();
 		}
 	}
@@ -4224,70 +4336,96 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 		tmpDir.mkpath(tmpDirPath);
 	}
 
-	// Define the batch file path
-	QString batFilePath = tmpDirPath + "/run_script.bat";
+	#ifdef Q_OS_WIN
+		// Define the batch file path for Windows
+		QString batFilePath = tmpDirPath + "/run_script.bat";
+	#else
+		// Define the shell script path for Linux
+		QString batFilePath = tmpDirPath + "/run_script.sh";
+	#endif
+
 	qDebug() << batFilePath;
 
 	QString finalRun;
+	QString intermediateTag;
 
-	// Write the command to the .bat file
+	// Write the command to the batch or shell file
 	QFile batFile(batFilePath);
 	if (batFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		QTextStream out(&batFile);
-
-		QString intermediateTag;
 
 		// Write the necessary command based on the selected language
 		if (currentLang.name == "Python") {
 			intermediateTag = pythonTag;
 		} else if (currentLang.name == "Rust") {
 			intermediateTag = rustTag;
-		} else if (currentLang.name == "WGSL"){
+		} else if (currentLang.name == "WGSL") {
 			intermediateTag = WGSLTag;
-		} else if (currentLang.name == "GLSL"){
+		} else if (currentLang.name == "GLSL") {
 			intermediateTag = GLSLTag;
-		} else if (currentLang.name == "C++"){
+		} else if (currentLang.name == "C++") {
 			intermediateTag = CppTag;
-		} else if (currentLang.name == "JS"){
+		} else if (currentLang.name == "JS") {
 			intermediateTag = jsTag;
-		} else if (currentLang.name == "TS"){
+		} else if (currentLang.name == "TS") {
 			intermediateTag = tsTag;
-		} else if (currentLang.name == "HTML"){
+		} else if (currentLang.name == "HTML") {
 			intermediateTag = HTMLTag;
-		} else if (currentLang.name == "Go"){
+		} else if (currentLang.name == "Go") {
 			intermediateTag = goTag;
-		} else if (currentLang.name == "Txt"){
+		} else if (currentLang.name == "Txt") {
 			intermediateTag = txtTag;
-		} else if (currentLang.name == "Lua"){
+		} else if (currentLang.name == "Lua") {
 			intermediateTag = luaTag;
-		} else if (currentLang.name == "C#"){
+		} else if (currentLang.name == "C#") {
 			intermediateTag = csharpTag;
-		} else if (currentLang.name == "Java"){
+		} else if (currentLang.name == "Java") {
 			intermediateTag = javaTag;
-		} else if (currentLang.name == "C"){
+		} else if (currentLang.name == "C") {
 			intermediateTag = cTag;
 		}
 
 		intermediateTag.replace("[filename]", fileNameName).replace("[filenameWoutExt]", fileNameName.split('.')[0]);
 
-		out << "cd /d " << fileDir << "\n";
-		out << intermediateTag;
+		#ifdef Q_OS_WIN
+			out << "cd /d " << fileDir << "\n";
+			out << intermediateTag;
+		#else
+			// For Linux, we use a shell script style command
+			out << "#!bash\n";
+			out << "cd " << fileDir << "\n";
+			out << intermediateTag;
+		#endif
 
 		finalRun = intermediateTag;
 
 		batFile.close();
+
+		#ifndef Q_OS_WIN
+			// Set execution permissions on Linux
+			QFile::setPermissions(batFilePath, QFileDevice::ReadOwner | QFileDevice::WriteOwner | QFileDevice::ExeOwner);
+		#endif
 	}
 
 	if (!useBuiltinTerminal->isChecked()){
-		QStringList arguments;
-		arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
-		process->startDetached("cmd.exe", arguments);
-	}else{
-		QStringList arguments;
-		arguments << "/c" << "start" << "cmd" << "/k";
-		QString moveD = "cd /d "+fileDir+"\n"+finalRun+"\n";
+		#ifdef Q_OS_WIN
+			QStringList arguments;
+			arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
+			process->startDetached("cmd.exe", arguments);
+		#else
+			QStringList arguments;
+			arguments << "-e" << "bash -c '" + batFilePath + "; exec bash'";
+			process->startDetached("gnome-terminal -- bash -c 'bash "+batFilePath+"; exec bash'");
+		#endif
+	} else {
+		#ifdef Q_OS_WIN
+			activeTerminal->start("cmd.exe");
+		#else
+			activeTerminal->setEnvironment(QStringList() << "TERM=dumb");
+			activeTerminal->start("bash", QStringList() << "--login" << "-i"); //<< "echo CodeWizard Builtin Terminal.");
+		#endif
 
-		activeTerminal->start("cmd.exe");
+		QString moveD = "cd " + fileDir + "\n" + finalRun + "\n";
 		activeTerminal->write(moveD.toUtf8());
 	}
 }
@@ -4408,7 +4546,9 @@ void MainWindow::on_actionStart_Macro_Recording_triggered() {
 	endRecordMacroButton->setEnabled(true);
 	replayMacroButton->setEnabled(false);
 	if (useSpeakerAction->isChecked()){
-		speech->say("Started Macro Recording");
+        #ifdef Q_OS_WIN
+			speech->say("Started Macro Recording");
+		#endif
 	}
 	int margin = 15; // Margin from the top-right edge
 	recordingLight->move(textEdit->width() - recordingLight->width() - margin, margin);
@@ -4425,7 +4565,9 @@ void MainWindow::on_actionEnd_Macro_Recording_triggered() {
 	endRecordMacroButton->setEnabled(false);
 	replayMacroButton->setEnabled(true);
 	if (useSpeakerAction->isChecked()){
-		speech->say("Ended Macro Recording");
+        #ifdef Q_OS_WIN
+			speech->say("Ended Macro Recording");
+		#endif
 	}
 
 	recordingLight->hide();
@@ -4529,24 +4671,24 @@ void MainWindow::executeNormalAct(QTextCursor::MoveOperation move, QKeyEvent *ke
 
 int MainWindow::findMatchingBracket(int direction){
 	qDebug() << "findMatchingBracket";
-	
+
 	int seen = 0;
 	QTextCursor cursor = textEdit->textCursor();
 	int initPos = cursor.position();
 	int copyInitPos = cursor.position();
-	
+
 	QString opening = "{[(<";
 	QString closing = "}])>";
-	
+
 	if (direction < 0){
 		opening = "}])>";
 		closing = "{[(<";
 	}
-	
+
 	QString text = textEdit->toPlainText();
-	
+
 	int textLen = text.length();
-	
+
 	if (opening.contains(text.at(initPos-1))){
 		initPos = initPos-1;
 	}else{
@@ -4554,17 +4696,17 @@ int MainWindow::findMatchingBracket(int direction){
 			return initPos;
 		}
 	}
-	
+
 	QChar lookingFor = closing.at(opening.indexOf(text.at(initPos)));
 	QChar had = text.at(initPos);
-	
+
 	int curPos = initPos + direction;
-	
+
 	while (true) {
 		if (curPos < 0 || curPos >= textLen){
 			break;
 		}
-		
+
 		if (had == text.at(curPos)){
 			seen += 1;
 		}else if (lookingFor == text.at(curPos)){
@@ -4574,10 +4716,10 @@ int MainWindow::findMatchingBracket(int direction){
 				seen -= 1;
 			}
 		}
-		
+
 		curPos += direction;
 	}
-	
+
 	return copyInitPos;
 }
 
@@ -4593,15 +4735,15 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		if (event->type() == QEvent::KeyPress){
 			QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 			QKeySequence key_sequence{static_cast<int>(keyEvent->modifiers()) + keyEvent->key()};
-			
+
 			QTextCursor cursor;
-			
+
 			if (watched == terminalInputLine){
 				cursor = terminalInputLine->textCursor();
 			}else{
 				cursor = terminalInputLineHORZ->textCursor();
 			}
-			
+
 			QString selectedText = cursor.selectedText();
 
 			if (key_sequence == QKeySequence("Ctrl+C") && selectedText.isEmpty()){
@@ -4620,7 +4762,13 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 				builtinTerminalTextEdit->insertPlainText("\n\n");
 				builtinTerminalTextEditHORZ->insertPlainText("\n\n");
-				activeTerminal->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal.");
+				#ifdef Q_OS_WIN
+					("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal.");
+				#else
+					activeTerminal->setEnvironment(QStringList() << "TERM=dumb");
+					activeTerminal->start("bash", QStringList() << "--login" << "-i"); //<< "echo CodeWizard Builtin Terminal.");
+					activeTerminal->write("echo CodeWizard Builtin Terminal.\n");
+				#endif
 			}
 
 			if (keyEvent->key() == Qt::Key_Escape){
@@ -4658,7 +4806,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 			if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter){
 				QString lineToSend;
-				
+
 				if (watched == terminalInputLine){
 					lineToSend = terminalInputLine->toPlainText() + "\n";
 					sentCommands.push_front(terminalInputLine->toPlainText());
@@ -4666,7 +4814,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 					lineToSend = terminalInputLineHORZ->toPlainText() + "\n";
 					sentCommands.push_front(terminalInputLineHORZ->toPlainText());
 				}
-				
+
 				indexInSentCommands = -1;
 				activeTerminal->write(lineToSend.toUtf8());
 				builtinTerminalTextEdit->insertPlainText(lineToSend);
@@ -4803,7 +4951,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 			return true; // always handle inputs in normal mode - normal is a strange term for this but whatever - it'll work.
 		}
-		
+
 		if (isACtrl) {
 			if (key_event->key() == Qt::Key_Less || key_event->key() == Qt::Key_Comma){
 				QTextCursor cursor = textEdit->textCursor();
@@ -5364,7 +5512,7 @@ void MainWindow::on_actionSave_triggered()
 		setLangOffFilename(fileName, true);
 		setupSyntaxTreeOnOpen(textEdit->toPlainText());
 		onContentsChange(0, 0, 0);
-		
+
 		fileModel->setRootPath(fileInfo.absolutePath());
 		QSettings settings("FoundationTechnologies", "CodeWizard");
 		settings.setValue("mostRecentFolder", fileInfo.absolutePath());
@@ -5385,7 +5533,7 @@ void MainWindow::on_actionSave_triggered()
 		client->documentSaved(textEdit->toPlainText());
 	}
 	lspMutex.unlock();
-	
+
 	toCompareTo = textEdit->toPlainText();
 }
 
@@ -5590,7 +5738,7 @@ void MainWindow::on_actionComment_Ctrl_Alt_triggered()
 
 void MainWindow::on_actionToggleComments_triggered(){
 	qDebug() << "on_actionToggleComments_triggered";
-	
+
 	QTextCursor cursor = textEdit->textCursor();
 	int start;
 	int end;
@@ -5609,11 +5757,10 @@ void MainWindow::on_actionToggleComments_triggered(){
 		start = qMin(rawstart, rawend);
 		end = qMax(rawstart, rawend);
 	}
-	
+
 	cursor.setPosition(start);
 	cursor.movePosition(QTextCursor::StartOfLine);
-	
-	
+
 	while (true){
 		cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
 		if (cursor.selectedText() != " " && cursor.selectedText() != "\t"){
@@ -5632,7 +5779,7 @@ void MainWindow::on_actionToggleComments_triggered(){
 	}else{
 		on_actionComment_Ctrl_Alt_triggered();
 	}
-	
+
 }
 
 void MainWindow::on_actionUn_Comment_Alt_5_triggered()
@@ -5807,7 +5954,7 @@ void MainWindow::on_actionSave_As_triggered()
 	setupSyntaxTreeOnOpen(textEdit->toPlainText());
 	onContentsChange(0, 0, 0);
 	addFileToRecentList(fileName);
-	
+
 	fileModel->setRootPath(fileInfo.absolutePath());
 	QSettings settings("FoundationTechnologies", "CodeWizard");
 	settings.setValue("mostRecentFolder", fileInfo.absolutePath());
@@ -6102,14 +6249,14 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 			textEdit->blockSignals(false);
 			return;
 		}
-		
+
 		int maxErrors = 40;
 
 		for (int i = 0; i < errStartL.size(); ++i) {
 			if (i >= maxErrors){
 				break;
 			}
-			
+
 			int startLine = errStartL[i];
 			int endLine = errEndL[i];
 			int startC = errStartC[i];
@@ -6339,7 +6486,7 @@ void MainWindow::handleTabs()
 
 		if (currentLang.closeIndentsWords.contains(realRealLastWord)){
 			if (tabs.length() > 0){
-				tabs = tabs.removeLast();
+				tabs.chop(1);
 				break;
 			}
 		}
@@ -6402,7 +6549,7 @@ void MainWindow::updateSyntax()
 		cursor.endEditBlock();
 		updateSyntaxAdd = "";
 	}
-	
+
 	if (updateSyntaxPosition != -1){
 		cursor.setPosition(updateSyntaxPosition);
 		updateSyntaxPosition = -1;
@@ -6471,7 +6618,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		palette = terminalInputLine->palette();
 		palette.setColor(QPalette::Base, QColor(23, 23, 23));
 		terminalInputLine->setPalette(palette);
-		
+
 		palette = builtinTerminalTextEditHORZ->palette();
 		palette.setColor(QPalette::Base, QColor(32, 32, 32));
 		builtinTerminalTextEditHORZ->setPalette(palette);
@@ -6527,7 +6674,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		palette = terminalInputLine->palette();
 		palette.setColor(QPalette::Base, QColor(230, 230, 230));
 		terminalInputLine->setPalette(palette);
-		
+
 		palette = builtinTerminalTextEditHORZ->palette();
 		palette.setColor(QPalette::Base, QColor(245, 245, 245));
 		builtinTerminalTextEditHORZ->setPalette(palette);
@@ -6664,14 +6811,14 @@ void MainWindow::changeTheme(bool darkMode)
 							   "QMenuBar::item:selected { background-color: rgb(70, 70, 70); }";
 
 		ui->menuBar->setStyleSheet(menubarSheet);
-		
-		QString listWidgetSheet = 
+
+		QString listWidgetSheet =
 		   "QListWidget{ background-color: rgb(20, 20, 20); color: white; }"
 		   "QListWidget::item:selected { background-color: rgb(45, 45, 45); color: white; }"
 		   "QListWidget::separator {height: 1px;background-color: rgb(255, 255, 255); margin: 2px 4px;}"
 		   "QListWidget::item { background-color: rgb(30, 30, 30); padding: 2px 2px; border-radius: 4px; margin: 3px 3px 2px 3px; }"
 		   "QListWidget::item:hover { background-color: rgb(70, 70, 70); }";
-		
+
 		fontList->setStyleSheet(listWidgetSheet);
 
 		QList<QMenu*> menus = ui->menuBar->findChildren<QMenu*>();
@@ -6716,16 +6863,16 @@ void MainWindow::changeTheme(bool darkMode)
 								"QMenuBar::item { background-color: rgb(251, 251, 251); padding: 2px 4px; border-radius: 4px; margin: 3px 3px 2px 3px; }"
 								"QMenuBar::item:hover { background-color: rgb(200, 200, 200); }"
 								"QMenuBar::item:selected { background-color: rgb(200, 200, 200); }";
-		
+
 		ui->menuBar->setStyleSheet(menubarSheet);
 
-		QString listWidgetSheet = 
+		QString listWidgetSheet =
 								"QListWidget{ background-color: rgb(251, 251, 251); color: black; }"
 								"QListWidget::item:selected { background-color: rgb(150, 150, 150); color: black; }"
 								"QListWidget::separator {height: 1px; background-color: rgb(0, 0, 0); margin: 2px 4px;}"
 								"QListWidget::item { background-color: rgb(251, 251, 251); padding: 2px 2px; border-radius: 4px; margin: 3px 3px 2px 3px; }"
 								"QListWidget::item:hover { background-color: rgb(200, 200, 200); }";
-		
+
 		fontList->setStyleSheet(listWidgetSheet);
 
 		QList<QMenu*> menus = ui->menuBar->findChildren<QMenu*>();
@@ -7115,7 +7262,9 @@ void MainWindow::openRecentFile(QString newFile){
 	isOpeningFile = true;
 
 	if (useSpeakerAction->isChecked()){
-		speech->say("Opening File");
+        #ifdef Q_OS_WIN
+			speech->say("Opening File");
+		#endif
 	}
 
 	if (unsaved && fileName != ""){
@@ -7205,7 +7354,9 @@ void MainWindow::openRecentFile(QString newFile){
 	updateMargins(true); // called on open - every time
 
 	if (useSpeakerAction->isChecked()){
-		speech->say("File Opened");
+        #ifdef Q_OS_WIN
+			speech->say("File Opened");
+		#endif
 	}
 
 	isOpeningFile = false;

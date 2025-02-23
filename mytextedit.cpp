@@ -1,4 +1,4 @@
-#include "MyTextEdit.h"
+#include "/home/adamj/QtProjects/CodeWizard/mytextedit.h"
 #include <QMenu>
 #include <QAction>
 #include <QContextMenuEvent>

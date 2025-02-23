@@ -1,0 +1,2 @@
+/usr/bin/ar qc libtree-sitter-cpp.a CMakeFiles/tree-sitter-cpp.dir/tree-sitter-cpp_autogen/mocs_compilation.cpp.o CMakeFiles/tree-sitter-cpp.dir/extern/tree-sitter-parsers/tree-sitter-cpp/src/parser.c.o CMakeFiles/tree-sitter-cpp.dir/extern/tree-sitter-parsers/tree-sitter-cpp/src/scanner.c.o
+/usr/bin/ranlib libtree-sitter-cpp.a

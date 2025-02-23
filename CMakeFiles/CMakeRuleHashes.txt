@@ -1,0 +1,16 @@
+# Hashes of file build rules.
+514d7ee30f3d973f3922f9e9305698ae CMakeFiles/CodeWizard_autogen
+13b504e7febc6c5a7b06cd78783ce907 CMakeFiles/tree-sitter-c-sharp_autogen
+547e6f6e16bf06e7fbd7a4869434c52d CMakeFiles/tree-sitter-c_autogen
+389228724ec58325833594847c099bf4 CMakeFiles/tree-sitter-cpp_autogen
+9c258f6987808451c47a42a2cdcf3077 CMakeFiles/tree-sitter-glsl_autogen
+16966887589d8c281d50103103de3e27 CMakeFiles/tree-sitter-go_autogen
+f6ed7ae57c6ffd6477e8282fa6177434 CMakeFiles/tree-sitter-html_autogen
+4faec54ac56ec2ca1b76a4673d4ef9f7 CMakeFiles/tree-sitter-java_autogen
+fad1042db62a9a9d657cfff946ed609c CMakeFiles/tree-sitter-javascript_autogen
+3b6e1468e3708781b3a6d296ae357e5a CMakeFiles/tree-sitter-lua_autogen
+f3b98ffd31a2dc99e1aa1b50fa84fe4e CMakeFiles/tree-sitter-python_autogen
+fa7a4387d3c286d876c83a2693b34a40 CMakeFiles/tree-sitter-rust_autogen
+bae836f76983f66e64226be756043347 CMakeFiles/tree-sitter-typescript_autogen
+2cb188469b5ff2c5966863ef15794ac9 CMakeFiles/tree-sitter-wgsl_autogen
+13b522f578d044b7c9c7f9382289a4d0 extern/tree-sitter/CMakeFiles/tree-sitter_autogen

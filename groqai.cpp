@@ -3,6 +3,10 @@
 #include <qdialog.h>
 #include <qlabel.h>
 #include "mytextedit.h"
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QtNetwork>
 
 GroqAI::GroqAI(QObject *parent)
 	: QObject(parent),

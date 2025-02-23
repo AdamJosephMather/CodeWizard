@@ -1,0 +1,2 @@
+/usr/bin/ar qc libtree-sitter-html.a CMakeFiles/tree-sitter-html.dir/tree-sitter-html_autogen/mocs_compilation.cpp.o CMakeFiles/tree-sitter-html.dir/extern/tree-sitter-parsers/tree-sitter-html/src/parser.c.o CMakeFiles/tree-sitter-html.dir/extern/tree-sitter-parsers/tree-sitter-html/src/scanner.c.o
+/usr/bin/ranlib libtree-sitter-html.a

@@ -20,8 +20,13 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt6 REQUIRED COMPONENTS TextToSpeech)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Network)
+
+if(WIN32)
+    find_package(Qt6 REQUIRED COMPONENTS TextToSpeech)
+endif()
+
 find_package(Qt6 REQUIRED COMPONENTS Core Concurrent)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
@@ -162,7 +167,7 @@ set(PROJECT_SOURCES
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(CodeWizard
-        app.o
+#        app.o
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         mytextedit.h mytextedit.cpp
@@ -199,7 +204,7 @@ else()
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
         add_executable(CodeWizard
-            app.o
+#            app.o
             ${PROJECT_SOURCES}
         )
     endif()
@@ -211,11 +216,17 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 # add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers)
 
+if(WIN32)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+        Qt::TextToSpeech
+    )
+endif()
+
 # Update target_link_libraries to include the parsers
 target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt::Core
     Qt::Widgets
-    Qt::TextToSpeech
+    Qt::Network
     tree-sitter
     tree-sitter-cpp
     tree-sitter-python

@@ -1,4 +1,4 @@
-#include "SyntaxHighlighter.h"
+#include "/home/adamj/QtProjects/CodeWizard/syntaxhighlighter.h"
 #include <QTextBlock>
 #include <QTextLayout>
 #include <QFont>
