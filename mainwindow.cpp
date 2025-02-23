@@ -4763,7 +4763,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				builtinTerminalTextEdit->insertPlainText("\n\n");
 				builtinTerminalTextEditHORZ->insertPlainText("\n\n");
 				#ifdef _WIN32
-					("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal.");
+					activeTerminal->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal.");
 				#else
 					activeTerminal->setEnvironment(QStringList() << "TERM=dumb");
 					activeTerminal->start("bash", QStringList() << "--login" << "-i"); //<< "echo CodeWizard Builtin Terminal.");
