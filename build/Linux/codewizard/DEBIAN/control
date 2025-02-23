@@ -1,0 +1,8 @@
+Package: codewizard
+Version: 8.9.4
+Section: utils
+Priority: optional
+Architecture: amd64
+Maintainer: Adam Mather <adamjosephmather@gmail.com>
+Depends: 
+Description: A code editor/ide designed and built by your's truly.
