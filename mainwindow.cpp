@@ -1624,7 +1624,9 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 	savedText = fileContent;
 
 	setupSyntaxTreeOnOpen(fileContent); // must be before setPlainText - don't ask why - I could tell you though...
-
+	
+	highlightDiagnostics(true);
+	
 	textEdit->setPlainText(fileContent);
 	toCompareTo = fileContent;
 	previousLineCount = fileContent.count('\xa')+1;
@@ -2394,6 +2396,8 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		savedText = fileContent;
 
 		setupSyntaxTreeOnOpen(fileContent);
+		
+		highlightDiagnostics(true);
 
 		textEdit->setPlainText(fileContent);
 		toCompareTo = fileContent;
@@ -4056,7 +4060,9 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	savedText = fileContent;
 
 	setupSyntaxTreeOnOpen(fileContent); // must be before setPlainText - don't ask why - I could tell you though...
-
+	
+	highlightDiagnostics(true);
+	
 	textEdit->setPlainText(fileContent);
 	toCompareTo = fileContent;
 	previousLineCount = fileContent.count('\xa')+1;
@@ -4246,6 +4252,7 @@ void MainWindow::on_actionNew_triggered()
 	lspMutex.unlock();
 
 	savedText = "";
+	highlightDiagnostics(true);
 	textEdit->setPlainText("");
 	windowName = defWindowTitle;
 	setWindowTitle(windowName);
@@ -6225,35 +6232,34 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 
 	if (reverseTheProcess){
 		isErrorHighlighted = false;
-
+		
 		// Only clear blocks that were highlighted
 		QTextBlock block = textDocument->begin();
+		
+		
 		for (QTextBlock block : errHighlightedBlocks) {
-			try{
-				if (!block.isValid()){
-					continue;
-				}
-
-				QTextLayout* layout = block.layout();
-
-				if (!layout) {
-					continue;
-				}
-
-				QTextLayout::FormatRange range;
-				range.format = errorFormats[0];
-				range.start = 0;
-				range.length = block.length();
-
-				QVector<QTextLayout::FormatRange> formats = layout->formats();
-				formats.append(range);
-				layout->setFormats(formats);
-				textDocument->markContentsDirty(block.position() + range.start, range.length);
-			}catch(...){
-				qDebug() << "Caught";
+			if (!block.isValid()){
+				continue;
 			}
-		}
+			
+			QTextLayout* layout = block.layout();
+			
+			if (!layout) {
+				continue;
+			}
 
+			QTextLayout::FormatRange range;
+			range.format = errorFormats[0];
+			range.start = 0;
+			range.length = block.length();
+
+			QVector<QTextLayout::FormatRange> formats = layout->formats();
+			
+			formats.append(range);
+			layout->setFormats(formats);
+			textDocument->markContentsDirty(block.position() + range.start, range.length);
+		}
+		
 		errHighlightedBlocks.clear();
 	}else{
 		QList<int> allowedSeverities;
@@ -6276,77 +6282,73 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 		int maxErrors = 40;
 
 		for (int i = 0; i < errStartL.size(); ++i) {
-			try{
-				if (i >= maxErrors){
+			if (i >= maxErrors){
+				break;
+			}
+
+			int startLine = errStartL[i];
+			int endLine = errEndL[i];
+			int startC = errStartC[i];
+			int endC = errEndC[i];
+			int severity = errSeverity[i];
+
+			if (!allowedSeverities.contains(severity)){
+				continue;
+			}
+
+			if (startLine == endLine && startC == endC){
+				startC -= 1;
+				if (startC < 0){
+					startC = 0;
+					endC += 1;
+				}
+			}
+
+			QTextBlock block = textDocument->findBlockByNumber(startLine);
+
+			// Process each block in the range
+			for (int currentLine = startLine; currentLine <= endLine; ++currentLine) {
+				if (!block.isValid()) {
 					break;
 				}
 
-				int startLine = errStartL[i];
-				int endLine = errEndL[i];
-				int startC = errStartC[i];
-				int endC = errEndC[i];
-				int severity = errSeverity[i];
-
-				if (!allowedSeverities.contains(severity)){
+				QTextLayout* layout = block.layout();
+				if (!layout) {
 					continue;
 				}
 
-				if (startLine == endLine && startC == endC){
-					startC -= 1;
-					if (startC < 0){
-						startC = 0;
-						endC += 1;
-					}
-				}
+				errHighlightedBlocks.push_back(block);
 
-				QTextBlock block = textDocument->findBlockByNumber(startLine);
+				int blockLen = block.length();
+				int blockPos = block.position();
 
-				// Process each block in the range
-				for (int currentLine = startLine; currentLine <= endLine; ++currentLine) {
-					if (!block.isValid()) {
-						break;
-					}
+				QTextLayout::FormatRange range;
+				range.format = errorFormats[severity];
 
-					QTextLayout* layout = block.layout();
-					if (!layout) {
-						continue;
-					}
-
-					errHighlightedBlocks.push_back(block);
-
-					int blockLen = block.length();
-					int blockPos = block.position();
-
-					QTextLayout::FormatRange range;
-					range.format = errorFormats[severity];
-
-					if (currentLine == startLine) {
-						range.start = startC;
-						if (currentLine == endLine) {
-							range.length = endC-startC;
-						}else{
-							range.length = blockLen-startC;
-						}
+				if (currentLine == startLine) {
+					range.start = startC;
+					if (currentLine == endLine) {
+						range.length = endC-startC;
 					}else{
-						range.start = 0;
-						if (currentLine == endLine) {
-							range.length = endC;
-						}else{
-							range.length = blockLen;
-						}
+						range.length = blockLen-startC;
 					}
-
-					QVector<QTextLayout::FormatRange> formats = layout->formats();
-					formats.append(range);
-					layout->setFormats(formats);
-					textDocument->markContentsDirty(blockPos, blockLen);
-
-					if (currentLine != endLine){
-						block = block.next();
+				}else{
+					range.start = 0;
+					if (currentLine == endLine) {
+						range.length = endC;
+					}else{
+						range.length = blockLen;
 					}
 				}
-			}catch(...){
-				qDebug() << "Caught2";
+
+				QVector<QTextLayout::FormatRange> formats = layout->formats();
+				formats.append(range);
+				layout->setFormats(formats);
+				textDocument->markContentsDirty(blockPos, blockLen);
+
+				if (currentLine != endLine){
+					block = block.next();
+				}
 			}
 		}
 	}
@@ -7342,7 +7344,9 @@ void MainWindow::openRecentFile(QString newFile){
 	savedText = fileContent;
 
 	setupSyntaxTreeOnOpen(fileContent);
-
+	
+	highlightDiagnostics(true);
+	
 	textEdit->setPlainText(fileContent);
 	toCompareTo = fileContent;
 
