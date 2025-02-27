@@ -25,7 +25,7 @@
 #include <tree_sitter/api.h>
 #include "syntaxhighlighter.h"
 #ifdef _WIN32
-	#include <windows.h>
+    //#include <windows.h>
 	#include <QTextToSpeech>
 #endif
 #include "recordinglight.h"

@@ -1,0 +1,36 @@
+^C:\USERS\ADAMJ\DOCUMENTS\QTPROJECTS\CODEWIZARD\BUILD\DESKTOP_QT_6_7_1_MSVC2019_64BIT\CMAKEFILES\72AB3C82298C6CA0B12E507D2E0882F8\AUTOUIC_(CONFIG).STAMP.RULE
+setlocal
+cd C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADAMJ\DOCUMENTS\QTPROJECTS\CODEWIZARD\BUILD\DESKTOP_QT_6_7_1_MSVC2019_64BIT\CMAKEFILES\B3C5A1D19F240E7D448D5A31686FFBF8\QRC_RESOURCES.CPP.RULE
+setlocal
+cd C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+C:\Qt\Tools\CMake_64\bin\cmake.exe -E cmake_autorcc C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit/CMakeFiles/CodeWizard_autogen.dir/AutoRcc_resources_EWIEGA46WW_Info.json Release
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADAMJ\DOCUMENTS\QTPROJECTS\CODEWIZARD\CMAKELISTS.TXT
+setlocal
+C:\Qt\Tools\CMake_64\bin\cmake.exe -SC:/Users/adamj/Documents/QtProjects/CodeWizard -BC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit --check-stamp-file C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

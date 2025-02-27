@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\tree-sitter_autogen\mocs_compilation_Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\tree-sitter_autogen\mocs_compilation_Release.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\tree-sitter_autogen\mocs_compilation_MinSizeRel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\tree-sitter_autogen\mocs_compilation_RelWithDebInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\tree-sitter_autogen\include_Debug\ui_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\tree-sitter_autogen\include_Release\ui_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\tree-sitter_autogen\include_MinSizeRel\ui_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\tree-sitter_autogen\include_RelWithDebInfo\ui_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\CMakeFiles\16aa04f1d88a4b381d48c9d23fc9428a\autouic_(CONFIG).stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\tree-sitter_autogen\autouic_Debug.stamp" />
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\tree-sitter_autogen\autouic_Release.stamp" />
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\tree-sitter_autogen\autouic_MinSizeRel.stamp" />
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\tree-sitter_autogen\autouic_RelWithDebInfo.stamp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{98D69E24-DCEB-34A8-88EE-C6D959658946}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{F49C2DE8-7F31-353E-9C17-AED08FFD0CE8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{171B23C7-47B1-3941-96B5-5BF6F7DA5170}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

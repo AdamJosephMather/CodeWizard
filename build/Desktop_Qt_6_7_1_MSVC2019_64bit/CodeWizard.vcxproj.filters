@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\CodeWizard_autogen\mocs_compilation_Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\mainwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\mytextedit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\syntaxhighlighter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\language.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\languageserverclient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\recordinglight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\groqai.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\myers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\errorsmenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\CodeWizard_autogen\EWIEGA46WW\qrc_resources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\CodeWizard_autogen\mocs_compilation_Release.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\CodeWizard_autogen\mocs_compilation_MinSizeRel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\CodeWizard_autogen\mocs_compilation_RelWithDebInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\mytextedit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\syntaxhighlighter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\language.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\languageserverclient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\recordinglight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\groqai.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\myers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\errorsmenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\CodeWizard_autogen\include_Debug\ui_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\CodeWizard_autogen\include_Release\ui_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\CodeWizard_autogen\include_MinSizeRel\ui_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\CodeWizard_autogen\include_RelWithDebInfo\ui_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\CMakeFiles\72ab3c82298c6ca0b12e507d2e0882f8\autouic_(CONFIG).stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\CMakeFiles\b3c5a1d19f240e7d448d5a31686ffbf8\qrc_resources.cpp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\mainwindow.ui">
+      <Filter>Forms</Filter>
+    </None>
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\resources\Python.ico">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\fonts\Courier_New.ttf" />
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\fonts\DroidSansMono.ttf" />
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\fonts\Monaco.ttf" />
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\fonts\Monospace.ttf" />
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\fonts\Courier_Prime.ttf" />
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\fonts\SourceCodePro-Regular.ttf" />
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\fonts\UbuntuMono-R.ttf" />
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\resources.qrc">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\CodeWizard_autogen\autouic_Debug.stamp" />
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\CodeWizard_autogen\autouic_Release.stamp" />
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\CodeWizard_autogen\autouic_MinSizeRel.stamp" />
+    <None Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\build\Desktop_Qt_6_7_1_MSVC2019_64bit\CodeWizard_autogen\autouic_RelWithDebInfo.stamp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="C:\Users\adamj\Documents\QtProjects\CodeWizard\app.o">
+      <Filter>Object Files</Filter>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{98D69E24-DCEB-34A8-88EE-C6D959658946}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forms">
+      <UniqueIdentifier>{43049866-A337-3908-8B3B-F794821CACC7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{F49C2DE8-7F31-353E-9C17-AED08FFD0CE8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object Files">
+      <UniqueIdentifier>{4C4CF502-5C4C-34CD-9BF3-D35B062F20A5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{194A1404-238F-3D66-B2ED-1C9FA89759B8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{171B23C7-47B1-3941-96B5-5BF6F7DA5170}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

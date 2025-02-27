@@ -1,0 +1,31 @@
+{
+	"BUILD_DIR" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/CodeWizard_autogen",
+	"CMAKE_BINARY_DIR" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release",
+	"CMAKE_CURRENT_BINARY_DIR" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release",
+	"CMAKE_CURRENT_SOURCE_DIR" : "C:/Users/adamj/Documents/QtProjects/CodeWizard",
+	"CMAKE_SOURCE_DIR" : "C:/Users/adamj/Documents/QtProjects/CodeWizard",
+	"CROSS_CONFIG" : false,
+	"GENERATOR" : "Ninja",
+	"INCLUDE_DIR" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/CodeWizard_autogen/include",
+	"INPUTS" : 
+	[
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/UbuntuMono-R.ttf",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/Monaco.ttf",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/Monospace.ttf",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/Courier_New.ttf",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/Courier_Prime.ttf",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/DroidSansMono.ttf",
+		"C:/Users/adamj/Documents/QtProjects/CodeWizard/fonts/SourceCodePro-Regular.ttf"
+	],
+	"LOCK_FILE" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/CMakeFiles/CodeWizard_autogen.dir/AutoRcc_resources_EWIEGA46WW_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "--no-zstd", "-name", "resources" ],
+	"OUTPUT_CHECKSUM" : "EWIEGA46WW",
+	"OUTPUT_NAME" : "qrc_resources.cpp",
+	"RCC_EXECUTABLE" : "C:/Qt/6.8.2/mingw_64/bin/rcc.exe",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/CMakeFiles/CodeWizard_autogen.dir/AutoRcc_resources_EWIEGA46WW_Used.txt",
+	"SOURCE" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/resources.qrc",
+	"USE_BETTER_GRAPH" : true,
+	"VERBOSITY" : 0
+}

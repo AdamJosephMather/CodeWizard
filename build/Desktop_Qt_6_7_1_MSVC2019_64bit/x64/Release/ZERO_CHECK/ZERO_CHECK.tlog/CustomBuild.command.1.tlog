@@ -1,0 +1,10 @@
+^C:\USERS\ADAMJ\DOCUMENTS\QTPROJECTS\CODEWIZARD\BUILD\DESKTOP_QT_6_7_1_MSVC2019_64BIT\CMAKEFILES\AB4AEC428E9C76AE385DC6E615E77437\GENERATE.STAMP.RULE
+setlocal
+C:\Qt\Tools\CMake_64\bin\cmake.exe -SC:/Users/adamj/Documents/QtProjects/CodeWizard -BC:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit/CodeWizard.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

@@ -248,7 +248,7 @@ endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	Qt::Core
 	Qt::Widgets
-	Qt::Network
+        Qt::Network
 	tree-sitter
 	tree-sitter-cpp
 	tree-sitter-python
