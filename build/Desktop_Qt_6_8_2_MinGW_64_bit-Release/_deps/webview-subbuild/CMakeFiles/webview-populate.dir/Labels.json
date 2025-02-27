@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/webview-subbuild/CMakeFiles/webview-populate"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/webview-subbuild/CMakeFiles/webview-populate.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/webview-subbuild/CMakeFiles/webview-populate-complete.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/webview-subbuild/webview-populate-prefix/src/webview-populate-stamp/webview-populate-build.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/webview-subbuild/webview-populate-prefix/src/webview-populate-stamp/webview-populate-configure.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/webview-subbuild/webview-populate-prefix/src/webview-populate-stamp/webview-populate-download.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/webview-subbuild/webview-populate-prefix/src/webview-populate-stamp/webview-populate-install.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/webview-subbuild/webview-populate-prefix/src/webview-populate-stamp/webview-populate-mkdir.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/webview-subbuild/webview-populate-prefix/src/webview-populate-stamp/webview-populate-patch.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/webview-subbuild/webview-populate-prefix/src/webview-populate-stamp/webview-populate-test.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/webview-subbuild/webview-populate-prefix/src/webview-populate-stamp/webview-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"webview-populate"
+		],
+		"name" : "webview-populate"
+	}
+}

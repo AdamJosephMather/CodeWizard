@@ -25,7 +25,6 @@
 #include <tree_sitter/api.h>
 #include "syntaxhighlighter.h"
 #ifdef _WIN32
-    //#include <windows.h>
 	#include <QTextToSpeech>
 #endif
 #include "recordinglight.h"
@@ -1174,7 +1173,7 @@ void MainWindow::storeResizeOfSplitters(){
 	for (int i = 0; i < s2.length(); i++){
 		totalHeight += s2[i];
 	}
-	
+
 	if (totalWidth == 0 || totalHeight == 0){return;}
 
 	splitWidths[0] = (float)fileTree->width()/(float)totalWidth;
@@ -2975,16 +2974,16 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 
 	QStringList lines;
 	int lineCount = 0;
-	
+
 	if (type == "markdown"){
 		finalString = markdownToHtml(info);
 	}else{
 		finalString = plaintextToHtml(info);
 	}
-	
+
 	lineCount = finalString.count("<br>")+finalString.count("<hr>")*4 + 2;
 	lines = finalString.split("<br>");
-	
+
 	int maxLength = 0;
 
 	for (const QString& line : lines) {
@@ -4788,13 +4787,13 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 				terminalInputLine->setText(toset);
 				terminalInputLineHORZ->setText(toset);
-				
+
 				QTextCursor cursor = terminalInputLine->textCursor();
 				QTextCursor cursor2 = terminalInputLineHORZ->textCursor();
-				
+
 				cursor.movePosition(QTextCursor::EndOfLine);
 				cursor2.movePosition(QTextCursor::EndOfLine);
-				
+
 				terminalInputLine->setTextCursor(cursor);
 				terminalInputLineHORZ->setTextCursor(cursor2);
 			}if (keyEvent->key() == Qt::Key_Down){
@@ -4813,13 +4812,13 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 				terminalInputLine->setText(toset);
 				terminalInputLineHORZ->setText(toset);
-				
+
 				QTextCursor cursor = terminalInputLine->textCursor();
 				QTextCursor cursor2 = terminalInputLineHORZ->textCursor();
-				
+
 				cursor.movePosition(QTextCursor::EndOfLine);
 				cursor2.movePosition(QTextCursor::EndOfLine);
-				
+
 				terminalInputLine->setTextCursor(cursor);
 				terminalInputLineHORZ->setTextCursor(cursor2);
 			}
@@ -6281,17 +6280,17 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 				if (i >= maxErrors){
 					break;
 				}
-	
+
 				int startLine = errStartL[i];
 				int endLine = errEndL[i];
 				int startC = errStartC[i];
 				int endC = errEndC[i];
 				int severity = errSeverity[i];
-	
+
 				if (!allowedSeverities.contains(severity)){
 					continue;
 				}
-	
+
 				if (startLine == endLine && startC == endC){
 					startC -= 1;
 					if (startC < 0){
@@ -6299,28 +6298,28 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 						endC += 1;
 					}
 				}
-	
+
 				QTextBlock block = textDocument->findBlockByNumber(startLine);
-	
+
 				// Process each block in the range
 				for (int currentLine = startLine; currentLine <= endLine; ++currentLine) {
 					if (!block.isValid()) {
 						break;
 					}
-	
+
 					QTextLayout* layout = block.layout();
 					if (!layout) {
 						continue;
 					}
-	
+
 					errHighlightedBlocks.push_back(block);
-	
+
 					int blockLen = block.length();
 					int blockPos = block.position();
-	
+
 					QTextLayout::FormatRange range;
 					range.format = errorFormats[severity];
-	
+
 					if (currentLine == startLine) {
 						range.start = startC;
 						if (currentLine == endLine) {
@@ -6336,12 +6335,12 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 							range.length = blockLen;
 						}
 					}
-	
+
 					QVector<QTextLayout::FormatRange> formats = layout->formats();
 					formats.append(range);
 					layout->setFormats(formats);
 					textDocument->markContentsDirty(blockPos, blockLen);
-	
+
 					if (currentLine != endLine){
 						block = block.next();
 					}
@@ -7071,25 +7070,26 @@ void MainWindow::on_actionKeybindings_triggered(){
 
 	openHelpMenu("Keybindings:\n\
   \n\
-  Ctrl+B ---- Toggle filetree\n\
-  Ctrl+T ---- Toggle builtin terminal\n\
-  Ctrl+S ---- Save file\n\
-  Ctrl+O ---- Open file\n\
-  Ctrl+N ---- New file\n\
-  Ctrl+'+' -- Increase text size\n\
-  Ctrl+'-' -- Decrease text size\n\
-  Alt ------- Start/End macro recording\n\
-  Ctrl+P ---- Replay Macro\n\
-  Ctrl+F/H -- Find\n\
-  Ctrl+[ ---- De-indent\n\
-  Ctrl+] ---- Indent\n\
-  Alt+Enter - Code actions (LSP)\n\
-  Alt+3 ----- Comment out section\n\
-  Alt+4 ----- De-comment out section\n\
-  Alt+A ----- Activate AI suggestion\n\
-  F5 -------- Run code\n\
-  Ctrl+, ---- Jumps to left corresponding bracket\n\
-  Ctrl+. ---- Jumps to right corresponding bracket");
+  Ctrl+B ------- Toggle filetree\n\
+  Ctrl+T ------- Toggle builtin terminal\n\
+  Ctrl+S ------- Save file\n\
+  Ctrl+O ------- Open file\n\
+  Ctrl+N ------- New file\n\
+  Ctrl+'+' ----- Increase text size\n\
+  Ctrl+'-' ----- Decrease text size\n\
+  Alt ---------- Start/End macro recording\n\
+  Ctrl+P ------- Replay Macro\n\
+  Ctrl+F/H ----- Find\n\
+  Ctrl+[ ------- De-indent\n\
+  Ctrl+] ------- Indent\n\
+  Alt+Enter ---- Code actions (LSP)\n\
+  Alt+3 -------- Comment out section\n\
+  Alt+4 -------- De-comment out section\n\
+  Alt+A -------- Activate AI suggestion\n\
+  F5 ----------- Run code\n\
+  Ctrl+, ------- Jumps to left corresponding bracket\n\
+  Ctrl+. ------- Jumps to right corresponding bracket\n\
+  Crtl+/ ------- Toggle Comment");
 }
 
 void MainWindow::openHelpMenu(QString text) {
