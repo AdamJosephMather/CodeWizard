@@ -1041,8 +1041,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	fileTree->setContextMenuPolicy(Qt::CustomContextMenu);
 
 	// Connect the custom context menu signal
-	connect(fileTree, &QTreeView::customContextMenuRequested,
-			this, &MainWindow::openFileTreeContextMenu);
+	connect(fileTree, &QTreeView::customContextMenuRequested, this, &MainWindow::openFileTreeContextMenu);
 
 	QAction* openInExplorerAction = new QAction("Open in Explorer", this);
 	QAction* copyPathAction = new QAction("Copy Path", this);
@@ -1066,7 +1065,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
 	fileTree->hideColumn(1);    // Hide column at index 1 (Size)
 	fileTree->hideColumn(2);    // Hide column at index 2 (Type)
-	fileTree->hideColumn(3);    // Hide column at index 2 (I don't remember)
+	fileTree->hideColumn(3);    // Hide column at index 3 (I don't remember)
 
 	fileTree->header()->hide(); // Remove the 'Name' bar at top
 
@@ -1082,10 +1081,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	#ifdef _WIN32
 		speech = new QTextToSpeech(this);
-
 		QList<QVoice> voices = speech->availableVoices();
 
-		// Select a male voice, if available
 		for (const QVoice &voice : voices) {
 			if (voice.gender() == QVoice::Male) {
 				speech->setVoice(voice);
@@ -1304,8 +1301,6 @@ void MainWindow::handleTerminalStdout(){
 	QByteArray output = activeTerminal->readAll();
 
 	QString text = QString::fromLocal8Bit(output);
-//    QRegularExpression ansiEscapePattern("\x1B(?:[@-Z\\-_]|\\[[0-?]*[ -/]*[@-~]|\\].*?\x07)");
-//    text = text.remove(ansiEscapePattern);
 
 	builtinTerminalTextEdit->moveCursor(QTextCursor::End);
 	builtinTerminalTextEdit->insertPlainText(text);
@@ -1377,10 +1372,10 @@ void MainWindow::updateTermimalViews(){
 	//ensure all are non-collapsible
 
 	for (int i = 0; i < splitter->count(); ++i) {
-		splitter->setCollapsible(i, false);  // Set each widget to be non-collapsible
+		splitter->setCollapsible(i, false);
 	}
 	for (int i = 0; i < splitter2->count(); ++i) {
-		splitter2->setCollapsible(i, false);  // Set each widget to be non-collapsible
+		splitter2->setCollapsible(i, false);
 	}
 }
 
@@ -4291,9 +4286,11 @@ void saveToFile(QString text)
 void MainWindow::on_actionRun_Module_F5_triggered()
 {
 	qDebug() << "on_actionRun_Module_F5_triggered";
-
-	on_actionSave_triggered();
-
+	
+	if (unsaved){
+		on_actionSave_triggered();
+	}
+	
 	builtinTerminalTextEdit->insertPlainText("\nRequesting process gracefully stop.");
 	builtinTerminalTextEditHORZ->insertPlainText("\nRequesting process gracefully stop.");
 
