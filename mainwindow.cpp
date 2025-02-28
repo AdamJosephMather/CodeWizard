@@ -106,7 +106,6 @@ QTextCharFormat c3Format;
 QTextCharFormat c4Format;
 QTextCharFormat c5Format;
 QTextCharFormat c6Format;
-QTextCharFormat normalColorFormat;
 QList<QTextCharFormat> errorFormats;
 QList<QTextCharFormat> compFormats;
 
@@ -596,7 +595,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	textEdit = ui->textEdit;
 	groq->setTextEdit(textEdit);
 	errMenu.Setup(textEdit);
-	
+
 	suggestionBox = new QListWidget(textEdit); //this goes here so that it is initialized by the time the applyonlyeditstheme is called (or whatever)
 	actionBox = new QListWidget(textEdit);
 	hoverBox = new QTextEdit(textEdit);
@@ -629,8 +628,6 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	QTextCharFormat extraFormat;
 	QTextCharFormat greyFormat;
 	QTextCharFormat literalFormat;
-
-	normalColorFormat.setForeground(normalColor);
 
 	QTextCharFormat form = QTextCharFormat();
 	form.setUnderlineStyle(QTextCharFormat::SingleUnderline);
@@ -973,7 +970,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	}
 
 	qDebug() << "Windows version: " << windowsVersion;
-	
+
 	hoverBox->setFont(textEdit->font());
 	hoverBox->setFocusPolicy(Qt::NoFocus);
 	hoverBox->setWordWrapMode(QTextOption::NoWrap);
@@ -1001,6 +998,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(textEdit, &MyTextEdit::mousePositionChanged, this, &MainWindow::handleMouseMoved);
 	connect(textEdit, &MyTextEdit::gotoDefinitionActionTriggered, this, &MainWindow::gotoDefinitionActionTriggered);
 	connect(textEdit, &MyTextEdit::mouseClicked, this, &MainWindow::mouseClicked);
+	connect(textEdit, &MyTextEdit::mouseReleased, this, &MainWindow::mouseReleased);
 	connect(textEdit, &MyTextEdit::handleSizeChange, this, &MainWindow::updateMargins);
 	connect(textDocument, &QTextDocument::contentsChange, this, &MainWindow::onContentsChange);
 
@@ -1623,9 +1621,9 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 	savedText = fileContent;
 
 	setupSyntaxTreeOnOpen(fileContent); // must be before setPlainText - don't ask why - I could tell you though...
-	
+
 	highlightDiagnostics(true);
-	
+
 	textEdit->setPlainText(fileContent);
 	toCompareTo = fileContent;
 	previousLineCount = fileContent.count('\xa')+1;
@@ -2155,6 +2153,10 @@ void MainWindow::printTree(TSNode node, int depth) {
 
 void MainWindow::mouseClicked(){
 	qDebug() << "mouseClicked";
+}
+
+void MainWindow::mouseReleased(){
+	qDebug() << "mouseClicked";
 
 	if (QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier) {
 		gotoDefinitionActionTriggered();
@@ -2393,7 +2395,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		savedText = fileContent;
 
 		setupSyntaxTreeOnOpen(fileContent);
-		
+
 		highlightDiagnostics(true);
 
 		textEdit->setPlainText(fileContent);
@@ -2701,7 +2703,7 @@ void MainWindow::on_actionLSP_triggered()
 	saveWantedTheme();
 }
 
-void MainWindow::gotoDefinitionReceived(int line, int character, QString uri) {
+void MainWindow::gotoDefinitionReceived(int line1, int character1, int line, int character, QString uri) {
 	qDebug() << "gotoDefinitionReceived";
 
 	if (uri != QUrl::fromLocalFile(fileName).toString()){
@@ -2709,9 +2711,9 @@ void MainWindow::gotoDefinitionReceived(int line, int character, QString uri) {
 		QMetaObject::invokeMethod(this, [this, line, character, uri]() {
 			on_actionOpen_triggered(true);
 		}, Qt::QueuedConnection);
-		QMetaObject::invokeMethod(this, [this, line, character, uri]() {
+		QMetaObject::invokeMethod(this, [this, line1, character1, line, character, uri]() {
 			if (uri == QUrl::fromLocalFile(fileName).toString()){
-				gotoDefinitionReceived(line, character, uri);
+				gotoDefinitionReceived(line1, character1, line, character, uri);
 			}
 		}, Qt::QueuedConnection);
 
@@ -2719,7 +2721,8 @@ void MainWindow::gotoDefinitionReceived(int line, int character, QString uri) {
 	}
 
 	QTextCursor cursor = textEdit->textCursor();
-	cursor.setPosition(textDocument->findBlockByNumber(line).position() + character);
+	cursor.setPosition(textDocument->findBlockByNumber(line1).position() + character1);
+	cursor.setPosition(textDocument->findBlockByNumber(line).position() + character, QTextCursor::KeepAnchor);
 	textEdit->setTextCursor(cursor);
 	textEdit->ensureCursorVisible();
 }
@@ -2981,7 +2984,7 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 	}else{
 		finalString = plaintextToHtml(info);
 	}
-	
+
 	hoverBox->setHtml(finalString);
 
 	lineCount = finalString.count("<br>")+finalString.count("<hr>")*4 + 2;
@@ -2996,7 +2999,7 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 	QFontMetrics metrics(textEdit->font());
 	int textHeight = metrics.height() * (lineCount);
 	int textWidth = metrics.horizontalAdvance('M') * (maxLength + 4);
-	
+
 	int maxWidth = qMin(textEdit->width()/2, textWidth);
 	int maxHeight = qMin(textEdit->height()/3, textHeight);
 
@@ -4058,9 +4061,9 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	savedText = fileContent;
 
 	setupSyntaxTreeOnOpen(fileContent); // must be before setPlainText - don't ask why - I could tell you though...
-	
+
 	highlightDiagnostics(true);
-	
+
 	textEdit->setPlainText(fileContent);
 	toCompareTo = fileContent;
 	previousLineCount = fileContent.count('\xa')+1;
@@ -5716,7 +5719,7 @@ void MainWindow::on_actionDe_Increment_Ctrl_triggered()
 void MainWindow::on_actionComment_Ctrl_Alt_triggered()
 {
 	qDebug() << "on_actionComment_Ctrl_Alt_triggered";
-	
+
 	if (currentLang.comments.length() == 0){
 		return;
 	}
@@ -5770,7 +5773,7 @@ void MainWindow::on_actionComment_Ctrl_Alt_triggered()
 
 void MainWindow::on_actionToggleComments_triggered(){
 	qDebug() << "on_actionToggleComments_triggered";
-	
+
 	if (currentLang.comments.length() == 0){
 		return;
 	}
@@ -5821,7 +5824,7 @@ void MainWindow::on_actionToggleComments_triggered(){
 void MainWindow::on_actionUn_Comment_Alt_5_triggered()
 {
 	qDebug() << "on_actionUn_Comment_Alt_5_triggered";
-	
+
 	if (currentLang.comments.length() == 0){
 		return;
 	}
@@ -6242,18 +6245,17 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 
 	if (reverseTheProcess){
 		isErrorHighlighted = false;
-		
+
 		// Only clear blocks that were highlighted
 		QTextBlock block = textDocument->begin();
-		
-		
+
 		for (QTextBlock block : errHighlightedBlocks) {
 			if (!block.isValid()){
 				continue;
 			}
-			
+
 			QTextLayout* layout = block.layout();
-			
+
 			if (!layout) {
 				continue;
 			}
@@ -6264,12 +6266,12 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 			range.length = block.length();
 
 			QVector<QTextLayout::FormatRange> formats = layout->formats();
-			
+
 			formats.append(range);
 			layout->setFormats(formats);
 			textDocument->markContentsDirty(block.position() + range.start, range.length);
 		}
-		
+
 		errHighlightedBlocks.clear();
 	}else{
 		QList<int> allowedSeverities;
@@ -6632,10 +6634,10 @@ void MainWindow::changeHighlightColors(bool darkmode){
 
 void MainWindow::changeOnlyEditsTheme(bool darkmode){
 	qDebug() << "changeOnlyEditsTheme";
-	
+
 	QColor color1;
 	QColor color2;
-	
+
 	if (darkmode){
 		color1 = QColor(23, 23, 23);
 		color2 = QColor(32, 32, 32);
@@ -6643,7 +6645,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		color1 = QColor(230, 230, 230);
 		color2 = QColor(245, 245, 245);
 	}
-	
+
 	QPalette palette = textEdit->palette();
 	palette.setColor(QPalette::Base, color1);
 	textEdit->setPalette(palette);
@@ -6651,15 +6653,15 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 	palette = lineNumberTextEdit->palette();
 	palette.setColor(QPalette::Base, color2);
 	lineNumberTextEdit->setPalette(palette);
-	
+
 	palette = hoverBox->palette();
 	palette.setColor(QPalette::Base, color2);
 	hoverBox->setPalette(palette);
-	
+
 	palette = actionBox->palette();
 	palette.setColor(QPalette::Base, color2);
 	actionBox->setPalette(palette);
-	
+
 	palette = suggestionBox->palette();
 	palette.setColor(QPalette::Base, color2);
 	suggestionBox->setPalette(palette);
@@ -6896,7 +6898,6 @@ void MainWindow::changeTheme(bool darkMode)
 	changeOnlyEditsTheme(darkmode);
 	changeHighlightColors(darkmode);
 
-	normalColorFormat.setForeground(normalColor);
 	updateSyntax();
 	centerCursor();
 }
@@ -7319,9 +7320,9 @@ void MainWindow::openRecentFile(QString newFile){
 	savedText = fileContent;
 
 	setupSyntaxTreeOnOpen(fileContent);
-	
+
 	highlightDiagnostics(true);
-	
+
 	textEdit->setPlainText(fileContent);
 	toCompareTo = fileContent;
 

@@ -34,6 +34,17 @@ protected:
 			emit mouseClickedAtCursor(cursor);
 		}
 	}
+	void mouseReleaseEvent(QMouseEvent *event) override {
+		QTextEdit::mouseReleaseEvent(event);
+	
+		if (event->button() == Qt::LeftButton) {
+			emit mouseReleased(event->pos());  // Emit position on mouse release
+			// If you want to also emit the text cursor position on mouse release:
+			QTextCursor cursor = cursorForPosition(event->pos());
+			emit mouseReleasedAtCursor(cursor);  // Emit cursor position on mouse release
+		}
+	}
+	
 	void wheelEvent(QWheelEvent *event) override;
 	
 	void resizeEvent(QResizeEvent* event) override {
@@ -46,7 +57,9 @@ signals:
 	void mousePositionChanged(QPoint pos);
 	void gotoDefinitionActionTriggered();
 	void mouseClicked(QPoint pos);                 // New signal for mouse clicks
+	void mouseReleased(QPoint pos);
 	void mouseClickedAtCursor(QTextCursor cursor); // New signal with cursor info
+	void mouseReleasedAtCursor(QTextCursor cursor); // New signal with cursor info
 	void handleSizeChange(bool force);
 };
 

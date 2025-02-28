@@ -60,7 +60,7 @@ private slots:
 	void changeFindSectionVisibility(bool visible);
 	void checkForFixitDialogue();
 	int compareVersionNumbers(QString vnum1, QString vnum2);
-	void gotoDefinitionReceived(int line, int character, QString uri);
+	void gotoDefinitionReceived(int line1, int character1, int line, int character, QString uri);
 	void rehighlightFullDoc();
 	void changeOnlyEditsTheme(bool);
 	int colorDifference(QColor c1, QColor c2);
@@ -76,6 +76,7 @@ private slots:
 	void onCopyPath();
 	void onOpenOutside();
 	void mouseClicked();
+	void mouseReleased();
 	void openFileTreeContextMenu(const QPoint &pos);
 	std::tuple<QString, QString, QString, QStringList> getTabDetails(QString);
 	void setupLSP(QString oldFile);

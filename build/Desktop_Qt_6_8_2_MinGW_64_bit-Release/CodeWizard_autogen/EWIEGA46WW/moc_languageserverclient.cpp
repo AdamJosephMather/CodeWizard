@@ -88,22 +88,22 @@ Q_CONSTINIT static const uint qt_meta_data_ZN20LanguageServerClientE[] = {
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
        1,    2,   80,    2, 0x06,    1 /* Public */,
-       5,    3,   85,    2, 0x06,    4 /* Public */,
-       7,    6,   92,    2, 0x06,    8 /* Public */,
-      15,    1,  105,    2, 0x06,   15 /* Public */,
-      17,    2,  108,    2, 0x06,   17 /* Public */,
-      21,    0,  113,    2, 0x06,   20 /* Public */,
-      22,    3,  114,    2, 0x06,   21 /* Public */,
-      23,    1,  121,    2, 0x06,   25 /* Public */,
+       5,    5,   85,    2, 0x06,    4 /* Public */,
+       7,    6,   96,    2, 0x06,   10 /* Public */,
+      15,    1,  109,    2, 0x06,   17 /* Public */,
+      17,    2,  112,    2, 0x06,   19 /* Public */,
+      21,    0,  117,    2, 0x06,   22 /* Public */,
+      22,    3,  118,    2, 0x06,   23 /* Public */,
+      23,    1,  125,    2, 0x06,   27 /* Public */,
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-      25,    0,  124,    2, 0x08,   27 /* Private */,
-      26,    1,  125,    2, 0x08,   28 /* Private */,
-      28,    2,  128,    2, 0x08,   30 /* Private */,
+      25,    0,  128,    2, 0x08,   29 /* Private */,
+      26,    1,  129,    2, 0x08,   30 /* Private */,
+      28,    2,  132,    2, 0x08,   32 /* Private */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::QStringList, QMetaType::Int,    3,    4,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::QString,    2,    2,    6,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::QString,    2,    2,    2,    2,    6,
     QMetaType::Void, QMetaType::QStringList, 0x80000000 | 9, 0x80000000 | 9, 0x80000000 | 9, 0x80000000 | 9, 0x80000000 | 9,    8,   10,   11,   12,   13,   14,
     QMetaType::Void, QMetaType::QString,   16,
     QMetaType::Void, QMetaType::Int, 0x80000000 | 19,   18,   20,
@@ -134,6 +134,8 @@ Q_CONSTINIT const QMetaObject LanguageServerClient::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<int, std::false_type>,
         // method 'gotoDefinitionsReceived'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
         QtPrivate::TypeAndForceComplete<int, std::false_type>,
         QtPrivate::TypeAndForceComplete<int, std::false_type>,
         QtPrivate::TypeAndForceComplete<QString, std::false_type>,
@@ -181,7 +183,7 @@ void LanguageServerClient::qt_static_metacall(QObject *_o, QMetaObject::Call _c,
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: _t->completionReceived((*reinterpret_cast< std::add_pointer_t<QStringList>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2]))); break;
-        case 1: _t->gotoDefinitionsReceived((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
+        case 1: _t->gotoDefinitionsReceived((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[5]))); break;
         case 2: _t->receivedDiagnostics((*reinterpret_cast< std::add_pointer_t<QStringList>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QList<int>>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QList<int>>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QList<int>>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<QList<int>>>(_a[5])),(*reinterpret_cast< std::add_pointer_t<QList<int>>>(_a[6]))); break;
         case 3: _t->serverErrorOccurred((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
         case 4: _t->serverFinished((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QProcess::ExitStatus>>(_a[2]))); break;
@@ -220,7 +222,7 @@ void LanguageServerClient::qt_static_metacall(QObject *_o, QMetaObject::Call _c,
             }
         }
         {
-            using _q_method_type = void (LanguageServerClient::*)(int , int , QString );
+            using _q_method_type = void (LanguageServerClient::*)(int , int , int , int , QString );
             if (_q_method_type _q_method = &LanguageServerClient::gotoDefinitionsReceived; *reinterpret_cast<_q_method_type *>(_a[1]) == _q_method) {
                 *result = 1;
                 return;
@@ -310,9 +312,9 @@ void LanguageServerClient::completionReceived(const QStringList & _t1, int _t2)
 }
 
 // SIGNAL 1
-void LanguageServerClient::gotoDefinitionsReceived(int _t1, int _t2, QString _t3)
+void LanguageServerClient::gotoDefinitionsReceived(int _t1, int _t2, int _t3, int _t4, QString _t5)
 {
-    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))), const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t2))), const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t3))) };
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))), const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t2))), const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t3))), const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t4))), const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t5))) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 

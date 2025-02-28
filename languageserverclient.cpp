@@ -578,12 +578,16 @@ void LanguageServerClient::onServerReadyRead()
 			}
 
 			QJsonObject location = array[0].toObject()["range"].toObject()["end"].toObject();
-
 			int line = location["line"].toInt();
 			int character = location["character"].toInt();
+			
+			location = array[0].toObject()["range"].toObject()["start"].toObject();
+			int line1 = location["line"].toInt();
+			int character1 = location["character"].toInt();
+			
 			QString locFile = response["result"].toArray()[0].toObject()["uri"].toString();
 
-			emit gotoDefinitionsReceived(line, character, locFile);
+			emit gotoDefinitionsReceived(line1, character1, line, character, locFile);
 			continue;
 		}else if (responseType == "textDocument/completion"){
 			QJsonArray items = result["items"].toArray();

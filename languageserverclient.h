@@ -33,7 +33,7 @@ public:
 
 signals:
 	void completionReceived(const QStringList &completions, int id);
-	void gotoDefinitionsReceived(int, int, QString uri);
+	void gotoDefinitionsReceived(int, int, int, int, QString uri);
 	void receivedDiagnostics(const QStringList &messages, const QList<int> &startC, const QList<int> &startL, const QList<int> &endC, const QList<int> &endL, const QList<int> &severity);
 	void serverErrorOccurred(const QString &error);  // Signal for server error
 	void serverFinished(int exitCode, QProcess::ExitStatus exitStatus);  // Signal for process finish

@@ -44,9 +44,11 @@ static constexpr auto qt_meta_stringdata_ZN10MyTextEditE = QtMocHelpers::stringD
     "pos",
     "gotoDefinitionActionTriggered",
     "mouseClicked",
+    "mouseReleased",
     "mouseClickedAtCursor",
     "QTextCursor",
     "cursor",
+    "mouseReleasedAtCursor",
     "handleSizeChange",
     "force"
 );
@@ -60,26 +62,30 @@ Q_CONSTINIT static const uint qt_meta_data_ZN10MyTextEditE[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       5,       // signalCount
+       7,       // signalCount
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    1,   44,    2, 0x06,    1 /* Public */,
-       4,    0,   47,    2, 0x06,    3 /* Public */,
-       5,    1,   48,    2, 0x06,    4 /* Public */,
-       6,    1,   51,    2, 0x06,    6 /* Public */,
-       9,    1,   54,    2, 0x06,    8 /* Public */,
+       1,    1,   56,    2, 0x06,    1 /* Public */,
+       4,    0,   59,    2, 0x06,    3 /* Public */,
+       5,    1,   60,    2, 0x06,    4 /* Public */,
+       6,    1,   63,    2, 0x06,    6 /* Public */,
+       7,    1,   66,    2, 0x06,    8 /* Public */,
+      10,    1,   69,    2, 0x06,   10 /* Public */,
+      11,    1,   72,    2, 0x06,   12 /* Public */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::QPoint,    3,
     QMetaType::Void,
     QMetaType::Void, QMetaType::QPoint,    3,
-    QMetaType::Void, 0x80000000 | 7,    8,
-    QMetaType::Void, QMetaType::Bool,   10,
+    QMetaType::Void, QMetaType::QPoint,    3,
+    QMetaType::Void, 0x80000000 | 8,    9,
+    QMetaType::Void, 0x80000000 | 8,    9,
+    QMetaType::Void, QMetaType::Bool,   12,
 
        0        // eod
 };
@@ -101,7 +107,13 @@ Q_CONSTINIT const QMetaObject MyTextEdit::staticMetaObject = { {
         // method 'mouseClicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<QPoint, std::false_type>,
+        // method 'mouseReleased'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<QPoint, std::false_type>,
         // method 'mouseClickedAtCursor'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<QTextCursor, std::false_type>,
+        // method 'mouseReleasedAtCursor'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<QTextCursor, std::false_type>,
         // method 'handleSizeChange'
@@ -119,8 +131,10 @@ void MyTextEdit::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 0: _t->mousePositionChanged((*reinterpret_cast< std::add_pointer_t<QPoint>>(_a[1]))); break;
         case 1: _t->gotoDefinitionActionTriggered(); break;
         case 2: _t->mouseClicked((*reinterpret_cast< std::add_pointer_t<QPoint>>(_a[1]))); break;
-        case 3: _t->mouseClickedAtCursor((*reinterpret_cast< std::add_pointer_t<QTextCursor>>(_a[1]))); break;
-        case 4: _t->handleSizeChange((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 3: _t->mouseReleased((*reinterpret_cast< std::add_pointer_t<QPoint>>(_a[1]))); break;
+        case 4: _t->mouseClickedAtCursor((*reinterpret_cast< std::add_pointer_t<QTextCursor>>(_a[1]))); break;
+        case 5: _t->mouseReleasedAtCursor((*reinterpret_cast< std::add_pointer_t<QTextCursor>>(_a[1]))); break;
+        case 6: _t->handleSizeChange((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
         default: ;
         }
     }
@@ -148,16 +162,30 @@ void MyTextEdit::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
             }
         }
         {
+            using _q_method_type = void (MyTextEdit::*)(QPoint );
+            if (_q_method_type _q_method = &MyTextEdit::mouseReleased; *reinterpret_cast<_q_method_type *>(_a[1]) == _q_method) {
+                *result = 3;
+                return;
+            }
+        }
+        {
             using _q_method_type = void (MyTextEdit::*)(QTextCursor );
             if (_q_method_type _q_method = &MyTextEdit::mouseClickedAtCursor; *reinterpret_cast<_q_method_type *>(_a[1]) == _q_method) {
-                *result = 3;
+                *result = 4;
+                return;
+            }
+        }
+        {
+            using _q_method_type = void (MyTextEdit::*)(QTextCursor );
+            if (_q_method_type _q_method = &MyTextEdit::mouseReleasedAtCursor; *reinterpret_cast<_q_method_type *>(_a[1]) == _q_method) {
+                *result = 5;
                 return;
             }
         }
         {
             using _q_method_type = void (MyTextEdit::*)(bool );
             if (_q_method_type _q_method = &MyTextEdit::handleSizeChange; *reinterpret_cast<_q_method_type *>(_a[1]) == _q_method) {
-                *result = 4;
+                *result = 6;
                 return;
             }
         }
@@ -183,14 +211,14 @@ int MyTextEdit::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 5)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 5;
+        _id -= 7;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 5)
+        if (_id < 7)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 5;
+        _id -= 7;
     }
     return _id;
 }
@@ -216,16 +244,30 @@ void MyTextEdit::mouseClicked(QPoint _t1)
 }
 
 // SIGNAL 3
-void MyTextEdit::mouseClickedAtCursor(QTextCursor _t1)
+void MyTextEdit::mouseReleased(QPoint _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
     QMetaObject::activate(this, &staticMetaObject, 3, _a);
 }
 
 // SIGNAL 4
-void MyTextEdit::handleSizeChange(bool _t1)
+void MyTextEdit::mouseClickedAtCursor(QTextCursor _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
     QMetaObject::activate(this, &staticMetaObject, 4, _a);
+}
+
+// SIGNAL 5
+void MyTextEdit::mouseReleasedAtCursor(QTextCursor _t1)
+{
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
+    QMetaObject::activate(this, &staticMetaObject, 5, _a);
+}
+
+// SIGNAL 6
+void MyTextEdit::handleSizeChange(bool _t1)
+{
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
+    QMetaObject::activate(this, &staticMetaObject, 6, _a);
 }
 QT_WARNING_POP
