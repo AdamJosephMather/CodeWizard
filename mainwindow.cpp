@@ -997,6 +997,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	connect(textEdit, &MyTextEdit::mousePositionChanged, this, &MainWindow::handleMouseMoved);
 	connect(textEdit, &MyTextEdit::gotoDefinitionActionTriggered, this, &MainWindow::gotoDefinitionActionTriggered);
+	connect(textEdit, &MyTextEdit::renameActionTriggered, this, &MainWindow::renameActionTriggered);
 	connect(textEdit, &MyTextEdit::mouseClicked, this, &MainWindow::mouseClicked);
 	connect(textEdit, &MyTextEdit::mouseReleased, this, &MainWindow::mouseReleased);
 	connect(textEdit, &MyTextEdit::handleSizeChange, this, &MainWindow::updateMargins);
@@ -2498,6 +2499,37 @@ void MainWindow::gotoDefinitionActionTriggered(){
 	lspMutex.unlock();
 }
 
+void MainWindow::renameActionTriggered(){
+	qDebug() << "renameActionTriggered";
+
+	if (isSettingUpLSP || isOpeningFile){
+		return;
+	}
+	
+	QInputDialog dialog;
+	dialog.setFont(textEdit->font());  // Set the font to match textEdit's font
+	dialog.setWindowTitle("Rename Reference");
+	dialog.setLabelText("New name");
+	dialog.setTextValue("");  // Default text value can be an empty string
+	dialog.setTextEchoMode(QLineEdit::Normal);  // You can change this to Password if needed
+	dialog.exec();
+
+	if (dialog.result() != QDialog::Accepted) {
+		return;
+	}
+
+	QString newname = dialog.textValue();
+
+	lspMutex.lock();
+	if (client){
+		QTextCursor cursor = textEdit->textCursor();
+		int line = cursor.blockNumber();
+		int column = cursor.columnNumber();
+		client->requestRename(line, column, newname);
+	}
+	lspMutex.unlock();
+}
+
 void MainWindow::handleMouseMoved(QPoint pos)
 {
 //	qDebug() << "handleMouseMoved"; - we don't do it for certain functions
@@ -2827,7 +2859,9 @@ void MainWindow::setupLSP(QString oldFile)
 	});
 
 	connect(client, &LanguageServerClient::gotoDefinitionsReceived, this, &MainWindow::gotoDefinitionReceived, Qt::AutoConnection);
-
+	
+	connect(client, &LanguageServerClient::renameReceived, this, &MainWindow::renameReference, Qt::AutoConnection);
+	
 	connect(client, &LanguageServerClient::codeActionsReceived, [this](const QJsonArray& suggestedActions) {
 		codeActions = suggestedActions;
 
@@ -5290,35 +5324,7 @@ bool MainWindow::activateCodeAction()
 			}
 		}
 
-		//Sort changes in descending order by line number
-		std::sort(changesList.begin(), changesList.end(), [](const QPair<double, QJsonObject>& a, const QPair<double, QJsonObject>& b) {
-			return a.first > b.first; // Sort by line number, descending
-		});
-
-		QTextCursor cursor = textEdit->textCursor();
-		cursor.beginEditBlock();
-		textEdit->blockSignals(true);
-
-		// Apply the changes in sorted order
-		for (const QPair<double, QJsonObject>& changePair : changesList) {
-			QJsonObject change = changePair.second;
-			QString newText = convertLeadingSpacesToTabs(change["newText"].toString());
-			QJsonObject range = change["range"].toObject();
-			QJsonObject start = range["start"].toObject();
-			QJsonObject end = range["end"].toObject();
-
-			// Extract line and character positions from the range
-			int startLine = start["line"].toInt();
-			int startCharacter = start["character"].toInt();
-			int endLine = end["line"].toInt();
-			int endCharacter = end["character"].toInt();
-
-			cursor.setPosition(textDocument->findBlockByLineNumber(startLine).position() + startCharacter);
-			cursor.setPosition(textDocument->findBlockByLineNumber(endLine).position() + endCharacter, QTextCursor::KeepAnchor);
-			cursor.insertText(newText);
-		}
-		textEdit->blockSignals(false);
-		cursor.endEditBlock(); // this goes after to ensure that the thing registers the change with the lsp
+		execChanges(changesList);
 
 		return true;
 	}
@@ -5340,46 +5346,175 @@ bool MainWindow::activateCodeAction()
 			changesList.append(qMakePair(pos, change));
 		}
 
-		//Sort changes in descending order by line number
-		std::sort(changesList.begin(), changesList.end(), [](const QPair<double, QJsonObject>& a, const QPair<double, QJsonObject>& b) {
-			return a.first > b.first; // Sort by line number, descending
-		});
-
-		QTextCursor cursor = textEdit->textCursor();
-		cursor.beginEditBlock();
-		textEdit->blockSignals(true);
-
-		// Apply the changes in sorted order
-		for (const QPair<double, QJsonObject>& changePair : changesList) {
-			QJsonObject change = changePair.second;
-			QString newText = convertLeadingSpacesToTabs(change["newText"].toString());
-			QJsonObject range = change["range"].toObject();
-			QJsonObject start = range["start"].toObject();
-			QJsonObject end = range["end"].toObject();
-
-			// Extract line and character positions from the range
-			int startLine = start["line"].toInt();
-			int startCharacter = start["character"].toInt();
-			int endLine = end["line"].toInt();
-			int endCharacter = end["character"].toInt();
-
-			// Move the cursor to the start position
-			cursor.setPosition(textDocument->findBlockByLineNumber(startLine).position() + startCharacter);
-
-			// Select the range in the QTextEdit
-			cursor.setPosition(textDocument->findBlockByLineNumber(endLine).position() + endCharacter, QTextCursor::KeepAnchor);
-
-			// Replace the selected text with the new text
-			cursor.insertText(newText);
-		}
-
-		cursor.endEditBlock();
-		textEdit->blockSignals(false);
+		execChanges(changesList);
 
 		return true;
 	}
 
 	return false;
+}
+
+void MainWindow::execChanges(QList<QPair<double, QJsonObject>> changesList){
+	qDebug() << "execChanges";
+	
+	std::sort(changesList.begin(), changesList.end(), [](const QPair<double, QJsonObject>& a, const QPair<double, QJsonObject>& b) {
+		return a.first > b.first; // Sort by line number, descending
+	});
+
+	QTextCursor cursor = textEdit->textCursor();
+	cursor.beginEditBlock();
+	textEdit->blockSignals(true);
+
+	// Apply the changes in sorted order
+	for (const QPair<double, QJsonObject>& changePair : changesList) {
+		QJsonObject change = changePair.second;
+		QString newText = convertLeadingSpacesToTabs(change["newText"].toString());
+		QJsonObject range = change["range"].toObject();
+		QJsonObject start = range["start"].toObject();
+		QJsonObject end = range["end"].toObject();
+
+		// Extract line and character positions from the range
+		int startLine = start["line"].toInt();
+		int startCharacter = start["character"].toInt();
+		int endLine = end["line"].toInt();
+		int endCharacter = end["character"].toInt();
+
+		cursor.setPosition(textDocument->findBlockByLineNumber(startLine).position() + startCharacter);
+		cursor.setPosition(textDocument->findBlockByLineNumber(endLine).position() + endCharacter, QTextCursor::KeepAnchor);
+		cursor.insertText(newText);
+	}
+	textEdit->blockSignals(false);
+	cursor.endEditBlock(); // this goes after to ensure that the thing registers the change with the lsp
+}
+
+void MainWindow::execChangesInOtherFile(QList<QPair<double, QJsonObject>> changesList, QString fileUri) {
+	qDebug() << "execChangesInOtherFile for" << fileUri;
+	
+	// Convert URI to local path (assuming file:// scheme)
+	QUrl url(fileUri);
+	QString filePath = url.isLocalFile() ? url.toLocalFile() : fileUri;
+	
+	// Open the file
+	QFile file(filePath);
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		qDebug() << "Failed to open file:" << filePath;
+		return;
+	}
+	
+	// Read the file content
+	QTextStream in(&file);
+	QString fileContent = in.readAll();
+	file.close();
+	
+	// Create a QTextDocument to work with the content
+	QTextDocument document;
+	document.setPlainText(fileContent);
+	
+	// Sort the changes by line number, descending
+	std::sort(changesList.begin(), changesList.end(), [](const QPair<double, QJsonObject>& a, const QPair<double, QJsonObject>& b) {
+		return a.first > b.first;
+	});
+	
+	// Apply the changes in sorted order
+	QTextCursor cursor(&document);
+	cursor.beginEditBlock();
+	
+	for (const QPair<double, QJsonObject>& changePair : changesList) {
+		QJsonObject change = changePair.second;
+		QString newText = convertLeadingSpacesToTabs(change["newText"].toString());
+		QJsonObject range = change["range"].toObject();
+		QJsonObject start = range["start"].toObject();
+		QJsonObject end = range["end"].toObject();
+		
+		// Extract line and character positions from the range
+		int startLine = start["line"].toInt();
+		int startCharacter = start["character"].toInt();
+		int endLine = end["line"].toInt();
+		int endCharacter = end["character"].toInt();
+		
+		// Set cursor position for editing
+		cursor.setPosition(document.findBlockByLineNumber(startLine).position() + startCharacter);
+		cursor.setPosition(document.findBlockByLineNumber(endLine).position() + endCharacter, QTextCursor::KeepAnchor);
+		cursor.insertText(newText);
+	}
+	
+	cursor.endEditBlock();
+	
+	// Save the modified content back to the file
+	if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+		QTextStream out(&file);
+		out << document.toPlainText();
+		file.close();
+		qDebug() << "Changes applied and saved to" << filePath;
+	} else {
+		qDebug() << "Failed to save changes to" << filePath;
+	}
+}
+
+void MainWindow::renameReference(QJsonObject instructions)
+{
+	qDebug() << "renameReference";
+
+	qDebug() << instructions;
+		
+	QString thisFile = QUrl::fromLocalFile(fileName).toString(); // we have to be in a file to use lsp... Might be something I change later. If so good luck finding this bug
+		
+	if (instructions.contains("documentChanges")){ // type 1
+		QJsonArray changes = instructions["documentChanges"].toArray();
+		
+		for (int i = 0; i < changes.count(); i++){
+			QJsonObject change = changes[i].toObject();
+			QString file = change["textDocument"].toObject()["uri"].toString(); //probably smart to do something with this...
+			
+			qDebug() << "file: " << file;
+			
+			QJsonArray edits = change["edits"].toArray();
+			
+			qDebug() << "edits: " << edits;
+			
+			QList<QPair<double, QJsonObject>> changesList;
+			
+			for (int j = 0; j < edits.count(); j++){
+				QJsonObject edit = edits[j].toObject();
+				QJsonObject range = edit["range"].toObject();
+				QJsonObject end = range["end"].toObject();
+
+				double pos = (double)end["line"].toInt()+1.0 - 1.0/(double)end["character"].toInt();
+				changesList.append(qMakePair(pos, edit));
+			}
+			
+			qDebug() << "cl: " << changesList;
+			
+			if (file == thisFile){
+				execChanges(changesList);
+			}else{
+				execChangesInOtherFile(changesList, file);
+			}
+		}
+	}else if (instructions.contains("changes")) { // type 2
+		QJsonObject changes = instructions["changes"].toObject();
+		
+		for (const QString& file : changes.keys()) { // Iterate over each file URI
+			QJsonArray edits = changes[file].toArray();
+			
+			QList<QPair<double, QJsonObject>> changesList;
+			
+			for (int j = 0; j < edits.count(); j++) {
+				QJsonObject edit = edits[j].toObject();
+				QJsonObject range = edit["range"].toObject();
+				QJsonObject end = range["end"].toObject();
+				
+				double pos = (double)end["line"].toInt() + 1.0 - 1.0 / (double)end["character"].toInt();
+				changesList.append(qMakePair(pos, edit));
+			}
+	
+			if (file == thisFile){
+				execChanges(changesList);
+			}else{
+				execChangesInOtherFile(changesList, file);
+			}
+		}
+	}
 }
 
 bool MainWindow::insertCompletion()

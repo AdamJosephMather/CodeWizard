@@ -26,6 +26,9 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void renameReference(QJsonObject);
+	void execChanges(QList<QPair<double, QJsonObject>>);
+	void execChangesInOtherFile(QList<QPair<double, QJsonObject>> changesList, QString fileUri);
 	void updateSplitsWidths();
 	void moveWidgetsToSplitter(QLayout *layout, QWidget *splitter);
 	void storeResizeOfSplitters();
@@ -88,6 +91,7 @@ private slots:
 	QString convertLeadingSpacesToTabs(const QString& input);
 	void ShowSuggestionsWithSuperSet(QStringList completions);
 	void gotoDefinitionActionTriggered();
+	void renameActionTriggered();
 	static void highlightDiagnostics(bool);
 	void autoSave();
 	void moveHoverBox(QPoint givenPos, QString info, QString type);

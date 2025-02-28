@@ -56,6 +56,7 @@ protected:
 signals:
 	void mousePositionChanged(QPoint pos);
 	void gotoDefinitionActionTriggered();
+	void renameActionTriggered();
 	void mouseClicked(QPoint pos);                 // New signal for mouse clicks
 	void mouseReleased(QPoint pos);
 	void mouseClickedAtCursor(QTextCursor cursor); // New signal with cursor info

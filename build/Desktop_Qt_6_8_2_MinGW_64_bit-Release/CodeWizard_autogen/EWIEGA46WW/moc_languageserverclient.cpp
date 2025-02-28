@@ -64,6 +64,8 @@ static constexpr auto qt_meta_stringdata_ZN20LanguageServerClientE = QtMocHelper
     "hoverInformationReceived",
     "codeActionsReceived",
     "codeActions",
+    "renameReceived",
+    "changes",
     "onServerReadyRead",
     "onServerErrorOccurred",
     "QProcess::ProcessError",
@@ -79,27 +81,28 @@ Q_CONSTINIT static const uint qt_meta_data_ZN20LanguageServerClientE[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-      11,   14, // methods
+      12,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       8,       // signalCount
+       9,       // signalCount
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    2,   80,    2, 0x06,    1 /* Public */,
-       5,    5,   85,    2, 0x06,    4 /* Public */,
-       7,    6,   96,    2, 0x06,   10 /* Public */,
-      15,    1,  109,    2, 0x06,   17 /* Public */,
-      17,    2,  112,    2, 0x06,   19 /* Public */,
-      21,    0,  117,    2, 0x06,   22 /* Public */,
-      22,    3,  118,    2, 0x06,   23 /* Public */,
-      23,    1,  125,    2, 0x06,   27 /* Public */,
+       1,    2,   86,    2, 0x06,    1 /* Public */,
+       5,    5,   91,    2, 0x06,    4 /* Public */,
+       7,    6,  102,    2, 0x06,   10 /* Public */,
+      15,    1,  115,    2, 0x06,   17 /* Public */,
+      17,    2,  118,    2, 0x06,   19 /* Public */,
+      21,    0,  123,    2, 0x06,   22 /* Public */,
+      22,    3,  124,    2, 0x06,   23 /* Public */,
+      23,    1,  131,    2, 0x06,   27 /* Public */,
+      25,    1,  134,    2, 0x06,   29 /* Public */,
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-      25,    0,  128,    2, 0x08,   29 /* Private */,
-      26,    1,  129,    2, 0x08,   30 /* Private */,
-      28,    2,  132,    2, 0x08,   32 /* Private */,
+      27,    0,  137,    2, 0x08,   31 /* Private */,
+      28,    1,  138,    2, 0x08,   32 /* Private */,
+      30,    2,  141,    2, 0x08,   34 /* Private */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::QStringList, QMetaType::Int,    3,    4,
@@ -110,10 +113,11 @@ Q_CONSTINIT static const uint qt_meta_data_ZN20LanguageServerClientE[] = {
     QMetaType::Void,
     QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::Int,    2,    2,    4,
     QMetaType::Void, QMetaType::QJsonArray,   24,
+    QMetaType::Void, QMetaType::QJsonObject,   26,
 
  // slots: parameters
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 27,   16,
+    QMetaType::Void, 0x80000000 | 29,   16,
     QMetaType::Void, QMetaType::Int, 0x80000000 | 19,   18,   20,
 
        0        // eod
@@ -164,6 +168,9 @@ Q_CONSTINIT const QMetaObject LanguageServerClient::staticMetaObject = { {
         // method 'codeActionsReceived'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<const QJsonArray &, std::false_type>,
+        // method 'renameReceived'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<QJsonObject, std::false_type>,
         // method 'onServerReadyRead'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'onServerErrorOccurred'
@@ -190,9 +197,10 @@ void LanguageServerClient::qt_static_metacall(QObject *_o, QMetaObject::Call _c,
         case 5: _t->initializeResponseReceived(); break;
         case 6: _t->hoverInformationReceived((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[3]))); break;
         case 7: _t->codeActionsReceived((*reinterpret_cast< std::add_pointer_t<QJsonArray>>(_a[1]))); break;
-        case 8: _t->onServerReadyRead(); break;
-        case 9: _t->onServerErrorOccurred((*reinterpret_cast< std::add_pointer_t<QProcess::ProcessError>>(_a[1]))); break;
-        case 10: _t->onServerFinished((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QProcess::ExitStatus>>(_a[2]))); break;
+        case 8: _t->renameReceived((*reinterpret_cast< std::add_pointer_t<QJsonObject>>(_a[1]))); break;
+        case 9: _t->onServerReadyRead(); break;
+        case 10: _t->onServerErrorOccurred((*reinterpret_cast< std::add_pointer_t<QProcess::ProcessError>>(_a[1]))); break;
+        case 11: _t->onServerFinished((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QProcess::ExitStatus>>(_a[2]))); break;
         default: ;
         }
     }
@@ -270,6 +278,13 @@ void LanguageServerClient::qt_static_metacall(QObject *_o, QMetaObject::Call _c,
                 return;
             }
         }
+        {
+            using _q_method_type = void (LanguageServerClient::*)(QJsonObject );
+            if (_q_method_type _q_method = &LanguageServerClient::renameReceived; *reinterpret_cast<_q_method_type *>(_a[1]) == _q_method) {
+                *result = 8;
+                return;
+            }
+        }
     }
 }
 
@@ -292,14 +307,14 @@ int LanguageServerClient::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 11)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 11;
+        _id -= 12;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 11)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 11;
+        _id -= 12;
     }
     return _id;
 }
@@ -357,5 +372,12 @@ void LanguageServerClient::codeActionsReceived(const QJsonArray & _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
     QMetaObject::activate(this, &staticMetaObject, 7, _a);
+}
+
+// SIGNAL 8
+void LanguageServerClient::renameReceived(QJsonObject _t1)
+{
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
+    QMetaObject::activate(this, &staticMetaObject, 8, _a);
 }
 QT_WARNING_POP

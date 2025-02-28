@@ -71,6 +71,11 @@ void MyTextEdit::contextMenuEvent(QContextMenuEvent *event) {
 	connect(definitionAction, &QAction::triggered, this, [this]() {
 		emit MyTextEdit::gotoDefinitionActionTriggered();
 	});
+	
+	QAction* renameAction = new QAction("Rename Property", this);
+	connect(renameAction, &QAction::triggered, this, [this]() {
+		emit MyTextEdit::renameActionTriggered();
+	});
 
 	if (menuStyle != "") {
 		menu->setPalette(palette());
@@ -81,7 +86,10 @@ void MyTextEdit::contextMenuEvent(QContextMenuEvent *event) {
 
 	menu->addSeparator();
 	menu->addAction(definitionAction);
+	menu->addAction(renameAction);
+	
 	menu->exec(event->globalPos());
+	
 	delete menu;  // Clean up the menu
 }
 

@@ -386,6 +386,36 @@ void LanguageServerClient::requestActions(int line, int character, int line2, in
 	sendMessage(message);
 }
 
+void LanguageServerClient::requestRename(int line, int character, const QString& newName)
+{
+	QJsonObject textDocument {
+		{"uri", fileURI}
+	};
+
+	QJsonObject position {
+		{"line", line},
+		{"character", character}
+	};
+
+	QJsonObject params {
+		{"textDocument", textDocument},
+		{"position", position},
+		{"newName", newName}
+	};
+
+	QJsonObject message {
+		{"jsonrpc", "2.0"},
+		{"id", requestId++},
+		{"method", "textDocument/rename"},
+		{"params", params}
+	};
+
+	requestsMap.insert(requestId-1, "textDocument/rename");
+
+	sendMessage(message);
+}
+
+
 QJsonArray LanguageServerClient::filterDiagnostics(const QJsonArray &diagnostics, int lineStart, int columnStart, int lineEnd, int columnEnd)
 {
 	QJsonArray filteredDiagnostics;
@@ -589,6 +619,8 @@ void LanguageServerClient::onServerReadyRead()
 
 			emit gotoDefinitionsReceived(line1, character1, line, character, locFile);
 			continue;
+		}else if (responseType == "textDocument/rename"){
+			emit renameReceived(result);
 		}else if (responseType == "textDocument/completion"){
 			QJsonArray items = result["items"].toArray();
 

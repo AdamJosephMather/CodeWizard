@@ -24,6 +24,7 @@ public:
 	int requestHover(int line, int character);
 	void requestGotoDefinition(int line, int character);
 	void requestActions(int line, int character, int line2, int character2);
+	void requestRename(int line, int character, const QString& newName);
 	void documentSaved(QString text);
 	void shutdown();
 
@@ -40,6 +41,7 @@ signals:
 	void initializeResponseReceived();
 	void hoverInformationReceived(QString, QString, int id);
 	void codeActionsReceived(const QJsonArray& codeActions);
+	void renameReceived(QJsonObject changes);
 
 private slots:
 	void onServerReadyRead();
