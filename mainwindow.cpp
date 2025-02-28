@@ -5302,8 +5302,6 @@ bool MainWindow::activateCodeAction()
 
 	QJsonArray arguments = codeActions[currentSelectionAction].toObject()["arguments"].toArray();
 
-	qDebug() << codeActions[currentSelectionAction];
-
 	if (!arguments.isEmpty()) {
 		QJsonObject changes = arguments[0].toObject()["changes"].toObject();
 
@@ -5412,8 +5410,6 @@ void MainWindow::execChanges(QList<QPair<double, QJsonObject>> changesList){
 		QJsonObject start = range["start"].toObject();
 		QJsonObject end = range["end"].toObject();
 
-		qDebug() << change << changePair.first;
-
 		// Extract line and character positions from the range
 		int startLine = start["line"].toInt();
 		int startCharacter = start["character"].toInt();
@@ -5486,17 +5482,12 @@ void MainWindow::execChangesInOtherFile(QList<QPair<double, QJsonObject>> change
 		QTextStream out(&file);
 		out << document.toPlainText();
 		file.close();
-		qDebug() << "Changes applied and saved to" << filePath;
-	} else {
-		qDebug() << "Failed to save changes to" << filePath;
 	}
 }
 
 void MainWindow::renameReference(QJsonObject instructions)
 {
 	qDebug() << "renameReference";
-
-	qDebug() << instructions;
 
 	QFileInfo filePathInfo(fileName);
 
@@ -5518,11 +5509,7 @@ void MainWindow::renameReference(QJsonObject instructions)
 			}
 			QFileInfo uriPathInfo(uriLocalPath);
 
-			qDebug() << "file: " << file;
-
 			QJsonArray edits = change["edits"].toArray();
-
-			qDebug() << "edits: " << edits;
 
 			QList<QPair<double, QJsonObject>> changesList;
 
@@ -5534,8 +5521,6 @@ void MainWindow::renameReference(QJsonObject instructions)
 				double pos = (double)end["line"].toInt()+1.0 - 1.0/(double)(end["character"].toInt()+1);
 				changesList.append(qMakePair(pos, edit));
 			}
-
-			qDebug() << "cl: " << changesList;
 
 			if (filePathInfo.canonicalFilePath() == uriPathInfo.canonicalFilePath()){
 				execChanges(changesList);
