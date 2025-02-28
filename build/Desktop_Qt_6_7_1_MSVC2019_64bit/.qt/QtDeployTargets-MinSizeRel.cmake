@@ -1,2 +1,0 @@
-set(__QT_DEPLOY_TARGET_CodeWizard_FILE C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit/MinSizeRel/CodeWizard.exe)
-set(__QT_DEPLOY_TARGET_CodeWizard_RUNTIME_DLLS C:/Qt/6.7.1/msvc2019_64/bin/Qt6Widgets.dll;C:/Qt/6.7.1/msvc2019_64/bin/Qt6TextToSpeech.dll;C:/Qt/6.7.1/msvc2019_64/bin/Qt6Multimedia.dll;C:/Qt/6.7.1/msvc2019_64/bin/Qt6Network.dll;C:/Qt/6.7.1/msvc2019_64/bin/Qt6Gui.dll;C:/Qt/6.7.1/msvc2019_64/bin/Qt6Core.dll)

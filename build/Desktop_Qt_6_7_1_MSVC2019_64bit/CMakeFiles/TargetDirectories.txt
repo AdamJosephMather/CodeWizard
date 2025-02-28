@@ -1,5 +1,0 @@
-C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit/CMakeFiles/tree-sitter.dir
-C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit/CMakeFiles/CodeWizard.dir
-C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit/CMakeFiles/INSTALL.dir
-C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit/CMakeFiles/ALL_BUILD.dir
-C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit/CMakeFiles/ZERO_CHECK.dir
