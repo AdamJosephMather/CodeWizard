@@ -596,6 +596,10 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	textEdit = ui->textEdit;
 	groq->setTextEdit(textEdit);
 	errMenu.Setup(textEdit);
+	
+	suggestionBox = new QListWidget(textEdit); //this goes here so that it is initialized by the time the applyonlyeditstheme is called (or whatever)
+	actionBox = new QListWidget(textEdit);
+	hoverBox = new QTextEdit(textEdit);
 
 	lineNumberTextEdit = ui->textEdit_4;
 
@@ -969,25 +973,20 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	}
 
 	qDebug() << "Windows version: " << windowsVersion;
+	
+	hoverBox->setFont(textEdit->font());
+	hoverBox->setFocusPolicy(Qt::NoFocus);
+	hoverBox->setWordWrapMode(QTextOption::NoWrap);
+	hoverBox->hide();
+	actionBox->setFocusPolicy(Qt::NoFocus);
+	actionBox->hide();
+	suggestionBox->setFocusPolicy(Qt::NoFocus);
+	suggestionBox->hide();
 
 	changeTheme(thm);
 	changeHighlightColors(thm);
 
 	MainWindow::setupCompleter();
-
-	suggestionBox = new QListWidget(textEdit);
-	suggestionBox->setFocusPolicy(Qt::NoFocus);
-	suggestionBox->hide();
-
-	actionBox = new QListWidget(textEdit);
-	actionBox->setFocusPolicy(Qt::NoFocus);
-	actionBox->hide();
-
-	hoverBox = new QTextEdit(textEdit);
-	hoverBox->setFont(textEdit->font());
-	hoverBox->setFocusPolicy(Qt::NoFocus);
-	hoverBox->setWordWrapMode(QTextOption::NoWrap);
-	hoverBox->hide();
 
 	updateFonts();
 	updateFontSelection();
@@ -2095,8 +2094,6 @@ void MainWindow::rehighlightFullDoc(){
 	if (!tree){
 		return;
 	}
-	// Determine the range of affected text
-	int startByte = 0;
 
 	treeParserSyntaxHighlighter.fullDocRehighlight(textDocument, tree);
 }
@@ -2984,9 +2981,11 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 	}else{
 		finalString = plaintextToHtml(info);
 	}
+	
+	hoverBox->setHtml(finalString);
 
 	lineCount = finalString.count("<br>")+finalString.count("<hr>")*4 + 2;
-	lines = finalString.split("<br>");
+	lines = hoverBox->toPlainText().split("\n"); // this way we don't get the sh*t from the html
 
 	int maxLength = 0;
 
@@ -2997,7 +2996,7 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 	QFontMetrics metrics(textEdit->font());
 	int textHeight = metrics.height() * (lineCount);
 	int textWidth = metrics.horizontalAdvance('M') * (maxLength + 4);
-
+	
 	int maxWidth = qMin(textEdit->width()/2, textWidth);
 	int maxHeight = qMin(textEdit->height()/3, textHeight);
 
@@ -3014,7 +3013,6 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 
 	hoverBox->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
 	hoverBox->setFocusPolicy(Qt::StrongFocus); // Allow the hoverBox to receive keyboard focus
-	hoverBox->setHtml(finalString);
 
 	hoverBox->move(newPos);
 	hoverBox->show();
@@ -6622,120 +6620,85 @@ void MainWindow::changeHighlightColors(bool darkmode){
 
 void MainWindow::changeOnlyEditsTheme(bool darkmode){
 	qDebug() << "changeOnlyEditsTheme";
-
+	
+	QColor color1;
+	QColor color2;
+	
 	if (darkmode){
-		QPalette palette = textEdit->palette();
-		palette.setColor(QPalette::Base, QColor(23, 23, 23));
-		textEdit->setPalette(palette);
-
-		palette = lineNumberTextEdit->palette();
-		palette.setColor(QPalette::Base, QColor(32, 32, 32));
-		lineNumberTextEdit->setPalette(palette);
-
-		palette = fileTree->palette();
-		palette.setColor(QPalette::Base, QColor(32, 32, 32));
-		fileTree->setPalette(palette);
-
-		palette = replaceTextEdit->palette();
-		palette.setColor(QPalette::Base, QColor(32, 32, 32));
-		replaceTextEdit->setPalette(palette);
-
-		palette = builtinTerminalTextEdit->palette();
-		palette.setColor(QPalette::Base, QColor(32, 32, 32));
-		builtinTerminalTextEdit->setPalette(palette);
-
-		palette = terminalInputLine->palette();
-		palette.setColor(QPalette::Base, QColor(23, 23, 23));
-		terminalInputLine->setPalette(palette);
-
-		palette = builtinTerminalTextEditHORZ->palette();
-		palette.setColor(QPalette::Base, QColor(32, 32, 32));
-		builtinTerminalTextEditHORZ->setPalette(palette);
-
-		palette = terminalInputLineHORZ->palette();
-		palette.setColor(QPalette::Base, QColor(23, 23, 23));
-		terminalInputLineHORZ->setPalette(palette);
-
-		palette = findTextEdit->palette();
-		palette.setColor(QPalette::Base, QColor(32, 32, 32));
-		findTextEdit->setPalette(palette);
-
-		palette = lineEdit->palette();
-		palette.setColor(QPalette::Base, QColor(32, 32, 32));
-		lineEdit->setPalette(palette);
-
-		palette = findButton->palette();
-		palette.setColor(QPalette::Button, QColor(32, 32, 32));
-		findButton->setPalette(palette);
-
-		palette = replaceButton->palette();
-		palette.setColor(QPalette::Button, QColor(32, 32, 32));
-		replaceButton->setPalette(palette);
-
-		palette = replaceAllButton->palette();
-		palette.setColor(QPalette::Button, QColor(32, 32, 32));
-		replaceAllButton->setPalette(palette);
-
-		palette = nextButton->palette();
-		palette.setColor(QPalette::Button, QColor(32, 32, 32));
-		nextButton->setPalette(palette);
+		color1 = QColor(23, 23, 23);
+		color2 = QColor(32, 32, 32);
 	} else {
-		QPalette palette = textEdit->palette();
-		palette.setColor(QPalette::Base, QColor(230, 230, 230));
-		textEdit->setPalette(palette);
-
-		palette = lineNumberTextEdit->palette();
-		palette.setColor(QPalette::Base, QColor(245, 245, 245));
-		lineNumberTextEdit->setPalette(palette);
-
-		palette = fileTree->palette();
-		palette.setColor(QPalette::Base, QColor(245, 245, 245));
-		fileTree->setPalette(palette);
-
-		palette = replaceTextEdit->palette();
-		palette.setColor(QPalette::Base, QColor(245, 245, 245));
-		replaceTextEdit->setPalette(palette);
-
-		palette = builtinTerminalTextEdit->palette();
-		palette.setColor(QPalette::Base, QColor(245, 245, 245));
-		builtinTerminalTextEdit->setPalette(palette);
-
-		palette = terminalInputLine->palette();
-		palette.setColor(QPalette::Base, QColor(230, 230, 230));
-		terminalInputLine->setPalette(palette);
-
-		palette = builtinTerminalTextEditHORZ->palette();
-		palette.setColor(QPalette::Base, QColor(245, 245, 245));
-		builtinTerminalTextEditHORZ->setPalette(palette);
-
-		palette = terminalInputLineHORZ->palette();
-		palette.setColor(QPalette::Base, QColor(230, 230, 230));
-		terminalInputLineHORZ->setPalette(palette);
-
-		palette = findTextEdit->palette();
-		palette.setColor(QPalette::Base, QColor(245, 245, 245));
-		findTextEdit->setPalette(palette);
-
-		palette = lineEdit->palette();
-		palette.setColor(QPalette::Base, QColor(245, 245, 245));
-		lineEdit->setPalette(palette);
-
-		palette = findButton->palette();
-		palette.setColor(QPalette::Button, QColor(245, 245, 245));
-		findButton->setPalette(palette);
-
-		palette = replaceButton->palette();
-		palette.setColor(QPalette::Button, QColor(245, 245, 245));
-		replaceButton->setPalette(palette);
-
-		palette = replaceAllButton->palette();
-		palette.setColor(QPalette::Button, QColor(245, 245, 245));
-		replaceAllButton->setPalette(palette);
-
-		palette = nextButton->palette();
-		palette.setColor(QPalette::Button, QColor(245, 245, 245));
-		nextButton->setPalette(palette);
+		color1 = QColor(230, 230, 230);
+		color2 = QColor(245, 245, 245);
 	}
+	
+	QPalette palette = textEdit->palette();
+	palette.setColor(QPalette::Base, color1);
+	textEdit->setPalette(palette);
+
+	palette = lineNumberTextEdit->palette();
+	palette.setColor(QPalette::Base, color2);
+	lineNumberTextEdit->setPalette(palette);
+	
+	palette = hoverBox->palette();
+	palette.setColor(QPalette::Base, color2);
+	hoverBox->setPalette(palette);
+	
+	palette = actionBox->palette();
+	palette.setColor(QPalette::Base, color2);
+	actionBox->setPalette(palette);
+	
+	palette = suggestionBox->palette();
+	palette.setColor(QPalette::Base, color2);
+	suggestionBox->setPalette(palette);
+
+	palette = fileTree->palette();
+	palette.setColor(QPalette::Base, color2);
+	fileTree->setPalette(palette);
+
+	palette = replaceTextEdit->palette();
+	palette.setColor(QPalette::Base, color2);
+	replaceTextEdit->setPalette(palette);
+
+	palette = builtinTerminalTextEdit->palette();
+	palette.setColor(QPalette::Base, color2);
+	builtinTerminalTextEdit->setPalette(palette);
+
+	palette = terminalInputLine->palette();
+	palette.setColor(QPalette::Base, color1);
+	terminalInputLine->setPalette(palette);
+
+	palette = builtinTerminalTextEditHORZ->palette();
+	palette.setColor(QPalette::Base, color2);
+	builtinTerminalTextEditHORZ->setPalette(palette);
+
+	palette = terminalInputLineHORZ->palette();
+	palette.setColor(QPalette::Base, color1);
+	terminalInputLineHORZ->setPalette(palette);
+
+	palette = findTextEdit->palette();
+	palette.setColor(QPalette::Base, color2);
+	findTextEdit->setPalette(palette);
+
+	palette = lineEdit->palette();
+	palette.setColor(QPalette::Base, color2);
+	lineEdit->setPalette(palette);
+
+	palette = findButton->palette();
+	palette.setColor(QPalette::Button, color2);
+	findButton->setPalette(palette);
+
+	palette = replaceButton->palette();
+	palette.setColor(QPalette::Button, color2);
+	replaceButton->setPalette(palette);
+
+	palette = replaceAllButton->palette();
+	palette.setColor(QPalette::Button, color2);
+	replaceAllButton->setPalette(palette);
+
+	palette = nextButton->palette();
+	palette.setColor(QPalette::Button, color2);
+	nextButton->setPalette(palette);
 }
 
 void MainWindow::changeTheme(bool darkMode)

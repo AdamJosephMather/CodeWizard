@@ -27,7 +27,7 @@ QTextEdit* copyOfTextEdit;
 
 LanguageServerClient::LanguageServerClient(const QString &serverPath, QTextEdit *providedTextEdit, QObject *parent)
 	: QObject(parent), requestId(0), documentVersion(1)
-{	
+{
 	lspPath = serverPath;
 
 	copyOfTextEdit = providedTextEdit;
@@ -48,11 +48,11 @@ LanguageServerClient::LanguageServerClient(const QString &serverPath, QTextEdit 
 	connect(&serverProcess, &QProcess::errorOccurred, this, &LanguageServerClient::onServerErrorOccurred);
 	connect(&serverProcess, &QProcess::finished, this, &LanguageServerClient::onServerFinished);
 
-    #ifdef Q_OS_WIN
-        serverProcess.start("cmd", QStringList() << "/c" << serverPath); // to send /k
-    #else
-        serverProcess.start("/bin/sh", QStringList() << "-c" << serverPath); // to send /k
-    #endif
+	#ifdef Q_OS_WIN
+		serverProcess.start("cmd", QStringList() << "/c" << serverPath); // to send /k
+	#else
+		serverProcess.start("/bin/sh", QStringList() << "-c" << serverPath); // to send /k
+	#endif
 
 	if (!serverProcess.waitForStarted()) {
 		failedToStart = true;
@@ -63,15 +63,15 @@ LanguageServerClient::LanguageServerClient(const QString &serverPath, QTextEdit 
 
 void LanguageServerClient::onServerErrorOccurred(QProcess::ProcessError error)
 {
-	qWarning() << "Server error occurred:" << error;
-	qWarning() << "Error String:" << serverProcess.errorString();
+	qDebug() << "Server error occurred:" << error;
+	qDebug() << "Error String:" << serverProcess.errorString();
 	initializeLoop.quit();
 	failedToStart = true;
 }
 
 void LanguageServerClient::onServerFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-	qWarning() << "Server process finished with exit code:" << exitCode << "and status:" << exitStatus;
+	qDebug() << "Server process finished with exit code:" << exitCode << "and status:" << exitStatus;
 	initializeLoop.quit();
 	failedToStart = true;
 }
@@ -91,47 +91,42 @@ void LanguageServerClient::initialize(const QString &rootUri)
 					{"snippetSupport", true},
 					{"resolveSupport", QJsonObject{
 						{"properties", QJsonArray{"documentation", "detail", "additionalTextEdits"}}
-				}},
-				{"commitCharactersSupport", true},
-				{"deprecatedSupport", true}
-			}},
-			{"contextSupport", true},
-			{"triggerCharacters", QJsonArray{".", ":", ">", "<", "/", "@", "*"}},
-			{"resolveProvider", true},
-			{"completionProvider", QJsonObject{
-				{"resolveProvider", true},
-				{"triggerCharacters", QJsonArray{".", ":", ">", "<", "/", "@", "*", "(", "[", "{", "'", "\"", "#"}}
-			}}
+					}}
+				}}
 			}},
 			{"synchronization", QJsonObject{
-			{"dynamicRegistration", true},
-			{"didSave", true},
-			{"didChange", true},
-			{"willSave", false}
+				{"dynamicRegistration", true},
+				{"didSave", true},
+				{"didChange", true},
+				{"willSave", false}
+			}},
+			{"publishDiagnostics", QJsonObject{
+				{"enabled", true}
+			}}
 		}},
-		{"publishDiagnostics", QJsonObject{
-			{"enabled", true}  // Enable diagnostics
-		}}
+		{"completionProvider", QJsonObject{
+			{"resolveProvider", true},
+			{"triggerCharacters", QJsonArray{".", ":", ">", "<", "/", "@", "*", "(", "[", "{", "'", "\"", "#"}}
 		}},
 		{"workspace", QJsonObject{
 			{"workspaceFolders", true},
 			{"configuration", true}
 		}}
 	};
-
+	
 	QJsonObject params {
 		{"rootUri", fileRootURI},
 		{"capabilities", capabilities},
 		{"clientInfo", QJsonObject{
-						   {"name", "CodeWizardLSP"},
-						   {"version", "1.0.0"}
-					   }},
+			   {"name", "CodeWizardLSP"},
+			   {"version", "1.0.0"}
+		   }},
 		{"workspaceFolders", QJsonArray{
-								 QJsonObject{
-									 {"uri", fileRootURI},
-									 {"name", "workspace"}
-								 }
-							 }}
+			 QJsonObject{
+				 {"uri", fileRootURI},
+				 {"name", "workspace"}
+			 }
+		 }},
 	};
 
 	initializeRequestId = requestId++;
@@ -468,9 +463,9 @@ void LanguageServerClient::onServerReadyRead()
 		if (!isInitialized && response["result"].toObject()["capabilities"].toObject() != QJsonObject()) {
 			// Initialize response received
 			QJsonObject serverCapabilities = response["result"].toObject()["capabilities"].toObject();
-			
+
 			QJsonArray triggerCharsArr = serverCapabilities["completionProvider"].toObject()["triggerCharacters"].toArray();
-			
+
 			triggerChars.clear();
 			QStringList stringList;
 			for (const QJsonValue &value : triggerCharsArr) {
@@ -479,9 +474,9 @@ void LanguageServerClient::onServerReadyRead()
 				}
 			}
 			triggerChars.push_back("_");
-			
+
 			qDebug() << "TRIGGER CHARACTERS: " << triggerChars;
-			
+
 			// You can store server capabilities here if needed
 			// Signal that we've received the initialize response
 			initializeLoop.quit();
@@ -671,7 +666,6 @@ QJsonObject LanguageServerClient::readMessage() // How do I put this? I'm a god.
 	int bytesAvail = serverProcess.bytesAvailable();
 	if (bytesAvail != 0){
 		QByteArray line = serverProcess.read(bytesAvail);
-//		qDebug() << line;
 		currentExecution += line;
 	}
 

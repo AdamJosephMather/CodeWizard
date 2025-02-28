@@ -67,9 +67,10 @@ void SyntaxHighlighter::fullDocRehighlight(QTextDocument* document, TSTree* tree
 		}
 
 		layout->setFormats(newFormats);
-		document->markContentsDirty(blockStart, block.length());
 		block = block.next();
 	}
+	
+	document->markContentsDirty(0, document->characterCount());
 }
 
 // Apply highlighting only where needed
