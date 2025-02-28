@@ -5456,6 +5456,9 @@ void MainWindow::renameReference(QJsonObject instructions)
 	qDebug() << "renameReference";
 
 	qDebug() << instructions;
+	
+	
+	QFileInfo filePathInfo(fileName);
 		
 	QString thisFile = QUrl::fromLocalFile(fileName).toString(); // we have to be in a file to use lsp... Might be something I change later. If so good luck finding this bug
 		
@@ -5465,6 +5468,16 @@ void MainWindow::renameReference(QJsonObject instructions)
 		for (int i = 0; i < changes.count(); i++){
 			QJsonObject change = changes[i].toObject();
 			QString file = change["textDocument"].toObject()["uri"].toString(); //probably smart to do something with this...
+			
+			QUrl url(file);
+			QString uriLocalPath;
+			if (url.isLocalFile()) {
+				uriLocalPath = url.toLocalFile();
+			} else {
+				uriLocalPath = file;
+			}
+			QFileInfo uriPathInfo(uriLocalPath);
+			
 			
 			qDebug() << "file: " << file;
 			
@@ -5485,7 +5498,7 @@ void MainWindow::renameReference(QJsonObject instructions)
 			
 			qDebug() << "cl: " << changesList;
 			
-			if (file == thisFile){
+			if (filePathInfo.canonicalFilePath() == uriPathInfo.canonicalFilePath()){
 				execChanges(changesList);
 			}else{
 				execChangesInOtherFile(changesList, file);
@@ -5495,6 +5508,15 @@ void MainWindow::renameReference(QJsonObject instructions)
 		QJsonObject changes = instructions["changes"].toObject();
 		
 		for (const QString& file : changes.keys()) { // Iterate over each file URI
+			QUrl url(file);
+			QString uriLocalPath;
+			if (url.isLocalFile()) {
+				uriLocalPath = url.toLocalFile();
+			} else {
+				uriLocalPath = file;
+			}
+			QFileInfo uriPathInfo(uriLocalPath);
+			
 			QJsonArray edits = changes[file].toArray();
 			
 			QList<QPair<double, QJsonObject>> changesList;
@@ -5508,7 +5530,7 @@ void MainWindow::renameReference(QJsonObject instructions)
 				changesList.append(qMakePair(pos, edit));
 			}
 	
-			if (file == thisFile){
+			if (filePathInfo.canonicalFilePath() == uriPathInfo.canonicalFilePath()){
 				execChanges(changesList);
 			}else{
 				execChangesInOtherFile(changesList, file);
