@@ -35,6 +35,12 @@ void ErrorsMenu::Setup(MyTextEdit *t) {
 	connect(errorsList, &QListWidget::itemClicked, this, &ErrorsMenu::onErrorItemClicked);
 }
 
+void ErrorsMenu::recolor(QColor backColor){
+	QPalette palette = errorsList->palette();
+	palette.setColor(QPalette::Base, backColor);
+	errorsList->setPalette(palette);
+}
+
 MyTextEdit* ErrorsMenu::createOverlay(QString color){
 	qDebug() << "createOverlay - errMenu";
 	MyTextEdit* overlayTextEdit = new MyTextEdit(textEdit);

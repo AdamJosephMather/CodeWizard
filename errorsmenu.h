@@ -13,6 +13,7 @@ class ErrorsMenu : public QObject
 public:
 	ErrorsMenu(); // Constructor
 
+	void recolor(QColor backColor);
 	void Setup(MyTextEdit *t);
 	void UpdateErrors(QList<int> lN, QStringList m, QList<int> s);
 	void reposition();

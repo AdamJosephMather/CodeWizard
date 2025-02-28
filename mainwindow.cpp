@@ -541,8 +541,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	menuSilly = ui->menuSilly;
 
 	menuSubFonts = menuFonts->addMenu("Browse Installed Fonts");
-	QFontDatabase fontDatabase;
-	fontFamilies = fontDatabase.families();
+	
+	fontFamilies = QFontDatabase::families();;
 	fontList = new QListWidget();
 
 	fontList->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -5316,18 +5316,12 @@ bool MainWindow::activateCodeAction()
 			int endLine = end["line"].toInt();
 			int endCharacter = end["character"].toInt();
 
-			// Move the cursor to the start position
 			cursor.setPosition(textDocument->findBlockByLineNumber(startLine).position() + startCharacter);
-
-			// Select the range in the QTextEdit
 			cursor.setPosition(textDocument->findBlockByLineNumber(endLine).position() + endCharacter, QTextCursor::KeepAnchor);
-
-			// Replace the selected text with the new text
 			cursor.insertText(newText);
 		}
-
-		cursor.endEditBlock();
 		textEdit->blockSignals(false);
+		cursor.endEditBlock(); // this goes after to ensure that the thing registers the change with the lsp
 
 		return true;
 	}
@@ -6645,6 +6639,8 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		color1 = QColor(230, 230, 230);
 		color2 = QColor(245, 245, 245);
 	}
+	
+	errMenu.recolor(color2);
 
 	QPalette palette = textEdit->palette();
 	palette.setColor(QPalette::Base, color1);
