@@ -541,7 +541,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	menuSilly = ui->menuSilly;
 
 	menuSubFonts = menuFonts->addMenu("Browse Installed Fonts");
-	
+
 	fontFamilies = QFontDatabase::families();;
 	fontList = new QListWidget();
 
@@ -2505,7 +2505,7 @@ void MainWindow::renameActionTriggered(){
 	if (isSettingUpLSP || isOpeningFile){
 		return;
 	}
-	
+
 	QInputDialog dialog;
 	dialog.setFont(textEdit->font());  // Set the font to match textEdit's font
 	dialog.setWindowTitle("Rename Reference");
@@ -2859,9 +2859,9 @@ void MainWindow::setupLSP(QString oldFile)
 	});
 
 	connect(client, &LanguageServerClient::gotoDefinitionsReceived, this, &MainWindow::gotoDefinitionReceived, Qt::AutoConnection);
-	
+
 	connect(client, &LanguageServerClient::renameReceived, this, &MainWindow::renameReference, Qt::AutoConnection);
-	
+
 	connect(client, &LanguageServerClient::codeActionsReceived, [this](const QJsonArray& suggestedActions) {
 		codeActions = suggestedActions;
 
@@ -4320,11 +4320,11 @@ void saveToFile(QString text)
 void MainWindow::on_actionRun_Module_F5_triggered()
 {
 	qDebug() << "on_actionRun_Module_F5_triggered";
-	
+
 	if (unsaved){
 		on_actionSave_triggered();
 	}
-	
+
 	builtinTerminalTextEdit->insertPlainText("\nRequesting process gracefully stop.");
 	builtinTerminalTextEditHORZ->insertPlainText("\nRequesting process gracefully stop.");
 
@@ -5297,17 +5297,31 @@ bool MainWindow::activateCodeAction()
 {
 	qDebug() << "activateCodeAction";
 
+	QFileInfo filePathInfo(fileName);
+	QString thisFile = QUrl::fromLocalFile(fileName).toString();
+
 	QJsonArray arguments = codeActions[currentSelectionAction].toObject()["arguments"].toArray();
+
+	qDebug() << codeActions[currentSelectionAction];
 
 	if (!arguments.isEmpty()) {
 		QJsonObject changes = arguments[0].toObject()["changes"].toObject();
 
-		// A list to hold changes in a sortable way
-		QList<QPair<double, QJsonObject>> changesList;
-
 		// Iterate over the keys in the changes object (which are file paths, in this case)
 		for (auto it = changes.begin(); it != changes.end(); ++it) {
 			// Extract the changes for each file
+			QList<QPair<double, QJsonObject>> changesList;
+
+			QString file = it.key();
+			QUrl url(file);
+			QString uriLocalPath;
+			if (url.isLocalFile()) {
+				uriLocalPath = url.toLocalFile();
+			} else {
+				uriLocalPath = file;
+			}
+			QFileInfo uriPathInfo(uriLocalPath);
+
 			QJsonArray fileChanges = it.value().toArray();
 
 			// Iterate over the changes for each file
@@ -5317,22 +5331,43 @@ bool MainWindow::activateCodeAction()
 				QJsonObject end = range["end"].toObject();
 
 				// Extract line number from the start position
-				double pos = (double)end["line"].toInt()+1.0 - 1.0/(double)end["character"].toInt();
+				double pos = (double)end["line"].toInt()+1.0 - 1.0/(double)(end["character"].toInt()+1);
 
 				// Store each change with its corresponding line number
 				changesList.append(qMakePair(pos, change));
 			}
-		}
 
-		execChanges(changesList);
+			if (filePathInfo.canonicalFilePath() == uriPathInfo.canonicalFilePath()){
+				execChanges(changesList);
+			}else{
+				execChangesInOtherFile(changesList, file);
+			}
+		}
 
 		return true;
 	}
 
-	QJsonArray changes = codeActions[currentSelectionAction].toObject()["edit"].toObject()["documentChanges"].toArray()[0].toObject()["edits"].toArray();
+	QJsonArray docChanges = codeActions[currentSelectionAction].toObject()["edit"].toObject()["documentChanges"].toArray();
 
-	if (!changes.empty()){
+	bool changed = false;
+
+	for (int i = 0; i < docChanges.count(); i++){
+		QJsonArray changes = docChanges[i].toObject()["edits"].toArray();
+
+		if (changes.empty()){
+			continue;
+		}
 		QList<QPair<double, QJsonObject>> changesList;
+		QString file = docChanges[i].toObject()["textDocument"].toObject()["uri"].toString(); //probably smart to do something with this...
+
+		QUrl url(file);
+		QString uriLocalPath;
+		if (url.isLocalFile()) {
+			uriLocalPath = url.toLocalFile();
+		} else {
+			uriLocalPath = file;
+		}
+		QFileInfo uriPathInfo(uriLocalPath);
 
 		for (auto it = 0; it < changes.count(); ++it) {
 			// Extract the changes for each file
@@ -5341,22 +5376,26 @@ bool MainWindow::activateCodeAction()
 			QJsonObject end = range["end"].toObject();
 
 			// Extract line number from the start position
-			double pos = (double)end["line"].toInt()+1.0 - 1.0/(double)end["character"].toInt();
+			double pos = (double)end["line"].toInt()+1.0 - 1.0/(double)(end["character"].toInt()+1);
 			// Store each change with its corresponding line number
 			changesList.append(qMakePair(pos, change));
 		}
 
-		execChanges(changesList);
+		if (filePathInfo.canonicalFilePath() == uriPathInfo.canonicalFilePath()){
+			execChanges(changesList);
+		}else{
+			execChangesInOtherFile(changesList, file);
+		}
 
-		return true;
+		changed = true;
 	}
 
-	return false;
+	return changed;
 }
 
 void MainWindow::execChanges(QList<QPair<double, QJsonObject>> changesList){
 	qDebug() << "execChanges";
-	
+
 	std::sort(changesList.begin(), changesList.end(), [](const QPair<double, QJsonObject>& a, const QPair<double, QJsonObject>& b) {
 		return a.first > b.first; // Sort by line number, descending
 	});
@@ -5372,6 +5411,8 @@ void MainWindow::execChanges(QList<QPair<double, QJsonObject>> changesList){
 		QJsonObject range = change["range"].toObject();
 		QJsonObject start = range["start"].toObject();
 		QJsonObject end = range["end"].toObject();
+
+		qDebug() << change << changePair.first;
 
 		// Extract line and character positions from the range
 		int startLine = start["line"].toInt();
@@ -5389,57 +5430,57 @@ void MainWindow::execChanges(QList<QPair<double, QJsonObject>> changesList){
 
 void MainWindow::execChangesInOtherFile(QList<QPair<double, QJsonObject>> changesList, QString fileUri) {
 	qDebug() << "execChangesInOtherFile for" << fileUri;
-	
+
 	// Convert URI to local path (assuming file:// scheme)
 	QUrl url(fileUri);
 	QString filePath = url.isLocalFile() ? url.toLocalFile() : fileUri;
-	
+
 	// Open the file
 	QFile file(filePath);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		qDebug() << "Failed to open file:" << filePath;
 		return;
 	}
-	
+
 	// Read the file content
 	QTextStream in(&file);
 	QString fileContent = in.readAll();
 	file.close();
-	
+
 	// Create a QTextDocument to work with the content
 	QTextDocument document;
 	document.setPlainText(fileContent);
-	
+
 	// Sort the changes by line number, descending
 	std::sort(changesList.begin(), changesList.end(), [](const QPair<double, QJsonObject>& a, const QPair<double, QJsonObject>& b) {
 		return a.first > b.first;
 	});
-	
+
 	// Apply the changes in sorted order
 	QTextCursor cursor(&document);
 	cursor.beginEditBlock();
-	
+
 	for (const QPair<double, QJsonObject>& changePair : changesList) {
 		QJsonObject change = changePair.second;
 		QString newText = convertLeadingSpacesToTabs(change["newText"].toString());
 		QJsonObject range = change["range"].toObject();
 		QJsonObject start = range["start"].toObject();
 		QJsonObject end = range["end"].toObject();
-		
+
 		// Extract line and character positions from the range
 		int startLine = start["line"].toInt();
 		int startCharacter = start["character"].toInt();
 		int endLine = end["line"].toInt();
 		int endCharacter = end["character"].toInt();
-		
+
 		// Set cursor position for editing
 		cursor.setPosition(document.findBlockByLineNumber(startLine).position() + startCharacter);
 		cursor.setPosition(document.findBlockByLineNumber(endLine).position() + endCharacter, QTextCursor::KeepAnchor);
 		cursor.insertText(newText);
 	}
-	
+
 	cursor.endEditBlock();
-	
+
 	// Save the modified content back to the file
 	if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		QTextStream out(&file);
@@ -5456,19 +5497,18 @@ void MainWindow::renameReference(QJsonObject instructions)
 	qDebug() << "renameReference";
 
 	qDebug() << instructions;
-	
-	
+
 	QFileInfo filePathInfo(fileName);
-		
+
 	QString thisFile = QUrl::fromLocalFile(fileName).toString(); // we have to be in a file to use lsp... Might be something I change later. If so good luck finding this bug
-		
+
 	if (instructions.contains("documentChanges")){ // type 1
 		QJsonArray changes = instructions["documentChanges"].toArray();
-		
+
 		for (int i = 0; i < changes.count(); i++){
 			QJsonObject change = changes[i].toObject();
 			QString file = change["textDocument"].toObject()["uri"].toString(); //probably smart to do something with this...
-			
+
 			QUrl url(file);
 			QString uriLocalPath;
 			if (url.isLocalFile()) {
@@ -5477,27 +5517,26 @@ void MainWindow::renameReference(QJsonObject instructions)
 				uriLocalPath = file;
 			}
 			QFileInfo uriPathInfo(uriLocalPath);
-			
-			
+
 			qDebug() << "file: " << file;
-			
+
 			QJsonArray edits = change["edits"].toArray();
-			
+
 			qDebug() << "edits: " << edits;
-			
+
 			QList<QPair<double, QJsonObject>> changesList;
-			
+
 			for (int j = 0; j < edits.count(); j++){
 				QJsonObject edit = edits[j].toObject();
 				QJsonObject range = edit["range"].toObject();
 				QJsonObject end = range["end"].toObject();
 
-				double pos = (double)end["line"].toInt()+1.0 - 1.0/(double)end["character"].toInt();
+				double pos = (double)end["line"].toInt()+1.0 - 1.0/(double)(end["character"].toInt()+1);
 				changesList.append(qMakePair(pos, edit));
 			}
-			
+
 			qDebug() << "cl: " << changesList;
-			
+
 			if (filePathInfo.canonicalFilePath() == uriPathInfo.canonicalFilePath()){
 				execChanges(changesList);
 			}else{
@@ -5506,7 +5545,7 @@ void MainWindow::renameReference(QJsonObject instructions)
 		}
 	}else if (instructions.contains("changes")) { // type 2
 		QJsonObject changes = instructions["changes"].toObject();
-		
+
 		for (const QString& file : changes.keys()) { // Iterate over each file URI
 			QUrl url(file);
 			QString uriLocalPath;
@@ -5516,20 +5555,20 @@ void MainWindow::renameReference(QJsonObject instructions)
 				uriLocalPath = file;
 			}
 			QFileInfo uriPathInfo(uriLocalPath);
-			
+
 			QJsonArray edits = changes[file].toArray();
-			
+
 			QList<QPair<double, QJsonObject>> changesList;
-			
+
 			for (int j = 0; j < edits.count(); j++) {
 				QJsonObject edit = edits[j].toObject();
 				QJsonObject range = edit["range"].toObject();
 				QJsonObject end = range["end"].toObject();
-				
-				double pos = (double)end["line"].toInt() + 1.0 - 1.0 / (double)end["character"].toInt();
+
+				double pos = (double)end["line"].toInt() + 1.0 - 1.0 / (double)(end["character"].toInt()+1);
 				changesList.append(qMakePair(pos, edit));
 			}
-	
+
 			if (filePathInfo.canonicalFilePath() == uriPathInfo.canonicalFilePath()){
 				execChanges(changesList);
 			}else{
@@ -6793,7 +6832,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		color1 = QColor(230, 230, 230);
 		color2 = QColor(245, 245, 245);
 	}
-	
+
 	errMenu.recolor(color2);
 
 	QPalette palette = textEdit->palette();
@@ -7238,11 +7277,11 @@ void MainWindow::openHelpMenu(QString text) {
 	layout->addWidget(helpText);
 
 	helpDialog->setLayout(layout);
-	
+
 	if (text.count("\n") > 20){ // fix for the lsp menu apearing above the top of the screen.
 		helpDialog->move(QPoint(50, 50));
 	}
-	
+
 	helpDialog->exec();
 }
 

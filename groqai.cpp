@@ -58,7 +58,7 @@ void GroqAI::openHelpMenu(QString text) {
 void GroqAI::generateResponse(const QList<QPair<QString, QString>> &conversation)
 {
 	if (m_apiKey.isEmpty() || m_model.isEmpty()) {
-		newHelpMenuTEST("API key or model is not set for Groq AI.");
+        openHelpMenu("API key or model is not set for Groq AI.");
 		return;
 	}
 
@@ -119,7 +119,7 @@ QJsonArray GroqAI::formatConversation(const QStringList &senders, const QStringL
 void GroqAI::onNetworkReply(QNetworkReply *reply)
 {
 	if (reply->error() != QNetworkReply::NoError) {
-		newHelpMenuTEST(reply->errorString());
+        openHelpMenu(reply->errorString());
 		qDebug() << reply->errorString();
 		reply->deleteLater();
 		return;
