@@ -5716,6 +5716,10 @@ void MainWindow::on_actionDe_Increment_Ctrl_triggered()
 void MainWindow::on_actionComment_Ctrl_Alt_triggered()
 {
 	qDebug() << "on_actionComment_Ctrl_Alt_triggered";
+	
+	if (currentLang.comments.length() == 0){
+		return;
+	}
 
 	disconnect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 	QTextCursor cursor = textEdit->textCursor();
@@ -5766,6 +5770,10 @@ void MainWindow::on_actionComment_Ctrl_Alt_triggered()
 
 void MainWindow::on_actionToggleComments_triggered(){
 	qDebug() << "on_actionToggleComments_triggered";
+	
+	if (currentLang.comments.length() == 0){
+		return;
+	}
 
 	QTextCursor cursor = textEdit->textCursor();
 	int start;
@@ -5813,6 +5821,10 @@ void MainWindow::on_actionToggleComments_triggered(){
 void MainWindow::on_actionUn_Comment_Alt_5_triggered()
 {
 	qDebug() << "on_actionUn_Comment_Alt_5_triggered";
+	
+	if (currentLang.comments.length() == 0){
+		return;
+	}
 
 	disconnect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 	QTextCursor cursor = textEdit->textCursor();
