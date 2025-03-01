@@ -2,8 +2,8 @@
 Version=8.9.4
 Name=CodeWizard
 Comment=The End Is Nigh
-Exec=/usr/local/bin/codewizard
-Icon=/usr/share/icons/hicolor/256x256/apps/codewizard.png
+Exec=CodeWizard
+Icon=codewizard
 Terminal=false
 Type=Application
 Categories=Utility;

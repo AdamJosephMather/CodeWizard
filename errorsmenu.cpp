@@ -9,30 +9,30 @@ ErrorsMenu::ErrorsMenu() {}
 void ErrorsMenu::Setup(MyTextEdit *t) {
 	qDebug() << "Setup - ErrMenu";
 	textEdit = t;
-	
+
 	overlayTextEditErrors = createOverlay("red");
 	overlayTextEditWarnings = createOverlay("orange");
-	overlayTextEditOther = createOverlay("blue");
+    overlayTextEditOther = createOverlay("blue");
 	
-	MyTextEdit::connect(overlayTextEditErrors, &MyTextEdit::mouseClicked, this, &ErrorsMenu::clickedOverlayErrors);
+    MyTextEdit::connect(overlayTextEditErrors, &MyTextEdit::mouseClicked, this, &ErrorsMenu::clickedOverlayErrors);
 	MyTextEdit::connect(overlayTextEditWarnings, &MyTextEdit::mouseClicked, this, &ErrorsMenu::clickedOverlayWarnings);
-	MyTextEdit::connect(overlayTextEditOther, &MyTextEdit::mouseClicked, this, &ErrorsMenu::clickedOverlayOther);
+    MyTextEdit::connect(overlayTextEditOther, &MyTextEdit::mouseClicked, this, &ErrorsMenu::clickedOverlayOther);
 	
 	overlayTextEditErrors->setText("0");
 	overlayTextEditWarnings->setText("0");
-	overlayTextEditOther->setText("0");
+    overlayTextEditOther->setText("0");
 	
 	errorsList = new QListWidget(textEdit);
-	errorsList->setFocusPolicy(Qt::NoFocus);
+    errorsList->setFocusPolicy(Qt::NoFocus);
 	
-	reposition();
+    reposition();
 	overlayTextEditErrors->hide();
 	overlayTextEditWarnings->hide();
 	overlayTextEditOther->hide();
-	errorsList->hide();
+    errorsList->hide();
 	currentlyShowing = -1;
 	
-	connect(errorsList, &QListWidget::itemClicked, this, &ErrorsMenu::onErrorItemClicked);
+    connect(errorsList, &QListWidget::itemClicked, this, &ErrorsMenu::onErrorItemClicked);
 }
 
 void ErrorsMenu::recolor(QColor backColor){
@@ -43,7 +43,7 @@ void ErrorsMenu::recolor(QColor backColor){
 
 MyTextEdit* ErrorsMenu::createOverlay(QString color){
 	qDebug() << "createOverlay - errMenu";
-	MyTextEdit* overlayTextEdit = new MyTextEdit(textEdit);
+    MyTextEdit* overlayTextEdit = new MyTextEdit(textEdit);
 	overlayTextEdit->setStyleSheet(
 		"QTextEdit {"
 		"   border: 2px solid "+color+";"
@@ -53,10 +53,10 @@ MyTextEdit* ErrorsMenu::createOverlay(QString color){
 		"   text-align: center;"
 		"   vertical-align: middle;"
 		"}"
-	);
+    );
 	overlayTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	overlayTextEdit->setTextInteractionFlags(Qt::TextBrowserInteraction);
-	overlayTextEdit->setCursor(Qt::PointingHandCursor);
+    overlayTextEdit->setCursor(Qt::PointingHandCursor);
 	return overlayTextEdit;
 }
 

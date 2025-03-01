@@ -1,7 +1,7 @@
 #ifdef _WIN32
 #include "languageserverclient.h"
 #else
-#include "/home/adamj/Documents/QtProjects/CodeWizard/languageserverclient.h"
+#include "/home/adamj/QtProjects/CodeWizard/languageserverclient.h"
 #endif
 
 #include <QDebug>

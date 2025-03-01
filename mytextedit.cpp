@@ -1,7 +1,7 @@
 #ifdef _WIN32
 #include "mytextedit.h"
 #else
-#include "/home/adamj/Documents/QtProjects/CodeWizard/mytextedit.h"
+#include "/home/adamj/QtProjects/CodeWizard/mytextedit.h"
 #endif
 
 #include <QMenu>

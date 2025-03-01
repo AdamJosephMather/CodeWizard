@@ -1,7 +1,7 @@
 #ifdef _WIN32
 #include "syntaxhighlighter.h"
 #else
-#include "/home/adamj/Documents/QtProjects/CodeWizard/syntaxhighlighter.h"
+#include "/home/adamj/QtProjects/CodeWizard/syntaxhighlighter.h"
 #endif
 
 #include <QTextBlock>
