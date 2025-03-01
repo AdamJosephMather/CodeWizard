@@ -1,0 +1,2 @@
+/bin/ar qc libtree-sitter-html.a "CMakeFiles/tree-sitter-html.dir/tree-sitter-html_autogen/mocs_compilation.cpp.o"
+/bin/ranlib libtree-sitter-html.a

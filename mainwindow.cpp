@@ -1423,14 +1423,14 @@ void MainWindow::on_actionDiscard_Local_Changes_triggered(){
 		QFile scriptFile(scriptFilePath);
 		if (scriptFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
 			QTextStream out(&scriptFile);
-			out << "#!bash\n";
+			out << "#!/bin/sh\n";
 			out << "cd \"" + filePath + "\" && git reset --hard && git pull";
 		}
 		scriptFile.close();
 
 		QFile::setPermissions(scriptFilePath, QFile::Permissions(QFile::ExeUser | QFile::ReadUser | QFile::WriteUser));
 		QProcess *process = new QProcess(this);
-		process->startDetached("bash", QStringList() << "-c" << scriptFilePath);
+        process->startDetached("gnome-terminal", QStringList() << "--" << "bash" << "-c" << (scriptFilePath + "; exec bash"));
 	#endif
 }
 
@@ -1470,14 +1470,15 @@ void MainWindow::on_actionRegular_triggered(){
 		QFile scriptFile(scriptFilePath);
 		if (scriptFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
 			QTextStream out(&scriptFile);
-			out << "#!bash\n";
+			out << "#!/bin/sh\n";
 			out << "cd \"" + filePath + "\" && git pull";
 		}
 		scriptFile.close();
 
 		QFile::setPermissions(scriptFilePath, QFile::Permissions(QFile::ExeUser | QFile::ReadUser | QFile::WriteUser));
 		QProcess *process = new QProcess(this);
-		process->startDetached("bash", QStringList() << "-c" << scriptFilePath);
+
+        process->startDetached("gnome-terminal", QStringList() << "--" << "bash" << "-c" << (scriptFilePath + "; exec bash"));
 	#endif
 }
 
@@ -1533,14 +1534,14 @@ void MainWindow::on_actionPush_triggered(){
 		QFile scriptFile(scriptFilePath);
 		if (scriptFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
 			QTextStream out(&scriptFile);
-			out << "#!bash\n";
+			out << "#!/bin/sh\n";
 			out << "cd \"" + filePath + "\" && git add --all && git commit -m \"" + commitmessage + "\" && git push";
 		}
 		scriptFile.close();
 
 		QFile::setPermissions(scriptFilePath, QFile::Permissions(QFile::ExeUser | QFile::ReadUser | QFile::WriteUser));
 		QProcess *process = new QProcess(this);
-		process->startDetached("bash", QStringList() << "-c" << scriptFilePath);
+        process->startDetached("gnome-terminal", QStringList() << "--" << "bash" << "-c" << (scriptFilePath + "; exec bash"));
 	#endif
 }
 
@@ -1814,7 +1815,11 @@ void MainWindow::saveSyntaxColorsToFile(){
 }
 
 void MainWindow::loadSyntaxColorsFromFile(){
+#ifdef Q_OS_WIN()
 	QString filePath = QFileDialog::getOpenFileName(this, "Open CodeWizard File", "", "CodeWizard Files (*.cdwzrd);");
+#else
+    QString filePath = QFileDialog::getOpenFileName(this, "Open CodeWizard File", "", "CodeWizard Files (*.cdwzrd)");
+#endif
 
 	if (filePath.isEmpty()) {
 		return; // Return an empty string if no file is selected
@@ -4354,9 +4359,23 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 
 		QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
 						 [process](int exitCode, QProcess::ExitStatus exitStatus) {
-							 process->deleteLater(); // Clean up the process object
+                            qDebug() << "Finished with< " << exitCode;
+                            process->deleteLater(); // Clean up the process object
 						 });
-	} else {
+
+        connect(process, &QProcess::readyReadStandardOutput, this, [process]() {
+            // Read standard output
+            QByteArray output = process->readAllStandardOutput();
+            qDebug() << "Output:" << output;
+        });
+
+        connect(process, &QProcess::readyReadStandardError, this, [process]() {
+            // Read standard error
+            QByteArray error = process->readAllStandardError();
+            qDebug() << "Error:" << error;
+        });
+
+    } else {
 		if (preferHorizontalTerminal->isChecked()){
 			terminalInputLineHORZ->setFocus();
 		} else {
@@ -4427,12 +4446,12 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 
 		intermediateTag.replace("[filename]", fileNameName).replace("[filenameWoutExt]", fileNameName.split('.')[0]);
 
-		#ifdef _WIN32
+        #ifdef _WIN32
 			out << "cd /d " << fileDir << "\n";
 			out << intermediateTag;
 		#else
 			// For Linux, we use a shell script style command
-			out << "#!bash\n";
+            out << "#!/bin/sh\n";
 			out << "cd " << fileDir << "\n";
 			out << intermediateTag;
 		#endif
@@ -4453,9 +4472,9 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 			arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
 			process->startDetached("cmd.exe", arguments);
 		#else
-			QStringList arguments;
-			arguments << "-e" << "bash -c '" + batFilePath + "; exec bash'";
-			process->startDetached("gnome-terminal -- bash -c 'bash "+batFilePath+"; exec bash'");
+            QString command = "./" + batFilePath + "\n";
+            qDebug() << "running command:" << command;
+            process->startDetached("gnome-terminal", QStringList() << "--" << "bash" << "-c" << (batFilePath + "; exec bash"));
 		#endif
 	} else {
 		#ifdef _WIN32

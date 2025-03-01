@@ -1,0 +1,2 @@
+/bin/ar qc libtree-sitter-javascript.a "CMakeFiles/tree-sitter-javascript.dir/tree-sitter-javascript_autogen/mocs_compilation.cpp.o" "CMakeFiles/tree-sitter-javascript.dir/extern/tree-sitter-parsers/tree-sitter-javascript/src/parser.c.o" "CMakeFiles/tree-sitter-javascript.dir/extern/tree-sitter-parsers/tree-sitter-javascript/src/scanner.c.o"
+/bin/ranlib libtree-sitter-javascript.a

@@ -1,0 +1,2 @@
+/bin/ar qc libtree-sitter-wgsl.a "CMakeFiles/tree-sitter-wgsl.dir/tree-sitter-wgsl_autogen/mocs_compilation.cpp.o"
+/bin/ranlib libtree-sitter-wgsl.a

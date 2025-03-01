@@ -1,0 +1,2 @@
+/bin/ar qc libtree-sitter-typescript.a "CMakeFiles/tree-sitter-typescript.dir/tree-sitter-typescript_autogen/mocs_compilation.cpp.o"
+/bin/ranlib libtree-sitter-typescript.a

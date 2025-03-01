@@ -1,0 +1,2 @@
+/bin/ar qc libtree-sitter-lua.a "CMakeFiles/tree-sitter-lua.dir/tree-sitter-lua_autogen/mocs_compilation.cpp.o" "CMakeFiles/tree-sitter-lua.dir/extern/tree-sitter-parsers/tree-sitter-lua/src/parser.c.o" "CMakeFiles/tree-sitter-lua.dir/extern/tree-sitter-parsers/tree-sitter-lua/src/scanner.c.o"
+/bin/ranlib libtree-sitter-lua.a

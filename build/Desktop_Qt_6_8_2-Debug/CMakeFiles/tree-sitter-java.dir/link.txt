@@ -1,0 +1,2 @@
+/bin/ar qc libtree-sitter-java.a "CMakeFiles/tree-sitter-java.dir/tree-sitter-java_autogen/mocs_compilation.cpp.o"
+/bin/ranlib libtree-sitter-java.a

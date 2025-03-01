@@ -1,0 +1,2 @@
+/bin/ar qc libtree-sitter-c-sharp.a "CMakeFiles/tree-sitter-c-sharp.dir/tree-sitter-c-sharp_autogen/mocs_compilation.cpp.o" "CMakeFiles/tree-sitter-c-sharp.dir/extern/tree-sitter-parsers/tree-sitter-c-sharp/src/parser.c.o" "CMakeFiles/tree-sitter-c-sharp.dir/extern/tree-sitter-parsers/tree-sitter-c-sharp/src/scanner.c.o"
+/bin/ranlib libtree-sitter-c-sharp.a

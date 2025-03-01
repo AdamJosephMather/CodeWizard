@@ -1,0 +1,2 @@
+/bin/ar qc libtree-sitter.a "CMakeFiles/tree-sitter.dir/tree-sitter_autogen/mocs_compilation.cpp.o" "CMakeFiles/tree-sitter.dir/lib/src/lib.c.o" "CMakeFiles/tree-sitter.dir/lib/src/lexer.c.o" "CMakeFiles/tree-sitter.dir/lib/src/tree.c.o" "CMakeFiles/tree-sitter.dir/lib/src/node.c.o" "CMakeFiles/tree-sitter.dir/lib/src/query.c.o" "CMakeFiles/tree-sitter.dir/lib/src/stack.c.o" "CMakeFiles/tree-sitter.dir/lib/src/language.c.o" "CMakeFiles/tree-sitter.dir/lib/src/subtree.c.o"
+/bin/ranlib libtree-sitter.a
