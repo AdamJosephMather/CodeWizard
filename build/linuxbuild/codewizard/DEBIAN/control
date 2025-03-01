@@ -4,5 +4,5 @@ Section: utils
 Priority: optional
 Architecture: amd64
 Maintainer: Adam Mather <adamjosephmather@gmail.com>
-Depends: 
+Depends: libqt6widgets6, libc6
 Description: A code editor/ide designed and built by your's truly.
