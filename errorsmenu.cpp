@@ -32,7 +32,7 @@ void ErrorsMenu::Setup(MyTextEdit *t) {
 	errorsList->hide();
 	currentlyShowing = -1;
 
-    connect(errorsList, &QListWidget::itemClicked, this, &ErrorsMenu::onErrorItemClicked);
+	connect(errorsList, &QListWidget::itemClicked, this, &ErrorsMenu::onErrorItemClicked);
 }
 
 void ErrorsMenu::recolor(QColor backColor){

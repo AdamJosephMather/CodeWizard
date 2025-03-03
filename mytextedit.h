@@ -81,6 +81,7 @@ private:
 	
 	void toggleCursorVisibility();
 	QTimer cursorBlinkTimer;
+	void handleDuplicateCursors();
 
 signals:
 	void mousePositionChanged(QPoint pos);

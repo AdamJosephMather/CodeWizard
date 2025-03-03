@@ -301,6 +301,7 @@ void MyTextEdit::insertTextAtAllCursors(const QString &text)
 	applyToAllCursors([&](QTextCursor &cursor) {
 		cursor.insertText(text);
 	});
+	handleDuplicateCursors();
 }
 
 void MyTextEdit::handleNavigationKey(QKeyEvent *event)
@@ -353,6 +354,8 @@ void MyTextEdit::handleNavigationKey(QKeyEvent *event)
 	applyToAllCursors([&](QTextCursor &cursor) {
 		cursor.movePosition(moveOp, moveMode);
 	});
+	
+	handleDuplicateCursors();
 }
 
 void MyTextEdit::handleDeletionKey(QKeyEvent *event)
@@ -370,4 +373,31 @@ void MyTextEdit::handleDeletionKey(QKeyEvent *event)
 
 void MyTextEdit::updateViewport(){
 	viewport()->update();
+}
+
+void MyTextEdit::handleDuplicateCursors(){
+	m_originalCursor = textCursor();
+	
+	for (int i = additionalCursors.length()-1; i >= 0; i--){
+		QTextCursor c1;
+		c1 = additionalCursors[i];
+		
+		bool deleted = false;
+		
+		for (int j = i-1; j >= 0; j--){
+			QTextCursor c2 = additionalCursors[j];
+			if (c1.position() == c2.position() && c1.anchor() == c2.anchor()){
+				additionalCursors.remove(i);
+				deleted = true;
+				break;
+			}
+		}
+		
+		if (deleted){
+			continue;
+		}
+		if (m_originalCursor.position() == c1.position() && m_originalCursor.anchor() == c1.anchor()){
+			additionalCursors.remove(i);
+		}
+	}
 }
