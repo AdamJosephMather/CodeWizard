@@ -7,6 +7,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_b
   C:/Qt/6.8.2/mingw_64/include/QtCore/QRect \
   C:/Qt/6.8.2/mingw_64/include/QtCore/QSize \
   C:/Qt/6.8.2/mingw_64/include/QtCore/QSizeF \
+  C:/Qt/6.8.2/mingw_64/include/QtCore/QTimer \
   C:/Qt/6.8.2/mingw_64/include/QtCore/q20functional.h \
   C:/Qt/6.8.2/mingw_64/include/QtCore/q20iterator.h \
   C:/Qt/6.8.2/mingw_64/include/QtCore/q20memory.h \
@@ -22,6 +23,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_b
   C:/Qt/6.8.2/mingw_64/include/QtCore/qatomic.h \
   C:/Qt/6.8.2/mingw_64/include/QtCore/qatomic_cxx11.h \
   C:/Qt/6.8.2/mingw_64/include/QtCore/qbasicatomic.h \
+  C:/Qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
   C:/Qt/6.8.2/mingw_64/include/QtCore/qbindingstorage.h \
   C:/Qt/6.8.2/mingw_64/include/QtCore/qbytearray.h \
   C:/Qt/6.8.2/mingw_64/include/QtCore/qbytearrayalgorithms.h \
@@ -124,6 +126,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_b
   C:/Qt/6.8.2/mingw_64/include/QtCore/qtdeprecationmarkers.h \
   C:/Qt/6.8.2/mingw_64/include/QtCore/qtenvironmentvariables.h \
   C:/Qt/6.8.2/mingw_64/include/QtCore/qtextstream.h \
+  C:/Qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
   C:/Qt/6.8.2/mingw_64/include/QtCore/qtmetamacros.h \
   C:/Qt/6.8.2/mingw_64/include/QtCore/qtnoop.h \
   C:/Qt/6.8.2/mingw_64/include/QtCore/qtpreprocessorsupport.h \
@@ -144,6 +147,8 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_b
   C:/Qt/6.8.2/mingw_64/include/QtGui/QAction \
   C:/Qt/6.8.2/mingw_64/include/QtGui/QContextMenuEvent \
   C:/Qt/6.8.2/mingw_64/include/QtGui/QMouseEvent \
+  C:/Qt/6.8.2/mingw_64/include/QtGui/QPaintEvent \
+  C:/Qt/6.8.2/mingw_64/include/QtGui/QTextCursor \
   C:/Qt/6.8.2/mingw_64/include/QtGui/QTransform \
   C:/Qt/6.8.2/mingw_64/include/QtGui/qaction.h \
   C:/Qt/6.8.2/mingw_64/include/QtGui/qbitmap.h \
@@ -188,6 +193,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_b
   C:/Qt/6.8.2/mingw_64/include/QtGui/qvectornd.h \
   C:/Qt/6.8.2/mingw_64/include/QtGui/qwindowdefs.h \
   C:/Qt/6.8.2/mingw_64/include/QtGui/qwindowdefs_win.h \
+  C:/Qt/6.8.2/mingw_64/include/QtWidgets/QApplication \
   C:/Qt/6.8.2/mingw_64/include/QtWidgets/QMenu \
   C:/Qt/6.8.2/mingw_64/include/QtWidgets/QTextEdit \
   C:/Qt/6.8.2/mingw_64/include/QtWidgets/QWidget \
@@ -196,6 +202,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_b
   C:/Qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
   C:/Qt/6.8.2/mingw_64/include/QtWidgets/qabstractslider.h \
   C:/Qt/6.8.2/mingw_64/include/QtWidgets/qabstractspinbox.h \
+  C:/Qt/6.8.2/mingw_64/include/QtWidgets/qapplication.h \
   C:/Qt/6.8.2/mingw_64/include/QtWidgets/qframe.h \
   C:/Qt/6.8.2/mingw_64/include/QtWidgets/qlistview.h \
   C:/Qt/6.8.2/mingw_64/include/QtWidgets/qlistwidget.h \

@@ -8,6 +8,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/errorsmenu.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/QRect
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/QSize
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/QSizeF
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/QTimer
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/q20functional.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/q20iterator.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/q20memory.h
@@ -23,6 +24,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/errorsmenu.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qatomic.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qatomic_cxx11.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qbasicatomic.h
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qbindingstorage.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qbytearray.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qbytearrayalgorithms.h
@@ -125,6 +127,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/errorsmenu.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtdeprecationmarkers.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtenvironmentvariables.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtextstream.h
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtimer.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtmetamacros.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtnoop.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtpreprocessorsupport.h
@@ -145,6 +148,8 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/errorsmenu.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QAction
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QContextMenuEvent
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QMouseEvent
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QPaintEvent
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QTextCursor
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QTransform
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/qaction.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/qbitmap.h
@@ -189,6 +194,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/errorsmenu.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/qvectornd.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/qwindowdefs.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/qwindowdefs_win.h
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/QApplication
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/QMenu
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/QTextEdit
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/QWidget
@@ -197,6 +203,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/errorsmenu.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qabstractslider.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qabstractspinbox.h
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qapplication.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qframe.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qlistview.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qlistwidget.h
@@ -440,6 +447,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/groqai.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/QSize
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/QSizeF
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/QString
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/QTimer
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/QUrl
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/QVariant
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/q20functional.h
@@ -457,6 +465,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/groqai.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qatomic.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qatomic_cxx11.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qbasicatomic.h
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qbindingstorage.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qbytearray.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qbytearrayalgorithms.h
@@ -567,6 +576,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/groqai.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtdeprecationmarkers.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtenvironmentvariables.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtextstream.h
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtimer.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtmetamacros.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtnoop.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtpreprocessorsupport.h
@@ -588,6 +598,8 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/groqai.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QAction
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QContextMenuEvent
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QMouseEvent
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QPaintEvent
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QTextCursor
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QTransform
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/qaction.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/qbitmap.h
@@ -652,9 +664,11 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/groqai.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtNetwork/qtnetwork-config.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtNetwork/qtnetworkexports.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtNetwork/qtnetworkglobal.h
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/QApplication
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/QMenu
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/QTextEdit
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qapplication.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qframe.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qmenu.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qsizepolicy.h
@@ -1703,6 +1717,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/mytextedit.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/QRect
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/QSize
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/QSizeF
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/QTimer
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/q20functional.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/q20iterator.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/q20memory.h
@@ -1717,6 +1732,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/mytextedit.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qatomic.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qatomic_cxx11.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qbasicatomic.h
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qbindingstorage.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qbytearray.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qbytearrayalgorithms.h
@@ -1817,6 +1833,7 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/mytextedit.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtdeprecationmarkers.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtenvironmentvariables.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtextstream.h
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtimer.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtmetamacros.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtnoop.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtCore/qtpreprocessorsupport.h
@@ -1837,6 +1854,8 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/mytextedit.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QAction
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QContextMenuEvent
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QMouseEvent
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QPaintEvent
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QTextCursor
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/QTransform
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/qaction.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/qbitmap.h
@@ -1880,9 +1899,11 @@ C:/Users/adamj/Documents/QtProjects/CodeWizard/mytextedit.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/qvectornd.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/qwindowdefs.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtGui/qwindowdefs_win.h
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/QApplication
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/QMenu
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/QTextEdit
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h
+ mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qapplication.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qframe.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qmenu.h
  mdp:C:/Qt/6.8.2/mingw_64/include/QtWidgets/qsizepolicy.h
