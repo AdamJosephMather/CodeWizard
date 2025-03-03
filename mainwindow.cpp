@@ -938,6 +938,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	terminalInputLine->installEventFilter(this);
 	terminalInputLineHORZ->installEventFilter(this);
 	this->installEventFilter(this); // for the fullscreen
+	qApp->installEventFilter(this); // for the fullscreen
 
 	darkmode = thm;
 	changeOnlyEditsTheme(thm);
@@ -1318,11 +1319,15 @@ void MainWindow::useVimModesTriggered(){
 	if (!useVimMode->isChecked()){
 		currentVimMode = "i";
 		textEdit->setCursorWidth(1);
+		textEdit->additionalCursors.clear();
+		textEdit->updateViewport();
 	}else{
 		currentVimMode = "n";
 		QFontMetrics metrics(textEdit->font());
 		int charWidth = metrics.horizontalAdvance("M");
 		textEdit->setCursorWidth(charWidth);
+		textEdit->additionalCursors.clear();
+		textEdit->updateViewport();
 	}
 
 	vimRepeater = 0;
@@ -2150,6 +2155,9 @@ void MainWindow::printTree(TSNode node, int depth) {
 
 void MainWindow::mouseClicked(){
 	qDebug() << "mouseClicked";
+	
+	textEdit->additionalCursors.clear();
+	textEdit->updateViewport();
 }
 
 void MainWindow::mouseReleased(){
@@ -2864,6 +2872,10 @@ void MainWindow::setupLSP(QString oldFile)
 	connect(client, &LanguageServerClient::renameReceived, this, &MainWindow::renameReference, Qt::AutoConnection);
 
 	connect(client, &LanguageServerClient::codeActionsReceived, [this](const QJsonArray& suggestedActions) {
+		if (!textEdit->additionalCursors.isEmpty()){
+			return;
+		}
+		
 		codeActions = suggestedActions;
 
 		if (suggestedActions.count() == 0){
@@ -2928,6 +2940,10 @@ void MainWindow::setupLSP(QString oldFile)
 
 void MainWindow::ShowSuggestionsWithSuperSet(QStringList completions){
 	qDebug() << "ShowSuggestionsWithSuperSet";
+	
+	if (!textEdit->additionalCursors.isEmpty()){
+		return;
+	}
 
 	QString word = MainWindow::getCurrentWord();
 
@@ -4920,6 +4936,20 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
 //	qDebug() << "eventFilter"; - we don't do it for certain functions
 
+	if (event->type() == QEvent::MouseButtonPress) {
+		auto *mouseEvent = static_cast<QMouseEvent *>(event);
+
+		if (mouseEvent->buttons() & Qt::LeftButton && QGuiApplication::keyboardModifiers() & Qt::AltModifier) {
+			QPoint relativePos = textEdit->mapFromGlobal(QCursor::pos());
+			QTextCursor cursor = textEdit->cursorForPosition(relativePos);
+			textEdit->additionalCursors.push_back(cursor);
+			textEdit->cursorBlinking = true;
+			textEdit->updateViewport();
+			holdingAnEvent = false;
+			return true;
+		}
+	}
+	
 	if (event->type()==QEvent::WindowStateChange){
 		onWindowStateChanged();
 	}
@@ -5115,6 +5145,8 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			if (key_event->key() == Qt::Key_I){
 				currentVimMode = "i";
 				textEdit->setCursorWidth(1);
+				textEdit->additionalCursors.clear();
+				textEdit->updateViewport();
 				vimRepeater = 0;
 			}else if (key_event->key() == Qt::Key_J || key_event->key() == Qt::Key_Down){
 				executeNormalAct(QTextCursor::Down, key_event);
@@ -5137,6 +5169,8 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			}else if (key_event->key() == Qt::Key_O){
 				currentVimMode = "i";
 				textEdit->setCursorWidth(1);
+				textEdit->additionalCursors.clear();
+				textEdit->updateViewport();
 				vimRepeater = 0;
 				executeNormalAct(QTextCursor::EndOfLine, key_event);
 				QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier, "");
@@ -5144,6 +5178,8 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			}else if (key_event->key() == Qt::Key_A){
 				currentVimMode = "i";
 				textEdit->setCursorWidth(1);
+				textEdit->additionalCursors.clear();
+				textEdit->updateViewport();
 				vimRepeater = 0;
 				executeNormalAct(QTextCursor::EndOfLine, key_event);
 			}else if (key_event->key() == Qt::Key_Dollar || key_event->key() == Qt::Key_4 && key_event->modifiers() & Qt::ShiftModifier){
@@ -5182,6 +5218,38 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				cursor.setPosition(loc);
 				textEdit->setTextCursor(cursor);
 			}
+		}
+		
+		if (key_event->key() == Qt::Key_Down && key_event->modifiers() & Qt::AltModifier){
+			QTextCursor c = textEdit->textCursor();
+			int highest = c.blockNumber();
+			for (QTextCursor curs : textEdit->additionalCursors){
+				if (curs.blockNumber() > highest){
+					highest = curs.blockNumber();
+				}
+			}
+			c.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, (highest-c.blockNumber()) + 1);
+			textEdit->cursorBlinking = false;
+			textEdit->additionalCursors.push_back(c);
+			textEdit->updateViewport();
+			suggestionBox->hide();
+			actionBox->hide();
+			return true;
+		}else if (key_event->key() == Qt::Key_Up && key_event->modifiers() & Qt::AltModifier){
+			QTextCursor c = textEdit->textCursor();
+			int lowest = c.blockNumber();
+			for (QTextCursor curs : textEdit->additionalCursors){
+				if (curs.blockNumber() < lowest){
+					lowest = curs.blockNumber();
+				}
+			}
+			c.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor, (c.blockNumber()-lowest) + 1);
+			textEdit->additionalCursors.push_back(c);
+			textEdit->cursorBlinking = false;
+			textEdit->updateViewport();
+			suggestionBox->hide();
+			actionBox->hide();
+			return true;
 		}
 
 		if (key_sequence == QKeySequence(".")){
@@ -5315,9 +5383,10 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 					}else{
 						cursor.movePosition(QTextCursor::EndOfLine);
 					}
+					textEdit->setTextCursor(cursor);
+					return true;
 				}
-				textEdit->setTextCursor(cursor);
-				return true;
+				
 			} else if (key_event->key() == Qt::Key_Up) {
 				QTextCursor cursor = textEdit->textCursor();
 				int initialPosition = cursor.position();
@@ -5332,20 +5401,27 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 					}else{
 						cursor.movePosition(QTextCursor::StartOfLine);
 					}
+					textEdit->setTextCursor(cursor);
+					return true;
 				}
-				textEdit->setTextCursor(cursor);
-				return true;
 			}
 		}
 
 		if(!suggestionBox->isVisible() && !actionBox->isVisible() && key_event->key() == Qt::Key_Escape){
-			changeFindSectionVisibility(false);
-			if (useVimMode->isChecked()){
-				QFontMetrics metrics(textEdit->font());
-				int charWidth = metrics.horizontalAdvance("M");
-				textEdit->setCursorWidth(charWidth);
-				currentVimMode = "n";
-				vimRepeater = 0;
+			if (!textEdit->additionalCursors.isEmpty()){
+				textEdit->additionalCursors.clear();
+				textEdit->updateViewport();
+			}else{
+				changeFindSectionVisibility(false);
+				if (useVimMode->isChecked()){
+					QFontMetrics metrics(textEdit->font());
+					int charWidth = metrics.horizontalAdvance("M");
+					textEdit->setCursorWidth(charWidth);
+					textEdit->additionalCursors.clear();
+					textEdit->updateViewport();
+					currentVimMode = "n";
+					vimRepeater = 0;
+				}
 			}
 		}
 

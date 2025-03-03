@@ -17,6 +17,7 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/QSize \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/QSizeF \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/QString \
+	C:/Qt/6.7.1/msvc2019_64/include/QtCore/QTimer \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/QUrl \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/QVariant \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/q20functional.h \
@@ -33,6 +34,7 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qatomic.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qatomic_cxx11.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qbasicatomic.h \
+	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qbasictimer.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qbindingstorage.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qbytearray.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qbytearrayalgorithms.h \
@@ -147,6 +149,7 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qtdeprecationmarkers.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qtenvironmentvariables.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qtextstream.h \
+	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qtimer.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qtimezone.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qtmetamacros.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtCore/qtnoop.h \
@@ -169,6 +172,7 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/QAction \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/QContextMenuEvent \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/QMouseEvent \
+	C:/Qt/6.7.1/msvc2019_64/include/QtGui/QPaintEvent \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/QPainter \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/QTextCursor \
 	C:/Qt/6.7.1/msvc2019_64/include/QtGui/QTransform \
@@ -235,6 +239,7 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/msvc2019_64/include/QtNetwork/qtnetwork-config.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtNetwork/qtnetworkexports.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtNetwork/qtnetworkglobal.h \
+	C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/QApplication \
 	C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/QListWidgetItem \
 	C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/QMainWindow \
 	C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/QMenu \
@@ -245,6 +250,7 @@ CodeWizard_autogen/timestamp: \
 	C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qabstractscrollarea.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qabstractslider.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qabstractspinbox.h \
+	C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qapplication.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qframe.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qlistview.h \
 	C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qlistwidget.h \

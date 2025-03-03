@@ -15,6 +15,7 @@ C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_M
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/QSize \
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/QSizeF \
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/QString \
+  C:/Qt/6.7.1/msvc2019_64/include/QtCore/QTimer \
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/QUrl \
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/QVariant \
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/q20functional.h \
@@ -30,6 +31,7 @@ C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_M
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/qatomic.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/qatomic_cxx11.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/qbasicatomic.h \
+  C:/Qt/6.7.1/msvc2019_64/include/QtCore/qbasictimer.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/qbindingstorage.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/qbytearray.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/qbytearrayalgorithms.h \
@@ -138,6 +140,7 @@ C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_M
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/qtdeprecationmarkers.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/qtenvironmentvariables.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/qtextstream.h \
+  C:/Qt/6.7.1/msvc2019_64/include/QtCore/qtimer.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/qtmetamacros.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/qtnoop.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtCore/qtpreprocessorsupport.h \
@@ -159,6 +162,8 @@ C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_M
   C:/Qt/6.7.1/msvc2019_64/include/QtGui/QAction \
   C:/Qt/6.7.1/msvc2019_64/include/QtGui/QContextMenuEvent \
   C:/Qt/6.7.1/msvc2019_64/include/QtGui/QMouseEvent \
+  C:/Qt/6.7.1/msvc2019_64/include/QtGui/QPaintEvent \
+  C:/Qt/6.7.1/msvc2019_64/include/QtGui/QTextCursor \
   C:/Qt/6.7.1/msvc2019_64/include/QtGui/QTransform \
   C:/Qt/6.7.1/msvc2019_64/include/QtGui/qaction.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtGui/qbitmap.h \
@@ -222,9 +227,11 @@ C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_M
   C:/Qt/6.7.1/msvc2019_64/include/QtNetwork/qtnetwork-config.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtNetwork/qtnetworkexports.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtNetwork/qtnetworkglobal.h \
+  C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/QApplication \
   C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/QMenu \
   C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/QTextEdit \
   C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qabstractscrollarea.h \
+  C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qapplication.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qframe.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qmenu.h \
   C:/Qt/6.7.1/msvc2019_64/include/QtWidgets/qsizepolicy.h \

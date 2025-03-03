@@ -9,22 +9,34 @@
 #include <QContextMenuEvent>
 #include <QDebug>
 #include <qpainter.h>
+#include <QTextCursor>
+#include <QList>
+#include <QPaintEvent>
+#include <QApplication>
+#include <QTimer>
 
 class MyTextEdit : public QTextEdit {
 	Q_OBJECT
 public:
 	explicit MyTextEdit(QWidget *parent = nullptr);
 	void setContextMenuStyle(const QString& stylesheet);
+	QList<QTextCursor> additionalCursors;
+	void updateViewport();
+	bool cursorBlinking;
 
 protected:
 	QString changeToTabs(QString text);
+	
 	void insertFromMimeData(const QMimeData *source) override;
+	
 	void contextMenuEvent(QContextMenuEvent *event) override;
+	
 	void mouseMoveEvent(QMouseEvent *event) override {
 		QTextEdit::mouseMoveEvent(event);
 		QPoint pos = event->pos();
 		emit mousePositionChanged(pos);
 	}
+	
 	void mousePressEvent(QMouseEvent *event) override {
 		QTextEdit::mousePressEvent(event);
 		if (event->button() == Qt::LeftButton) {
@@ -34,6 +46,7 @@ protected:
 			emit mouseClickedAtCursor(cursor);
 		}
 	}
+	
 	void mouseReleaseEvent(QMouseEvent *event) override {
 		QTextEdit::mouseReleaseEvent(event);
 	
@@ -52,6 +65,23 @@ protected:
 		// Call your function here
 		emit handleSizeChange(false);
 	}
+	
+	void paintEvent(QPaintEvent *event) override;
+	
+	void keyPressEvent(QKeyEvent *event) override;
+	
+private:
+	bool m_multiCursorEnabled = true;
+	QTextCursor m_originalCursor;
+	void drawCursor(QPainter &painter, const QTextCursor &cursor, const QColor &color);
+	void applyToAllCursors(const std::function<void(QTextCursor&)>& operation);
+	void insertTextAtAllCursors(const QString &text);
+	void handleNavigationKey(QKeyEvent *event);
+	void handleDeletionKey(QKeyEvent *event);
+	void drawSelection(QPainter &painter, QTextCursor cursor);
+	
+	void toggleCursorVisibility();
+	QTimer cursorBlinkTimer;
 
 signals:
 	void mousePositionChanged(QPoint pos);
