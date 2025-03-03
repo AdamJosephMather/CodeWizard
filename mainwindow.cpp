@@ -48,7 +48,7 @@ extern "C" {
 	TSLanguage* tree_sitter_go(void);
 }
 
-QString versionNumber = "8.9.4";
+QString versionNumber = "8.9.5";
 
 QList<QLineEdit*> hexColorsList;
 
