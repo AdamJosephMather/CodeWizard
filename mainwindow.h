@@ -26,6 +26,8 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void on_actionSave_All_Settings_triggered();
+	void on_actionLoad_All_Settings_triggered();
 	void renameReference(QJsonObject);
 	void execChanges(QList<QPair<double, QJsonObject>>);
 	void execChangesInOtherFile(QList<QPair<double, QJsonObject>> changesList, QString fileUri);

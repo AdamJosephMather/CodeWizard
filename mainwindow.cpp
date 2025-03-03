@@ -48,6 +48,8 @@ extern "C" {
 	TSLanguage* tree_sitter_go(void);
 }
 
+QString versionNumber = "8.9.4";
+
 QList<QLineEdit*> hexColorsList;
 
 bool isErrorHighlighted = false;
@@ -58,8 +60,6 @@ QTextDocument *textDocument;
 
 QString updateSyntaxAdd = "";
 int updateSyntaxPosition = -1;
-
-QString versionNumber = "8.9.4";
 
 GroqAI *groq;
 QString groqApiKey;
@@ -3574,7 +3574,7 @@ int MainWindow::compareVersionNumbers(QString vnum1, QString vnum2){
 bool MainWindow::wantedTheme()
 {
 	qDebug() << "wantedTheme";
-
+	
 	QSettings settings("FoundationTechnologies", "CodeWizard");
 	bool exists = settings.value("variablesSet", false).toBool();
 
@@ -3590,7 +3590,7 @@ bool MainWindow::wantedTheme()
 			txtTag = settings.value("txtTag", defTxtTag).toString();
 			jsTag = settings.value("jsTag", defJsTag).toString();
 			tsTag = settings.value("tsTag", defTsTag).toString();
-			HTMLTag = settings.value("HTMTag", defHTMLTag).toString();
+			HTMLTag = settings.value("HTMLTag", defHTMLTag).toString();
 			goTag = settings.value("goTag", defGoTag).toString();
 			luaTag = settings.value("luaTag", defLuaTag).toString();
 			csharpTag = settings.value("csharpTag", defCsharpTag).toString();
@@ -3685,6 +3685,144 @@ bool MainWindow::wantedTheme()
 		#endif
 	}
 }
+
+void MainWindow::on_actionSave_All_Settings_triggered(){
+	qDebug() << "on_actionSave_All_Settings_triggered";
+	
+	QString outText = "CodeWizard - AllSettings\n\n";
+	
+	QSettings settings("FoundationTechnologies", "CodeWizard");
+	QStringList keys = settings.allKeys(); // Get all stored keys
+	
+	QStringList settingsAsALst;
+	
+	for (QString settingName : keys){
+		QVariant originalValue = settings.value(settingName);
+		QString storedString = QString("%1/.CodeWiz./%2")
+		.arg(settingName)
+		.arg(originalValue.toString());
+		settingsAsALst.push_back(storedString);
+	}
+	
+	outText += settingsAsALst.join("\n");
+	
+	QString saveFile = QFileDialog::getSaveFileName(this, tr("Save File"), "allSettings.cdwzrd", tr("All Files (*)"));
+
+	if (saveFile.isEmpty()){
+		return;
+	}
+
+	if (!saveFile.endsWith(".cdwzrd")){
+		saveFile += ".cdwzrd";
+	}
+
+	QFile file(saveFile);
+	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+		openHelpMenu("Failed to open file to save syntax colors.");
+		if (useSpeakerAction->isChecked()){
+			#ifdef _WIN32
+				speech->say("Failed to open file to save syntax colors.");
+			#endif
+		}
+		return;
+	}
+
+	QTextStream out(&file);
+	out << outText;
+	file.close();
+
+	openHelpMenu("Completed.");
+}
+
+void MainWindow::on_actionLoad_All_Settings_triggered(){
+	qDebug() << "on_actionLoad_All_Settings_triggered";
+	
+	QString filePath = QFileDialog::getOpenFileName(this, "Open CodeWizard File", "", "CodeWizard Files (*.cdwzrd)");
+
+	if (filePath.isEmpty()) {
+		return; // Return an empty string if no file is selected
+	}
+
+	QFile file(filePath);
+
+	// Attempt to open the file in read-only mode
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		openHelpMenu("Failed to open file.");
+		if (useSpeakerAction->isChecked()){
+			#ifdef _WIN32
+				speech->say("Failed to open file.");
+			#endif
+		}
+		return;
+	}
+
+	// Read the contents of the file
+	QTextStream in(&file);
+	QString fileContents = in.readAll();
+	file.close();
+
+	QString expectedHeader = "CodeWizard - AllSettings\n\n";
+
+	if (!fileContents.startsWith(expectedHeader)){
+		openHelpMenu("File does not match specification.");
+		if (useSpeakerAction->isChecked()){
+			#ifdef _WIN32
+				speech->say("File does not match specification.");
+			#endif
+		}
+		return;
+	}
+
+	QString content = fileContents.mid(expectedHeader.length(), fileContents.length()-expectedHeader.length());
+	
+	// time to decode this stuff. Remember a newline is a problem. Kinda.
+	
+	QString splitter = "/.CodeWiz./";
+	
+	QString currentSetting = "";
+	QString currentValue = "";
+	
+	QStringList names;
+	QStringList values;
+	
+	QStringList lines = content.split("\n");
+	for (QString line : lines){
+		if (line.contains(splitter)){
+			if (currentSetting != ""){
+				names.push_back(currentSetting);
+				values.push_back(currentValue);
+			}
+			
+			int index = line.indexOf(splitter);
+			QString firstPart, secondPart;
+			
+			currentSetting = line.left(index);
+			currentValue = line.mid(index+splitter.length());
+		}else{
+			currentValue += "\n" + line;
+		}
+	}
+	
+	if (currentSetting != ""){
+		names.push_back(currentSetting);
+		values.push_back(currentValue);
+	}
+	
+	QSettings settings("FoundationTechnologies", "CodeWizard");
+	
+	for (int i = 0; i < names.length(); i++){
+		settings.setValue(names[i], values[i]);
+	}
+	
+	wantedTheme();
+	
+	openHelpMenu("Completed. CodeWizard will now restart.");
+	
+	QString program = QCoreApplication::applicationFilePath();
+	QProcess::startDetached(program, QStringList());
+	QCoreApplication::quit();
+}
+
 
 void MainWindow::on_actionSet_Font_By_Name_triggered(){
 	// Cascadia Code

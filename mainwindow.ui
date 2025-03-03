@@ -387,6 +387,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="actionSave_As"/>
     <addaction name="actionCompare_2_Files"/>
     <addaction name="actionExit"/>
+    <addaction name="actionSave_All_Settings"/>
+    <addaction name="actionLoad_All_Settings"/>
    </widget>
    <widget class="QMenu" name="menuRun">
     <property name="title">
@@ -1109,6 +1111,16 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </property>
    <property name="text">
     <string>Prefer Horizontal Terminal</string>
+   </property>
+  </action>
+  <action name="actionSave_All_Settings">
+   <property name="text">
+    <string>Save All Settings</string>
+   </property>
+  </action>
+  <action name="actionLoad_All_Settings">
+   <property name="text">
+    <string>Load All Settings</string>
    </property>
   </action>
  </widget>

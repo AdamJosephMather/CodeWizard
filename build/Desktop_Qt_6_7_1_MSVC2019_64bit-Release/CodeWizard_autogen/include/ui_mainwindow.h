@@ -131,6 +131,8 @@ public:
     QAction *actionUse_Builtin_Terminal;
     QAction *actionAuto_Add_Brackets;
     QAction *actionPrefer_Horizontal_Terminal;
+    QAction *actionSave_All_Settings;
+    QAction *actionLoad_All_Settings;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
@@ -403,6 +405,10 @@ public:
         actionPrefer_Horizontal_Terminal = new QAction(MainWindow);
         actionPrefer_Horizontal_Terminal->setObjectName("actionPrefer_Horizontal_Terminal");
         actionPrefer_Horizontal_Terminal->setCheckable(true);
+        actionSave_All_Settings = new QAction(MainWindow);
+        actionSave_All_Settings->setObjectName("actionSave_All_Settings");
+        actionLoad_All_Settings = new QAction(MainWindow);
+        actionLoad_All_Settings->setObjectName("actionLoad_All_Settings");
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         QSizePolicy sizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::Minimum);
@@ -645,6 +651,8 @@ public:
         menuOp1->addAction(actionSave_As);
         menuOp1->addAction(actionCompare_2_Files);
         menuOp1->addAction(actionExit);
+        menuOp1->addAction(actionSave_All_Settings);
+        menuOp1->addAction(actionLoad_All_Settings);
         menuOpen_Recent->addAction(actionOp1);
         menuRun->addAction(actionRun_Module_F5);
         menuEdit->addSeparator();
@@ -843,6 +851,8 @@ public:
         actionUse_Builtin_Terminal->setText(QCoreApplication::translate("MainWindow", "Use Builtin Terminal (Ctrl+T)", nullptr));
         actionAuto_Add_Brackets->setText(QCoreApplication::translate("MainWindow", "Auto Add Brackets", nullptr));
         actionPrefer_Horizontal_Terminal->setText(QCoreApplication::translate("MainWindow", "Prefer Horizontal Terminal", nullptr));
+        actionSave_All_Settings->setText(QCoreApplication::translate("MainWindow", "Save All Settings", nullptr));
+        actionLoad_All_Settings->setText(QCoreApplication::translate("MainWindow", "Load All Settings", nullptr));
         textEdit_4->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
