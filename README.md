@@ -57,6 +57,11 @@ CodeWizard has an optional vim mode which enables a modal setup with both a norm
 
 CodeWizard now has an optional builtin terminal. It's far from perfect, and I don't recommend using it for a wide variety of tasks. If your program does not do what is expected when using the builtin terminal, it is probably because of the stdio buffering issue. Look for an option to disable buffering or buffer by line (in Python the fix is the -u argument in the CodeWizard tagline).  
 
+**Operating Systems**
+
+1. Windows - Originally designed for - works perfectly (most of the time)
+2. Linux - There is a new Linux build available for amd64 Debian based environments. It's not been properly tested, and is very experemental.
+
 ---
 
 No I don't know why I did this.  
