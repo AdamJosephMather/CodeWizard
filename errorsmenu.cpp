@@ -12,27 +12,27 @@ void ErrorsMenu::Setup(MyTextEdit *t) {
 
 	overlayTextEditErrors = createOverlay("red");
 	overlayTextEditWarnings = createOverlay("orange");
-    overlayTextEditOther = createOverlay("blue");
-	
-    MyTextEdit::connect(overlayTextEditErrors, &MyTextEdit::mouseClicked, this, &ErrorsMenu::clickedOverlayErrors);
+	overlayTextEditOther = createOverlay("blue");
+
+	MyTextEdit::connect(overlayTextEditErrors, &MyTextEdit::mouseClicked, this, &ErrorsMenu::clickedOverlayErrors);
 	MyTextEdit::connect(overlayTextEditWarnings, &MyTextEdit::mouseClicked, this, &ErrorsMenu::clickedOverlayWarnings);
-    MyTextEdit::connect(overlayTextEditOther, &MyTextEdit::mouseClicked, this, &ErrorsMenu::clickedOverlayOther);
-	
+	MyTextEdit::connect(overlayTextEditOther, &MyTextEdit::mouseClicked, this, &ErrorsMenu::clickedOverlayOther);
+
 	overlayTextEditErrors->setText("0");
 	overlayTextEditWarnings->setText("0");
-    overlayTextEditOther->setText("0");
-	
+	overlayTextEditOther->setText("0");
+
 	errorsList = new QListWidget(textEdit);
-    errorsList->setFocusPolicy(Qt::NoFocus);
-	
-    reposition();
+	errorsList->setFocusPolicy(Qt::NoFocus);
+
+	reposition();
 	overlayTextEditErrors->hide();
 	overlayTextEditWarnings->hide();
 	overlayTextEditOther->hide();
-    errorsList->hide();
+	errorsList->hide();
 	currentlyShowing = -1;
-	
-    connect(errorsList, &QListWidget::itemClicked, this, &ErrorsMenu::onErrorItemClicked);
+
+	connect(errorsList, &QListWidget::itemClicked, this, &ErrorsMenu::onErrorItemClicked);
 }
 
 void ErrorsMenu::recolor(QColor backColor){
@@ -43,7 +43,7 @@ void ErrorsMenu::recolor(QColor backColor){
 
 MyTextEdit* ErrorsMenu::createOverlay(QString color){
 	qDebug() << "createOverlay - errMenu";
-    MyTextEdit* overlayTextEdit = new MyTextEdit(textEdit);
+	MyTextEdit* overlayTextEdit = new MyTextEdit(textEdit);
 	overlayTextEdit->setStyleSheet(
 		"QTextEdit {"
 		"   border: 2px solid "+color+";"
@@ -53,10 +53,10 @@ MyTextEdit* ErrorsMenu::createOverlay(QString color){
 		"   text-align: center;"
 		"   vertical-align: middle;"
 		"}"
-    );
+	);
 	overlayTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	overlayTextEdit->setTextInteractionFlags(Qt::TextBrowserInteraction);
-    overlayTextEdit->setCursor(Qt::PointingHandCursor);
+	overlayTextEdit->setCursor(Qt::PointingHandCursor);
 	return overlayTextEdit;
 }
 
@@ -65,7 +65,7 @@ void ErrorsMenu::onErrorItemClicked(QListWidgetItem* item){
 	int selected = errorsList->row(item);
 	QList<int> itms = findSeverities(currentlyShowing);
 	int lineNumber = lineNumbers[itms[selected]]+1;
-	
+
 	QTextCursor cursor = textEdit->textCursor();
 	cursor.movePosition(QTextCursor::Start);
 	for (int i = 1; i < lineNumber; ++i) {
@@ -77,7 +77,7 @@ void ErrorsMenu::onErrorItemClicked(QListWidgetItem* item){
 void ErrorsMenu::clickedOverlayOther(QPoint pos){
 	qDebug() << "clickedOverlayOther - errMenu";
 	reposition();
-	
+
 	if (currentlyShowing != 2 || !errorsList->isVisible()){
 		currentlyShowing = 2;
 		fillErrorsListWith(2);
@@ -92,7 +92,7 @@ void ErrorsMenu::clickedOverlayOther(QPoint pos){
 void ErrorsMenu::clickedOverlayWarnings(QPoint pos){
 	qDebug() << "clickedOverlayOther - errMenu";
 	reposition();
-	
+
 	if (currentlyShowing != 1 || !errorsList->isVisible()){
 		currentlyShowing = 1;
 		fillErrorsListWith(1);
@@ -107,7 +107,7 @@ void ErrorsMenu::clickedOverlayWarnings(QPoint pos){
 void ErrorsMenu::clickedOverlayErrors(QPoint pos){
 	qDebug() << "clickedOverlayOther - errMenu";
 	reposition();
-	
+
 	if (currentlyShowing != 0 || !errorsList->isVisible()){
 		currentlyShowing = 0;
 		fillErrorsListWith(0);
@@ -123,7 +123,7 @@ void ErrorsMenu::fillErrorsListWith(int sev){
 	errorsList->clear();
 	QList<int> itms = findSeverities(sev);
 	for (int i = 0; i < itms.length(); i++){
-		errorsList->addItem(QString::number(lineNumbers[itms[i]]+1)+" - "+messages[itms[i]].split("\n")[0]);		
+		errorsList->addItem(QString::number(lineNumbers[itms[i]]+1)+" - "+messages[itms[i]].split("\n")[0]);
 	}
 	if (itms.length() == 0){
 		errorsList->hide();
@@ -132,13 +132,13 @@ void ErrorsMenu::fillErrorsListWith(int sev){
 
 void ErrorsMenu::UpdateErrors(QList<int> ln, QStringList m, QList<int> s){
 	qDebug() << "UpdateErrors - ErrMenu" << lineNumbers;
-	
+
 	lineNumbers = ln;
 	messages = m;
 	severity = s;
-	
+
 	reposition();
-	
+
 	if (currentlyShowing != -1){
 		fillErrorsListWith(currentlyShowing);
 	}else{
@@ -148,7 +148,7 @@ void ErrorsMenu::UpdateErrors(QList<int> ln, QStringList m, QList<int> s){
 
 QList<int> ErrorsMenu::findSeverities(int s){
 	QList<int> errIndexes;
-	
+
 	for (int i = 0; i < severity.length(); i++){
 		if (severity[i] == s+1){ // 1, 2, 3, 4 (3&4 are other)
 			errIndexes.push_back(i);
@@ -156,24 +156,24 @@ QList<int> ErrorsMenu::findSeverities(int s){
 			errIndexes.push_back(i);
 		}
 	}
-	
+
 	return errIndexes;
 }
 
 void ErrorsMenu::reposition(){
 	qDebug() << "reposition - ErrMenu";
-	
+
 	overlayTextEditErrors->setFont(textEdit->font());
 	overlayTextEditWarnings->setFont(textEdit->font());
 	overlayTextEditOther->setFont(textEdit->font());
 	errorsList->setFont(textEdit->font());
-	
+
 	QFontMetrics metrics(textEdit->font());
-	
+
 	int curLocX = textEdit->geometry().width() - 20;
 	int oh = metrics.height() + 11;
 	int y = textEdit->geometry().height() - oh - 20;
-	
+
 	QList<int> errIndexes = findSeverities(0);
 	if (errIndexes.length() != 0){
 		overlayTextEditErrors->setText(QString::number(errIndexes.length()));
@@ -185,7 +185,7 @@ void ErrorsMenu::reposition(){
 	}else{
 		overlayTextEditErrors->hide();
 	}
-	
+
 	QList<int> warnIndexes = findSeverities(1);
 	if (warnIndexes.length() != 0){
 		overlayTextEditWarnings->setText(QString::number(warnIndexes.length()));
@@ -197,7 +197,7 @@ void ErrorsMenu::reposition(){
 	}else{
 		overlayTextEditWarnings->hide();
 	}
-	
+
 	QList<int> othIndexes = findSeverities(2);
 	if (othIndexes.length() != 0){
 		overlayTextEditOther->setText(QString::number(othIndexes.length()));
@@ -209,8 +209,7 @@ void ErrorsMenu::reposition(){
 	}else{
 		overlayTextEditOther->hide();
 	}
-	
-	
+
 	int eW = 500;
 	int eH = metrics.height()*(2+findSeverities(currentlyShowing).length());
 	if (eH > 350){
@@ -218,7 +217,7 @@ void ErrorsMenu::reposition(){
 	}
 	int x = textEdit->geometry().width() - eW - 20;
 	y = y - eH - 20;
-	
+
 	errorsList->setGeometry(x, y, eW, eH);
 	errorsList->setFont(textEdit->font());
 }

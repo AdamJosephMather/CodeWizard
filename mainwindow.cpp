@@ -4939,7 +4939,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 	if (event->type() == QEvent::MouseButtonPress) {
 		auto *mouseEvent = static_cast<QMouseEvent *>(event);
 
-		if (mouseEvent->buttons() & Qt::LeftButton && QGuiApplication::keyboardModifiers() & Qt::AltModifier) {
+		if (mouseEvent->buttons() & Qt::LeftButton && QGuiApplication::keyboardModifiers() & Qt::AltModifier && !recordingMacro && currentVimMode == "i") {
 			QPoint relativePos = textEdit->mapFromGlobal(QCursor::pos());
 			QTextCursor cursor = textEdit->cursorForPosition(relativePos);
 			textEdit->additionalCursors.push_back(cursor);
