@@ -38,13 +38,26 @@ protected:
 	}
 	
 	void mousePressEvent(QMouseEvent *event) override {
-		QTextEdit::mousePressEvent(event);
 		if (event->button() == Qt::LeftButton) {
+			auto *mouseEvent = static_cast<QMouseEvent *>(event);
+
+			if (mouseEvent->buttons() & Qt::LeftButton && QGuiApplication::keyboardModifiers() & Qt::AltModifier) {
+				QPoint relativePos = mapFromGlobal(QCursor::pos());
+				QTextCursor cursor = cursorForPosition(relativePos);
+				additionalCursors.push_back(cursor);
+				cursorBlinking = true;
+				updateViewport();
+				event->accept();
+				
+				emit mouseClicked(event->pos());
+				emit mouseClickedAtCursor(cursor);
+				return;
+			}
 			emit mouseClicked(event->pos());
-			// If you want to also emit the text cursor position:
 			QTextCursor cursor = cursorForPosition(event->pos());
 			emit mouseClickedAtCursor(cursor);
 		}
+		QTextEdit::mousePressEvent(event);
 	}
 	
 	void mouseReleaseEvent(QMouseEvent *event) override {

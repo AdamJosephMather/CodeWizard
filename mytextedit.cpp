@@ -273,6 +273,7 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event)
 	}
 	
 	// Ensure viewport is updated to reflect cursor changes
+	cursorBlinking = false;
 	viewport()->update();
 }
 

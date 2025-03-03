@@ -938,7 +938,6 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	terminalInputLine->installEventFilter(this);
 	terminalInputLineHORZ->installEventFilter(this);
 	this->installEventFilter(this); // for the fullscreen
-	qApp->installEventFilter(this); // for the fullscreen
 
 	darkmode = thm;
 	changeOnlyEditsTheme(thm);
@@ -2162,8 +2161,11 @@ void MainWindow::printTree(TSNode node, int depth) {
 void MainWindow::mouseClicked(){
 	qDebug() << "mouseClicked";
 	
-	textEdit->additionalCursors.clear();
-	textEdit->updateViewport();
+	holdingAnEvent = false;
+	if (!(QGuiApplication::keyboardModifiers() & Qt::AltModifier) || (currentVimMode != "i" || recordingMacro)){
+		textEdit->additionalCursors.clear();
+		textEdit->updateViewport();
+	}
 }
 
 void MainWindow::mouseReleased(){
@@ -4947,20 +4949,6 @@ int MainWindow::findMatchingBracket(int direction){
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
 //	qDebug() << "eventFilter"; - we don't do it for certain functions
-
-	if (event->type() == QEvent::MouseButtonPress) {
-		auto *mouseEvent = static_cast<QMouseEvent *>(event);
-
-		if (mouseEvent->buttons() & Qt::LeftButton && QGuiApplication::keyboardModifiers() & Qt::AltModifier && !recordingMacro && currentVimMode == "i") {
-			QPoint relativePos = textEdit->mapFromGlobal(QCursor::pos());
-			QTextCursor cursor = textEdit->cursorForPosition(relativePos);
-			textEdit->additionalCursors.push_back(cursor);
-			textEdit->cursorBlinking = true;
-			textEdit->updateViewport();
-			holdingAnEvent = false;
-			return true;
-		}
-	}
 	
 	if (event->type()==QEvent::WindowStateChange){
 		onWindowStateChanged();
@@ -5116,7 +5104,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		recordedWidgets.append(watched);
 	}
 
-	if (event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease && !recordingMacro){
+	if ((event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease && !recordingMacro)){
 		QKeyEvent *key_event = dynamic_cast<QKeyEvent*>(event);
 		QKeySequence key_sequence{static_cast<int>(key_event->modifiers()) + key_event->key()};
 
@@ -5132,7 +5120,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			holdingAnEvent = false;
 		}
 	}
-
+	
 	if( event->type() != QEvent::KeyPress){
 		return false;
 	}
