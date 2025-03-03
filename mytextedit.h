@@ -71,7 +71,6 @@ protected:
 	void keyPressEvent(QKeyEvent *event) override;
 	
 private:
-	bool m_multiCursorEnabled = true;
 	QTextCursor m_originalCursor;
 	void drawCursor(QPainter &painter, const QTextCursor &cursor, const QColor &color);
 	void applyToAllCursors(const std::function<void(QTextCursor&)>& operation);

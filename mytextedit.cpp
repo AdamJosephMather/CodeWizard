@@ -11,8 +11,9 @@
 #include <qscrollbar.h>
 #include <QTextCursor>
 #include <QList>
-#include <QAbstractTextDocumentLayout>>
+#include <QAbstractTextDocumentLayout>
 #include <QTextBlock>
+#include <QClipboard>
 
 QString menuStyle = "";
 
@@ -222,16 +223,13 @@ void MyTextEdit::paintEvent(QPaintEvent *event)
 
 void MyTextEdit::keyPressEvent(QKeyEvent *event)
 {
-	// If multi-cursor mode is disabled, use the default behavior
-	if (!m_multiCursorEnabled || additionalCursors.isEmpty()) {
+	if (additionalCursors.isEmpty()) {
 		QTextEdit::keyPressEvent(event);
 		return;
 	}
 	
 	// Store the original cursor before we start manipulating
 	m_originalCursor = textCursor();
-	
-	qDebug() << "DETECTED";
 	
 	// Handle different key types
 	switch (event->key()) {
@@ -250,10 +248,22 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event)
 		case Qt::Key_Delete:
 			handleDeletionKey(event);
 			break;
+		
+		case Qt::Key_Tab:
+			insertTextAtAllCursors("\t");
+			break;
+	
+		case Qt::Key_Return:
+		case Qt::Key_Enter:
+			insertTextAtAllCursors("\n");
+			break;
 			
-		// Text input (includes Space, Enter, Tab, etc.)
 		default:
-			if (!event->text().isEmpty() && event->text()[0].isPrint() && !(event->modifiers() & Qt::ControlModifier)) {
+			if (event->modifiers() & Qt::ControlModifier && event->key() == Qt::Key_V){
+				QClipboard *clipboard = QGuiApplication::clipboard();
+				QString textToPaste = changeToTabs(clipboard->text());
+				insertTextAtAllCursors(textToPaste);
+			}else if (!event->text().isEmpty() && event->text()[0].isPrint() && !(event->modifiers() & Qt::ControlModifier)) {
 				insertTextAtAllCursors(event->text());
 			} else {
 				// For special keys we haven't specifically handled, use default behavior

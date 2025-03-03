@@ -1628,6 +1628,8 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 
 	textEdit->setPlainText(fileContent);
 	toCompareTo = fileContent;
+	textEdit->additionalCursors.clear();
+	textEdit->updateViewport();
 	previousLineCount = fileContent.count('\xa')+1;
 	file.close();
 
@@ -2409,6 +2411,8 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 
 		textEdit->setPlainText(fileContent);
 		toCompareTo = fileContent;
+		textEdit->additionalCursors.clear();
+		textEdit->updateViewport();
 
 		previousLineCount = fileContent.count('\xa')+1;
 		file.close();
@@ -4254,6 +4258,8 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 
 	textEdit->setPlainText(fileContent);
 	toCompareTo = fileContent;
+	textEdit->additionalCursors.clear();
+	textEdit->updateViewport();
 	previousLineCount = fileContent.count('\xa')+1;
 	file.close();
 
@@ -4443,6 +4449,8 @@ void MainWindow::on_actionNew_triggered()
 	savedText = "";
 	highlightDiagnostics(true);
 	textEdit->setPlainText("");
+	textEdit->additionalCursors.clear();
+	textEdit->updateViewport();
 	windowName = defWindowTitle;
 	setWindowTitle(windowName);
 	fileName = "";
@@ -5235,6 +5243,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			c.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, (highest-c.blockNumber()) + 1);
 			textEdit->cursorBlinking = false;
 			textEdit->additionalCursors.push_back(c);
+			holdingAnEvent = false;	
 			textEdit->updateViewport();
 			suggestionBox->hide();
 			actionBox->hide();
@@ -5250,6 +5259,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			c.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor, (c.blockNumber()-lowest) + 1);
 			textEdit->additionalCursors.push_back(c);
 			textEdit->cursorBlinking = false;
+			holdingAnEvent = false;
 			textEdit->updateViewport();
 			suggestionBox->hide();
 			actionBox->hide();
@@ -6518,9 +6528,7 @@ void MainWindow::on_actionFix_It_triggered(){ // THE FIX IT BUTTON
 	cursor.removeSelectedText();         // Clear the selection
 	cursor.insertText(text);          // Insert new text
 	cursor.endEditBlock();
-
-	//textEdit->setPlainText(text);
-
+	
 	updateSyntax();
 
 	connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
@@ -6990,9 +6998,11 @@ void MainWindow::updateSyntax()
 	lspMutex.unlock();
 
 	if (updateSyntaxAdd != "") {
-		cursor.beginEditBlock();
-		cursor.insertText(updateSyntaxAdd);
-		cursor.endEditBlock();
+		if (textEdit->additionalCursors.isEmpty()){
+			cursor.beginEditBlock();
+			cursor.insertText(updateSyntaxAdd);
+			cursor.endEditBlock();
+		}
 		updateSyntaxAdd = "";
 	}
 
@@ -7737,6 +7747,8 @@ void MainWindow::openRecentFile(QString newFile){
 
 	textEdit->setPlainText(fileContent);
 	toCompareTo = fileContent;
+	textEdit->additionalCursors.clear();
+	textEdit->updateViewport();
 
 	previousLineCount = fileContent.count('\xa')+1;
 	file.close();
