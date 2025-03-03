@@ -605,6 +605,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	bool thm = wantedTheme(); // must happen before any posibility of setting the saveWantedTheme
 
 	textEdit->setWordWrapMode(QTextOption::NoWrap);
+	textEdit->useMultiCursors = true;
 	textDocument = textEdit->document();
 
 	QFont monacoFont("Monaco");

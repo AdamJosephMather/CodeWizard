@@ -211,19 +211,21 @@ void MyTextEdit::paintEvent(QPaintEvent *event)
 	// First let the standard paint event handle the default drawing
 	QTextEdit::paintEvent(event);
 	
-	// Then draw our additional cursors on top
-	QPainter painter(viewport());
-	
-	// Draw all additional cursors
-	for (const QTextCursor &cursor : additionalCursors) {
-		// Use a different color for additional cursors to distinguish them
-		drawCursor(painter, cursor, QColor(255, 165, 0)); // Orange color
+	if (useMultiCursors){
+		// Then draw our additional cursors on top
+		QPainter painter(viewport());
+		
+		// Draw all additional cursors
+		for (const QTextCursor &cursor : additionalCursors) {
+			// Use a different color for additional cursors to distinguish them
+			drawCursor(painter, cursor, QColor(255, 165, 0)); // Orange color
+		}
 	}
 }
 
 void MyTextEdit::keyPressEvent(QKeyEvent *event)
 {
-	if (additionalCursors.isEmpty()) {
+	if (additionalCursors.isEmpty() || !useMultiCursors) {
 		QTextEdit::keyPressEvent(event);
 		return;
 	}

@@ -23,6 +23,7 @@ public:
 	QList<QTextCursor> additionalCursors;
 	void updateViewport();
 	bool cursorBlinking;
+	bool useMultiCursors = false;
 
 protected:
 	QString changeToTabs(QString text);
