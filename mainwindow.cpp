@@ -2132,6 +2132,10 @@ void MainWindow::onContentsChange(int position, int charsRemoved, int charsAdded
 	treeParserSyntaxHighlighter.setLanguage(currentLang.name); // we do this because I'm too lazy to do it any other way
 	treeParserSyntaxHighlighter.updateHighlighting(textDocument, position, charsAdded+charsRemoved, tree, newTree, charsAdded == textDocument->characterCount());
 
+	if (tree) {
+		ts_tree_delete(tree);
+	}
+	
 	tree = newTree;
 }
 
