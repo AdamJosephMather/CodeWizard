@@ -372,6 +372,8 @@ void MyTextEdit::handleDeletionKey(QKeyEvent *event)
 			cursor.deleteChar();
 		});
 	}
+	
+	handleDuplicateCursors();
 }
 
 void MyTextEdit::updateViewport(){

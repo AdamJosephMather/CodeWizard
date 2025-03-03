@@ -5232,6 +5232,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			c.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, (highest-c.blockNumber()) + 1);
 			textEdit->cursorBlinking = false;
 			textEdit->additionalCursors.push_back(c);
+			textEdit->handleDuplicateCursors();
 			holdingAnEvent = false;	
 			textEdit->updateViewport();
 			suggestionBox->hide();
@@ -5247,6 +5248,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			}
 			c.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor, (c.blockNumber()-lowest) + 1);
 			textEdit->additionalCursors.push_back(c);
+			textEdit->handleDuplicateCursors();
 			textEdit->cursorBlinking = false;
 			holdingAnEvent = false;
 			textEdit->updateViewport();

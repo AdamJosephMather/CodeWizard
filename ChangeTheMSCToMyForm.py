@@ -159,7 +159,7 @@ dct = {
 	"function.call.lua":5,
 	"constant.builtin":3,
 	"variable.parameter":3,
-	}
+}
 
 out = ""
 

@@ -24,6 +24,7 @@ public:
 	void updateViewport();
 	bool cursorBlinking;
 	bool useMultiCursors = false;
+	void handleDuplicateCursors();
 
 protected:
 	QString changeToTabs(QString text);
@@ -95,7 +96,6 @@ private:
 	
 	void toggleCursorVisibility();
 	QTimer cursorBlinkTimer;
-	void handleDuplicateCursors();
 
 signals:
 	void mousePositionChanged(QPoint pos);
