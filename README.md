@@ -57,6 +57,18 @@ CodeWizard has an optional vim mode which enables a modal setup with both a norm
 
 CodeWizard now has an optional builtin terminal. It's far from perfect, and I don't recommend using it for a wide variety of tasks. If your program does not do what is expected when using the builtin terminal, it is probably because of the stdio buffering issue. Look for an option to disable buffering or buffer by line (in Python the fix is the -u argument in the CodeWizard tagline).  
 
+**Multiple Cursors**
+
+As of CodeWizard V8.9.5, using Alt+Click or Alt+Up/Down Arrow you can instantiate more cursors. Clear them by regular clicking or the escape key. Yes you can do multiple cursors inside a macro but only with Up/Down Arrows.
+
+**Settings Export**
+
+CodeWizard, as of V8.9.5 can now export all of your settings in a .cdwzrd file. It works to export all settings except the recent files list. Also you can export just your syntax colors under View->Set Syntax Colors->Save to File
+
+**Setup CodeWizard**
+
+On first open (after clean install) you may find that there may be UI inconsistencies. The recommended proceedure is hitting Ctrl+T once or twice. Following that you will probably want to set your Syntax Colors, LSP, filetree, and terminal settings. And possibly the Vim mode along with other edit settings. (Under Edit menu (includes Auto-Save))
+
 **Operating Systems**
 
 1. Windows - Originally designed for - works perfectly (most of the time)
