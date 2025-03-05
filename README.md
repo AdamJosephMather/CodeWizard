@@ -8,20 +8,14 @@ CodeWizard is a custom Code Editor / IDE designed by Adam Mather. The main point
 
 ## Screenshots
 
-<img width="1128" alt="FullWFiletree" src="https://github.com/user-attachments/assets/e326ef1a-5cf3-4ba4-98ba-ca5a6bd718c6" />
+<img width="1128" alt="Screenshot-1" src="https://github.com/user-attachments/assets/538a0b02-3b6b-4a2f-8861-b1a045c444fd" />
+<img width="564" alt="Screenshot-2" src="https://github.com/user-attachments/assets/28bd54b8-39ca-4870-848e-9d6bcde90df3" />
+<img width="1128" alt="Screenshot-3" src="https://github.com/user-attachments/assets/24addb29-0e4d-4352-8ddd-d71ee6c2d94c" />
+<img width="1128" alt="Screenshot-4" src="https://github.com/user-attachments/assets/4e3abc11-1c3c-4216-8875-e71f5147f0b9" />
+<img width="1128" alt="Screenshot-5" src="https://github.com/user-attachments/assets/d0d5fa64-ffdb-4e10-ab48-3714da3e1601" />
+<img width="1128" alt="Screenshot-6" src="https://github.com/user-attachments/assets/b5ffcfc1-9ca9-4d8e-84a6-042b40d942c5" />
 
-CodeWizard has an optional filetree on the left. Here's an example without.
-
-<img width="564" alt="HalfWBottom" src="https://github.com/user-attachments/assets/03625ed1-bb6a-4bc7-b233-a13e0f567d6d" />
-
-Furthermore, the bottom bar can be closed and the filetree can be closed in fullscreen.
-
-<img width="1128" alt="LargeWoutFiletreeWoutBottom" src="https://github.com/user-attachments/assets/c11f404c-3a74-4b77-9fe1-b5c5cf98718d" />
-
-Here, I am demonstrating the comparison function in CodeWizard.
-
-<img width="1128" alt="image" src="https://github.com/user-attachments/assets/eb7eef86-95e3-4757-981c-9f4c542f492f" />
-
+These screenshots show a wide variety of features in CodeWizard. Including the builtin terminal, filetree, comparison feature, syntax colors, multiple cursors, and bottom edit bar.
 
 ## Why use CodeWizard?
 
