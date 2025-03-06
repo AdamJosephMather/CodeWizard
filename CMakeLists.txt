@@ -162,6 +162,10 @@ set(PROJECT_SOURCES
 	languageserverclient.cpp
 	recordinglight.h
 	recordinglight.cpp
+        customhorizontalscrollarea.h
+        customhorizontalscrollarea.cpp
+        tabwidget.h
+        tabwidget.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -182,9 +186,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 			language.h language.cpp
 			languageserverclient.h languageserverclient.cpp
 			syntaxhighlighter.h syntaxhighlighter.cpp
-
 			resources.qrc
 			recordinglight.h recordinglight.cpp
+                        customhorizontalscrollarea.h customhorizontalscrollarea.cpp
+                        tabwidget.h tabwidget.cpp
 			groqai.h groqai.cpp
 			myers.h myers.cpp
 			errorsmenu.h errorsmenu.cpp
@@ -210,6 +215,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 
 			resources.qrc
 			recordinglight.h recordinglight.cpp
+                        customhorizontalscrollarea.h customhorizontalscrollarea.cpp
+                        tabwidget.h tabwidget.cpp
 			groqai.h groqai.cpp
 			myers.h myers.cpp
 			errorsmenu.h errorsmenu.cpp

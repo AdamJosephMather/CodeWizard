@@ -1,4 +1,9 @@
+#ifdef Q_OS_WIN
 #include "customHorizontalScrollArea.h"
+#else
+#include "/home/adamj/QtProjects/CodeWizard/customhorizontalscrollarea.h"
+#endif
+
 #include <QScrollBar>
 
 customHorizontalScrollArea::customHorizontalScrollArea(QWidget *parent)

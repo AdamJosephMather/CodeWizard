@@ -24,15 +24,17 @@
 #include <QRegularExpression>
 #include <tree_sitter/api.h>
 #include "syntaxhighlighter.h"
+
 #ifdef _WIN32
 	#include <QTextToSpeech>
 #endif
+
 #include "recordinglight.h"
 #include "groqai.h"
 #include "myers.h"
 #include "errorsmenu.h"
 #include "tabwidget.h"
-#include "customHorizontalScrollArea.h"
+#include "customhorizontalscrollarea.h"
 
 extern "C" {
 	TSLanguage* tree_sitter_cpp(void);
