@@ -1189,7 +1189,7 @@ void MainWindow::addTab(QString name, QString file){
 	tabs.push_back(tab);
 	tab->setText(name);
 	tab->extraText = file;
-	tabLayout->insertWidget(0, tab);
+	tabLayout->insertWidget(tabLayout->count()-1, tab);
 	fileTabBar->setFixedHeight(tab->height()-2);
 	
 	if (useTabs->isChecked()){

@@ -38,12 +38,14 @@ void TabWidget::updateStyles(bool darkmode){
 	QString regular = "rgb(251, 251, 251)";
 	QString hover = "rgb(241, 241, 241)";
 	QString click = "rgb(231, 231, 231)";
+	QString oneStepFurther = "rgb(221, 221, 221)";
 	QString text = "rgb(0, 0, 0)";
 	
 	if (darkmode){
 		regular = "rgb(36, 36, 36)";
 		hover = "rgb(46, 46, 46)";
 		click = "rgb(56, 56, 56)";
+		oneStepFurther = "rgb(66, 66, 66)";
 		text = "rgb(255, 255, 255)";
 	}
 	
@@ -69,11 +71,11 @@ void TabWidget::updateStyles(bool darkmode){
 		"   border-left: none;"
 		"	margin-top: 3px;"
 		"   padding: 3px;"
-		"   background-color: "+regular+";"
+		"   background-color: "+hover+";"
 		"	color: "+text+";"
 		"}"
-		"QPushButton:hover { background-color: "+hover+"; }"
-		"QPushButton:pressed { background-color: "+click+"; }"
+		"QPushButton:hover { background-color: "+click+"; }"
+		"QPushButton:pressed { background-color: "+oneStepFurther+"; }"
 	);
 }
 
