@@ -26,6 +26,10 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void useTabsToggled();
+	void addTab(QString name, QString file);
+	void closeTab(int id);
+	void tabClicked(int id);
 	void on_actionSave_All_Settings_triggered();
 	void on_actionLoad_All_Settings_triggered();
 	void renameReference(QJsonObject);

@@ -31,6 +31,8 @@
 #include "groqai.h"
 #include "myers.h"
 #include "errorsmenu.h"
+#include "tabwidget.h"
+#include "customHorizontalScrollArea.h"
 
 extern "C" {
 	TSLanguage* tree_sitter_cpp(void);
@@ -48,7 +50,7 @@ extern "C" {
 	TSLanguage* tree_sitter_go(void);
 }
 
-QString versionNumber = "8.9.5";
+QString versionNumber = "8.9.6";
 
 QList<QLineEdit*> hexColorsList;
 
@@ -221,6 +223,14 @@ QMenu *menuAutocomplete;
 QMenu *menuSilly;
 QMenu *menuSubFonts;
 QTreeView *fileTree;
+
+customHorizontalScrollArea *fileTabBar;
+QWidget *fileTabBarContent;
+int tabsIndex;
+int editingTab;
+QList<TabWidget *> tabs;
+QHBoxLayout *tabLayout;
+QAction *useTabs;
 
 QHBoxLayout *horizontalLayout;
 
@@ -562,10 +572,24 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	QWidgetAction *fontAction = new QWidgetAction(this);
 	fontAction->setDefaultWidget(fontList);
 	menuSubFonts->addAction(fontAction);
-
+	
+	useTabs = ui->actionUse_File_Tabs;
+	
 	useFileTree = ui->actionUse_File_Tree;
 	useFileTreeIfFullscreen = ui->actionUse_File_Tree_If_Fullscreen;
 	fileTree = ui->treeView;
+	
+	fileTabBar = ui->scrollArea;
+	fileTabBarContent = ui->scrollAreaWidgetContents;
+	
+	tabLayout = new QHBoxLayout(fileTabBarContent);
+	tabLayout->setContentsMargins(0, 0, 0, 0);
+	tabLayout->setSpacing(2);
+	tabLayout->addStretch();
+	
+	fileTabBar->hide();
+	fileTabBar->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	fileTabBar->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 	showWarnings = ui->actionShow_Warnings;
 	showErrors = ui->actionShow_Errors;
@@ -1021,6 +1045,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(useFileTreeIfFullscreen, &QAction::toggled, this, &MainWindow::fileTreeToggled);
 	connect(splitter, &QSplitter::splitterMoved, this, &MainWindow::storeResizeOfSplitters);
 	connect(splitter2, &QSplitter::splitterMoved, this, &MainWindow::storeResizeOfSplitters);
+	connect(useTabs, &QAction::toggled, this, &MainWindow::useTabsToggled);
 
 	connect(fileTree, &QTreeView::doubleClicked, this, &MainWindow::fileTreeOpened);
 
@@ -1108,6 +1133,91 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	}
 
 	QTimer::singleShot(50, this, &MainWindow::updateSplitsWidths);
+}
+
+void MainWindow::useTabsToggled(){
+	qDebug() << "useTabsToggled";
+	
+	if (useTabs->isChecked() && tabs.length() > 0){
+		fileTabBar->show();
+	} else {
+		fileTabBar->hide();
+	}
+}
+
+void MainWindow::closeTab(int id){
+	qDebug() << "closeTab - " << id;
+	
+	int loc = -1;
+	for (int i = 0; i < tabs.length(); i++){
+		TabWidget *tabHere = tabs[i];
+		if (tabHere->m_index == id){
+			loc = i;
+			break;
+		}
+	}
+	
+	if (loc == -1){
+		return;
+	}
+	
+	TabWidget *tab = tabs[loc];
+	
+	tabLayout->removeWidget(tab);
+	tab->setParent(nullptr);
+	tabs.remove(loc);
+	delete tab;
+	
+	if (tabs.length() == 0){
+		fileTabBar->hide();
+	}
+}
+
+void MainWindow::addTab(QString name, QString file){
+	for (TabWidget *tab : tabs){
+		if (tab->extraText == file){
+			editingTab = tab->m_index;
+			return;
+		}
+	}
+	
+	TabWidget *tab = new TabWidget(true, tabsIndex, fileTabBarContent); // darkmode, index, parent
+	editingTab = tabsIndex;
+	tabsIndex ++;
+	connect(tab, &TabWidget::tabClicked, this, &MainWindow::tabClicked);
+	connect(tab, &TabWidget::tabClosed, this, &MainWindow::closeTab);
+	tabs.push_back(tab);
+	tab->setText(name);
+	tab->extraText = file;
+	tabLayout->insertWidget(0, tab);
+	fileTabBar->setFixedHeight(tab->height()-2);
+	
+	if (useTabs->isChecked()){
+		fileTabBar->show();
+	}
+}
+
+void MainWindow::tabClicked(int id){
+	qDebug() << "tabClicked - " << id;
+	
+	int loc = -1;
+	for (int i = 0; i < tabs.length(); i++){
+		TabWidget *tabHere = tabs[i];
+		if (tabHere->m_index == id){
+			loc = i;
+			break;
+		}
+	}
+	
+	if (loc == -1){
+		return;
+	}
+	
+	TabWidget *tab = tabs[loc];
+	
+	QString filename = tab->extraText;
+	globalArgFileName = filename;
+	on_actionOpen_triggered();
 }
 
 void MainWindow::updateSplitsWidths(){
@@ -2409,6 +2519,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		savedText = fileContent;
 
 		setupSyntaxTreeOnOpen(fileContent);
+		addTab(fileNameName, fileName);
 
 		highlightDiagnostics(true);
 
@@ -3334,6 +3445,14 @@ void MainWindow::updateFonts()
 	updateLineNumbers(globalLineCount);
 
 	errMenu.reposition();
+	
+	for (TabWidget *tab : tabs){
+		tab->stFnt(font);
+	}
+	
+	if (tabs.length() != 0){
+		fileTabBar->setFixedHeight(tabs[0]->height()-2);
+	}
 }
 
 void MainWindow::setupCompleter() {
@@ -3531,6 +3650,7 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("autoAddBrackets", autoAddBrackets->isChecked());
 	settings.setValue("useFileTree", useFileTree->isChecked());
 	settings.setValue("useFiletreeIfFullscreen",  useFileTreeIfFullscreen->isChecked());
+	settings.setValue("useTabs", useTabs->isChecked());
 
 	settings.setValue("autoSaveAct", autoSaveAct->isChecked());
 	settings.setValue("randomSelectFileTypeAct",randomSelectFileTypeAct->isChecked());
@@ -3669,6 +3789,7 @@ bool MainWindow::wantedTheme()
 		autoAddBrackets->setChecked(settings.value("autoAddBrackets", false).toBool());
 		autoSaveAct->setChecked(settings.value("autoSaveAct", true).toBool());
 		useFileTree->setChecked(settings.value("useFileTree", false).toBool());
+		useTabs->setChecked(settings.value("useTabs", false).toBool());
 		useFileTreeIfFullscreen->setChecked(settings.value("useFileTreeIfFullscreen", true).toBool());
 
 		bool defaultRandomSelect = false;
@@ -4256,6 +4377,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	savedText = fileContent;
 
 	setupSyntaxTreeOnOpen(fileContent); // must be before setPlainText - don't ask why - I could tell you though...
+	addTab(fileNameName, fileName);
 
 	highlightDiagnostics(true);
 
@@ -4448,7 +4570,7 @@ void MainWindow::on_actionNew_triggered()
 		client = nullptr;
 	}
 	lspMutex.unlock();
-
+	
 	savedText = "";
 	highlightDiagnostics(true);
 	textEdit->setPlainText("");
@@ -5958,6 +6080,8 @@ void MainWindow::on_actionSave_triggered()
 		windowName = "CodeWizard V"+versionNumber+" - "+fileNameName+" - "+fileName;
 
 		addFileToRecentList(fileName);
+		
+		addTab(fileNameName, fileName);
 
 		updateMargins(true); // called on open - every time
 	}
@@ -6401,6 +6525,7 @@ void MainWindow::on_actionSave_As_triggered()
 
 	setLangOffFilename(fileName, true);
 	setupSyntaxTreeOnOpen(textEdit->toPlainText());
+	addTab(fileNameName, fileName);
 	onContentsChange(0, 0, 0);
 	addFileToRecentList(fileName);
 
@@ -6417,6 +6542,8 @@ void MainWindow::on_actionSave_As_triggered()
 	lspMutex.lock();
 	setupLSP(oldFile);
 	lspMutex.unlock();
+	
+	addTab(fileNameName, fileName);
 
 	updateMargins(true); // called on open - every time
 }
@@ -7043,13 +7170,16 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 
 	QColor color1;
 	QColor color2;
+	QColor color3;
 
 	if (darkmode){
 		color1 = QColor(23, 23, 23);
 		color2 = QColor(32, 32, 32);
+		color3 = QColor(25, 25, 25);
 	} else {
 		color1 = QColor(230, 230, 230);
 		color2 = QColor(245, 245, 245);
+		color3 = QColor(245, 245, 245);
 	}
 
 	errMenu.recolor(color2);
@@ -7121,11 +7251,20 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 	palette = nextButton->palette();
 	palette.setColor(QPalette::Button, color2);
 	nextButton->setPalette(palette);
+	
+	palette = fileTabBar->palette();
+	palette.setColor(QPalette::Base, color3);
+	fileTabBar->setPalette(palette);
+	fileTabBar->setStyleSheet("QScrollArea { border: none; }");
 }
 
 void MainWindow::changeTheme(bool darkMode)
 {
 	qDebug() << "changeTheme";
+	
+	for (TabWidget *tab : tabs){
+		tab->updateStyles(darkmode);
+	}
 
 	// Dark theme style
 	QString contextMenuSheet = R"(
@@ -7195,16 +7334,13 @@ void MainWindow::changeTheme(bool darkMode)
 	}
 
 	if (darkMode) {
-		// Optionally modify the palette for light mode
 		QPalette lightPalette = qApp->palette();
 
 		lightPalette.setColor(QPalette::Inactive, QPalette::Highlight, QColor("#FFFFFF"));
 		lightPalette.setColor(QPalette::Inactive, QPalette::HighlightedText, QColor("#000000"));
 		lightPalette.setColor(QPalette::Active, QPalette::Highlight, QColor("#FFFFFF"));
 		lightPalette.setColor(QPalette::Active, QPalette::HighlightedText, QColor("#000000"));
-
-		// Customize the palette as needed
-
+		
 		lightPalette.setColor(QPalette::Window, QColor(25, 25, 25));
 		lightPalette.setColor(QPalette::WindowText, Qt::white);
 		lightPalette.setColor(QPalette::Base, QColor(45, 45, 45));
@@ -7251,9 +7387,8 @@ void MainWindow::changeTheme(bool darkMode)
 		qApp->setPalette(lightPalette);
 		normalColor = QColor(255, 255, 255);
 	}else{
-		// Optionally modify the palette for light mode
 		QPalette lightPalette = qApp->palette();
-
+		
 		lightPalette.setColor(QPalette::Inactive, QPalette::Highlight, QColor("#000000"));
 		lightPalette.setColor(QPalette::Inactive, QPalette::HighlightedText, QColor("#FFFFFF"));
 		lightPalette.setColor(QPalette::Active, QPalette::Highlight, QColor("#000000"));
@@ -7733,6 +7868,7 @@ void MainWindow::openRecentFile(QString newFile){
 	savedText = fileContent;
 
 	setupSyntaxTreeOnOpen(fileContent);
+	addTab(fileNameName, fileName);
 
 	highlightDiagnostics(true);
 

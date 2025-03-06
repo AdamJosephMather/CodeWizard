@@ -42,6 +42,35 @@
        <number>2</number>
       </property>
       <item>
+       <widget class="customHorizontalScrollArea" name="scrollArea">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>1130</width>
+           <height>68</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </widget>
+      </item>
+      <item>
        <widget class="QWidget" name="horizontalLayout_4" native="true">
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
@@ -440,6 +469,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="separator"/>
     <addaction name="actionUse_Vim_Modes"/>
     <addaction name="actionAuto_Add_Brackets"/>
+    <addaction name="actionUse_File_Tabs"/>
    </widget>
    <widget class="QMenu" name="menuFixit">
     <property name="title">
@@ -1123,12 +1153,26 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <string>Load All Settings</string>
    </property>
   </action>
+  <action name="actionUse_File_Tabs">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Use File Tabs</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
    <class>MyTextEdit</class>
    <extends>QTextEdit</extends>
    <header>mytextedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>customHorizontalScrollArea</class>
+   <extends>QScrollArea</extends>
+   <header>customhorizontalscrollarea.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
