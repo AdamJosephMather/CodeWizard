@@ -1,4 +1,4 @@
-#ifdef Q_OS_WIN
+#ifdef _WIN32
 #include "customHorizontalScrollArea.h"
 #else
 #include "/home/adamj/QtProjects/CodeWizard/customhorizontalscrollarea.h"

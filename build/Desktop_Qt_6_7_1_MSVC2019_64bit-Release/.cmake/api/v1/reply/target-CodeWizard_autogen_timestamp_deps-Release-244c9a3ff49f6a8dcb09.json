@@ -18,23 +18,7 @@
 	[
 		{
 			"backtrace" : 0,
-			"id" : "tree-sitter-cpp::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 0,
-			"id" : "tree-sitter-python::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 0,
-			"id" : "tree-sitter-javascript::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 0,
-			"id" : "tree-sitter-typescript::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 0,
-			"id" : "tree-sitter-rust::@6890427a1f51a3e7e1df"
+			"id" : "tree-sitter-c-sharp::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 0,
@@ -42,15 +26,11 @@
 		},
 		{
 			"backtrace" : 0,
-			"id" : "tree-sitter-c-sharp::@6890427a1f51a3e7e1df"
+			"id" : "tree-sitter-python::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 0,
-			"id" : "tree-sitter-html::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 0,
-			"id" : "tree-sitter-glsl::@6890427a1f51a3e7e1df"
+			"id" : "tree-sitter-c::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 0,
@@ -58,7 +38,27 @@
 		},
 		{
 			"backtrace" : 0,
-			"id" : "tree-sitter-c::@6890427a1f51a3e7e1df"
+			"id" : "tree-sitter-cpp::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "tree-sitter-typescript::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "tree-sitter-html::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "tree-sitter-javascript::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "tree-sitter-rust::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "tree-sitter-glsl::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 0,

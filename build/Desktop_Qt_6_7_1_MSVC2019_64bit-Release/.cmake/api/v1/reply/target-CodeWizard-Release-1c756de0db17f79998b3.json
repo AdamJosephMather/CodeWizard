@@ -63,7 +63,7 @@
 			{
 				"command" : 3,
 				"file" : 1,
-				"line" : 169,
+				"line" : 173,
 				"parent" : 0
 			},
 			{
@@ -87,19 +87,19 @@
 			{
 				"command" : 4,
 				"file" : 1,
-				"line" : 286,
+				"line" : 294,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 1,
-				"line" : 249,
+				"line" : 257,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 1,
-				"line" : 269,
+				"line" : 277,
 				"parent" : 0
 			},
 			{
@@ -439,7 +439,7 @@
 			{
 				"command" : 5,
 				"file" : 1,
-				"line" : 243,
+				"line" : 251,
 				"parent" : 0
 			},
 			{
@@ -451,7 +451,7 @@
 			{
 				"command" : 13,
 				"file" : 1,
-				"line" : 236,
+				"line" : 244,
 				"parent" : 0
 			}
 		]
@@ -667,11 +667,12 @@
 				10,
 				12,
 				14,
-				26,
-				28,
+				16,
+				18,
 				30,
 				32,
-				35
+				34,
+				37
 			]
 		}
 	],
@@ -679,23 +680,7 @@
 	[
 		{
 			"backtrace" : 6,
-			"id" : "tree-sitter-cpp::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 6,
-			"id" : "tree-sitter-python::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 6,
-			"id" : "tree-sitter-javascript::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 6,
-			"id" : "tree-sitter-typescript::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 6,
-			"id" : "tree-sitter-rust::@6890427a1f51a3e7e1df"
+			"id" : "tree-sitter-c-sharp::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 6,
@@ -703,15 +688,11 @@
 		},
 		{
 			"backtrace" : 6,
-			"id" : "tree-sitter-c-sharp::@6890427a1f51a3e7e1df"
+			"id" : "tree-sitter-python::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 6,
-			"id" : "tree-sitter-html::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 6,
-			"id" : "tree-sitter-glsl::@6890427a1f51a3e7e1df"
+			"id" : "tree-sitter-c::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 6,
@@ -719,7 +700,27 @@
 		},
 		{
 			"backtrace" : 6,
-			"id" : "tree-sitter-c::@6890427a1f51a3e7e1df"
+			"id" : "tree-sitter-cpp::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "tree-sitter-typescript::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "tree-sitter-html::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "tree-sitter-javascript::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "tree-sitter-rust::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "tree-sitter-glsl::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 6,
@@ -941,11 +942,12 @@
 				10,
 				12,
 				14,
-				26,
-				28,
+				16,
+				18,
 				30,
 				32,
-				35
+				34,
+				37
 			]
 		},
 		{
@@ -958,11 +960,12 @@
 				9,
 				11,
 				13,
-				25,
-				27,
+				15,
+				17,
 				29,
 				31,
-				33
+				33,
+				35
 			]
 		},
 		{
@@ -976,37 +979,37 @@
 			"name" : "Object Files",
 			"sourceIndexes" : 
 			[
-				15
+				19
 			]
 		},
 		{
 			"name" : "Resources",
 			"sourceIndexes" : 
 			[
-				16,
-				24
+				20,
+				28
 			]
 		},
 		{
 			"name" : "",
 			"sourceIndexes" : 
 			[
-				17,
-				18,
-				19,
-				20,
 				21,
 				22,
 				23,
-				34
+				24,
+				25,
+				26,
+				27,
+				36
 			]
 		},
 		{
 			"name" : "CMake Rules",
 			"sourceIndexes" : 
 			[
-				36,
-				37
+				38,
+				39
 			]
 		}
 	],
@@ -1098,6 +1101,28 @@
 		},
 		{
 			"backtrace" : 4,
+			"path" : "customhorizontalscrollarea.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "customhorizontalscrollarea.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"path" : "tabwidget.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "tabwidget.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
 			"path" : "app.o",
 			"sourceGroupIndex" : 3
 		},
@@ -1177,17 +1202,6 @@
 			"backtrace" : 4,
 			"compileGroupIndex" : 0,
 			"path" : "errorsmenu.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 4,
-			"path" : "tabwidget.h",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 4,
-			"compileGroupIndex" : 0,
-			"path" : "tabwidget.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

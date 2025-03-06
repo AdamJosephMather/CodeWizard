@@ -12,7 +12,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "tree-sitter-wgsl.lib"
+			"path" : "tree-sitter-rust.lib"
 		}
 	],
 	"backtrace" : 1,
@@ -38,13 +38,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 80,
+				"line" : 51,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 295,
+				"line" : 303,
 				"parent" : 0
 			},
 			{
@@ -62,7 +62,7 @@
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 134,
+				"line" : 109,
 				"parent" : 0
 			}
 		]
@@ -84,7 +84,7 @@
 			[
 				{
 					"backtrace" : 0,
-					"path" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-wgsl_autogen/include"
+					"path" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-rust_autogen/include"
 				},
 				{
 					"backtrace" : 4,
@@ -92,7 +92,7 @@
 				},
 				{
 					"backtrace" : 5,
-					"path" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src"
+					"path" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src"
 				}
 			],
 			"language" : "CXX",
@@ -124,7 +124,7 @@
 			[
 				{
 					"backtrace" : 0,
-					"path" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-wgsl_autogen/include"
+					"path" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-rust_autogen/include"
 				},
 				{
 					"backtrace" : 4,
@@ -132,7 +132,7 @@
 				},
 				{
 					"backtrace" : 5,
-					"path" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-wgsl/src"
+					"path" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-rust/src"
 				}
 			],
 			"language" : "C",
@@ -146,14 +146,14 @@
 	"dependencies" : 
 	[
 		{
-			"backtrace" : 0,
-			"id" : "tree-sitter-wgsl_autogen::@6890427a1f51a3e7e1df"
+			"id" : "tree-sitter-rust_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
 		},
 		{
-			"id" : "tree-sitter-wgsl_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
+			"backtrace" : 0,
+			"id" : "tree-sitter-rust_autogen::@6890427a1f51a3e7e1df"
 		}
 	],
-	"id" : "tree-sitter-wgsl::@6890427a1f51a3e7e1df",
+	"id" : "tree-sitter-rust::@6890427a1f51a3e7e1df",
 	"install" : 
 	{
 		"destinations" : 
@@ -168,8 +168,8 @@
 			"path" : "C:/Program Files (x86)/CodeWizard"
 		}
 	},
-	"name" : "tree-sitter-wgsl",
-	"nameOnDisk" : "tree-sitter-wgsl.lib",
+	"name" : "tree-sitter-rust",
+	"nameOnDisk" : "tree-sitter-rust.lib",
 	"paths" : 
 	{
 		"build" : ".",
@@ -214,37 +214,37 @@
 			"backtrace" : 0,
 			"compileGroupIndex" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-wgsl_autogen/mocs_compilation.cpp",
+			"path" : "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-rust_autogen/mocs_compilation.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 1,
-			"path" : "extern/tree-sitter-parsers/tree-sitter-wgsl/src/parser.c",
+			"path" : "extern/tree-sitter-parsers/tree-sitter-rust/src/parser.c",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 1,
-			"path" : "extern/tree-sitter-parsers/tree-sitter-wgsl/src/scanner.c",
+			"path" : "extern/tree-sitter-parsers/tree-sitter-rust/src/scanner.c",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-wgsl_autogen/include/ui_mainwindow.h",
+			"path" : "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-rust_autogen/include/ui_mainwindow.h",
 			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-wgsl_autogen/timestamp",
+			"path" : "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-rust_autogen/timestamp",
 			"sourceGroupIndex" : 2
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-wgsl_autogen/timestamp.rule",
+			"path" : "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-rust_autogen/timestamp.rule",
 			"sourceGroupIndex" : 3
 		}
 	],

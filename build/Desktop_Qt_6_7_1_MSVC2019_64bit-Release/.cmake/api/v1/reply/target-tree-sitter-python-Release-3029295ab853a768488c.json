@@ -12,7 +12,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "tree-sitter-java.lib"
+			"path" : "tree-sitter-python.lib"
 		}
 	],
 	"backtrace" : 1,
@@ -38,13 +38,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 89,
+				"line" : 46,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 295,
+				"line" : 303,
 				"parent" : 0
 			},
 			{
@@ -62,7 +62,7 @@
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 142,
+				"line" : 105,
 				"parent" : 0
 			}
 		]
@@ -84,7 +84,7 @@
 			[
 				{
 					"backtrace" : 0,
-					"path" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-java_autogen/include"
+					"path" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-python_autogen/include"
 				},
 				{
 					"backtrace" : 4,
@@ -92,7 +92,7 @@
 				},
 				{
 					"backtrace" : 5,
-					"path" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-java/src"
+					"path" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src"
 				}
 			],
 			"language" : "CXX",
@@ -124,7 +124,7 @@
 			[
 				{
 					"backtrace" : 0,
-					"path" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-java_autogen/include"
+					"path" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-python_autogen/include"
 				},
 				{
 					"backtrace" : 4,
@@ -132,27 +132,28 @@
 				},
 				{
 					"backtrace" : 5,
-					"path" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-java/src"
+					"path" : "C:/Users/adamj/OneDrive/Documents/QtProjects/CodeWizard/extern/tree-sitter-parsers/tree-sitter-python/src"
 				}
 			],
 			"language" : "C",
 			"sourceIndexes" : 
 			[
-				1
+				1,
+				2
 			]
 		}
 	],
 	"dependencies" : 
 	[
 		{
-			"id" : "tree-sitter-java_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
+			"backtrace" : 0,
+			"id" : "tree-sitter-python_autogen::@6890427a1f51a3e7e1df"
 		},
 		{
-			"backtrace" : 0,
-			"id" : "tree-sitter-java_autogen::@6890427a1f51a3e7e1df"
+			"id" : "tree-sitter-python_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
 		}
 	],
-	"id" : "tree-sitter-java::@6890427a1f51a3e7e1df",
+	"id" : "tree-sitter-python::@6890427a1f51a3e7e1df",
 	"install" : 
 	{
 		"destinations" : 
@@ -167,8 +168,8 @@
 			"path" : "C:/Program Files (x86)/CodeWizard"
 		}
 	},
-	"name" : "tree-sitter-java",
-	"nameOnDisk" : "tree-sitter-java.lib",
+	"name" : "tree-sitter-python",
+	"nameOnDisk" : "tree-sitter-python.lib",
 	"paths" : 
 	{
 		"build" : ".",
@@ -181,28 +182,29 @@
 			"sourceIndexes" : 
 			[
 				0,
-				1
+				1,
+				2
 			]
 		},
 		{
 			"name" : "Header Files",
 			"sourceIndexes" : 
 			[
-				2
+				3
 			]
 		},
 		{
 			"name" : "",
 			"sourceIndexes" : 
 			[
-				3
+				4
 			]
 		},
 		{
 			"name" : "CMake Rules",
 			"sourceIndexes" : 
 			[
-				4
+				5
 			]
 		}
 	],
@@ -212,31 +214,37 @@
 			"backtrace" : 0,
 			"compileGroupIndex" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-java_autogen/mocs_compilation.cpp",
+			"path" : "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-python_autogen/mocs_compilation.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 1,
-			"path" : "extern/tree-sitter-parsers/tree-sitter-java/src/parser.c",
+			"path" : "extern/tree-sitter-parsers/tree-sitter-python/src/parser.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 1,
+			"path" : "extern/tree-sitter-parsers/tree-sitter-python/src/scanner.c",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-java_autogen/include/ui_mainwindow.h",
+			"path" : "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-python_autogen/include/ui_mainwindow.h",
 			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-java_autogen/timestamp",
+			"path" : "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-python_autogen/timestamp",
 			"sourceGroupIndex" : 2
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-java_autogen/timestamp.rule",
+			"path" : "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/tree-sitter-python_autogen/timestamp.rule",
 			"sourceGroupIndex" : 3
 		}
 	],
