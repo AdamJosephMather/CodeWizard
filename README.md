@@ -20,9 +20,9 @@ These screenshots show a wide variety of features in CodeWizard. Including the b
 ## Why use CodeWizard?
 
 CodeWizard offers a couple of major improvements on the existing editors:  
-1. System resource usage. CodeWizard clocks in at 20 MB of RAM usage on my machine. Compare that to VSCode which consumes upwards of 600 MB of RAM when opened.  
+1. System resource usage. CodeWizard clocks in at 30 MB of RAM usage on my machine. Compare that to VSCode which consumes upwards of 600 MB of RAM when opened.  
 2. Simplicity. CodeWizard is ideal for people used to and or wanting the IDLE like experience without excess bloat. Of course it does support the more complicated features like LSPs and whatnot, but it's an optional addon.  
-3. AI. CodeWizard can connect to Groq AI with an API key provided by the user for code generation.  
+3. AI. CodeWizard can connect to Groq AI with an API key provided by the user for code generation. (this will burn through credits, particularly on larger files)  
 4. Fun features. For example, CodeWizard will let you select an image to theme it off of. This themeing will apply to the syntax colors it uses. More info in the Syntax Highlighting section.
 
 ## Language Server Protocol
@@ -41,15 +41,15 @@ Version 8.8.0 can now request code generation by a 70 billion paramater model at
 
 **Running Code**
 
-When CodeWizard attempts to execute the program you have created, it will first create a .bat file in a temporary folder. This .bat file will be written with the appropriate commands to run the program. After it is created, CodeWizard will run it. I tried so hard to not have to use a .bat file, but whatever.
+When CodeWizard attempts to execute the program you have created, it will first create a .bat file in a temporary folder. This .bat file will be written with the appropriate commands to run the program. After it is created, CodeWizard will run it. I tried so hard to not have to use a .bat file, but whatever. (or .sh on linux)
 
 **Vim mode**
 
-CodeWizard has an optional vim mode which enables a modal setup with both a normal and insert mode. It is worth noting that it is a modification to a subset of Vim bindings. 
+CodeWizard has an optional "Vim" mode which enables a modal setup with both a normal and insert mode. It is worth noting that it is a modification to a _small_ subset of Vim bindings. 
 
 **Builtin Terminal**
 
-CodeWizard now has an optional builtin terminal. It's far from perfect, and I don't recommend using it for a wide variety of tasks. If your program does not do what is expected when using the builtin terminal, it is probably because of the stdio buffering issue. Look for an option to disable buffering or buffer by line (in Python the fix is the -u argument in the CodeWizard tagline).  
+CodeWizard now has an optional builtin terminal. It's far from perfect, and I don't recommend using it for a wide variety of tasks. If your program does not do what is expected when using the builtin terminal, it is probably because of the stdio buffering issue. Look for an option to disable buffering or buffer by line (in Python the fix is the -u argument in the CodeWizard tagline). You can use more than one terminal at the same time btw.  
 
 **Multiple Cursors**
 
@@ -61,7 +61,7 @@ CodeWizard, as of V8.9.5 can now export all of your settings in a .cdwzrd file. 
 
 **Setup CodeWizard**
 
-On first open (after clean install) you may find that there may be UI inconsistencies. The recommended proceedure is hitting Ctrl+T once or twice. Following that you will probably want to set your Syntax Colors, LSP, filetree, and terminal settings. And possibly the Vim mode along with other edit settings. (Under Edit menu (includes Auto-Save))
+On first open (after clean install) you may find that there may be UI inconsistencies. The recommended proceedure is hitting Ctrl+T once or twice. Following that you will probably want to set your Syntax Colors, LSP, filetree, file tabs, and terminal settings. And possibly the Vim mode along with other edit settings. (Under Edit menu (includes Auto-Save)) There's more help for much of these under the Help menus.
 
 **Operating Systems**
 
