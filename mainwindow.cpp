@@ -1210,6 +1210,8 @@ void MainWindow::useTabsToggled(){
 	} else {
 		fileTabBar->hide();
 	}
+	
+	saveWantedTheme();
 }
 
 void MainWindow::closeTab(int id){
