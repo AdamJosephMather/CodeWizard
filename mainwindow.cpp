@@ -1257,7 +1257,7 @@ void MainWindow::addTab(QString name, QString file){
 	tab->setText(name);
 	tab->extraText = file;
 	tabLayout->insertWidget(tabLayout->count()-1, tab);
-	fileTabBar->setFixedHeight(tab->height()-2);
+	fileTabBar->setFixedHeight(tab->height());
 
 	if (useTabs->isChecked()){
 		fileTabBar->show();
@@ -3628,7 +3628,7 @@ void MainWindow::updateFonts()
 	}
 
 	if (tabs.length() != 0){
-		fileTabBar->setFixedHeight(tabs[0]->height()-2);
+		fileTabBar->setFixedHeight(tabs[0]->height());
 	}
 
 	prevTerm1->setFixedWidth(prevTerm1->height());
