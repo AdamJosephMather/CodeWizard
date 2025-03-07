@@ -14,6 +14,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
@@ -149,9 +150,19 @@ public:
     MyTextEdit *textEdit_4;
     MyTextEdit *textEdit;
     QVBoxLayout *verticalLayout_8;
+    QHBoxLayout *horizontalLayout_6;
+    QPushButton *prevTerm2;
+    QPushButton *nextTerm2;
+    QPushButton *addTerm2;
+    QLabel *termCnt2;
     QTextEdit *textEdit_8;
     MyTextEdit *textEdit_9;
     QVBoxLayout *verticalLayout_5;
+    QHBoxLayout *horizontalLayout_5;
+    QPushButton *prevTerm1;
+    QPushButton *nextTerm1;
+    QPushButton *addTerm1;
+    QLabel *termCnt1;
     QTextEdit *textEdit_6;
     MyTextEdit *textEdit_7;
     QHBoxLayout *findLayout;
@@ -493,6 +504,36 @@ public:
 
         verticalLayout_8 = new QVBoxLayout();
         verticalLayout_8->setObjectName("verticalLayout_8");
+        horizontalLayout_6 = new QHBoxLayout();
+        horizontalLayout_6->setObjectName("horizontalLayout_6");
+        prevTerm2 = new QPushButton(verticalLayout_7);
+        prevTerm2->setObjectName("prevTerm2");
+
+        horizontalLayout_6->addWidget(prevTerm2);
+
+        nextTerm2 = new QPushButton(verticalLayout_7);
+        nextTerm2->setObjectName("nextTerm2");
+
+        horizontalLayout_6->addWidget(nextTerm2);
+
+        addTerm2 = new QPushButton(verticalLayout_7);
+        addTerm2->setObjectName("addTerm2");
+        QSizePolicy sizePolicy3(QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Fixed);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(addTerm2->sizePolicy().hasHeightForWidth());
+        addTerm2->setSizePolicy(sizePolicy3);
+
+        horizontalLayout_6->addWidget(addTerm2);
+
+        termCnt2 = new QLabel(verticalLayout_7);
+        termCnt2->setObjectName("termCnt2");
+
+        horizontalLayout_6->addWidget(termCnt2);
+
+
+        verticalLayout_8->addLayout(horizontalLayout_6);
+
         textEdit_8 = new QTextEdit(verticalLayout_7);
         textEdit_8->setObjectName("textEdit_8");
         sizePolicy2.setHeightForWidth(textEdit_8->sizePolicy().hasHeightForWidth());
@@ -504,11 +545,11 @@ public:
 
         textEdit_9 = new MyTextEdit(verticalLayout_7);
         textEdit_9->setObjectName("textEdit_9");
-        QSizePolicy sizePolicy3(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Fixed);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(textEdit_9->sizePolicy().hasHeightForWidth());
-        textEdit_9->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy4(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Fixed);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(textEdit_9->sizePolicy().hasHeightForWidth());
+        textEdit_9->setSizePolicy(sizePolicy4);
         textEdit_9->setMinimumSize(QSize(0, 28));
         textEdit_9->setMaximumSize(QSize(16777215, 28));
 
@@ -522,6 +563,31 @@ public:
 
         verticalLayout_5 = new QVBoxLayout();
         verticalLayout_5->setObjectName("verticalLayout_5");
+        horizontalLayout_5 = new QHBoxLayout();
+        horizontalLayout_5->setObjectName("horizontalLayout_5");
+        prevTerm1 = new QPushButton(horizontalLayout_4);
+        prevTerm1->setObjectName("prevTerm1");
+
+        horizontalLayout_5->addWidget(prevTerm1);
+
+        nextTerm1 = new QPushButton(horizontalLayout_4);
+        nextTerm1->setObjectName("nextTerm1");
+
+        horizontalLayout_5->addWidget(nextTerm1);
+
+        addTerm1 = new QPushButton(horizontalLayout_4);
+        addTerm1->setObjectName("addTerm1");
+
+        horizontalLayout_5->addWidget(addTerm1);
+
+        termCnt1 = new QLabel(horizontalLayout_4);
+        termCnt1->setObjectName("termCnt1");
+
+        horizontalLayout_5->addWidget(termCnt1);
+
+
+        verticalLayout_5->addLayout(horizontalLayout_5);
+
         textEdit_6 = new QTextEdit(horizontalLayout_4);
         textEdit_6->setObjectName("textEdit_6");
         sizePolicy2.setHeightForWidth(textEdit_6->sizePolicy().hasHeightForWidth());
@@ -533,8 +599,8 @@ public:
 
         textEdit_7 = new MyTextEdit(horizontalLayout_4);
         textEdit_7->setObjectName("textEdit_7");
-        sizePolicy3.setHeightForWidth(textEdit_7->sizePolicy().hasHeightForWidth());
-        textEdit_7->setSizePolicy(sizePolicy3);
+        sizePolicy4.setHeightForWidth(textEdit_7->sizePolicy().hasHeightForWidth());
+        textEdit_7->setSizePolicy(sizePolicy4);
         textEdit_7->setMinimumSize(QSize(0, 28));
         textEdit_7->setMaximumSize(QSize(16777215, 28));
 
@@ -555,8 +621,8 @@ public:
         verticalLayout_4->setObjectName("verticalLayout_4");
         textEdit_2 = new MyTextEdit(centralwidget);
         textEdit_2->setObjectName("textEdit_2");
-        sizePolicy3.setHeightForWidth(textEdit_2->sizePolicy().hasHeightForWidth());
-        textEdit_2->setSizePolicy(sizePolicy3);
+        sizePolicy4.setHeightForWidth(textEdit_2->sizePolicy().hasHeightForWidth());
+        textEdit_2->setSizePolicy(sizePolicy4);
         textEdit_2->setMinimumSize(QSize(0, 28));
         textEdit_2->setMaximumSize(QSize(16777215, 28));
 
@@ -564,8 +630,8 @@ public:
 
         textEdit_3 = new MyTextEdit(centralwidget);
         textEdit_3->setObjectName("textEdit_3");
-        sizePolicy3.setHeightForWidth(textEdit_3->sizePolicy().hasHeightForWidth());
-        textEdit_3->setSizePolicy(sizePolicy3);
+        sizePolicy4.setHeightForWidth(textEdit_3->sizePolicy().hasHeightForWidth());
+        textEdit_3->setSizePolicy(sizePolicy4);
         textEdit_3->setMinimumSize(QSize(0, 28));
         textEdit_3->setMaximumSize(QSize(16777215, 28));
 
@@ -887,6 +953,14 @@ public:
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", nullptr));
+        prevTerm2->setText(QCoreApplication::translate("MainWindow", "<", nullptr));
+        nextTerm2->setText(QCoreApplication::translate("MainWindow", ">", nullptr));
+        addTerm2->setText(QCoreApplication::translate("MainWindow", "+", nullptr));
+        termCnt2->setText(QCoreApplication::translate("MainWindow", "TextLabel", nullptr));
+        prevTerm1->setText(QCoreApplication::translate("MainWindow", "<", nullptr));
+        nextTerm1->setText(QCoreApplication::translate("MainWindow", ">", nullptr));
+        addTerm1->setText(QCoreApplication::translate("MainWindow", "+", nullptr));
+        termCnt1->setText(QCoreApplication::translate("MainWindow", "TextLabel", nullptr));
         textEdit_2->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

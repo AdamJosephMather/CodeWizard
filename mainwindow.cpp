@@ -226,6 +226,15 @@ QMenu *menuSilly;
 QMenu *menuSubFonts;
 QTreeView *fileTree;
 
+QPushButton *prevTerm1;
+QPushButton *nextTerm1;
+QPushButton *addTerm1;
+QLabel *termCnt1;
+QPushButton *prevTerm2;
+QPushButton *nextTerm2;
+QPushButton *addTerm2;
+QLabel *termCnt2;
+
 customHorizontalScrollArea *fileTabBar;
 QWidget *fileTabBarContent;
 int tabsIndex;
@@ -344,7 +353,9 @@ QAction *useSpeakerAction;
 Myers* diffAlgo;
 
 QString currentVimMode = "i";
-QProcess *activeTerminal;
+QList<QProcess *> activeTerminals;
+QStringList terminalStdOuts;
+int currentTerminalIndex = 0;
 QStringList sentCommands;
 int indexInSentCommands = -1;
 
@@ -364,7 +375,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	qDebug() << "MainWindow";
 
 	ui->setupUi(this);
-
+	
 	// Replace with new splitters
 
 	QWidget *placeholderWidget = ui->horizontalLayout_4;  // Get the widget holding the layout
@@ -385,7 +396,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 				widget->layout()->setSpacing(0);
 				widget->layout()->setContentsMargins(0, 0, 0, 0);
 			}
-		} else if (QLayout *nestedLayout = item->layout()) {
+		}else if (QLayout *nestedLayout = item->layout()) {
 			QWidget *container = new QWidget(splitter);
 			QLayout *containerLayout = nullptr;
 
@@ -515,20 +526,29 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	builtinTerminalTextEdit->setReadOnly(true);
 	terminalInputLineHORZ->setAcceptRichText(false);
 	builtinTerminalTextEditHORZ->setReadOnly(true);
+	
+	builtinTerminalTextEdit->setWordWrapMode(QTextOption::WrapAnywhere);
+	builtinTerminalTextEditHORZ->setWordWrapMode(QTextOption::WrapAnywhere);
 
-	activeTerminal = new QProcess(this);
-	activeTerminal->setProcessChannelMode(QProcess::MergedChannels);
+	terminalStdOuts.push_back("");
+	activeTerminals.push_back(new QProcess(this));
+	
+	activeTerminals[currentTerminalIndex]->setProcessChannelMode(QProcess::MergedChannels);
 
-	connect(activeTerminal, &QProcess::readyReadStandardOutput, this, &MainWindow::handleTerminalStdout);
-	connect(activeTerminal, &QProcess::readyReadStandardError, this, &MainWindow::handleTerminalStdout);
+	connect(activeTerminals[currentTerminalIndex], &QProcess::readyReadStandardOutput, this, [this]{
+		handleTerminalStdout(currentTerminalIndex);
+	});
+	connect(activeTerminals[currentTerminalIndex], &QProcess::readyReadStandardError, this, [this]{
+		handleTerminalStdout(currentTerminalIndex);
+	});
 
 	// Start cmd with a command that will keep the prompt open
 	#ifdef _WIN32
-		activeTerminal->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal.");
+		activeTerminals[currentTerminalIndex]->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1));
 	#else
-		activeTerminal->setEnvironment(QStringList() << "TERM=dumb");
-		activeTerminal->start("bash", QStringList() << "--login" << "-i"); //<< "echo CodeWizard Builtin Terminal.");
-		activeTerminal->write("echo CodeWizard Builtin Terminal.\n");
+		activeTerminals[currentTerminalIndex]->setEnvironment(QStringList() << "TERM=dumb");
+		activeTerminals[currentTerminalIndex]->start("bash", QStringList() << "--login" << "-i"); //<< "echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1));
+		activeTerminals[currentTerminalIndex]->write("echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1)+"\n");
 	#endif
 
 	findBar = ui->textEdit_2;
@@ -580,6 +600,39 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	useFileTree = ui->actionUse_File_Tree;
 	useFileTreeIfFullscreen = ui->actionUse_File_Tree_If_Fullscreen;
 	fileTree = ui->treeView;
+	
+	prevTerm1 = ui->prevTerm1;
+	nextTerm1 = ui->nextTerm1;
+	addTerm1  =  ui->addTerm1;
+	termCnt1  =  ui->termCnt1;
+	prevTerm2 = ui->prevTerm2;
+	nextTerm2 = ui->nextTerm2;
+	addTerm2  =  ui->addTerm2;
+	termCnt2  =  ui->termCnt2;
+	
+	prevTerm1->setFixedWidth(prevTerm1->height());
+	nextTerm1->setFixedWidth(prevTerm1->height());
+	addTerm1->setFixedWidth(prevTerm1->height());
+	prevTerm2->setFixedWidth(prevTerm1->height());
+	nextTerm2->setFixedWidth(prevTerm1->height());
+	addTerm2->setFixedWidth(prevTerm1->height());
+	
+	termCnt1->setText("");
+	termCnt2->setText("");
+	
+	connect(addTerm1, &QPushButton::clicked, this, &MainWindow::addTerminal);
+	connect(prevTerm1, &QPushButton::clicked, this, &MainWindow::prevTerminal);
+	connect(nextTerm1, &QPushButton::clicked, this, &MainWindow::nextTerminal);
+	connect(addTerm2, &QPushButton::clicked, this, &MainWindow::addTerminal);
+	connect(prevTerm2, &QPushButton::clicked, this, &MainWindow::prevTerminal);
+	connect(nextTerm2, &QPushButton::clicked, this, &MainWindow::nextTerminal);
+	
+	if (auto *boxLayout = qobject_cast<QBoxLayout*>(addTerm1->parentWidget()->layout())) {
+		boxLayout->insertStretch(3);
+	}
+	if (auto *boxLayout = qobject_cast<QBoxLayout*>(addTerm2->parentWidget()->layout())) {
+		boxLayout->insertStretch(3);
+	}
 	
 	fileTabBar = ui->scrollArea;
 	fileTabBarContent = ui->scrollAreaWidgetContents;
@@ -1308,8 +1361,7 @@ void MainWindow::moveWidgetsToSplitter(QLayout *layout, QWidget *toWidget) {
 				widget->layout()->setSpacing(0);
 				widget->layout()->setContentsMargins(0, 0, 0, 0);
 			}
-		}
-		else if (QLayout *nestedLayout = item->layout()) {
+		}else if (QLayout *nestedLayout = item->layout()) {
 			// If it's a nested layout, create a new container widget for the layout
 			QWidget *container = new QWidget(toWidget);
 			QLayout *containerLayout = nullptr;
@@ -1397,6 +1449,8 @@ void MainWindow::changeEvent(QEvent *event) {
 }
 
 void MainWindow::pullUpReloadDialogue(QString message){
+	qDebug() << "pullUpReloadDialogue";
+	
 	QMessageBox dialog;
 	dialog.setWindowTitle("Reload");
 	dialog.setText(message);
@@ -1411,18 +1465,87 @@ void MainWindow::pullUpReloadDialogue(QString message){
 	}
 }
 
-void MainWindow::handleTerminalStdout(){
-	QByteArray output = activeTerminal->readAll();
+void MainWindow::addTerminal(){
+	qDebug() << "addTerminal";
+	
+	currentTerminalIndex = activeTerminals.length();
+	
+	termCnt1->setText(QString::number(currentTerminalIndex+1)+"/"+QString::number(activeTerminals.length()+1)+" ");
+	termCnt2->setText(QString::number(currentTerminalIndex+1)+"/"+QString::number(activeTerminals.length()+1)+" ");
+	//add process
+	
+	terminalStdOuts.push_back("");
+	builtinTerminalTextEdit->setPlainText(terminalStdOuts[currentTerminalIndex]);
+	builtinTerminalTextEditHORZ->setPlainText(terminalStdOuts[currentTerminalIndex]);
+	
+	activeTerminals.push_back(new QProcess(this));
+	
+	activeTerminals[currentTerminalIndex]->setProcessChannelMode(QProcess::MergedChannels);
 
+	connect(activeTerminals[currentTerminalIndex], &QProcess::readyReadStandardOutput, this, [this]{
+		handleTerminalStdout(currentTerminalIndex);
+	});
+	connect(activeTerminals[currentTerminalIndex], &QProcess::readyReadStandardError, this, [this]{
+		handleTerminalStdout(currentTerminalIndex);
+	});
+
+	// Start cmd with a command that will keep the prompt open
+	#ifdef _WIN32
+		activeTerminals[currentTerminalIndex]->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1));
+	#else
+		activeTerminals[currentTerminalIndex]->setEnvironment(QStringList() << "TERM=dumb");
+		activeTerminals[currentTerminalIndex]->start("bash", QStringList() << "--login" << "-i"); //<< "echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1));
+		activeTerminals[currentTerminalIndex]->write("echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1)+"\n");
+	#endif
+}
+
+void MainWindow::prevTerminal(){
+	qDebug() << "prevTerminal";
+	
+	if (activeTerminals.length() == 1){return;}
+	
+	currentTerminalIndex --;
+	currentTerminalIndex = currentTerminalIndex%activeTerminals.length();
+	if (currentTerminalIndex < 0){currentTerminalIndex = activeTerminals.length()-1;}
+	
+	builtinTerminalTextEdit->setPlainText(terminalStdOuts[currentTerminalIndex]);
+	builtinTerminalTextEditHORZ->setPlainText(terminalStdOuts[currentTerminalIndex]);
+	
+	termCnt1->setText(QString::number(currentTerminalIndex+1)+"/"+QString::number(activeTerminals.length())+" ");
+	termCnt2->setText(QString::number(currentTerminalIndex+1)+"/"+QString::number(activeTerminals.length())+" ");
+}
+
+void MainWindow::nextTerminal(){
+	qDebug() << "nextTerminal";
+	
+	if (activeTerminals.length() == 1){return;}
+	
+	currentTerminalIndex ++;
+	currentTerminalIndex = currentTerminalIndex%activeTerminals.length();
+	
+	builtinTerminalTextEdit->setPlainText(terminalStdOuts[currentTerminalIndex]);
+	builtinTerminalTextEditHORZ->setPlainText(terminalStdOuts[currentTerminalIndex]);
+	
+	termCnt1->setText(QString::number(currentTerminalIndex+1)+"/"+QString::number(activeTerminals.length())+" ");
+	termCnt2->setText(QString::number(currentTerminalIndex+1)+"/"+QString::number(activeTerminals.length())+" ");
+}
+
+void MainWindow::handleTerminalStdout(int index){
+	QByteArray output = activeTerminals[index]->readAll();
+	
 	QString text = QString::fromLocal8Bit(output);
-
-	builtinTerminalTextEdit->moveCursor(QTextCursor::End);
-	builtinTerminalTextEdit->insertPlainText(text);
-	builtinTerminalTextEdit->verticalScrollBar()->setValue(builtinTerminalTextEdit->verticalScrollBar()->maximum());
-
-	builtinTerminalTextEditHORZ->moveCursor(QTextCursor::End);
-	builtinTerminalTextEditHORZ->insertPlainText(text);
-	builtinTerminalTextEditHORZ->verticalScrollBar()->setValue(builtinTerminalTextEditHORZ->verticalScrollBar()->maximum());
+	
+	terminalStdOuts[index] += text;
+	
+	if (index == currentTerminalIndex){
+		builtinTerminalTextEdit->moveCursor(QTextCursor::End);
+		builtinTerminalTextEdit->insertPlainText(text);
+		builtinTerminalTextEdit->verticalScrollBar()->setValue(builtinTerminalTextEdit->verticalScrollBar()->maximum());
+	
+		builtinTerminalTextEditHORZ->moveCursor(QTextCursor::End);
+		builtinTerminalTextEditHORZ->insertPlainText(text);
+		builtinTerminalTextEditHORZ->verticalScrollBar()->setValue(builtinTerminalTextEditHORZ->verticalScrollBar()->maximum());
+	}
 }
 
 void MainWindow::useVimModesTriggered(){
@@ -3455,6 +3578,13 @@ void MainWindow::updateFonts()
 	if (tabs.length() != 0){
 		fileTabBar->setFixedHeight(tabs[0]->height()-2);
 	}
+	
+	prevTerm1->setFixedWidth(prevTerm1->height());
+	nextTerm1->setFixedWidth(prevTerm1->height());
+	addTerm1->setFixedWidth(prevTerm1->height());
+	prevTerm2->setFixedWidth(prevTerm1->height());
+	nextTerm2->setFixedWidth(prevTerm1->height());
+	addTerm2->setFixedWidth(prevTerm1->height());
 }
 
 void MainWindow::setupCompleter() {
@@ -4622,24 +4752,29 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 	builtinTerminalTextEdit->insertPlainText("\nRequesting process gracefully stop.");
 	builtinTerminalTextEditHORZ->insertPlainText("\nRequesting process gracefully stop.");
 
-	activeTerminal->terminate();
-	if (!activeTerminal->waitForFinished(100)) {
+	activeTerminals[currentTerminalIndex]->terminate();
+	if (!activeTerminals[currentTerminalIndex]->waitForFinished(100)) {
 		builtinTerminalTextEdit->insertPlainText("\nForcing process to terminate.");
 		builtinTerminalTextEditHORZ->insertPlainText("\nForcing process to terminate.");
-		activeTerminal->kill();
-		activeTerminal->waitForFinished();
+		activeTerminals[currentTerminalIndex]->kill();
+		activeTerminals[currentTerminalIndex]->waitForFinished();
 	}
 
-	delete activeTerminal;
+	delete activeTerminals[currentTerminalIndex];
 
-	builtinTerminalTextEdit->insertPlainText("\n\nHard Reset CodeWizard Builtin Terminal\n\n");
-	builtinTerminalTextEditHORZ->insertPlainText("\n\nHard Reset CodeWizard Builtin Terminal\n\n");
+	builtinTerminalTextEdit->insertPlainText("\n\nHard Reset CodeWizard Builtin Terminal." + QString::number(currentTerminalIndex+1)+"\n\n");
+	builtinTerminalTextEditHORZ->insertPlainText("\n\nHard Reset CodeWizard Builtin Terminal" + QString::number(currentTerminalIndex+1)+"\n\n");
 
-	activeTerminal = new QProcess(this);
-	activeTerminal->setProcessChannelMode(QProcess::MergedChannels);
+	activeTerminals[currentTerminalIndex] = new QProcess(this);
 
-	connect(activeTerminal, &QProcess::readyReadStandardOutput, this, &MainWindow::handleTerminalStdout);
-	connect(activeTerminal, &QProcess::readyReadStandardError, this, &MainWindow::handleTerminalStdout);
+	activeTerminals[currentTerminalIndex]->setProcessChannelMode(QProcess::MergedChannels);
+
+	connect(activeTerminals[currentTerminalIndex], &QProcess::readyReadStandardOutput, this, [this]{
+		handleTerminalStdout(currentTerminalIndex);
+	});
+	connect(activeTerminals[currentTerminalIndex], &QProcess::readyReadStandardError, this, [this]{
+		handleTerminalStdout(currentTerminalIndex);
+	});
 
 	QProcess *process;
 
@@ -4767,14 +4902,14 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 		#endif
 	} else {
 		#ifdef _WIN32
-			activeTerminal->start("cmd.exe");
+			activeTerminals[currentTerminalIndex]->start("cmd.exe");
 		#else
-			activeTerminal->setEnvironment(QStringList() << "TERM=dumb");
-			activeTerminal->start("bash", QStringList() << "--login" << "-i"); //<< "echo CodeWizard Builtin Terminal.");
+			activeTerminals[currentTerminalIndex]->setEnvironment(QStringList() << "TERM=dumb");
+			activeTerminals[currentTerminalIndex]->start("bash", QStringList() << "--login" << "-i"); //<< "echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1));
 		#endif
 
 		QString moveD = "cd " + fileDir + "\n" + finalRun + "\n";
-		activeTerminal->write(moveD.toUtf8());
+		activeTerminals[currentTerminalIndex]->write(moveD.toUtf8());
 	}
 }
 
@@ -5095,27 +5230,35 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			QString selectedText = cursor.selectedText();
 
 			if (key_sequence == QKeySequence("Ctrl+C") && selectedText.isEmpty()){
-				activeTerminal->kill();
-				activeTerminal->waitForFinished();
+				#ifdef _WIN32
+					QProcess::startDetached("taskkill", {"/F", "/T", "/PID", QString::number(activeTerminals[currentTerminalIndex]->processId())});
+				#else
+					activeTerminals[currentTerminalIndex]->kill();
+					activeTerminals[currentTerminalIndex]->waitForFinished();
+				#endif
 
-				activeTerminal = new QProcess(this);
-				activeTerminal->setProcessChannelMode(QProcess::MergedChannels);
+				activeTerminals[currentTerminalIndex] = new QProcess(this);
+				activeTerminals[currentTerminalIndex]->setProcessChannelMode(QProcess::MergedChannels);
 
-				connect(activeTerminal, &QProcess::readyReadStandardOutput, this, &MainWindow::handleTerminalStdout);
-				connect(activeTerminal, &QProcess::readyReadStandardError, this, &MainWindow::handleTerminalStdout);
+				connect(activeTerminals[currentTerminalIndex], &QProcess::readyReadStandardOutput, this, [this]{
+					handleTerminalStdout(currentTerminalIndex);
+				});
+				connect(activeTerminals[currentTerminalIndex], &QProcess::readyReadStandardError, this, [this]{
+					handleTerminalStdout(currentTerminalIndex);
+				});
 
 				QFileInfo fileInfo(fileName);
 				QString fileDir = fileInfo.absolutePath();
-				activeTerminal->setWorkingDirectory(fileDir);
+				activeTerminals[currentTerminalIndex]->setWorkingDirectory(fileDir);
 
 				builtinTerminalTextEdit->insertPlainText("\n\n");
 				builtinTerminalTextEditHORZ->insertPlainText("\n\n");
 				#ifdef _WIN32
-					activeTerminal->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal.");
+					activeTerminals[currentTerminalIndex]->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1));
 				#else
-					activeTerminal->setEnvironment(QStringList() << "TERM=dumb");
-					activeTerminal->start("bash", QStringList() << "--login" << "-i"); //<< "echo CodeWizard Builtin Terminal.");
-					activeTerminal->write("echo CodeWizard Builtin Terminal.\n");
+					activeTerminals[currentTerminalIndex]->setEnvironment(QStringList() << "TERM=dumb");
+					activeTerminals[currentTerminalIndex]->start("bash", QStringList() << "--login" << "-i"); //<< "echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1));
+					activeTerminals[currentTerminalIndex]->write("echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1)+"\n");
 				#endif
 			}
 
@@ -5186,7 +5329,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				}
 
 				indexInSentCommands = -1;
-				activeTerminal->write(lineToSend.toUtf8());
+				activeTerminals[currentTerminalIndex]->write(lineToSend.toUtf8());
 				builtinTerminalTextEdit->insertPlainText(lineToSend);
 				builtinTerminalTextEditHORZ->insertPlainText(lineToSend);
 				terminalInputLine->setPlainText("");

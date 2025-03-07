@@ -26,6 +26,9 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void addTerminal();
+	void nextTerminal();
+	void prevTerminal();
 	void useTabsToggled();
 	void addTab(QString name, QString file);
 	void closeTab(int id);
@@ -44,7 +47,7 @@ private slots:
 	void switchTerminalType();
 	int findMatchingBracket(int direction);
 	void handleBracketsOnEnter();
-	void handleTerminalStdout();
+	void handleTerminalStdout(int index);
 	void useBuiltinTerminalTriggered();
 	void on_actionVim_Modes_triggered();
 	void executeNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event);
