@@ -1277,16 +1277,25 @@ void MainWindow::addTab(QString name, QString file){
 
 void MainWindow::tabClicked(int id){
 	qDebug() << "tabClicked - " << id;
-
+	
+	storedLineNumbers[fileName] = textEdit->verticalScrollBar()->value();
+	
 	int loc = -1;
+	int loc2 = -1;
 	for (int i = 0; i < tabs.length(); i++){
 		TabWidget *tabHere = tabs[i];
 		if (tabHere->m_index == id){
 			loc = i;
-			break;
+		}
+		if (tabHere->extraText == fileName){
+			loc2 = i;
 		}
 	}
-
+	
+	if (loc2 != -1){
+		tabs[loc2]->lineNum = textEdit->verticalScrollBar()->value();
+	}
+	
 	if (loc == -1){
 		return;
 	}
@@ -1296,6 +1305,9 @@ void MainWindow::tabClicked(int id){
 	QString filename = tab->extraText;
 	globalArgFileName = filename;
 	on_actionOpen_triggered();
+	
+	qDebug() << loc << loc2 << tabs[loc2]->lineNum;
+	textEdit->verticalScrollBar()->setValue(tab->lineNum);
 }
 
 void MainWindow::updateSplitsWidths(){
@@ -2617,6 +2629,19 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 	isOpeningFile = true;
 
 	storedLineNumbers[fileName] = textEdit->verticalScrollBar()->value();
+	
+	int loc = -1;
+	for (int i = 0; i < tabs.length(); i++){
+		TabWidget *tabHere = tabs[i];
+		if (tabHere->extraText == fileName){
+			loc = i;
+			break;
+		}
+	}
+	
+	if (loc != -1){
+		tabs[loc]->lineNum = textEdit->verticalScrollBar()->value();
+	}
 
 	if (!index.model()->hasChildren(index)) {
 		QString newFile = index.data(QFileSystemModel::FilePathRole).toString();

@@ -16,6 +16,7 @@ public:
 	void stFnt(QFont font);
 	QString extraText = "";
 	bool isUntitled = false;
+	int lineNum;
 
 private:
 	QString m_text;
