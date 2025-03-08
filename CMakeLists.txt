@@ -27,6 +27,18 @@ if(WIN32)
 	find_package(Qt6 REQUIRED COMPONENTS TextToSpeech)
 endif()
 
+include(FetchContent)
+
+# Declare cmark to be fetched
+FetchContent_Declare(
+    cmark
+    GIT_REPOSITORY https://github.com/commonmark/cmark.git
+    GIT_TAG        0.31.0 # Use a specific release for stability (check latest on GitHub)
+)
+
+# Make the fetched content available
+FetchContent_MakeAvailable(cmark)
+
 find_package(Qt6 REQUIRED COMPONENTS Core Concurrent)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
@@ -243,6 +255,8 @@ endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter/lib/include
+        ${cmark_SOURCE_DIR}/src
+        ${cmark_BINARY_DIR}/src
 )
 
 # add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers)
@@ -272,6 +286,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	tree-sitter-go
 	tree-sitter-c
 	tree-sitter-c-sharp
+        cmark
 )
 
 target_link_libraries(CodeWizard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)

@@ -1,0 +1,3 @@
+C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/cmark-subbuild/CMakeFiles/cmark-populate.dir
+C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/cmark-subbuild/CMakeFiles/edit_cache.dir
+C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/cmark-subbuild/CMakeFiles/rebuild_cache.dir

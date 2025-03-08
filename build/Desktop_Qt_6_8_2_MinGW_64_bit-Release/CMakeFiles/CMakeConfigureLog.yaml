@@ -705,3 +705,44 @@ events:
         
       exitCode: 0
 ...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Qt/Tools/CMake_64/share/cmake-3.30/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Qt/Tools/CMake_64/share/cmake-3.30/Modules/CheckSourceCompiles.cmake:77 (cmake_check_source_compiles)"
+      - "C:/Qt/Tools/CMake_64/share/cmake-3.30/Modules/GenerateExportHeader.cmake:206 (check_source_compiles)"
+      - "C:/Qt/Tools/CMake_64/share/cmake-3.30/Modules/GenerateExportHeader.cmake:263 (_check_cxx_compiler_attribute)"
+      - "C:/Qt/Tools/CMake_64/share/cmake-3.30/Modules/GenerateExportHeader.cmake:420 (_test_compiler_has_deprecated)"
+      - "build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/cmark-src/src/CMakeLists.txt:48 (generate_export_header)"
+    checks:
+      - "Performing Test COMPILER_HAS_DEPRECATED_ATTR"
+    directories:
+      source: "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/CMakeFiles/CMakeScratch/TryCompile-n2j6s7"
+      binary: "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/CMakeFiles/CMakeScratch/TryCompile-n2j6s7"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Qt/6.8.2/mingw_64/lib/cmake/Qt6;C:/Qt/6.8.2/mingw_64/lib/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;C:/Qt/6.8.2/mingw_64/lib/cmake/Qt6/3rdparty/kwin;C:/Qt/6.8.2/mingw_64/lib/cmake/Qt6;C:/Qt/6.8.2/mingw_64/lib/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;C:/Qt/6.8.2/mingw_64/lib/cmake/Qt6/3rdparty/kwin;C:/Qt/6.8.2/mingw_64/lib/cmake/Qt6;C:/Qt/6.8.2/mingw_64/lib/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;C:/Qt/6.8.2/mingw_64/lib/cmake/Qt6/3rdparty/kwin"
+    buildResult:
+      variable: "COMPILER_HAS_DEPRECATED_ATTR"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/CMakeFiles/CMakeScratch/TryCompile-n2j6s7'
+        
+        Run Build Command(s): C:/Users/adamj/Documents/pathVisible/ninja.exe -v cmTC_3baf8
+        [1/2] C:\\Qt\\Tools\\mingw1310_64\\bin\\g++.exe -DCOMPILER_HAS_DEPRECATED_ATTR  -std=gnu++17 -o CMakeFiles/cmTC_3baf8.dir/src.cxx.obj -c C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/CMakeFiles/CMakeScratch/TryCompile-n2j6s7/src.cxx
+        C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/CMakeFiles/CMakeScratch/TryCompile-n2j6s7/src.cxx: In function 'int main()':
+        C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/CMakeFiles/CMakeScratch/TryCompile-n2j6s7/src.cxx:2:33: warning: 'int somefunc()' is deprecated [-Wdeprecated-declarations]
+            2 |     int main() { return somefunc();}
+              |                         ~~~~~~~~^~
+        C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/CMakeFiles/CMakeScratch/TryCompile-n2j6s7/src.cxx:1:37: note: declared here
+            1 | __attribute__((__deprecated__)) int somefunc() { return 0; }
+              |                                     ^~~~~~~~
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Qt\\Tools\\mingw1310_64\\bin\\g++.exe   CMakeFiles/cmTC_3baf8.dir/src.cxx.obj -o cmTC_3baf8.exe -Wl,--out-implib,libcmTC_3baf8.dll.a -Wl,--major-image-version,0,--minor-image-version,0  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 && cd ."
+        
+      exitCode: 0
+...

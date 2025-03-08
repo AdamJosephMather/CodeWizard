@@ -14,6 +14,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
@@ -23,6 +24,7 @@
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include "C:/Users/adamj/Documents/QtProjects/CodeWizard/customhorizontalscrollarea.h"
 #include "C:/Users/adamj/Documents/QtProjects/CodeWizard/mytextedit.h"
 
 QT_BEGIN_NAMESPACE
@@ -133,9 +135,13 @@ public:
     QAction *actionPrefer_Horizontal_Terminal;
     QAction *actionSave_All_Settings;
     QAction *actionLoad_All_Settings;
+    QAction *actionUse_File_Tabs;
+    QAction *actionRender_As_Markdown;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
+    customHorizontalScrollArea *scrollArea;
+    QWidget *scrollAreaWidgetContents;
     QWidget *horizontalLayout_4;
     QHBoxLayout *horizontalLayout_3;
     QTreeView *treeView;
@@ -145,9 +151,19 @@ public:
     MyTextEdit *textEdit_4;
     MyTextEdit *textEdit;
     QVBoxLayout *verticalLayout_8;
+    QHBoxLayout *horizontalLayout_6;
+    QPushButton *prevTerm2;
+    QPushButton *nextTerm2;
+    QPushButton *addTerm2;
+    QLabel *termCnt2;
     QTextEdit *textEdit_8;
     MyTextEdit *textEdit_9;
     QVBoxLayout *verticalLayout_5;
+    QHBoxLayout *horizontalLayout_5;
+    QPushButton *prevTerm1;
+    QPushButton *nextTerm1;
+    QPushButton *addTerm1;
+    QLabel *termCnt1;
     QTextEdit *textEdit_6;
     MyTextEdit *textEdit_7;
     QHBoxLayout *findLayout;
@@ -166,6 +182,7 @@ public:
     QMenu *menuOp1;
     QMenu *menuOpen_Recent;
     QMenu *menuRun;
+    QMenu *menuRender;
     QMenu *menuEdit;
     QMenu *menuFonts;
     QMenu *menuSilly;
@@ -409,6 +426,11 @@ public:
         actionSave_All_Settings->setObjectName("actionSave_All_Settings");
         actionLoad_All_Settings = new QAction(MainWindow);
         actionLoad_All_Settings->setObjectName("actionLoad_All_Settings");
+        actionUse_File_Tabs = new QAction(MainWindow);
+        actionUse_File_Tabs->setObjectName("actionUse_File_Tabs");
+        actionUse_File_Tabs->setCheckable(true);
+        actionRender_As_Markdown = new QAction(MainWindow);
+        actionRender_As_Markdown->setObjectName("actionRender_As_Markdown");
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         QSizePolicy sizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::Minimum);
@@ -423,17 +445,34 @@ public:
         verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(2);
         verticalLayout->setObjectName("verticalLayout");
+        scrollArea = new customHorizontalScrollArea(centralwidget);
+        scrollArea->setObjectName("scrollArea");
+        QSizePolicy sizePolicy1(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(scrollArea->sizePolicy().hasHeightForWidth());
+        scrollArea->setSizePolicy(sizePolicy1);
+        scrollArea->setWidgetResizable(true);
+        scrollAreaWidgetContents = new QWidget();
+        scrollAreaWidgetContents->setObjectName("scrollAreaWidgetContents");
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1130, 49));
+        sizePolicy1.setHeightForWidth(scrollAreaWidgetContents->sizePolicy().hasHeightForWidth());
+        scrollAreaWidgetContents->setSizePolicy(sizePolicy1);
+        scrollArea->setWidget(scrollAreaWidgetContents);
+
+        verticalLayout->addWidget(scrollArea);
+
         horizontalLayout_4 = new QWidget(centralwidget);
         horizontalLayout_4->setObjectName("horizontalLayout_4");
         horizontalLayout_3 = new QHBoxLayout(horizontalLayout_4);
         horizontalLayout_3->setObjectName("horizontalLayout_3");
         treeView = new QTreeView(horizontalLayout_4);
         treeView->setObjectName("treeView");
-        QSizePolicy sizePolicy1(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(treeView->sizePolicy().hasHeightForWidth());
-        treeView->setSizePolicy(sizePolicy1);
+        QSizePolicy sizePolicy2(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(treeView->sizePolicy().hasHeightForWidth());
+        treeView->setSizePolicy(sizePolicy2);
         treeView->setMinimumSize(QSize(0, 0));
         treeView->setMaximumSize(QSize(16777215, 16777215));
         treeView->setDragEnabled(false);
@@ -448,8 +487,8 @@ public:
         horizontalLayout->setObjectName("horizontalLayout");
         textEdit_4 = new MyTextEdit(verticalLayout_7);
         textEdit_4->setObjectName("textEdit_4");
-        sizePolicy1.setHeightForWidth(textEdit_4->sizePolicy().hasHeightForWidth());
-        textEdit_4->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(textEdit_4->sizePolicy().hasHeightForWidth());
+        textEdit_4->setSizePolicy(sizePolicy2);
         textEdit_4->setMinimumSize(QSize(50, 0));
         textEdit_4->setMaximumSize(QSize(50, 16777215));
 
@@ -469,10 +508,40 @@ public:
 
         verticalLayout_8 = new QVBoxLayout();
         verticalLayout_8->setObjectName("verticalLayout_8");
+        horizontalLayout_6 = new QHBoxLayout();
+        horizontalLayout_6->setObjectName("horizontalLayout_6");
+        prevTerm2 = new QPushButton(verticalLayout_7);
+        prevTerm2->setObjectName("prevTerm2");
+
+        horizontalLayout_6->addWidget(prevTerm2);
+
+        nextTerm2 = new QPushButton(verticalLayout_7);
+        nextTerm2->setObjectName("nextTerm2");
+
+        horizontalLayout_6->addWidget(nextTerm2);
+
+        addTerm2 = new QPushButton(verticalLayout_7);
+        addTerm2->setObjectName("addTerm2");
+        QSizePolicy sizePolicy3(QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Fixed);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(addTerm2->sizePolicy().hasHeightForWidth());
+        addTerm2->setSizePolicy(sizePolicy3);
+
+        horizontalLayout_6->addWidget(addTerm2);
+
+        termCnt2 = new QLabel(verticalLayout_7);
+        termCnt2->setObjectName("termCnt2");
+
+        horizontalLayout_6->addWidget(termCnt2);
+
+
+        verticalLayout_8->addLayout(horizontalLayout_6);
+
         textEdit_8 = new QTextEdit(verticalLayout_7);
         textEdit_8->setObjectName("textEdit_8");
-        sizePolicy1.setHeightForWidth(textEdit_8->sizePolicy().hasHeightForWidth());
-        textEdit_8->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(textEdit_8->sizePolicy().hasHeightForWidth());
+        textEdit_8->setSizePolicy(sizePolicy2);
         textEdit_8->setMinimumSize(QSize(0, 0));
         textEdit_8->setMaximumSize(QSize(16777215, 16777215));
 
@@ -480,11 +549,11 @@ public:
 
         textEdit_9 = new MyTextEdit(verticalLayout_7);
         textEdit_9->setObjectName("textEdit_9");
-        QSizePolicy sizePolicy2(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(textEdit_9->sizePolicy().hasHeightForWidth());
-        textEdit_9->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy4(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Fixed);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(textEdit_9->sizePolicy().hasHeightForWidth());
+        textEdit_9->setSizePolicy(sizePolicy4);
         textEdit_9->setMinimumSize(QSize(0, 28));
         textEdit_9->setMaximumSize(QSize(16777215, 28));
 
@@ -498,10 +567,35 @@ public:
 
         verticalLayout_5 = new QVBoxLayout();
         verticalLayout_5->setObjectName("verticalLayout_5");
+        horizontalLayout_5 = new QHBoxLayout();
+        horizontalLayout_5->setObjectName("horizontalLayout_5");
+        prevTerm1 = new QPushButton(horizontalLayout_4);
+        prevTerm1->setObjectName("prevTerm1");
+
+        horizontalLayout_5->addWidget(prevTerm1);
+
+        nextTerm1 = new QPushButton(horizontalLayout_4);
+        nextTerm1->setObjectName("nextTerm1");
+
+        horizontalLayout_5->addWidget(nextTerm1);
+
+        addTerm1 = new QPushButton(horizontalLayout_4);
+        addTerm1->setObjectName("addTerm1");
+
+        horizontalLayout_5->addWidget(addTerm1);
+
+        termCnt1 = new QLabel(horizontalLayout_4);
+        termCnt1->setObjectName("termCnt1");
+
+        horizontalLayout_5->addWidget(termCnt1);
+
+
+        verticalLayout_5->addLayout(horizontalLayout_5);
+
         textEdit_6 = new QTextEdit(horizontalLayout_4);
         textEdit_6->setObjectName("textEdit_6");
-        sizePolicy1.setHeightForWidth(textEdit_6->sizePolicy().hasHeightForWidth());
-        textEdit_6->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(textEdit_6->sizePolicy().hasHeightForWidth());
+        textEdit_6->setSizePolicy(sizePolicy2);
         textEdit_6->setMinimumSize(QSize(0, 0));
         textEdit_6->setMaximumSize(QSize(16777215, 16777215));
 
@@ -509,8 +603,8 @@ public:
 
         textEdit_7 = new MyTextEdit(horizontalLayout_4);
         textEdit_7->setObjectName("textEdit_7");
-        sizePolicy2.setHeightForWidth(textEdit_7->sizePolicy().hasHeightForWidth());
-        textEdit_7->setSizePolicy(sizePolicy2);
+        sizePolicy4.setHeightForWidth(textEdit_7->sizePolicy().hasHeightForWidth());
+        textEdit_7->setSizePolicy(sizePolicy4);
         textEdit_7->setMinimumSize(QSize(0, 28));
         textEdit_7->setMaximumSize(QSize(16777215, 28));
 
@@ -531,8 +625,8 @@ public:
         verticalLayout_4->setObjectName("verticalLayout_4");
         textEdit_2 = new MyTextEdit(centralwidget);
         textEdit_2->setObjectName("textEdit_2");
-        sizePolicy2.setHeightForWidth(textEdit_2->sizePolicy().hasHeightForWidth());
-        textEdit_2->setSizePolicy(sizePolicy2);
+        sizePolicy4.setHeightForWidth(textEdit_2->sizePolicy().hasHeightForWidth());
+        textEdit_2->setSizePolicy(sizePolicy4);
         textEdit_2->setMinimumSize(QSize(0, 28));
         textEdit_2->setMaximumSize(QSize(16777215, 28));
 
@@ -540,8 +634,8 @@ public:
 
         textEdit_3 = new MyTextEdit(centralwidget);
         textEdit_3->setObjectName("textEdit_3");
-        sizePolicy2.setHeightForWidth(textEdit_3->sizePolicy().hasHeightForWidth());
-        textEdit_3->setSizePolicy(sizePolicy2);
+        sizePolicy4.setHeightForWidth(textEdit_3->sizePolicy().hasHeightForWidth());
+        textEdit_3->setSizePolicy(sizePolicy4);
         textEdit_3->setMinimumSize(QSize(0, 28));
         textEdit_3->setMaximumSize(QSize(16777215, 28));
 
@@ -600,15 +694,17 @@ public:
         MainWindow->setStatusBar(statusbar);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName("menuBar");
-        menuBar->setGeometry(QRect(0, 0, 1134, 21));
-        sizePolicy1.setHeightForWidth(menuBar->sizePolicy().hasHeightForWidth());
-        menuBar->setSizePolicy(sizePolicy1);
+        menuBar->setGeometry(QRect(0, 0, 1134, 17));
+        sizePolicy2.setHeightForWidth(menuBar->sizePolicy().hasHeightForWidth());
+        menuBar->setSizePolicy(sizePolicy2);
         menuOp1 = new QMenu(menuBar);
         menuOp1->setObjectName("menuOp1");
         menuOpen_Recent = new QMenu(menuOp1);
         menuOpen_Recent->setObjectName("menuOpen_Recent");
         menuRun = new QMenu(menuBar);
         menuRun->setObjectName("menuRun");
+        menuRender = new QMenu(menuRun);
+        menuRender->setObjectName("menuRender");
         menuEdit = new QMenu(menuBar);
         menuEdit->setObjectName("menuEdit");
         menuFonts = new QMenu(menuEdit);
@@ -655,6 +751,8 @@ public:
         menuOp1->addAction(actionLoad_All_Settings);
         menuOpen_Recent->addAction(actionOp1);
         menuRun->addAction(actionRun_Module_F5);
+        menuRun->addAction(menuRender->menuAction());
+        menuRender->addAction(actionRender_As_Markdown);
         menuEdit->addSeparator();
         menuEdit->addAction(actionIncrement_Ctrl);
         menuEdit->addAction(actionDe_Increment_Ctrl);
@@ -675,6 +773,7 @@ public:
         menuEdit->addSeparator();
         menuEdit->addAction(actionUse_Vim_Modes);
         menuEdit->addAction(actionAuto_Add_Brackets);
+        menuEdit->addAction(actionUse_File_Tabs);
         menuFonts->addAction(actionCourier_New_2);
         menuFonts->addAction(actionCourier_Prime_2);
         menuFonts->addAction(actionDroidSansMono_2);
@@ -853,6 +952,8 @@ public:
         actionPrefer_Horizontal_Terminal->setText(QCoreApplication::translate("MainWindow", "Prefer Horizontal Terminal", nullptr));
         actionSave_All_Settings->setText(QCoreApplication::translate("MainWindow", "Save All Settings", nullptr));
         actionLoad_All_Settings->setText(QCoreApplication::translate("MainWindow", "Load All Settings", nullptr));
+        actionUse_File_Tabs->setText(QCoreApplication::translate("MainWindow", "Use File Tabs", nullptr));
+        actionRender_As_Markdown->setText(QCoreApplication::translate("MainWindow", "Render As Markdown", nullptr));
         textEdit_4->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -861,6 +962,14 @@ public:
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", nullptr));
+        prevTerm2->setText(QCoreApplication::translate("MainWindow", "<", nullptr));
+        nextTerm2->setText(QCoreApplication::translate("MainWindow", ">", nullptr));
+        addTerm2->setText(QCoreApplication::translate("MainWindow", "+", nullptr));
+        termCnt2->setText(QCoreApplication::translate("MainWindow", "TextLabel", nullptr));
+        prevTerm1->setText(QCoreApplication::translate("MainWindow", "<", nullptr));
+        nextTerm1->setText(QCoreApplication::translate("MainWindow", ">", nullptr));
+        addTerm1->setText(QCoreApplication::translate("MainWindow", "+", nullptr));
+        termCnt1->setText(QCoreApplication::translate("MainWindow", "TextLabel", nullptr));
         textEdit_2->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -876,6 +985,7 @@ public:
         menuOp1->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));
         menuOpen_Recent->setTitle(QCoreApplication::translate("MainWindow", "Open Recent", nullptr));
         menuRun->setTitle(QCoreApplication::translate("MainWindow", "Run", nullptr));
+        menuRender->setTitle(QCoreApplication::translate("MainWindow", "Render", nullptr));
         menuEdit->setTitle(QCoreApplication::translate("MainWindow", "Edit", nullptr));
         menuFonts->setTitle(QCoreApplication::translate("MainWindow", "Fonts", nullptr));
         menuSilly->setTitle(QCoreApplication::translate("MainWindow", "Silly", nullptr));

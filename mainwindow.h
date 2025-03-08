@@ -26,6 +26,8 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void openMenuWithHTML(QString name, QString html);
+	void on_actionRender_As_Markdown_triggered();
 	void addTerminal();
 	void nextTerminal();
 	void prevTerminal();

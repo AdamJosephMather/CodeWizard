@@ -24,6 +24,7 @@
 #include <QRegularExpression>
 #include <tree_sitter/api.h>
 #include "syntaxhighlighter.h"
+#include <cmark.h>
 
 #ifdef _WIN32
 	#include <QTextToSpeech>
@@ -52,7 +53,7 @@ extern "C" {
 	TSLanguage* tree_sitter_go(void);
 }
 
-QString versionNumber = "9.0.0";
+QString versionNumber = "9.0.1";
 
 QList<QLineEdit*> hexColorsList;
 
@@ -1189,6 +1190,18 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	QTimer::singleShot(50, this, &MainWindow::updateSplitsWidths);
 
 	fileTabBar->hide();
+}
+
+void MainWindow::on_actionRender_As_Markdown_triggered(){
+	qDebug() << "actionRender_As_Markdown_triggered";
+	
+	QByteArray markdownBytes = textEdit->toPlainText().toUtf8();
+	const char* markdownCStr = markdownBytes.constData();
+	char* htmlCStr = cmark_markdown_to_html(markdownCStr, markdownBytes.length(), 0);
+	QString html = QString::fromUtf8(htmlCStr);
+	free(htmlCStr);
+	
+	openMenuWithHTML("Markdown", html);
 }
 
 void MainWindow::useTabsToggled(){
@@ -3394,7 +3407,7 @@ QString MainWindow::plaintextToHtml(QString plaintext) {
 	return "<div style=\"white-space: pre;\">"+html+"</div>";
 }
 
-QString MainWindow::markdownToHtml(QString markdown) {
+QString MainWindow::markdownToHtml(QString markdown) { // we implement our own just for the hoverbox because it breaks less often
 	qDebug() << "markdownToHtml";
 
 	QString html = markdown;
@@ -7810,6 +7823,29 @@ void MainWindow::on_actionKeybindings_triggered(){
   Ctrl+, ------- Jumps to left corresponding bracket\n\
   Ctrl+. ------- Jumps to right corresponding bracket\n\
   Crtl+/ ------- Toggle Comment");
+}
+
+void MainWindow::openMenuWithHTML(QString name, QString html) {
+	qDebug() << "openMenuWithHTML";
+
+	// Create a simple help dialog
+	QDialog *dialog = new QDialog(this);
+	dialog->setWindowTitle(name);
+
+	dialog->resize(700, 500); // seems to resize to the apropriate size given the text or something - it's the label that causes this I think
+
+	QTextBrowser *widgt = new QTextBrowser(dialog);
+	//widgt->setFont(textEdit->font());
+	//widgt->setTextInteractionFlags(Qt::TextSelectableByMouse);
+	widgt->setHtml(html);
+	
+	QVBoxLayout *layout = new QVBoxLayout(dialog);
+	layout->addWidget(widgt);
+
+	dialog->setLayout(layout);
+	dialog->move(QPoint(50, 50));
+
+	dialog->exec();
 }
 
 void MainWindow::openHelpMenu(QString text) {

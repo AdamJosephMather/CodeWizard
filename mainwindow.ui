@@ -58,7 +58,7 @@
            <x>0</x>
            <y>0</y>
            <width>1130</width>
-           <height>68</height>
+           <height>49</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -459,7 +459,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>0</x>
      <y>0</y>
      <width>1134</width>
-     <height>21</height>
+     <height>17</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -493,7 +493,14 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <property name="title">
      <string>Run</string>
     </property>
+    <widget class="QMenu" name="menuRender">
+     <property name="title">
+      <string>Render</string>
+     </property>
+     <addaction name="actionRender_As_Markdown"/>
+    </widget>
     <addaction name="actionRun_Module_F5"/>
+    <addaction name="menuRender"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -1229,6 +1236,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </property>
    <property name="text">
     <string>Use File Tabs</string>
+   </property>
+  </action>
+  <action name="actionRender_As_Markdown">
+   <property name="text">
+    <string>Render As Markdown</string>
    </property>
   </action>
  </widget>

@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "_deps/cmark-build/testdir",
+		"source" : "build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/cmark-src/test"
+	}
+}
