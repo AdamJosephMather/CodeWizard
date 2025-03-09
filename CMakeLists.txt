@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 project(CodeWizard VERSION 0.1 LANGUAGES C CXX)
 
-set(BUILD_SHARED_LIBS ON)
+set(BUILD_SHARED_LIBS OFF)
 
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 #set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -36,8 +36,6 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/commonmark/cmark.git
     GIT_TAG        0.31.0 # Use a specific release for stability (check latest on GitHub)
 )
-
-# Make the fetched content available
 FetchContent_MakeAvailable(cmark)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Concurrent)
@@ -242,8 +240,8 @@ endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter/lib/include
-        ${cmark_SOURCE_DIR}/src
-        ${cmark_BINARY_DIR}/src
+        #${cmark_SOURCE_DIR}/src
+        #${cmark_BINARY_DIR}/src
 )
 
 # add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers)
