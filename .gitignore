@@ -1,0 +1,5 @@
+CMakeLists.txt.user
+CMakeLists.txt.user.*
+/build/*MSVC*/
+/build/*MinGW*/
+/build/CodeWizard/
