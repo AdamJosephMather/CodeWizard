@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1134</width>
+    <width>1229</width>
     <height>786</height>
    </rect>
   </property>
@@ -57,7 +57,7 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>1130</width>
+           <width>1225</width>
            <height>49</height>
           </rect>
          </property>
@@ -105,6 +105,9 @@
              <layout class="QHBoxLayout" name="horizontalLayout">
               <item>
                <widget class="MyTextEdit" name="textEdit_4">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                   <horstretch>0</horstretch>
@@ -500,7 +503,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1134</width>
+     <width>1229</width>
      <height>17</height>
     </rect>
    </property>

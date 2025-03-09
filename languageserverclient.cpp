@@ -168,7 +168,37 @@ void LanguageServerClient::initialize(const QString &rootUri)
 	};
 
 	sendMessage(initializedMessage);
+	
+	/*
+	{
+  jsonrpc = "2.0",
+  method = "workspace/didChangeConfiguration",
+  params = {
+	settings = {
+	  python = {
+		analysis = {
+		  autoSearchPaths = true,
+		  diagnosticMode = "openFilesOnly",
+		  useLibraryCodeForTypes = true
+		}
+	  }
+	}
+  }}
+*/
+	QJsonObject params2 {
+		{"settings", QJsonObject {
+			{"python", QJsonObject()}
+		}}
+	};
+	
+	QJsonObject workspaceChanged {
+		{"jsonrpc", "2.0"},
+		{"method", "workspace/didChangeConfiguration"},
+		{"params", params2}
+	};
 
+	sendMessage(workspaceChanged);
+	
 	isInitialized = true;
 }
 
@@ -702,6 +732,7 @@ QJsonObject LanguageServerClient::readMessage() // How do I put this? I'm a god.
 	int bytesAvail = serverProcess.bytesAvailable();
 	if (bytesAvail != 0){
 		QByteArray line = serverProcess.read(bytesAvail);
+		qDebug() << line;
 		currentExecution += line;
 	}
 
