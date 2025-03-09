@@ -708,7 +708,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	textEdit->setWordWrapMode(QTextOption::NoWrap);
 	textEdit->useMultiCursors = true;
 	textDocument = textEdit->document();
-
+	
 	QFont monacoFont("Monaco");
 	textEdit->setFont(monacoFont);
 
@@ -798,7 +798,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	pythonLang.multiLineCommentsStart = QStringList();
 	pythonLang.multiLineCommentsEnd = QStringList();
 	pythonLang.openIndents = QStringList() << ":";
-	pythonLang.closeIndentsWords = QStringList() << "break" << "return" << "continue";
+	pythonLang.closeIndentsWords = QStringList() << "break" << "return" << "continue" << "pass";
 	pythonLang.defWordList = defWordListPython;
 	pythonLang.fileExtensions = QStringList() << ".py" << ".pyw";
 
@@ -1014,6 +1014,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	setupSyntaxTreeOnOpen("");
 
 	lineNumberTextEdit->setReadOnly(true);
+	lineNumberTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
 	lineNumberTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	lineNumberTextEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn); // So that it can't get out of sync w/ main textedit
 	lineNumberTextEdit->setAlignment(Qt::AlignRight);
