@@ -14,13 +14,14 @@ CodeWizard is a custom Code Editor / IDE designed by Adam Mather. The main point
 <img width="1128" alt="Screenshot-4" src="https://github.com/user-attachments/assets/4e3abc11-1c3c-4216-8875-e71f5147f0b9" />
 <img width="1128" alt="Screenshot-5" src="https://github.com/user-attachments/assets/d0d5fa64-ffdb-4e10-ab48-3714da3e1601" />
 <img width="1128" alt="Screenshot-6" src="https://github.com/user-attachments/assets/b5ffcfc1-9ca9-4d8e-84a6-042b40d942c5" />
+<img width="1128" alt="RickRoll" src="https://github.com/user-attachments/assets/58d8bfb3-7660-49c5-aa1c-18aecf26c190" />
 
 These screenshots show a wide variety of features in CodeWizard. Including the builtin terminal, filetree, comparison feature, syntax colors, multiple cursors, and bottom edit bar.
 
 ## Why use CodeWizard?
 
 CodeWizard offers a couple of major improvements on the existing editors:  
-1. System resource usage. CodeWizard clocks in at 30 MB of RAM usage on my machine. Compare that to VSCode which consumes upwards of 600 MB of RAM when opened.  
+1. System resource usage. CodeWizard clocks in at ~~30~~ 150 MB of RAM usage on my machine. (increased due to new built in web view) Compare that to VSCode which consumes upwards of 600 MB of RAM when opened.  
 2. Simplicity. CodeWizard is ideal for people used to and or wanting the IDLE like experience without excess bloat. Of course it does support the more complicated features like LSPs and whatnot, but it's an optional addon.  
 3. AI. CodeWizard can connect to Groq AI with an API key provided by the user for code generation. (this will burn through credits, particularly on larger files)  
 4. Fun features. For example, CodeWizard will let you select an image to theme it off of. This themeing will apply to the syntax colors it uses. More info in the Syntax Highlighting section.
