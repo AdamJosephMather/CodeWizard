@@ -1,2 +1,0 @@
-/bin/ar qc libtree-sitter-rust.a "CMakeFiles/tree-sitter-rust.dir/tree-sitter-rust_autogen/mocs_compilation.cpp.o"
-/bin/ranlib libtree-sitter-rust.a

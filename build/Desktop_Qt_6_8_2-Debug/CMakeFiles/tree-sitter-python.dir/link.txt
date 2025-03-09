@@ -1,2 +1,0 @@
-/bin/ar qc libtree-sitter-python.a "CMakeFiles/tree-sitter-python.dir/tree-sitter-python_autogen/mocs_compilation.cpp.o"
-/bin/ranlib libtree-sitter-python.a

@@ -1,2 +1,0 @@
-/bin/ar qc libtree-sitter.a "CMakeFiles/tree-sitter.dir/tree-sitter_autogen/mocs_compilation.cpp.o"
-/bin/ranlib libtree-sitter.a

@@ -1,2 +1,0 @@
-/bin/ar qc libtree-sitter-python.a "CMakeFiles/tree-sitter-python.dir/tree-sitter-python_autogen/mocs_compilation.cpp.o" "CMakeFiles/tree-sitter-python.dir/extern/tree-sitter-parsers/tree-sitter-python/src/parser.c.o" "CMakeFiles/tree-sitter-python.dir/extern/tree-sitter-parsers/tree-sitter-python/src/scanner.c.o"
-/bin/ranlib libtree-sitter-python.a

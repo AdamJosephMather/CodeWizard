@@ -1,2 +1,0 @@
-/bin/ar qc libtree-sitter-glsl.a "CMakeFiles/tree-sitter-glsl.dir/tree-sitter-glsl_autogen/mocs_compilation.cpp.o" "CMakeFiles/tree-sitter-glsl.dir/extern/tree-sitter-parsers/tree-sitter-glsl/src/parser.c.o"
-/bin/ranlib libtree-sitter-glsl.a
