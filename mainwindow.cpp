@@ -7923,7 +7923,7 @@ void MainWindow::on_actionGit_Integration_triggered(){
 void MainWindow::on_actionMultiple_Cursors_triggered(){
 	qDebug() << "on_actionMultiple_Cursors_triggered";
 
-	openHelpMenu("CodeWizard now has multiple cursor functionality.\n\nUse Alt+Clicking or Alt+(Up/Down) Arrows to instantiate new cursors. When you're done with them just press escape.");
+	openHelpMenu("CodeWizard now has multiple cursor functionality.\n\nUse Alt+Clicking or Alt+(Up/Down) Arrow to instantiate new cursors. When you're done with them just press escape.");
 }
 
 void MainWindow::on_actionKeybindings_triggered(){
@@ -7931,6 +7931,7 @@ void MainWindow::on_actionKeybindings_triggered(){
 
 	openHelpMenu("Keybindings:\n\
   \n\
+  Ctrl+K ------- Toggle web view\n\
   Ctrl+B ------- Toggle filetree\n\
   Ctrl+T ------- Toggle builtin terminal\n\
   Ctrl+S ------- Save file\n\
