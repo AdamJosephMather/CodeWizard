@@ -17,19 +17,21 @@
 #include <QStringListModel>
 #include <QListWidget>
 #include <QOperatingSystemVersion>
-#include "language.h"
-#include "languageserverclient.h"
+#include <QWebEngineView>
 #include <QtWidgets>
 #include <QTextCursor>
 #include <QRegularExpression>
+
 #include <tree_sitter/api.h>
-#include "syntaxhighlighter.h"
 #include <cmark.h>
 
 #ifdef _WIN32
 	#include <QTextToSpeech>
 #endif
 
+#include "syntaxhighlighter.h"
+#include "language.h"
+#include "languageserverclient.h"
 #include "recordinglight.h"
 #include "groqai.h"
 #include "myers.h"
@@ -250,6 +252,8 @@ QAction *recordMacroButton;
 QAction *endRecordMacroButton;
 QAction *replayMacroButton;
 
+QAction *useWebView;
+
 QAction *useFileTree;
 QAction *useFileTreeIfFullscreen;
 QFileSystemModel *fileModel;
@@ -370,6 +374,12 @@ QSplitter *splitter;
 QSplitter *splitter2;
 
 double splitWidths[3];
+
+QWebEngineView *webView;
+QPushButton *reloadButton;
+QPushButton *nextWebButton;
+QPushButton *prevWebButton;
+QLineEdit *urlBar;
 
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -510,6 +520,12 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	groq = new GroqAI(this);
 	groq->setModel("llama-3.3-70b-versatile");
 
+	webView = ui->webView;
+	reloadButton = ui->reloadButton;
+	nextWebButton = ui->nextWeb;
+	prevWebButton = ui->prevWeb;
+	urlBar = ui->urlBar;
+
 	findButton = ui->pushButton_4;
 	nextButton = ui->pushButton_3;
 	replaceButton = ui->pushButton_2;
@@ -598,6 +614,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	useTabs = ui->actionUse_File_Tabs;
 
+	useWebView = ui->actionUse_Web_View_Crtl_K;
+
 	useFileTree = ui->actionUse_File_Tree;
 	useFileTreeIfFullscreen = ui->actionUse_File_Tree_If_Fullscreen;
 	fileTree = ui->treeView;
@@ -617,6 +635,10 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	prevTerm2->setFixedWidth(prevTerm1->height());
 	nextTerm2->setFixedWidth(prevTerm1->height());
 	addTerm2->setFixedWidth(prevTerm1->height());
+	
+	nextWebButton->setFixedWidth(nextWebButton->height());
+	prevWebButton->setFixedWidth(prevWebButton->height());
+	reloadButton->setFixedWidth(reloadButton->height());
 
 	termCnt1->setText("");
 	termCnt2->setText("");
@@ -1017,6 +1039,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	builtinTerminalTextEditHORZ->installEventFilter(this);
 	terminalInputLine->installEventFilter(this);
 	terminalInputLineHORZ->installEventFilter(this);
+	urlBar->installEventFilter(this);
 	this->installEventFilter(this); // for the fullscreen
 
 	darkmode = thm;
@@ -1101,6 +1124,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(splitter, &QSplitter::splitterMoved, this, &MainWindow::storeResizeOfSplitters);
 	connect(splitter2, &QSplitter::splitterMoved, this, &MainWindow::storeResizeOfSplitters);
 	connect(useTabs, &QAction::toggled, this, &MainWindow::useTabsToggled);
+	connect(useWebView, &QAction::toggled, this, &MainWindow::useWebViewToggled);
 
 	connect(fileTree, &QTreeView::doubleClicked, this, &MainWindow::fileTreeOpened);
 
@@ -1136,6 +1160,12 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(openInExplorerAction, &QAction::triggered, this, &MainWindow::onOpenInExplorer);
 	connect(copyPathAction, &QAction::triggered, this, &MainWindow::onCopyPath);
 	connect(openOutsideAction, &QAction::triggered, this, &MainWindow::onOpenOutside);
+	
+	connect(reloadButton, &QPushButton::clicked, this, &MainWindow::reloadWebView);
+	connect(nextWebButton, &QPushButton::clicked, this, &MainWindow::nextWebView);
+	connect(prevWebButton, &QPushButton::clicked, this, &MainWindow::backWebView);
+	
+	connect(webView, &QWebEngineView::urlChanged, this, &MainWindow::urlChanged);
 
 	fileModel = new QFileSystemModel;
 
@@ -1190,17 +1220,73 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	QTimer::singleShot(50, this, &MainWindow::updateSplitsWidths);
 
 	fileTabBar->hide();
+
+	//Web View
+
+	//webView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+	//textEdit->parentWidget()->layout()->addWidget(webView);
+	webView->setUrl(QUrl("https://www.github.com/AdamJosephMather/CodeWizard"));
+	urlBar->setText("https://www.github.com/AdamJosephMather/CodeWizard");
+
+	if (!useWebView->isChecked()){
+		webView->hide();
+		reloadButton->hide();
+		nextWebButton->hide();
+		prevWebButton->hide();
+		urlBar->hide();
+	}
+}
+
+void MainWindow::urlChanged(const QUrl &url){
+	qDebug() << "urlChanged";
+	urlBar->setText(url.toString());
+	urlBar->setCursorPosition(0);
+}
+
+void MainWindow::reloadWebView(){
+	qDebug() << "reloadWebView";
+	webView->reload();
+}
+
+void MainWindow::backWebView(){
+	qDebug() << "backWebView";
+	webView->back();
+}
+
+void MainWindow::nextWebView(){
+	qDebug() << "nextWebView";
+	webView->forward();
+}
+
+void MainWindow::useWebViewToggled(){
+	qDebug() << "useWebViewToggled";
+	
+	if (useWebView->isChecked()){
+		webView->show();
+		urlBar->show();
+		reloadButton->show();
+		nextWebButton->show();
+		prevWebButton->show();
+	}else{
+		webView->hide();
+		urlBar->hide();
+		reloadButton->hide();
+		nextWebButton->hide();
+		prevWebButton->hide();
+	}
+
+	saveWantedTheme();
 }
 
 void MainWindow::on_actionRender_As_Markdown_triggered(){
 	qDebug() << "actionRender_As_Markdown_triggered";
-	
+
 	QByteArray markdownBytes = textEdit->toPlainText().toUtf8();
 	const char* markdownCStr = markdownBytes.constData();
 	char* htmlCStr = cmark_markdown_to_html(markdownCStr, markdownBytes.length(), 0);
 	QString html = QString::fromUtf8(htmlCStr);
 	free(htmlCStr);
-	
+
 	openMenuWithHTML("Markdown", html);
 }
 
@@ -1223,7 +1309,7 @@ void MainWindow::useTabsToggled(){
 	} else {
 		fileTabBar->hide();
 	}
-	
+
 	saveWantedTheme();
 }
 
@@ -1292,9 +1378,9 @@ void MainWindow::addTab(QString name, QString file){
 
 void MainWindow::tabClicked(int id){
 	qDebug() << "tabClicked - " << id;
-	
+
 	storedLineNumbers[fileName] = textEdit->verticalScrollBar()->value();
-	
+
 	int loc = -1;
 	int loc2 = -1;
 	for (int i = 0; i < tabs.length(); i++){
@@ -1306,11 +1392,11 @@ void MainWindow::tabClicked(int id){
 			loc2 = i;
 		}
 	}
-	
+
 	if (loc2 != -1){
 		tabs[loc2]->lineNum = textEdit->verticalScrollBar()->value();
 	}
-	
+
 	if (loc == -1){
 		return;
 	}
@@ -1320,7 +1406,7 @@ void MainWindow::tabClicked(int id){
 	QString filename = tab->extraText;
 	globalArgFileName = filename;
 	on_actionOpen_triggered();
-	
+
 	qDebug() << loc << loc2 << tabs[loc2]->lineNum;
 	textEdit->verticalScrollBar()->setValue(tab->lineNum);
 }
@@ -2644,7 +2730,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 	isOpeningFile = true;
 
 	storedLineNumbers[fileName] = textEdit->verticalScrollBar()->value();
-	
+
 	int loc = -1;
 	for (int i = 0; i < tabs.length(); i++){
 		TabWidget *tabHere = tabs[i];
@@ -2653,7 +2739,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 			break;
 		}
 	}
-	
+
 	if (loc != -1){
 		tabs[loc]->lineNum = textEdit->verticalScrollBar()->value();
 	}
@@ -3646,6 +3732,10 @@ void MainWindow::updateFonts()
 		fileTabBar->setFixedHeight(tabs[0]->height());
 	}
 
+	nextWebButton->setFixedWidth(nextWebButton->height());
+	prevWebButton->setFixedWidth(prevWebButton->height());
+	reloadButton->setFixedWidth(reloadButton->height());
+	
 	prevTerm1->setFixedWidth(prevTerm1->height());
 	nextTerm1->setFixedWidth(prevTerm1->height());
 	addTerm1->setFixedWidth(prevTerm1->height());
@@ -3850,6 +3940,7 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("useFileTree", useFileTree->isChecked());
 	settings.setValue("useFiletreeIfFullscreen",  useFileTreeIfFullscreen->isChecked());
 	settings.setValue("useTabs", useTabs->isChecked());
+	settings.setValue("useWebView", useWebView->isChecked());
 
 	settings.setValue("autoSaveAct", autoSaveAct->isChecked());
 	settings.setValue("randomSelectFileTypeAct",randomSelectFileTypeAct->isChecked());
@@ -3988,8 +4079,9 @@ bool MainWindow::wantedTheme()
 		autoAddBrackets->setChecked(settings.value("autoAddBrackets", false).toBool());
 		autoSaveAct->setChecked(settings.value("autoSaveAct", true).toBool());
 		useFileTree->setChecked(settings.value("useFileTree", false).toBool());
-		useTabs->setChecked(settings.value("useTabs", false).toBool());
 		useFileTreeIfFullscreen->setChecked(settings.value("useFileTreeIfFullscreen", true).toBool());
+		useTabs->setChecked(settings.value("useTabs", false).toBool());
+		useWebView->setChecked(settings.value("useWebView", false).toBool());
 
 		bool defaultRandomSelect = false;
 		QString name = qgetenv("USER"); // this env is LINUX - might as well right?
@@ -5014,6 +5106,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 			}
 		}else if(event->key() == Qt::Key_T){
 			useBuiltinTerminal->toggle();
+		}else if(event->key() == Qt::Key_K){
+			useWebView->toggle();
 		}else if (event->key() == Qt::Key_N){
 			on_actionNew_triggered();
 		}else if (event->key() == Qt::Key_BracketLeft){
@@ -5783,6 +5877,30 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 	}else if (watched == replaceTextEdit) {
 		if (key_event->key() == Qt::Key_Escape) {
 			textEdit->setFocus();
+			return true;
+		}
+	}else if (watched == urlBar){
+		if (key_sequence == QKeySequence("Shift+Return") || key_event->key() == Qt::Key_Return){
+			QString userInput = urlBar->text().trimmed(); // Remove leading/trailing whitespace
+			if (userInput.isEmpty()) {
+				webView->setUrl(QUrl("about:blank")); // Or a default homepage
+				return true;
+			}
+			
+			QUrl url(userInput);
+			if ((!url.isValid() || url.scheme().isEmpty()) && userInput.contains(".")) {
+				if (!userInput.startsWith("http://") && !userInput.startsWith("https://")) {
+					userInput.prepend("http://");
+				}
+				url = QUrl(userInput);
+			}
+			
+			if (!url.isValid() || !userInput.contains(".")) {
+				QString searchUrl = "https://www.google.com/search?q=" + QUrl::toPercentEncoding(userInput);
+				url = QUrl(searchUrl);
+			}
+			
+			webView->setUrl(url);
 			return true;
 		}
 	}
@@ -7838,7 +7956,7 @@ void MainWindow::openMenuWithHTML(QString name, QString html) {
 	//widgt->setFont(textEdit->font());
 	//widgt->setTextInteractionFlags(Qt::TextSelectableByMouse);
 	widgt->setHtml(html);
-	
+
 	QVBoxLayout *layout = new QVBoxLayout(dialog);
 	layout->addWidget(widgt);
 

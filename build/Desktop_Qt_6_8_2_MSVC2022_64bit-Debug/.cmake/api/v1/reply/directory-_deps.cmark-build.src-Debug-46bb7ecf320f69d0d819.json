@@ -1,0 +1,136 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-src/src/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 63,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 70,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 73,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 90,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 96,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"_deps/cmark-build/src/cmark.exe"
+			],
+			"targetId" : "cmark_exe::@43c2aec3f23cd5f00a32",
+			"targetIndex" : 37,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/cmark-build/src/cmark.lib"
+			],
+			"targetId" : "cmark::@43c2aec3f23cd5f00a32",
+			"targetIndex" : 34,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib/pkgconfig",
+			"paths" : 
+			[
+				"build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-build/src/libcmark.pc"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "include",
+			"paths" : 
+			[
+				"build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-src/src/cmark.h",
+				"build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-build/src/cmark_export.h",
+				"build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-build/src/cmark_version.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/cmark",
+			"paths" : 
+			[
+				"build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-build/src/generated/cmark-config.cmake",
+				"build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-build/src/generated/cmark-config-version.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/cmark",
+			"exportName" : "cmark-targets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "cmark_exe::@43c2aec3f23cd5f00a32",
+					"index" : 37
+				},
+				{
+					"id" : "cmark::@43c2aec3f23cd5f00a32",
+					"index" : 34
+				}
+			],
+			"paths" : 
+			[
+				"_deps/cmark-build/src/CMakeFiles/Export/fccc7afb0bf4c34e18a1be84d1a11cfd/cmark-targets.cmake"
+			],
+			"type" : "export"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "_deps/cmark-build/src",
+		"source" : "build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-src/src"
+	}
+}

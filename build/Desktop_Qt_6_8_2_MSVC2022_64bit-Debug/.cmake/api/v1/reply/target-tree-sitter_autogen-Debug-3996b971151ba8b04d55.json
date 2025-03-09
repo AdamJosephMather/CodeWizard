@@ -1,0 +1,71 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"extern/tree-sitter/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "tree-sitter_autogen_timestamp_deps::@df0f4dfc7b2b45dd2262"
+		}
+	],
+	"id" : "tree-sitter_autogen::@df0f4dfc7b2b45dd2262",
+	"isGeneratorProvided" : true,
+	"name" : "tree-sitter_autogen",
+	"paths" : 
+	{
+		"build" : "extern/tree-sitter",
+		"source" : "extern/tree-sitter"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1,
+				2
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/extern/tree-sitter/CMakeFiles/tree-sitter_autogen",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/extern/tree-sitter/CMakeFiles/tree-sitter_autogen.rule",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/extern/tree-sitter/tree-sitter_autogen/timestamp.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

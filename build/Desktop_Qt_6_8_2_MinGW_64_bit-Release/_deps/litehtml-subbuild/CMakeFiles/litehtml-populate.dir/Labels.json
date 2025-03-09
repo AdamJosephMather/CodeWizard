@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/CMakeFiles/litehtml-populate"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/CMakeFiles/litehtml-populate.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/CMakeFiles/litehtml-populate-complete.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/litehtml-populate-prefix/src/litehtml-populate-stamp/litehtml-populate-build.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/litehtml-populate-prefix/src/litehtml-populate-stamp/litehtml-populate-configure.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/litehtml-populate-prefix/src/litehtml-populate-stamp/litehtml-populate-download.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/litehtml-populate-prefix/src/litehtml-populate-stamp/litehtml-populate-install.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/litehtml-populate-prefix/src/litehtml-populate-stamp/litehtml-populate-mkdir.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/litehtml-populate-prefix/src/litehtml-populate-stamp/litehtml-populate-patch.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/litehtml-populate-prefix/src/litehtml-populate-stamp/litehtml-populate-test.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/litehtml-populate-prefix/src/litehtml-populate-stamp/litehtml-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"litehtml-populate"
+		],
+		"name" : "litehtml-populate"
+	}
+}

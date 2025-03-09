@@ -1,0 +1,109 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 72,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 79,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "libraries",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/litehtml-build/src/gumbo/libgumbo.dll.a"
+			],
+			"targetId" : "gumbo::@f8d598ae0097cf9aed3a",
+			"targetIndex" : 41,
+			"targetIsImportLibrary" : true,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "libraries",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"_deps/litehtml-build/src/gumbo/libgumbo.dll"
+			],
+			"targetId" : "gumbo::@f8d598ae0097cf9aed3a",
+			"targetIndex" : 41,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "include/gumbo",
+			"paths" : 
+			[
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/attribute.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/char_ref.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/error.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/insertion_mode.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/parser.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/string_buffer.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/string_piece.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/tag_enum.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/tag_gperf.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/tag_sizes.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/tag_strings.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/token_type.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/tokenizer.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/tokenizer_states.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/utf8.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/util.h",
+				"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo/include/gumbo/vector.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/gumbo",
+			"exportName" : "gumbo",
+			"exportTargets" : 
+			[
+				{
+					"id" : "gumbo::@f8d598ae0097cf9aed3a",
+					"index" : 41
+				}
+			],
+			"paths" : 
+			[
+				"_deps/litehtml-build/src/gumbo/CMakeFiles/Export/df09b600d79ede856025bf0d0b984a6e/gumboConfig.cmake"
+			],
+			"type" : "export"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "_deps/litehtml-build/src/gumbo",
+		"source" : "build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo"
+	}
+}

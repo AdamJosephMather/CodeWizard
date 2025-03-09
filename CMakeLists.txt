@@ -11,6 +11,7 @@ if(MSVC)
 	# Add MSVC-specific compile options
 	add_compile_options(/w)
 	set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+        add_link_options(/FORCE:MULTIPLE)
 endif()
 
 set(CMAKE_AUTOUIC ON)
@@ -21,7 +22,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets)
-find_package(Qt6 REQUIRED COMPONENTS Network)
+find_package(Qt6 REQUIRED COMPONENTS Network WebEngineWidgets)
 
 if(WIN32)
 	find_package(Qt6 REQUIRED COMPONENTS TextToSpeech)
@@ -44,6 +45,10 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/tree-sitter)
+
+set_target_properties(tree-sitter PROPERTIES
+    POSITION_INDEPENDENT_CODE ON  # Useful for static linking
+)
 
 add_library(tree-sitter-cpp STATIC
 	${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-cpp/src/parser.c
@@ -103,7 +108,7 @@ add_library(tree-sitter-java STATIC
 )
 
 add_library(tree-sitter-c STATIC
-	${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-c/src/parser.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-c/src/parser.c
 )
 
 target_include_directories(tree-sitter-cpp PUBLIC
@@ -134,7 +139,6 @@ target_include_directories(tree-sitter-html PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-html/src
 )
 
-#lua, glsl, wgsl, go, java,
 target_include_directories(tree-sitter-lua PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-lua/src
 )
@@ -234,23 +238,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 			errorsmenu.h errorsmenu.cpp
 		)
 	endif()
-
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET CodeWizard APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-else()
-	if(ANDROID)
-		add_library(CodeWizard SHARED
-			${PROJECT_SOURCES}
-		)
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-	else()
-		add_executable(CodeWizard
-			${PROJECT_SOURCES}
-		)
-	endif()
 endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -272,6 +259,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	Qt::Core
 	Qt::Widgets
         Qt::Network
+        Qt6::WebEngineWidgets
 	tree-sitter
 	tree-sitter-cpp
 	tree-sitter-python
@@ -330,6 +318,7 @@ if(WIN32)
 		tree-sitter-go
 		tree-sitter-c
 		tree-sitter-c-sharp
+                cmark
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION bin
 	)

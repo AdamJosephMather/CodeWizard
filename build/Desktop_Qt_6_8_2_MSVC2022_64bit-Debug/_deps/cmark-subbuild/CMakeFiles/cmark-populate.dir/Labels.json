@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-subbuild/CMakeFiles/cmark-populate"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-subbuild/CMakeFiles/cmark-populate.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-subbuild/CMakeFiles/cmark-populate-complete.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-subbuild/cmark-populate-prefix/src/cmark-populate-stamp/cmark-populate-build.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-subbuild/cmark-populate-prefix/src/cmark-populate-stamp/cmark-populate-configure.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-subbuild/cmark-populate-prefix/src/cmark-populate-stamp/cmark-populate-download.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-subbuild/cmark-populate-prefix/src/cmark-populate-stamp/cmark-populate-install.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-subbuild/cmark-populate-prefix/src/cmark-populate-stamp/cmark-populate-mkdir.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-subbuild/cmark-populate-prefix/src/cmark-populate-stamp/cmark-populate-patch.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-subbuild/cmark-populate-prefix/src/cmark-populate-stamp/cmark-populate-test.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-subbuild/cmark-populate-prefix/src/cmark-populate-stamp/cmark-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"cmark-populate"
+		],
+		"name" : "cmark-populate"
+	}
+}

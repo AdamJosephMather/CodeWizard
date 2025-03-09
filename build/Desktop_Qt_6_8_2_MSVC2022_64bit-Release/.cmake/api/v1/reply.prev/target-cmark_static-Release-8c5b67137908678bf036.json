@@ -1,0 +1,72 @@
+{
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target"
+		],
+		"files" : 
+		[
+			"build/Desktop_Qt_6_8_2_MSVC2022_64bit-Release/_deps/cmark-src/src/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 53,
+				"parent" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "cmark::@43c2aec3f23cd5f00a32"
+		}
+	],
+	"id" : "cmark_static::@43c2aec3f23cd5f00a32",
+	"name" : "cmark_static",
+	"paths" : 
+	{
+		"build" : "_deps/cmark-build/src",
+		"source" : "build/Desktop_Qt_6_8_2_MSVC2022_64bit-Release/_deps/cmark-src/src"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_8_2_MSVC2022_64bit-Release/_deps/cmark-build/src/CMakeFiles/cmark_static",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_8_2_MSVC2022_64bit-Release/_deps/cmark-build/src/CMakeFiles/cmark_static.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

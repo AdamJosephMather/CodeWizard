@@ -1,0 +1,34 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-src/src/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "cmark::@43c2aec3f23cd5f00a32"
+		}
+	],
+	"id" : "cmark_exe_autogen_timestamp_deps::@43c2aec3f23cd5f00a32",
+	"isGeneratorProvided" : true,
+	"name" : "cmark_exe_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "_deps/cmark-build/src",
+		"source" : "build/Desktop_Qt_6_8_2_MSVC2022_64bit-Debug/_deps/cmark-src/src"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

@@ -1,0 +1,1025 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						3,
+						7
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Release-3ea985b020fe59d645f9.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						48,
+						49,
+						50,
+						51,
+						52,
+						53,
+						54,
+						55,
+						56,
+						57,
+						58,
+						59,
+						60,
+						61,
+						62,
+						63,
+						64,
+						65,
+						66,
+						67,
+						68,
+						69,
+						70,
+						71,
+						72,
+						73,
+						74,
+						75,
+						76,
+						77,
+						78,
+						79,
+						80,
+						81,
+						82,
+						83,
+						84,
+						85,
+						86
+					]
+				},
+				{
+					"build" : "_deps/litehtml-build",
+					"childIndexes" : 
+					[
+						2
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-_deps.litehtml-build-Release-2d6baf0e9a19dac683cc.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src",
+					"targetIndexes" : 
+					[
+						44,
+						45,
+						46
+					]
+				},
+				{
+					"build" : "_deps/litehtml-build/src/gumbo",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-_deps.litehtml-build.src.gumbo-Release-b41f4ca71a31d0498e60.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 2,
+					"source" : "build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-src/src/gumbo",
+					"targetIndexes" : 
+					[
+						41,
+						42,
+						43
+					]
+				},
+				{
+					"build" : "_deps/cmark-build",
+					"childIndexes" : 
+					[
+						4,
+						5,
+						6
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-_deps.cmark-build-Release-6ace64e159db9cd86753.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.7"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 3,
+					"source" : "build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/cmark-src",
+					"targetIndexes" : 
+					[
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20,
+						21,
+						22,
+						23,
+						24,
+						25,
+						26,
+						27,
+						28,
+						29,
+						30
+					]
+				},
+				{
+					"build" : "_deps/cmark-build/src",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-_deps.cmark-build.src-Release-8089cd0f660ea23f5f13.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.7"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 3,
+					"source" : "build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/cmark-src/src",
+					"targetIndexes" : 
+					[
+						34,
+						35,
+						36,
+						37,
+						38,
+						39,
+						40
+					]
+				},
+				{
+					"build" : "_deps/cmark-build/api_test",
+					"jsonFile" : "directory-_deps.cmark-build.api_test-Release-b378beb831b98cb245d5.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.7"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 3,
+					"source" : "build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/cmark-src/api_test",
+					"targetIndexes" : 
+					[
+						31,
+						32,
+						33
+					]
+				},
+				{
+					"build" : "_deps/cmark-build/testdir",
+					"jsonFile" : "directory-_deps.cmark-build.testdir-Release-cd0f26d7402157b4a3ec.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.7"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 3,
+					"source" : "build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/cmark-src/test"
+				},
+				{
+					"build" : "extern/tree-sitter",
+					"jsonFile" : "directory-extern.tree-sitter-Release-095e24a1c221b75f7ce4.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 4,
+					"source" : "extern/tree-sitter",
+					"targetIndexes" : 
+					[
+						47,
+						87,
+						88
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						3,
+						4
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "CodeWizard",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						48,
+						49,
+						50,
+						51,
+						52,
+						53,
+						54,
+						55,
+						56,
+						57,
+						58,
+						59,
+						60,
+						61,
+						62,
+						63,
+						64,
+						65,
+						66,
+						67,
+						68,
+						69,
+						70,
+						71,
+						72,
+						73,
+						74,
+						75,
+						76,
+						77,
+						78,
+						79,
+						80,
+						81,
+						82,
+						83,
+						84,
+						85,
+						86
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						2
+					],
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "litehtml",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						44,
+						45,
+						46
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "gumbo",
+					"parentIndex" : 1,
+					"targetIndexes" : 
+					[
+						41,
+						42,
+						43
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3,
+						4,
+						5,
+						6
+					],
+					"name" : "cmark",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20,
+						21,
+						22,
+						23,
+						24,
+						25,
+						26,
+						27,
+						28,
+						29,
+						30,
+						31,
+						32,
+						33,
+						34,
+						35,
+						36,
+						37,
+						38,
+						39,
+						40
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						7
+					],
+					"name" : "tree-sitter",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						47,
+						87,
+						88
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "CodeWizard::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CodeWizard-Release-9a8319045b363b332ed7.json",
+					"name" : "CodeWizard",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "CodeWizard_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CodeWizard_autogen-Release-2536026ee78b87f0705c.json",
+					"name" : "CodeWizard_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "CodeWizard_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CodeWizard_autogen_timestamp_deps-Release-e5a3478bddf79d3293fb.json",
+					"name" : "CodeWizard_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "Continuous::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-Continuous-Release-36f3a464a6bbfaad70a5.json",
+					"name" : "Continuous",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ContinuousBuild::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-ContinuousBuild-Release-3e96f2f72da24d5451a0.json",
+					"name" : "ContinuousBuild",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ContinuousConfigure::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-ContinuousConfigure-Release-8bc9d7dc2185f35c1298.json",
+					"name" : "ContinuousConfigure",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ContinuousCoverage::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-ContinuousCoverage-Release-f8032bf58f1dbca9843a.json",
+					"name" : "ContinuousCoverage",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ContinuousMemCheck::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-ContinuousMemCheck-Release-091bc53d91f158c529da.json",
+					"name" : "ContinuousMemCheck",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ContinuousStart::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-ContinuousStart-Release-23708d9d276aa38dd692.json",
+					"name" : "ContinuousStart",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ContinuousSubmit::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-ContinuousSubmit-Release-53029a4a9193ddef110d.json",
+					"name" : "ContinuousSubmit",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ContinuousTest::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-ContinuousTest-Release-5f292ec129a43b48e953.json",
+					"name" : "ContinuousTest",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ContinuousUpdate::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-ContinuousUpdate-Release-c3434a0f81b4e8cc894b.json",
+					"name" : "ContinuousUpdate",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "Experimental::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-Experimental-Release-d174de0f125ca3300dbc.json",
+					"name" : "Experimental",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ExperimentalBuild::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-ExperimentalBuild-Release-a4c2179310bb34ba0724.json",
+					"name" : "ExperimentalBuild",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ExperimentalConfigure::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-ExperimentalConfigure-Release-5c9351484fcf075e8459.json",
+					"name" : "ExperimentalConfigure",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ExperimentalCoverage::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-ExperimentalCoverage-Release-26f02e0e441a568e5d54.json",
+					"name" : "ExperimentalCoverage",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ExperimentalMemCheck::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-ExperimentalMemCheck-Release-08f2b998432e871a2597.json",
+					"name" : "ExperimentalMemCheck",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ExperimentalStart::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-ExperimentalStart-Release-d0b31fa1fc6789e5ab46.json",
+					"name" : "ExperimentalStart",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ExperimentalSubmit::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-ExperimentalSubmit-Release-a706f3600f9ad3756742.json",
+					"name" : "ExperimentalSubmit",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ExperimentalTest::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-ExperimentalTest-Release-db2e3d081c50bffa19f8.json",
+					"name" : "ExperimentalTest",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ExperimentalUpdate::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-ExperimentalUpdate-Release-75be1e70663c96f2478d.json",
+					"name" : "ExperimentalUpdate",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "Nightly::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-Nightly-Release-2a3907616e5496b7886e.json",
+					"name" : "Nightly",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "NightlyBuild::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-NightlyBuild-Release-7d7dfb985a6b1561ad5f.json",
+					"name" : "NightlyBuild",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "NightlyConfigure::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-NightlyConfigure-Release-5f3123a0c9417a5e8d53.json",
+					"name" : "NightlyConfigure",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "NightlyCoverage::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-NightlyCoverage-Release-b8ab79a62d7eca812816.json",
+					"name" : "NightlyCoverage",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "NightlyMemCheck::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-NightlyMemCheck-Release-fd62019d1b1702deba16.json",
+					"name" : "NightlyMemCheck",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "NightlyMemoryCheck::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-NightlyMemoryCheck-Release-2e91da01bf54dcd2b2dc.json",
+					"name" : "NightlyMemoryCheck",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "NightlyStart::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-NightlyStart-Release-2b2919415a8d2b920381.json",
+					"name" : "NightlyStart",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "NightlySubmit::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-NightlySubmit-Release-1a243c60068cdfee27c8.json",
+					"name" : "NightlySubmit",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "NightlyTest::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-NightlyTest-Release-3d48d843dd91713caa9f.json",
+					"name" : "NightlyTest",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "NightlyUpdate::@4abdfe80633f20bfe8e7",
+					"jsonFile" : "target-NightlyUpdate-Release-c6232c9e1b79ef59f998.json",
+					"name" : "NightlyUpdate",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "api_test::@979140ab9dba74ad5709",
+					"jsonFile" : "target-api_test-Release-c1c744474c5399e1ac9a.json",
+					"name" : "api_test",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "api_test_autogen::@979140ab9dba74ad5709",
+					"jsonFile" : "target-api_test_autogen-Release-68c3d808c7102e2e4bfe.json",
+					"name" : "api_test_autogen",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "api_test_autogen_timestamp_deps::@979140ab9dba74ad5709",
+					"jsonFile" : "target-api_test_autogen_timestamp_deps-Release-feff41338aadce6d5a95.json",
+					"name" : "api_test_autogen_timestamp_deps",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "cmark::@43c2aec3f23cd5f00a32",
+					"jsonFile" : "target-cmark-Release-a57fac9236a2d8469634.json",
+					"name" : "cmark",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "cmark_autogen::@43c2aec3f23cd5f00a32",
+					"jsonFile" : "target-cmark_autogen-Release-7eb7aa5fadec4cc59b7d.json",
+					"name" : "cmark_autogen",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "cmark_autogen_timestamp_deps::@43c2aec3f23cd5f00a32",
+					"jsonFile" : "target-cmark_autogen_timestamp_deps-Release-7a64b18ac87a951493b0.json",
+					"name" : "cmark_autogen_timestamp_deps",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "cmark_exe::@43c2aec3f23cd5f00a32",
+					"jsonFile" : "target-cmark_exe-Release-bdf68ced2d7e578c87b9.json",
+					"name" : "cmark_exe",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "cmark_exe_autogen::@43c2aec3f23cd5f00a32",
+					"jsonFile" : "target-cmark_exe_autogen-Release-f7215d4f6bf65f38a1fd.json",
+					"name" : "cmark_exe_autogen",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "cmark_exe_autogen_timestamp_deps::@43c2aec3f23cd5f00a32",
+					"jsonFile" : "target-cmark_exe_autogen_timestamp_deps-Release-ab66aa13181a603da864.json",
+					"name" : "cmark_exe_autogen_timestamp_deps",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "cmark_static::@43c2aec3f23cd5f00a32",
+					"jsonFile" : "target-cmark_static-Release-c9edb417dc9df3aa0e81.json",
+					"name" : "cmark_static",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "gumbo::@f8d598ae0097cf9aed3a",
+					"jsonFile" : "target-gumbo-Release-aa878ecbc39dd0926e6c.json",
+					"name" : "gumbo",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "gumbo_autogen::@f8d598ae0097cf9aed3a",
+					"jsonFile" : "target-gumbo_autogen-Release-990c6642c23a5f15c152.json",
+					"name" : "gumbo_autogen",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "gumbo_autogen_timestamp_deps::@f8d598ae0097cf9aed3a",
+					"jsonFile" : "target-gumbo_autogen_timestamp_deps-Release-c92106659d89bb1ab485.json",
+					"name" : "gumbo_autogen_timestamp_deps",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "litehtml::@64366939f801719f632c",
+					"jsonFile" : "target-litehtml-Release-b7935a1c3883b2047c9b.json",
+					"name" : "litehtml",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "litehtml_autogen::@64366939f801719f632c",
+					"jsonFile" : "target-litehtml_autogen-Release-678b835834bb50af3913.json",
+					"name" : "litehtml_autogen",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "litehtml_autogen_timestamp_deps::@64366939f801719f632c",
+					"jsonFile" : "target-litehtml_autogen_timestamp_deps-Release-0166e2fe2c92e17be8ba.json",
+					"name" : "litehtml_autogen_timestamp_deps",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "tree-sitter::@df0f4dfc7b2b45dd2262",
+					"jsonFile" : "target-tree-sitter-Release-8b8c22df3a3ff61154a5.json",
+					"name" : "tree-sitter",
+					"projectIndex" : 4
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-c-Release-08a2f8b365e6f7f80541.json",
+					"name" : "tree-sitter-c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-c-sharp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-c-sharp-Release-a7bf748d0138fdc2e1ab.json",
+					"name" : "tree-sitter-c-sharp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-c-sharp_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-c-sharp_autogen-Release-6f8bc65fbd1c8131c892.json",
+					"name" : "tree-sitter-c-sharp_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-c-sharp_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-c-sharp_autogen_timestamp_deps-Release-788604513fd94ad09291.json",
+					"name" : "tree-sitter-c-sharp_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-c_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-c_autogen-Release-86cfa9a3c564bec86ede.json",
+					"name" : "tree-sitter-c_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-c_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-c_autogen_timestamp_deps-Release-6bc799b9cf3cdf344480.json",
+					"name" : "tree-sitter-c_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-cpp-Release-f27bdaf1844d9b75d385.json",
+					"name" : "tree-sitter-cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-cpp_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-cpp_autogen-Release-e089862d8f1163f9792e.json",
+					"name" : "tree-sitter-cpp_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-cpp_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-cpp_autogen_timestamp_deps-Release-e281527eb098bd0e009e.json",
+					"name" : "tree-sitter-cpp_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-glsl::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-glsl-Release-b3b90eb6f52b2d185060.json",
+					"name" : "tree-sitter-glsl",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-glsl_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-glsl_autogen-Release-bb09a0b2ae27e49bb6ad.json",
+					"name" : "tree-sitter-glsl_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-glsl_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-glsl_autogen_timestamp_deps-Release-1d71099c7a34ecf39a3f.json",
+					"name" : "tree-sitter-glsl_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-go::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-go-Release-245381b0b0fa3a05b3c1.json",
+					"name" : "tree-sitter-go",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-go_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-go_autogen-Release-b1a835abf8ddb8b88d10.json",
+					"name" : "tree-sitter-go_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-go_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-go_autogen_timestamp_deps-Release-0c8befd3d7a3fe37f678.json",
+					"name" : "tree-sitter-go_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-html::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-html-Release-42e48fe1b83ccf798cb0.json",
+					"name" : "tree-sitter-html",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-html_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-html_autogen-Release-6c3067f46f5ca8d1936a.json",
+					"name" : "tree-sitter-html_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-html_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-html_autogen_timestamp_deps-Release-236fdabbaaaf9d3df5c8.json",
+					"name" : "tree-sitter-html_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-java::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-java-Release-083b8d2963e56d081652.json",
+					"name" : "tree-sitter-java",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-java_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-java_autogen-Release-ca55cda398435edc3751.json",
+					"name" : "tree-sitter-java_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-java_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-java_autogen_timestamp_deps-Release-37020e884c4283137e8a.json",
+					"name" : "tree-sitter-java_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-javascript::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-javascript-Release-12d282589484e84e90ae.json",
+					"name" : "tree-sitter-javascript",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-javascript_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-javascript_autogen-Release-88704368bc5f8d81e261.json",
+					"name" : "tree-sitter-javascript_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-javascript_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-javascript_autogen_timestamp_deps-Release-5966279a08b08690f9f0.json",
+					"name" : "tree-sitter-javascript_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-lua::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-lua-Release-6e6d7e55beff270b2735.json",
+					"name" : "tree-sitter-lua",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-lua_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-lua_autogen-Release-a5dab43ac32bf45451b4.json",
+					"name" : "tree-sitter-lua_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-lua_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-lua_autogen_timestamp_deps-Release-8cc3884277a87935cbec.json",
+					"name" : "tree-sitter-lua_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-python::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-python-Release-1de5e5a618dd833f3333.json",
+					"name" : "tree-sitter-python",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-python_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-python_autogen-Release-00faaa0622821114aae4.json",
+					"name" : "tree-sitter-python_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-python_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-python_autogen_timestamp_deps-Release-b6b385c18f671465b142.json",
+					"name" : "tree-sitter-python_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-rust::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-rust-Release-fd601697900e3dd0f5eb.json",
+					"name" : "tree-sitter-rust",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-rust_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-rust_autogen-Release-3df22ab284d10b5052c6.json",
+					"name" : "tree-sitter-rust_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-rust_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-rust_autogen_timestamp_deps-Release-75987ff40a21528c5348.json",
+					"name" : "tree-sitter-rust_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-typescript::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-typescript-Release-ba426a24734fc44cc3a7.json",
+					"name" : "tree-sitter-typescript",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-typescript_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-typescript_autogen-Release-ea2a1d297fb707c92179.json",
+					"name" : "tree-sitter-typescript_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-typescript_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-typescript_autogen_timestamp_deps-Release-0c1f3c3fb2cb78599101.json",
+					"name" : "tree-sitter-typescript_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-wgsl::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-wgsl-Release-4046f3ff13e7c9a60868.json",
+					"name" : "tree-sitter-wgsl",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-wgsl_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-wgsl_autogen-Release-54ebd44c5ba5fb7966db.json",
+					"name" : "tree-sitter-wgsl_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tree-sitter-wgsl_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tree-sitter-wgsl_autogen_timestamp_deps-Release-45ada15a65f450c7995b.json",
+					"name" : "tree-sitter-wgsl_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "tree-sitter_autogen::@df0f4dfc7b2b45dd2262",
+					"jsonFile" : "target-tree-sitter_autogen-Release-289824d6267792bff9b9.json",
+					"name" : "tree-sitter_autogen",
+					"projectIndex" : 4
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "tree-sitter_autogen_timestamp_deps::@df0f4dfc7b2b45dd2262",
+					"jsonFile" : "target-tree-sitter_autogen_timestamp_deps-Release-cbeebf2b10718866669e.json",
+					"name" : "tree-sitter_autogen_timestamp_deps",
+					"projectIndex" : 4
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release",
+		"source" : "C:/Users/adamj/Documents/QtProjects/CodeWizard"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

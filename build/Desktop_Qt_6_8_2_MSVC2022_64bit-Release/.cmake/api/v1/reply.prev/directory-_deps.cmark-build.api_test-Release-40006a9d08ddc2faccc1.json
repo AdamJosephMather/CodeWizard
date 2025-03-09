@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "_deps/cmark-build/api_test",
+		"source" : "build/Desktop_Qt_6_8_2_MSVC2022_64bit-Release/_deps/cmark-src/api_test"
+	}
+}

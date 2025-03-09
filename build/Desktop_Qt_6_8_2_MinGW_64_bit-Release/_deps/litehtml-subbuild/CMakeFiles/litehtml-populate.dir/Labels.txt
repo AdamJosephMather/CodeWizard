@@ -1,0 +1,14 @@
+# Target labels
+ litehtml-populate
+# Source files and their labels
+C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/CMakeFiles/litehtml-populate
+C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/CMakeFiles/litehtml-populate.rule
+C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/CMakeFiles/litehtml-populate-complete.rule
+C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/litehtml-populate-prefix/src/litehtml-populate-stamp/litehtml-populate-build.rule
+C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/litehtml-populate-prefix/src/litehtml-populate-stamp/litehtml-populate-configure.rule
+C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/litehtml-populate-prefix/src/litehtml-populate-stamp/litehtml-populate-download.rule
+C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/litehtml-populate-prefix/src/litehtml-populate-stamp/litehtml-populate-install.rule
+C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/litehtml-populate-prefix/src/litehtml-populate-stamp/litehtml-populate-mkdir.rule
+C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/litehtml-populate-prefix/src/litehtml-populate-stamp/litehtml-populate-patch.rule
+C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/litehtml-populate-prefix/src/litehtml-populate-stamp/litehtml-populate-test.rule
+C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/litehtml-subbuild/litehtml-populate-prefix/src/litehtml-populate-stamp/litehtml-populate-update.rule

@@ -26,6 +26,11 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void urlChanged(const QUrl &url);
+	void nextWebView();
+	void backWebView();
+	void reloadWebView();
+	void useWebViewToggled();
 	void openMenuWithHTML(QString name, QString html);
 	void on_actionRender_As_Markdown_triggered();
 	void addTerminal();

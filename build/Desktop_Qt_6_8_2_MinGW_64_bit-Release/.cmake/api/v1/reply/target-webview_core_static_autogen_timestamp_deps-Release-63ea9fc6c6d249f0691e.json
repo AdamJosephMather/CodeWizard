@@ -1,0 +1,27 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/webview-src/core/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"id" : "webview_core_static_autogen_timestamp_deps::@48746d47efa01a0dbf4e",
+	"isGeneratorProvided" : true,
+	"name" : "webview_core_static_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "_deps/webview-build/core",
+		"source" : "build/Desktop_Qt_6_8_2_MinGW_64_bit-Release/_deps/webview-src/core"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

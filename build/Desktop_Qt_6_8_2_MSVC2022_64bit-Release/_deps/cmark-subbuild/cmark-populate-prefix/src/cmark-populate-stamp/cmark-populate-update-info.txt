@@ -1,0 +1,7 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The patch step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+command (connected)=C:/Qt/Tools/CMake_64/bin/cmake.exe;-Dcan_fetch=YES;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MSVC2022_64bit-Release/_deps/cmark-subbuild/cmark-populate-prefix/tmp/cmark-populate-gitupdate.cmake
+command (disconnected)=C:/Qt/Tools/CMake_64/bin/cmake.exe;-Dcan_fetch=NO;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MSVC2022_64bit-Release/_deps/cmark-subbuild/cmark-populate-prefix/tmp/cmark-populate-gitupdate.cmake
+work_dir=C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MSVC2022_64bit-Release/_deps/cmark-src

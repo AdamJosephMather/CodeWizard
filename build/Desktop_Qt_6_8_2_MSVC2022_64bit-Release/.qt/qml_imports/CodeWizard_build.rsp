@@ -1,0 +1,9 @@
+-rootPath
+C:/Users/adamj/Documents/QtProjects/CodeWizard
+-cmake-output
+-output-file
+C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MSVC2022_64bit-Release/.qt/qml_imports/CodeWizard_build.cmake
+-importPath
+C:/Users/adamj/Documents/QtProjects/CodeWizard/build/Desktop_Qt_6_8_2_MSVC2022_64bit-Release
+-importPath
+C:/Qt/6.8.2/msvc2022_64/qml

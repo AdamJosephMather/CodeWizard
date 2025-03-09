@@ -145,6 +145,48 @@ li.checked::marker { content: &quot;\2612&quot;; }
                 </property>
                </widget>
               </item>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_9">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_7">
+                  <item>
+                   <widget class="QPushButton" name="prevWeb">
+                    <property name="text">
+                     <string>&lt;</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="nextWeb">
+                    <property name="text">
+                     <string>&gt;</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="reloadButton">
+                    <property name="text">
+                     <string>⟳</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="urlBar"/>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <widget class="QWebEngineView" name="webView" native="true">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
              </layout>
             </item>
             <item>
@@ -547,6 +589,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="actionUse_Vim_Modes"/>
     <addaction name="actionAuto_Add_Brackets"/>
     <addaction name="actionUse_File_Tabs"/>
+    <addaction name="actionUse_Web_View_Crtl_K"/>
    </widget>
    <widget class="QMenu" name="menuFixit">
     <property name="title">
@@ -1243,6 +1286,14 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <string>Render As Markdown</string>
    </property>
   </action>
+  <action name="actionUse_Web_View_Crtl_K">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Use Web View (Ctrl + K)</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -1254,6 +1305,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
    <class>customHorizontalScrollArea</class>
    <extends>QScrollArea</extends>
    <header>customhorizontalscrollarea.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QWebEngineView</class>
+   <extends>QWidget</extends>
+   <header>qwebengineview.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
