@@ -1235,6 +1235,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		prevWebButton->hide();
 		urlBar->hide();
 	}
+	
+	webView->setMaximumHeight(textEdit->height()-urlBar->height());
 }
 
 void MainWindow::urlChanged(const QUrl &url){
@@ -2082,6 +2084,8 @@ void MainWindow::updateMargins(bool force) {
 	qDebug() << "updateMargins - " << force;
 
 	errMenu.reposition();
+	
+	webView->setMaximumHeight(textEdit->height()-urlBar->height());
 
 	QFontMetrics metrics(textEdit->font());
 
@@ -7682,11 +7686,11 @@ void MainWindow::changeTheme(bool darkMode)
 		lightPalette.setColor(QPalette::Light, QColor(255, 255, 255));
 		lightPalette.setColor(QPalette::Dark, QColor(100, 100, 100));
 
-		QString menubarSheet = "QMenuBar {background-color: rgb(30, 30, 30); color: white; }"
+		QString menubarSheet = "QMenuBar {background-color: rgb(25, 25, 25); color: white; }"
 							   "QMenu { background-color: rgb(20, 20, 20); color: white; }"
 							   "QMenu::item:selected { background-color: rgb(45, 45, 45); color: white; }"
 							   "QMenu::separator {height: 1px;background-color: rgb(255, 255, 255); margin: 2px 4px;}"
-							   "QMenuBar::item { background-color: rgb(30, 30, 30); padding: 2px 4px; border-radius: 4px; margin: 3px 3px 2px 3px; }"
+							   "QMenuBar::item { background-color: rgb(25, 25, 25); padding: 2px 4px; border-radius: 4px; margin: 3px 3px 2px 3px; }"
 							   "QMenuBar::item:hover { background-color: rgb(70, 70, 70); }"
 							   "QMenuBar::item:selected { background-color: rgb(70, 70, 70); }";
 
