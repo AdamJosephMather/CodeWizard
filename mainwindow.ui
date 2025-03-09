@@ -635,6 +635,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="actionKeybindings"/>
     <addaction name="actionGit_Integration"/>
     <addaction name="actionVim_Modes"/>
+    <addaction name="actionMultiple_Cursors"/>
    </widget>
    <widget class="QMenu" name="menuLanguage">
     <property name="title">
@@ -1295,6 +1296,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </property>
    <property name="text">
     <string>Use Web View (Ctrl + K)</string>
+   </property>
+  </action>
+  <action name="actionMultiple_Cursors">
+   <property name="text">
+    <string>Multiple Cursors</string>
    </property>
   </action>
  </widget>

@@ -26,6 +26,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void on_actionMultiple_Cursors_triggered();
 	void urlChanged(const QUrl &url);
 	void nextWebView();
 	void backWebView();

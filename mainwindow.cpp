@@ -7690,7 +7690,7 @@ void MainWindow::changeTheme(bool darkMode)
 							   "QMenu { background-color: rgb(20, 20, 20); color: white; }"
 							   "QMenu::item:selected { background-color: rgb(45, 45, 45); color: white; }"
 							   "QMenu::separator {height: 1px;background-color: rgb(255, 255, 255); margin: 2px 4px;}"
-							   "QMenuBar::item { background-color: rgb(25, 25, 25); padding: 2px 4px; border-radius: 4px; margin: 3px 3px 2px 3px; }"
+							   "QMenuBar::item { background-color: rgb(25, 25, 25); padding: 2px 4px; border-radius: 4px; margin: 3px 3px 3px 3px; }"
 							   "QMenuBar::item:hover { background-color: rgb(70, 70, 70); }"
 							   "QMenuBar::item:selected { background-color: rgb(70, 70, 70); }";
 
@@ -7700,7 +7700,7 @@ void MainWindow::changeTheme(bool darkMode)
 		   "QListWidget{ background-color: rgb(20, 20, 20); color: white; }"
 		   "QListWidget::item:selected { background-color: rgb(45, 45, 45); color: white; }"
 		   "QListWidget::separator {height: 1px;background-color: rgb(255, 255, 255); margin: 2px 4px;}"
-		   "QListWidget::item { background-color: rgb(30, 30, 30); padding: 2px 2px; border-radius: 4px; margin: 3px 3px 2px 3px; }"
+		   "QListWidget::item { background-color: rgb(30, 30, 30); padding: 2px 2px; border-radius: 4px; margin: 3px 3px 3px 3px; }"
 		   "QListWidget::item:hover { background-color: rgb(70, 70, 70); }";
 
 		fontList->setStyleSheet(listWidgetSheet);
@@ -7743,7 +7743,7 @@ void MainWindow::changeTheme(bool darkMode)
 								"QMenu { background-color: rgb(251, 251, 251); color: black; }"
 								"QMenu::item:selected { background-color: rgb(150, 150, 150); color: black; }"
 								"QMenu::separator {height: 1px; background-color: rgb(0, 0, 0); margin: 2px 4px;}"
-								"QMenuBar::item { background-color: rgb(251, 251, 251); padding: 2px 4px; border-radius: 4px; margin: 3px 3px 2px 3px; }"
+								"QMenuBar::item { background-color: rgb(251, 251, 251); padding: 2px 4px; border-radius: 4px; margin: 3px 3px 3px 3px; }"
 								"QMenuBar::item:hover { background-color: rgb(200, 200, 200); }"
 								"QMenuBar::item:selected { background-color: rgb(200, 200, 200); }";
 
@@ -7753,7 +7753,7 @@ void MainWindow::changeTheme(bool darkMode)
 								"QListWidget{ background-color: rgb(251, 251, 251); color: black; }"
 								"QListWidget::item:selected { background-color: rgb(150, 150, 150); color: black; }"
 								"QListWidget::separator {height: 1px; background-color: rgb(0, 0, 0); margin: 2px 4px;}"
-								"QListWidget::item { background-color: rgb(251, 251, 251); padding: 2px 2px; border-radius: 4px; margin: 3px 3px 2px 3px; }"
+								"QListWidget::item { background-color: rgb(251, 251, 251); padding: 2px 2px; border-radius: 4px; margin: 3px 3px 3px 3px; }"
 								"QListWidget::item:hover { background-color: rgb(200, 200, 200); }";
 
 		fontList->setStyleSheet(listWidgetSheet);
@@ -7893,7 +7893,7 @@ void MainWindow::on_actionCodeWizard_triggered(){
 void MainWindow::on_actionSettings_triggered(){
 	qDebug() << "on_actionSettings_triggered";
 
-	openHelpMenu("The settings for CodeWizard are mostly under the edit tab. Notable settings include:\n\nEdit->Fonts\nEdit->Tab Width\nEdit->Dark Mode\nEdit->Light Mode\nEdit->Auto Save\nView->Use File Tree\nView->Use File Tree If Fullscreen\nLanguage->LSP Settings\n\nNotable Shortcuts:\n\nAlt+Enter - Code Actions (LSP helpers)\nRight Click->Goto Definition (Requires LSP)");
+	openHelpMenu("The settings for CodeWizard are mostly under the edit tab. Notable settings include:\n\nEdit->Fonts\nEdit->Tab Width\nEdit->Dark Mode\nEdit->Light Mode\nEdit->Auto Save\nEdit->Use File Tabs\nEdit->Use Web View\nView->Use File Tree\nView->Use File Tree If Fullscreen\nLanguage->LSP Settings\n\nNotable Shortcuts:\n\nAlt+Enter->Code Actions (LSP helpers)\nRight Click->Goto Definition (Requires LSP)");
 }
 
 void MainWindow::on_actionExtras_triggered(){
@@ -7917,7 +7917,13 @@ void MainWindow::on_actionLSP_2_triggered(){
 void MainWindow::on_actionGit_Integration_triggered(){
 	qDebug() << "on_actionGit_Integration_triggered";
 
-	openHelpMenu("CodeWizard has builtin git support. When you press Git->Push, it will request a commit message, and then trigger the commands 'git add --all', 'git commit -m \"message\"' and 'git push'. Similarly for Git->Pull->Regular it runs 'git pull' and for Git->Pull->Discard Local Changes it runs 'git reset --hard'");
+	openHelpMenu("CodeWizard has builtin git support. When you press Git->Push, it will request a commit message, and then trigger the commands 'git add --all', 'git commit -m \"message\"' and 'git push'. Similarly for Git->Pull->Regular it runs 'git pull' and for Git->Pull->Discard Local Changes it runs 'git reset --hard && git pull'");
+}
+
+void MainWindow::on_actionMultiple_Cursors_triggered(){
+	qDebug() << "on_actionMultiple_Cursors_triggered";
+
+	openHelpMenu("CodeWizard now has multiple cursor functionality.\n\nUse Alt+Clicking or Alt+(Up/Down) Arrows to instantiate new cursors. When you're done with them just press escape.");
 }
 
 void MainWindow::on_actionKeybindings_triggered(){
