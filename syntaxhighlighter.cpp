@@ -317,8 +317,6 @@ QTextCharFormat SyntaxHighlighter::getFormatForType(const QString& lotsOinfo) {
 	QStringList parents = parts[0].split("/.CodeWiz./");
 	QString following = parts[2];
 	
-	qDebug() << parentAndType;
-	
 	if (curLang == "Python"){
 		int pythonFix = specificPythonFix(parents, PAT, following);
 		
