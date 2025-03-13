@@ -732,7 +732,7 @@ QJsonObject LanguageServerClient::readMessage() // How do I put this? I'm a god.
 	int bytesAvail = serverProcess.bytesAvailable();
 	if (bytesAvail != 0){
 		QByteArray line = serverProcess.read(bytesAvail);
-		qDebug() << line;
+//		qDebug() << line;
 		currentExecution += line;
 	}
 
