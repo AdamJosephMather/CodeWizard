@@ -3,7 +3,7 @@ import re
 from collections import defaultdict
 
 filedir = "testhighlight"
-file = 'typescript.msc'
+file = 'cobol.msc'
 
 def isRegex(txt):
 	cnt = txt.count("^")
@@ -159,6 +159,7 @@ dct = {
 	"function.call.lua":5,
 	"constant.builtin":3,
 	"variable.parameter":3,
+	"first":3
 }
 
 out = ""
@@ -167,6 +168,7 @@ print(fulls)
 print("\n\n")
 
 for i in fulls:
+	print(i)
 	out += "{\""+i.replace("\\", "\\\\").replace("\"", "\\\"")+"\", "+str(dct[fulls[i]])+"}, "
 
 import pyperclip

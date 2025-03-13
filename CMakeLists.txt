@@ -256,8 +256,8 @@ endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	Qt::Core
 	Qt::Widgets
-        Qt::Network
-        Qt6::WebEngineWidgets
+    Qt::Network
+    Qt6::WebEngineWidgets
 	tree-sitter
 	tree-sitter-cpp
 	tree-sitter-python
@@ -272,7 +272,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	tree-sitter-go
 	tree-sitter-c
 	tree-sitter-c-sharp
-        cmark
+    cmark
 )
 
 target_link_libraries(CodeWizard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
@@ -316,7 +316,7 @@ if(WIN32)
 		tree-sitter-go
 		tree-sitter-c
 		tree-sitter-c-sharp
-                cmark
+        cmark
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION bin
 	)

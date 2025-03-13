@@ -130,6 +130,7 @@ Language GLSLLang;
 Language javaLang;
 Language tsLang;
 Language cLang;
+Language cobolLang;
 
 QVector<Language> supportedLangs;
 
@@ -149,6 +150,7 @@ std::unordered_map<QString, int> colormapGLSLTS;
 std::unordered_map<QString, int> colormapJavaTS;
 std::unordered_map<QString, int> colormapTsTS;
 std::unordered_map<QString, int> colormapCTS;
+std::unordered_map<QString, int> colormapCobolTS;
 
 std::unordered_map<QString, int> storedLineNumbers;
 
@@ -173,6 +175,7 @@ QString defCsharpTag = "csc \"[filename]\"";
 QString defGLSLTag = "";
 QString defJavaTag = "javac \"[filename]\"\njava \"[filename]\"";
 QString defCTag = "call \"C:\\Program Files\\Microsoft Visual Studio\\[VERSION_NUMBER]\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat\" x64\ncl \"[filename]\" && \"[filenameWoutExt].exe\"";
+QString defCobolTag = "cobc -x \"[filename]\"";
 
 QString pythonTag = defPythonTag;
 QString rustTag = defRustTag;
@@ -188,6 +191,7 @@ QString csharpTag = defCsharpTag;
 QString GLSLTag = defGLSLTag;
 QString javaTag = defJavaTag;
 QString cTag = defCTag;
+QString cobolTag = defCTag;
 
 QString pythonLSP = "";
 QString rustLSP = "";
@@ -203,6 +207,7 @@ QString csharpLSP = "";
 QString GLSLLSP = "";
 QString javaLSP = "";
 QString cLSP = "";
+QString cobolLSP = "";
 
 float fontSize = 11.0;
 
@@ -286,6 +291,7 @@ QStringList defWordListCsharp;
 QStringList defWordListGLSL;
 QStringList defWordListJava;
 QStringList defWordListC;
+QStringList defWordListCobol;
 
 QSet<QString> wrdLstDefQSetted;
 QStringList wrdLstDefQStringy;
@@ -786,6 +792,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	colormapJavaTS = {{"identifier", 3}, {"method_declaration/.CodeWiz./identifier", 5}, {"method_invocation/.CodeWiz./identifier", 5}, {"super", 5}, {"annotation/.CodeWiz./identifier", 4}, {"marker_annotation/.CodeWiz./identifier", 4}, {"@", 7}, {"type_identifier", 4}, {"interface_declaration/.CodeWiz./identifier", 4}, {"class_declaration/.CodeWiz./identifier", 4}, {"enum_declaration/.CodeWiz./identifier", 4}, {"field_access", 4}, {"field_access/.CodeWiz./identifier", 4}, {"scoped_identifier", 4}, {"scoped_identifier/.CodeWiz./identifier", 4}, {"method_invocation", 4}, {"method_reference", 4}, {"method_reference/.CodeWiz./identifier", 4}, {"constructor_declaration/.CodeWiz./identifier", 4}, {"boolean_type/.CodeWiz./integral_type", 4}, {"integral_type/.CodeWiz./floating_point_type", 4}, {"floating_point_type/.CodeWiz./void_type", 4}, {"this", 3}, {"hex_integer_literal/.CodeWiz./decimal_integer_literal", 8}, {"decimal_integer_literal/.CodeWiz./octal_integer_literal", 8}, {"octal_integer_literal/.CodeWiz./decimal_floating_point_literal", 8}, {"decimal_floating_point_literal/.CodeWiz./hex_floating_point_literal", 8}, {"character_literal", 1}, {"character_literal/.CodeWiz./string_literal", 1}, {"string_literal", 1}, {"escape_sequence", 1}, {"true/.CodeWiz./false", 3}, {"false/.CodeWiz./null_literal", 3}, {"line_comment", 2}, {"line_comment/.CodeWiz./block_comment", 2}, {"block_comment", 2}, {"abstract", 6}, {"abstract/.CodeWiz./assert", 6}, {"assert", 6}, {"assert/.CodeWiz./break", 6}, {"break", 6}, {"break/.CodeWiz./case", 6}, {"case", 6}, {"case/.CodeWiz./catch", 6}, {"catch", 6}, {"catch/.CodeWiz./class", 6}, {"class", 6}, {"class/.CodeWiz./continue", 6}, {"continue", 6}, {"continue/.CodeWiz./default", 6}, {"default", 6}, {"default/.CodeWiz./do", 6}, {"do", 6}, {"do/.CodeWiz./else", 6}, {"else", 6}, {"else/.CodeWiz./enum", 6}, {"enum", 6}, {"enum/.CodeWiz./exports", 6}, {"exports", 6}, {"exports/.CodeWiz./extends", 6}, {"extends", 6}, {"extends/.CodeWiz./final", 6}, {"final", 6}, {"final/.CodeWiz./finally", 6}, {"finally", 6}, {"finally/.CodeWiz./for", 6}, {"for", 6}, {"for/.CodeWiz./if", 6}, {"if", 6}, {"if/.CodeWiz./implements", 6}, {"implements", 6}, {"implements/.CodeWiz./import", 6}, {"import", 6}, {"import/.CodeWiz./instanceof", 6}, {"instanceof", 6}, {"instanceof/.CodeWiz./interface", 6}, {"interface", 6}, {"interface/.CodeWiz./module", 6}, {"module", 6}, {"module/.CodeWiz./native", 6}, {"native", 6}, {"native/.CodeWiz./new", 6}, {"new", 6}, {"new/.CodeWiz./non-sealed", 6}, {"non-sealed", 6}, {"non-sealed/.CodeWiz./open", 6}, {"open", 6}, {"open/.CodeWiz./opens", 6}, {"opens", 6}, {"opens/.CodeWiz./package", 6}, {"package", 6}, {"package/.CodeWiz./permits", 6}, {"permits", 6}, {"permits/.CodeWiz./private", 6}, {"private", 6}, {"private/.CodeWiz./protected", 6}, {"protected", 6}, {"protected/.CodeWiz./provides", 6}, {"provides", 6}, {"provides/.CodeWiz./public", 6}, {"public", 6}, {"public/.CodeWiz./requires", 6}, {"requires", 6}, {"requires/.CodeWiz./record", 6}, {"record", 6}, {"record/.CodeWiz./return", 6}, {"return", 6}, {"return/.CodeWiz./sealed", 6}, {"sealed", 6}, {"sealed/.CodeWiz./static", 6}, {"static", 6}, {"static/.CodeWiz./strictfp", 6}, {"strictfp", 6}, {"strictfp/.CodeWiz./switch", 6}, {"switch", 6}, {"switch/.CodeWiz./synchronized", 6}, {"synchronized", 6}, {"synchronized/.CodeWiz./throw", 6}, {"throw", 6}, {"throw/.CodeWiz./throws", 6}, {"throws", 6}, {"throws/.CodeWiz./to", 6}, {"to", 6}, {"to/.CodeWiz./transient", 6}, {"transient", 6}, {"transient/.CodeWiz./transitive", 6}, {"transitive", 6}, {"transitive/.CodeWiz./try", 6}, {"try", 6}, {"try/.CodeWiz./uses", 6}, {"uses", 6}, {"uses/.CodeWiz./volatile", 6}, {"volatile", 6}, {"volatile/.CodeWiz./when", 6}, {"when", 6}, {"when/.CodeWiz./while", 6}, {"while", 6}, {"while/.CodeWiz./with", 6}, {"with", 6}, {"with/.CodeWiz./yield", 6}, {"yield", 6}};
 	colormapTsTS = {{"type_identifier", 4}, {"predefined_type", 4}, {"identifier", 4}, {"type_arguments", 7}, {"type_arguments/.CodeWiz./<", 7}, {"<", 7}, {">", 7}, {"abstract", 6}, {"abstract/.CodeWiz./declare", 6}, {"declare", 6}, {"declare/.CodeWiz./enum", 6}, {"enum", 6}, {"enum/.CodeWiz./export", 6}, {"export", 6}, {"export/.CodeWiz./implements", 6}, {"implements", 6}, {"implements/.CodeWiz./interface", 6}, {"interface", 6}, {"interface/.CodeWiz./keyof", 6}, {"keyof", 6}, {"keyof/.CodeWiz./namespace", 6}, {"namespace", 6}, {"namespace/.CodeWiz./private", 6}, {"private", 6}, {"private/.CodeWiz./protected", 6}, {"protected", 6}, {"protected/.CodeWiz./public", 6}, {"public", 6}, {"public/.CodeWiz./type", 6}, {"type", 6}, {"type/.CodeWiz./readonly", 6}, {"readonly", 6}, {"readonly/.CodeWiz./override", 6}, {"override", 6}, {"override/.CodeWiz./satisfies", 6}, {"satisfies", 6}, {"property_identifier", 4}, {"function_expression/.CodeWiz./identifier", 5}, {"function_declaration/.CodeWiz./identifier", 5}, {"method_definition/.CodeWiz./property_identifier", 5}, {"pair", 5}, {"pair/.CodeWiz./property_identifier", 5}, {"function_expression/.CodeWiz./arrow_function", 5}, {"arrow_function/.CodeWiz./assignment_expression", 5}, {"assignment_expression/.CodeWiz./member_expression", 5}, {"member_expression/.CodeWiz./property_identifier", 5}, {"arrow_function/.CodeWiz./variable_declarator", 5}, {"variable_declarator/.CodeWiz./identifier", 5}, {"assignment_expression/.CodeWiz./identifier", 5}, {"arrow_function/.CodeWiz./call_expression", 5}, {"call_expression/.CodeWiz./identifier", 5}, {"call_expression/.CodeWiz./member_expression", 5}, {"identifier/.CodeWiz./shorthand_property_identifier", 3}, {"shorthand_property_identifier/.CodeWiz./shorthand_property_identifier_pattern", 3}, {"arguments", 3}, {"arguments/.CodeWiz./module", 3}, {"module", 3}, {"module/.CodeWiz./console", 3}, {"console", 3}, {"console/.CodeWiz./window", 3}, {"window", 3}, {"window/.CodeWiz./document", 3}, {"document", 3}, {"require", 5}, {"this", 3}, {"super", 3}, {"true/.CodeWiz./false", 3}, {"false/.CodeWiz./null", 3}, {"null/.CodeWiz./undefined", 3}, {"comment", 2}, {"string", 1}, {"string/.CodeWiz./template_string", 1}, {"template_string", 1}, {"regex", 1}, {"number", 8}, {";", 7}, {";/.CodeWiz./optional_chain", 7}, {"optional_chain", 7}, {"optional_chain/.CodeWiz./.", 7}, {".", 7}, {"./.CodeWiz./,", 7}, {",", 7}, {"-", 7}, {"-/.CodeWiz./--", 7}, {"--", 7}, {"--/.CodeWiz./-=", 7}, {"-=", 7}, {"-=/.CodeWiz./+", 7}, {"+", 7}, {"+/.CodeWiz./++", 7}, {"++", 7}, {"++/.CodeWiz./+=", 7}, {"+=", 7}, {"+=/.CodeWiz./*", 7}, {"*", 7}, {"*/.CodeWiz./*=", 7}, {"*=", 7}, {"*=/.CodeWiz./**", 7}, {"**", 7}, {"**/.CodeWiz./**=", 7}, {"**=", 7}, {"**=/.CodeWiz.//", 7}, {"/", 7}, {"//.CodeWiz.//=", 7}, {"/=", 7}, {"/=/.CodeWiz./%", 7}, {"%", 7}, {"%/.CodeWiz./%=", 7}, {"%=", 7}, {"%=/.CodeWiz./<", 7}, {"</.CodeWiz./<=", 7}, {"<=", 7}, {"<=/.CodeWiz./<<", 7}, {"<<", 7}, {"<</.CodeWiz./<<=", 7}, {"<<=", 7}, {"<<=/.CodeWiz./=", 7}, {"=", 7}, {"=/.CodeWiz./==", 7}, {"==", 7}, {"==/.CodeWiz./===", 7}, {"===", 7}, {"===/.CodeWiz./!", 7}, {"!", 7}, {"!/.CodeWiz./!=", 7}, {"!=", 7}, {"!=/.CodeWiz./!==", 7}, {"!==", 7}, {"!==/.CodeWiz./=>", 7}, {"=>", 7}, {"=>/.CodeWiz./>", 7}, {">/.CodeWiz./>=", 7}, {">=", 7}, {">=/.CodeWiz./>>", 7}, {">>", 7}, {">>/.CodeWiz./>>=", 7}, {">>=", 7}, {">>=/.CodeWiz./>>>", 7}, {">>>", 7}, {">>>/.CodeWiz./>>>=", 7}, {">>>=", 7}, {">>>=/.CodeWiz./~", 7}, {"~", 7}, {"~/.CodeWiz./^", 7}, {"^", 7}, {"^/.CodeWiz./&", 7}, {"&", 7}, {"&/.CodeWiz./|", 7}, {"|", 7}, {"|/.CodeWiz./^=", 7}, {"^=", 7}, {"^=/.CodeWiz./&=", 7}, {"&=", 7}, {"&=/.CodeWiz./|=", 7}, {"|=", 7}, {"|=/.CodeWiz./&&", 7}, {"&&", 7}, {"&&/.CodeWiz./||", 7}, {"||", 7}, {"||/.CodeWiz./??", 7}, {"??", 7}, {"??/.CodeWiz./&&=", 7}, {"&&=", 7}, {"&&=/.CodeWiz./||=", 7}, {"||=", 7}, {"||=/.CodeWiz./??=", 7}, {"??=", 7}, {"(", 7}, {"(/.CodeWiz./)", 7}, {")", 7}, {")/.CodeWiz./[", 7}, {"[", 7}, {"[/.CodeWiz./]", 7}, {"]", 7}, {"]/.CodeWiz./{", 7}, {"{", 7}, {"{/.CodeWiz./}", 7}, {"}", 7}, {"template_substitution", 7}, {"template_substitution/.CodeWiz./${", 7}, {"${", 7}, {"as", 6}, {"as/.CodeWiz./async", 6}, {"async", 6}, {"async/.CodeWiz./await", 6}, {"await", 6}, {"await/.CodeWiz./break", 6}, {"break", 6}, {"break/.CodeWiz./case", 6}, {"case", 6}, {"case/.CodeWiz./catch", 6}, {"catch", 6}, {"catch/.CodeWiz./class", 6}, {"class", 6}, {"class/.CodeWiz./const", 6}, {"const", 6}, {"const/.CodeWiz./continue", 6}, {"continue", 6}, {"continue/.CodeWiz./debugger", 6}, {"debugger", 6}, {"debugger/.CodeWiz./default", 6}, {"default", 6}, {"default/.CodeWiz./delete", 6}, {"delete", 6}, {"delete/.CodeWiz./do", 6}, {"do", 6}, {"do/.CodeWiz./else", 6}, {"else", 6}, {"else/.CodeWiz./export", 6}, {"export/.CodeWiz./extends", 6}, {"extends", 6}, {"extends/.CodeWiz./finally", 6}, {"finally", 6}, {"finally/.CodeWiz./for", 6}, {"for", 6}, {"for/.CodeWiz./from", 6}, {"from", 6}, {"from/.CodeWiz./function", 6}, {"function", 6}, {"function/.CodeWiz./get", 6}, {"get", 6}, {"get/.CodeWiz./if", 6}, {"if", 6}, {"if/.CodeWiz./import", 6}, {"import", 6}, {"import/.CodeWiz./in", 6}, {"in", 6}, {"in/.CodeWiz./instanceof", 6}, {"instanceof", 6}, {"instanceof/.CodeWiz./let", 6}, {"let", 6}, {"let/.CodeWiz./new", 6}, {"new", 6}, {"new/.CodeWiz./of", 6}, {"of", 6}, {"of/.CodeWiz./return", 6}, {"return", 6}, {"return/.CodeWiz./set", 6}, {"set", 6}, {"set/.CodeWiz./static", 6}, {"static", 6}, {"static/.CodeWiz./switch", 6}, {"switch", 6}, {"switch/.CodeWiz./target", 6}, {"target", 6}, {"target/.CodeWiz./throw", 6}, {"throw", 6}, {"throw/.CodeWiz./try", 6}, {"try", 6}, {"try/.CodeWiz./typeof", 6}, {"typeof", 6}, {"typeof/.CodeWiz./var", 6}, {"var", 6}, {"var/.CodeWiz./void", 6}, {"void", 6}, {"void/.CodeWiz./while", 6}, {"while", 6}, {"while/.CodeWiz./with", 6}, {"with", 6}, {"with/.CodeWiz./yield", 6}, {"yield", 6}};
 	colormapCTS = {{"identifier", 3}, {"break", 6}, {"case", 6}, {"const", 6}, {"continue", 6}, {"default", 6}, {"do", 6}, {"else", 6}, {"enum", 6}, {"extern", 6}, {"for", 6}, {"if", 6}, {"inline", 6}, {"return", 6}, {"sizeof", 6}, {"static", 6}, {"struct", 6}, {"switch", 6}, {"typedef", 6}, {"union", 6}, {"volatile", 6}, {"while", 6}, {"#define", 6}, {"#elif", 6}, {"#else", 6}, {"#endif", 6}, {"#if", 6}, {"#ifdef", 6}, {"#ifndef", 6}, {"#include", 6}, {"preproc_directive", 6}, {"--", 7}, {"-", 7}, {"-=", 7}, {"->", 7}, {"=", 7}, {"!=", 7}, {"*", 7}, {"&", 7}, {"&&", 7}, {"+", 7}, {"++", 7}, {"+=", 7}, {"<", 7}, {"==", 7}, {">", 7}, {"||", 7}, {".", 7}, {";", 7}, {"string_literal", 1}, {"system_lib_string", 1}, {"null", 3}, {"number_literal", 8}, {"char_literal", 8}, {"field_identifier", 4}, {"statement_identifier", 4}, {"type_identifier", 4}, {"primitive_type", 4}, {"sized_type_specifier", 4}, {"call_expression", 5}, {"call_expression/.CodeWiz./identifier", 5}, {"call_expression/.CodeWiz./field_expression", 5}, {"field_expression/.CodeWiz./field_identifier", 5}, {"function_declarator", 5}, {"function_declarator/.CodeWiz./identifier", 5}, {"preproc_function_def/.CodeWiz./identifier", 5}, {"comment", 2}};
+	colormapCobolTS = colormapLuaTS;
 
 	extraWordList = {};
 
@@ -801,60 +808,57 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	pythonLang.closeIndentsWords = QStringList() << "break" << "return" << "continue" << "pass";
 	pythonLang.defWordList = defWordListPython;
 	pythonLang.fileExtensions = QStringList() << ".py" << ".pyw";
-
 	pythonLang.colorMapTS = colormapPythonTS;
 
 	rustLang.name = "Rust";
 	rustLang.strings = QStringList() << "'";
-	rustLang.stringExtensions = QStringList() << ""; // Backslash is used for escaping in strings
-	rustLang.comments = QStringList() << "//"; // Single-line comments
-	rustLang.multiLineStringsStart = QStringList() << "r#\"" << "r##\"" << "r###\"" << "\""; // Raw string literals start
-	rustLang.multiLineStringsEnd = QStringList() << "\"#" << "\"##" << "\"###" << "\""; // Raw string literals end
-	rustLang.multiLineCommentsStart = QStringList() << "/*"; // Start of block comment
-	rustLang.multiLineCommentsEnd = QStringList() << "*/";   // End of block comment
+	rustLang.stringExtensions = QStringList() << "";
+	rustLang.comments = QStringList() << "//";
+	rustLang.multiLineStringsStart = QStringList() << "r#\"" << "r##\"" << "r###\"" << "\"";
+	rustLang.multiLineStringsEnd = QStringList() << "\"#" << "\"##" << "\"###" << "\"";
+	rustLang.multiLineCommentsStart = QStringList() << "/*";
+	rustLang.multiLineCommentsEnd = QStringList() << "*/";
 	rustLang.openIndents = QStringList() << "{";
 	rustLang.closeIndents = QStringList() << "}";
 	rustLang.closeIndentsWords = QStringList();
 	rustLang.defWordList = defWordListRust;
 	rustLang.fileExtensions = QStringList() << ".rs" << ".toml";
-
 	rustLang.colorMapTS = colormapRustTS;
 
 	WGSLLang.name = "WGSL";
 	WGSLLang.strings = QStringList() << "\"";
-	WGSLLang.stringExtensions = QStringList() << "\\"; // Backslash for escaping
-	WGSLLang.comments = QStringList() << "//"; // Single-line comments
+	WGSLLang.stringExtensions = QStringList() << "\\";
+	WGSLLang.comments = QStringList() << "//";
 	WGSLLang.multiLineStringsStart = QStringList();
 	WGSLLang.multiLineStringsEnd = QStringList();
-	WGSLLang.multiLineCommentsStart = QStringList() << "/*"; // Start of block comment
-	WGSLLang.multiLineCommentsEnd = QStringList() << "*/";   // End of block comment
+	WGSLLang.multiLineCommentsStart = QStringList() << "/*";
+	WGSLLang.multiLineCommentsEnd = QStringList() << "*/";
 	WGSLLang.openIndents = QStringList() << "{";
 	WGSLLang.closeIndents = QStringList() << "}";
 	WGSLLang.closeIndentsWords = QStringList();
 	WGSLLang.defWordList = defWordListWGSL;
 	WGSLLang.fileExtensions = QStringList() << ".wgsl";
-
 	WGSLLang.colorMapTS = colormapWGSLTS;
 
 	cppLang.name = "C++";
 	cppLang.strings = QStringList() << "\'" << "\"";
-	cppLang.stringExtensions = QStringList() << "" << ""; // Backslash for escaping
-	cppLang.comments = QStringList() << "//"; // Single-line comments
+	cppLang.stringExtensions = QStringList() << "" << "";
+	cppLang.comments = QStringList() << "//";
 	cppLang.multiLineStringsStart = QStringList() << "R\"";
 	cppLang.multiLineStringsEnd = QStringList() << "\"";
-	cppLang.multiLineCommentsStart = QStringList() << "/*"; // Start of block comment
-	cppLang.multiLineCommentsEnd = QStringList() << "*/";   // End of block comment
+	cppLang.multiLineCommentsStart = QStringList() << "/*";
+	cppLang.multiLineCommentsEnd = QStringList() << "*/";
 	cppLang.openIndents = QStringList() << "{";
 	cppLang.closeIndents = QStringList() << "}";
 	cppLang.closeIndentsWords = QStringList();
 	cppLang.defWordList = defWordListCpp;
 	cppLang.fileExtensions = QStringList() << ".cpp" << ".h";
-
 	cppLang.colorMapTS = colormapCppTS;
 
 	txtLang.name = "Txt";
 	txtLang.fileExtensions = QStringList() << ".txt";
 	txtLang.defWordList = defWordListTxt;
+	txtLang.openIndents = QStringList() << ":";
 
 	jsLang.name = "JS";
 	jsLang.strings = QStringList() << "\"" << "\'";
@@ -869,23 +873,21 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	jsLang.closeIndentsWords = QStringList();
 	jsLang.defWordList = defWordListJs;
 	jsLang.fileExtensions = QStringList() << ".js";
-
 	jsLang.colorMapTS = colormapJsTS;
 
 	HTMLLang.name = "HTML";
-	HTMLLang.strings = QStringList() << "\"" << "\'"; // Attribute values use double quotes
-	HTMLLang.stringExtensions = QStringList() << "" << ""; // Entities start with an ampersand
-	HTMLLang.comments = QStringList() << "//"; // HTML comment start
-	HTMLLang.multiLineStringsStart = QStringList(); // HTML does not support multiline strings
-	HTMLLang.multiLineStringsEnd = QStringList();   // No multiline strings in HTML
-	HTMLLang.multiLineCommentsStart = QStringList() << "<!--" << "/*"; // Start of HTML comment
-	HTMLLang.multiLineCommentsEnd = QStringList() << "-->" << "*/";   // End of HTML comment
+	HTMLLang.strings = QStringList() << "\"" << "\'";
+	HTMLLang.stringExtensions = QStringList() << "" << "";
+	HTMLLang.comments = QStringList() << "//";
+	HTMLLang.multiLineStringsStart = QStringList();
+	HTMLLang.multiLineStringsEnd = QStringList();
+	HTMLLang.multiLineCommentsStart = QStringList() << "<!--" << "/*";
+	HTMLLang.multiLineCommentsEnd = QStringList() << "-->" << "*/";
 	HTMLLang.openIndents = QStringList() << "{";
 	HTMLLang.closeIndents = QStringList() << "}";
 	HTMLLang.closeIndentsWords = QStringList();
 	HTMLLang.defWordList = defWordListHTML;
 	HTMLLang.fileExtensions = QStringList() << ".html";
-
 	HTMLLang.colorMapTS = colormapHTMLTS;
 
 	goLang.name = "Go";
@@ -901,7 +903,6 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	goLang.closeIndentsWords = QStringList();
 	goLang.defWordList = defWordListGo;
 	goLang.fileExtensions = QStringList() << ".go" << ".mod";
-
 	goLang.colorMapTS = colormapGoTS;
 
 	luaLang.name = "Lua";
@@ -917,49 +918,46 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	luaLang.closeIndentsWords = QStringList();
 	luaLang.defWordList = defWordListLua;
 	luaLang.fileExtensions = QStringList() << ".lua" << ".rockspec";
-
 	luaLang.colorMapTS = colormapLuaTS;
 
 	csharpLang.name = "C#";
 	csharpLang.strings = QStringList() << "\'" << "\"";
-	csharpLang.stringExtensions = QStringList() << "" << ""; // Backslash for escaping
-	csharpLang.comments = QStringList() << "//"; // Single-line comments
+	csharpLang.stringExtensions = QStringList() << "" << "";
+	csharpLang.comments = QStringList() << "//";
 	csharpLang.multiLineStringsStart = QStringList() << "@\"";
 	csharpLang.multiLineStringsEnd = QStringList() << "\"";
-	csharpLang.multiLineCommentsStart = QStringList() << "/*"; // Start of block comment
-	csharpLang.multiLineCommentsEnd = QStringList() << "*/";   // End of block comment
+	csharpLang.multiLineCommentsStart = QStringList() << "/*";
+	csharpLang.multiLineCommentsEnd = QStringList() << "*/";
 	csharpLang.openIndents = QStringList() << "{";
 	csharpLang.closeIndents = QStringList() << "}";
 	csharpLang.closeIndentsWords = QStringList();
 	csharpLang.defWordList = defWordListCsharp;
 	csharpLang.fileExtensions = QStringList() << ".cs" << ".csproj";
-
 	csharpLang.colorMapTS = colormapCsharpTS;
 
 	GLSLLang.name = "GLSL";
 	GLSLLang.strings = QStringList() << "\"";
-	GLSLLang.stringExtensions = QStringList() << "\\"; // Backslash for escaping
-	GLSLLang.comments = QStringList() << "//"; // Single-line comments
+	GLSLLang.stringExtensions = QStringList() << "\\";
+	GLSLLang.comments = QStringList() << "//";
 	GLSLLang.multiLineStringsStart = QStringList();
 	GLSLLang.multiLineStringsEnd = QStringList();
-	GLSLLang.multiLineCommentsStart = QStringList() << "/*"; // Start of block comment
-	GLSLLang.multiLineCommentsEnd = QStringList() << "*/";   // End of block comment
+	GLSLLang.multiLineCommentsStart = QStringList() << "/*";
+	GLSLLang.multiLineCommentsEnd = QStringList() << "*/";
 	GLSLLang.openIndents = QStringList() << "{";
 	GLSLLang.closeIndents = QStringList() << "}";
 	GLSLLang.closeIndentsWords = QStringList();
 	GLSLLang.defWordList = defWordListGLSL;
 	GLSLLang.fileExtensions = QStringList() << ".glsl";
-
 	GLSLLang.colorMapTS = colormapGLSLTS;
 
 	javaLang.name = "Java";
 	javaLang.strings = QStringList() << "\"" << "\'";
-	javaLang.stringExtensions = QStringList() << "" << ""; // Backslash for escaping
-	javaLang.comments = QStringList() << "//"; // Single-line comments
+	javaLang.stringExtensions = QStringList() << "" << "";
+	javaLang.comments = QStringList() << "//";
 	javaLang.multiLineStringsStart = QStringList() << "\"\"\"";
 	javaLang.multiLineStringsEnd = QStringList() << "\"\"\"";
-	javaLang.multiLineCommentsStart = QStringList() << "/*"; // Start of block comment
-	javaLang.multiLineCommentsEnd = QStringList() << "*/";   // End of block comment
+	javaLang.multiLineCommentsStart = QStringList() << "/*";
+	javaLang.multiLineCommentsEnd = QStringList() << "*/";
 	javaLang.openIndents = QStringList() << "{";
 	javaLang.closeIndents = QStringList() << "}";
 	javaLang.closeIndentsWords = QStringList();
@@ -984,20 +982,35 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	cLang.name = "C";
 	cLang.strings = QStringList() << "\'" << "\"";
-	cLang.stringExtensions = QStringList() << "" << ""; // Backslash for escaping
-	cLang.comments = QStringList() << "//"; // Single-line comments
-	cLang.multiLineStringsStart = QStringList(); // C does not have raw strings like C++
+	cLang.stringExtensions = QStringList() << "" << "";
+	cLang.comments = QStringList() << "//";
+	cLang.multiLineStringsStart = QStringList();
 	cLang.multiLineStringsEnd = QStringList();
-	cLang.multiLineCommentsStart = QStringList() << "/*"; // Start of block comment
-	cLang.multiLineCommentsEnd = QStringList() << "*/";   // End of block comment
+	cLang.multiLineCommentsStart = QStringList() << "/*";
+	cLang.multiLineCommentsEnd = QStringList() << "*/";
 	cLang.openIndents = QStringList() << "{";
 	cLang.closeIndents = QStringList() << "}";
 	cLang.closeIndentsWords = QStringList();
-	cLang.defWordList = defWordListC; // Replace with C-specific keywords
+	cLang.defWordList = defWordListC;
 	cLang.fileExtensions = QStringList() << ".c";
 	cLang.colorMapTS = colormapCTS;
+	
+	cobolLang.name = "Cobol";
+	cobolLang.strings = QStringList() << "\'" << "\"";
+	cobolLang.stringExtensions = QStringList() << "" << "";
+	cobolLang.comments = QStringList() << "*" << "$" << "REM";
+	cobolLang.multiLineStringsStart = QStringList();
+	cobolLang.multiLineStringsEnd = QStringList();
+	cobolLang.multiLineCommentsStart = QStringList();
+	cobolLang.multiLineCommentsEnd = QStringList() ;
+	cobolLang.openIndents = QStringList();
+	cobolLang.closeIndents = QStringList();
+	cobolLang.closeIndentsWords = QStringList();
+	cobolLang.defWordList = defWordListCobol;
+	cobolLang.fileExtensions = QStringList() << ".cob";
+	cobolLang.colorMapTS = colormapCobolTS;
 
-	supportedLangs = {pythonLang, rustLang, WGSLLang, cppLang, txtLang, jsLang, HTMLLang, goLang, luaLang, csharpLang, GLSLLang, javaLang, tsLang, cLang};
+	supportedLangs = {pythonLang, rustLang, WGSLLang, cppLang, txtLang, jsLang, HTMLLang, goLang, luaLang, csharpLang, GLSLLang, javaLang, tsLang, cLang, cobolLang};
 
 	for (int i = 0; i < supportedLangs.count(); i ++){
 		supportedLangs[i].index = i;
@@ -3093,6 +3106,8 @@ void MainWindow::on_actionLSP_triggered()
 		lspPath = javaLSP;
 	}else if (currentLang.name == "C"){
 		lspPath = cLSP;
+	}else if (currentLang.name == "Cobol"){
+		lspPath = cobolLSP;
 	}
 
 	QInputDialog dialog;
@@ -3139,6 +3154,8 @@ void MainWindow::on_actionLSP_triggered()
 		javaLSP = lspPath;
 	}else if (currentLang.name == "C"){
 		cLSP = lspPath;
+	}else if (currentLang.name == "Cobol"){
+		cobolLSP = lspPath;
 	}
 
 	saveWantedTheme();
@@ -3210,6 +3227,8 @@ void MainWindow::setupLSP(QString oldFile)
 		lspPath = javaLSP;
 	}else if (currentLang.name == "C"){
 		lspPath = cLSP;
+	}else if (currentLang.name == "Cobol"){
+		lspPath = cobolLSP;
 	}
 
 	if (client && client->lspPath == lspPath){
@@ -3898,6 +3917,8 @@ void MainWindow::saveWantedTheme()
 		javaTag = lineEdit->toPlainText();
 	}else if (currentLang.name == "C"){
 		cTag = lineEdit->toPlainText();
+	}else if (currentLang.name == "Cobol"){
+		cobolTag = lineEdit->toPlainText();
 	}
 
 	QSettings settings("FoundationTechnologies", "CodeWizard");
@@ -3916,6 +3937,7 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("csharpTag", csharpTag);
 	settings.setValue("javaTag", javaTag);
 	settings.setValue("cTag", cTag);
+	settings.setValue("cobolTag", cobolTag);
 
 	settings.setValue("pythonLSP", pythonLSP);
 	settings.setValue("rustLSP", rustLSP);
@@ -3931,6 +3953,7 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("GLSLLSP", GLSLLSP);
 	settings.setValue("javaLSP", javaLSP);
 	settings.setValue("cLSP", cLSP);
+	settings.setValue("cobolLSP", cobolLSP);
 
 	settings.setValue("showWarnings", showWarnings->isChecked());
 	settings.setValue("showErrors", showErrors->isChecked());
@@ -4038,6 +4061,7 @@ bool MainWindow::wantedTheme()
 			csharpTag = settings.value("csharpTag", defCsharpTag).toString();
 			javaTag = settings.value("javaTag", defJavaTag).toString();
 			cTag = settings.value("cTag", defCTag).toString();
+			cobolTag = settings.value("cobolTag", defCobolTag).toString();
 		}
 		if (compareVersionNumbers(existingVersion, "8.6.3") < 0){ // less than v863
 			CppTag = defCppTag;
@@ -4058,6 +4082,7 @@ bool MainWindow::wantedTheme()
 		csharpLSP = settings.value("csharpLSP", "").toString();
 		javaLSP = settings.value("javaLSP", "").toString();
 		cLSP = settings.value("cLSP", "").toString();
+		cobolLSP = settings.value("cobolLSP", "").toString();
 
 		groqApiKey = settings.value("groqApiKey", "").toString();
 		groq->setApiKey(groqApiKey);
@@ -4565,6 +4590,8 @@ void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
 		ts_parser_set_language(parser, tree_sitter_java());
 	}else if (currentLang.name == "C"){
 		ts_parser_set_language(parser, tree_sitter_c());
+	}else if (currentLang.name == "Cobol"){
+		ts_parser_set_language(parser, tree_sitter_lua());
 	}
 
 	QElapsedTimer timer;
@@ -4783,6 +4810,8 @@ void MainWindow::updateTagLine(){
 		lineEdit->setPlainText(javaTag);
 	}else if (currentLang.name == "C"){
 		lineEdit->setPlainText(cTag);
+	}else if (currentLang.name == "Cobol"){
+		lineEdit->setPlainText(cobolTag);
 	}
 }
 
@@ -5029,6 +5058,8 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 			intermediateTag = javaTag;
 		} else if (currentLang.name == "C") {
 			intermediateTag = cTag;
+		} else if (currentLang.name == "Cobol") {
+			intermediateTag = cobolTag;
 		}
 
 		intermediateTag.replace("[filename]", fileNameName).replace("[filenameWoutExt]", fileNameName.split('.')[0]);
@@ -5726,9 +5757,9 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		}else if (key_sequence == QKeySequence("Alt+4")) {
 			on_actionUn_Comment_Alt_5_triggered();
 			return true; // Mark as handled
-		}else if (QString("{[(<").contains(key_event->text()) && !isACtrl && (key_event->key() == Qt::Key_ParenLeft || key_event->key() == Qt::Key_BracketLeft || key_event->key() == Qt::Key_Less || key_event->key() == Qt::Key_BraceLeft)) {
+		}else if (QString("{[(").contains(key_event->text()) && !isACtrl && (key_event->key() == Qt::Key_ParenLeft || key_event->key() == Qt::Key_BracketLeft || key_event->key() == Qt::Key_BraceLeft)) {
 			if (autoAddBrackets->isChecked()){
-				updateSyntaxAdd = QString("}])>").at(QString("{[(<").indexOf(key_event->text()));
+				updateSyntaxAdd = QString("}])").at(QString("{[(").indexOf(key_event->text()));
 				updateSyntaxPosition = textEdit->textCursor().position()+1;
 			}
 		}else if (key_event->key() == Qt::Key_BraceRight && currentLang.closeIndents.contains("}")){
@@ -8018,6 +8049,15 @@ void MainWindow::on_actionC_triggered(){
 
 	currentLang = cppLang;
 	lineEdit->setPlainText(CppTag);
+	updateDefaultWordLists();
+	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
+}
+
+void MainWindow::on_actionCobol_triggered(){
+	qDebug() << "on_actionCobol_triggered";
+
+	currentLang = cobolLang;
+	lineEdit->setPlainText(cobolTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }

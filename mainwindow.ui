@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1229</width>
+    <width>1290</width>
     <height>786</height>
    </rect>
   </property>
@@ -57,8 +57,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>1225</width>
-           <height>49</height>
+           <width>1286</width>
+           <height>68</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -506,8 +506,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1229</width>
-     <height>17</height>
+     <width>1290</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -680,6 +680,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="actionHTML"/>
     <addaction name="actionLua"/>
     <addaction name="actionGo"/>
+    <addaction name="actionCobol"/>
     <addaction name="actionPlaintext"/>
     <addaction name="separator"/>
     <addaction name="actionLSP"/>
@@ -1304,6 +1305,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionMultiple_Cursors">
    <property name="text">
     <string>Multiple Cursors</string>
+   </property>
+  </action>
+  <action name="actionCobol">
+   <property name="text">
+    <string>Cobol</string>
    </property>
   </action>
  </widget>

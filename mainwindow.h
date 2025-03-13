@@ -161,6 +161,7 @@ private slots:
 	void on_actionHTML_triggered();
 	void on_actionGo_triggered();
 	void on_actionC_triggered();
+	void on_actionCobol_triggered();
 	void on_actionC_2_triggered();
 	void on_actionC_3_triggered();
 	void on_actionRust_triggered();
