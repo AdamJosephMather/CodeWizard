@@ -678,6 +678,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="actionJavaScript"/>
     <addaction name="actionTypeScript"/>
     <addaction name="actionHTML"/>
+    <addaction name="actionCss"/>
     <addaction name="actionLua"/>
     <addaction name="actionGo"/>
     <addaction name="actionCobol"/>
@@ -1310,6 +1311,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionCobol">
    <property name="text">
     <string>Cobol</string>
+   </property>
+  </action>
+  <action name="actionCss">
+   <property name="text">
+    <string>Css</string>
    </property>
   </action>
  </widget>

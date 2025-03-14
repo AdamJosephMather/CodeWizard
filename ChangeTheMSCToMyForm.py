@@ -3,7 +3,7 @@ import re
 from collections import defaultdict
 
 filedir = "testhighlight"
-file = 'cobol.msc'
+file = 'lua_new.scm'
 
 def isRegex(txt):
 	cnt = txt.count("^")
@@ -107,7 +107,7 @@ for i in fulls2:
 dct = {
 	"identifier":3,
 	"tag":6,
-	"error":0,
+	"error":8, # we used to do 0 - but... I want colors so...
 	"conditional":6,
 	"repeat":5,
 	"storageclass":4,
@@ -159,7 +159,14 @@ dct = {
 	"function.call.lua":5,
 	"constant.builtin":3,
 	"variable.parameter":3,
-	"first":3
+	"first":3,
+	"media":1,
+	"import":6,
+	"charset":1,
+	"namespace":6,
+	"supports":6,
+	"keyframes":6,
+	
 }
 
 out = ""

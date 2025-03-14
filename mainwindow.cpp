@@ -53,6 +53,7 @@ extern "C" {
 	TSLanguage* tree_sitter_lua(void);
 	TSLanguage* tree_sitter_java(void);
 	TSLanguage* tree_sitter_go(void);
+	TSLanguage* tree_sitter_css(void);
 }
 
 QString versionNumber = "9.2.0";
@@ -131,6 +132,7 @@ Language javaLang;
 Language tsLang;
 Language cLang;
 Language cobolLang;
+Language cssLang;
 
 QVector<Language> supportedLangs;
 
@@ -151,6 +153,7 @@ std::unordered_map<QString, int> colormapJavaTS;
 std::unordered_map<QString, int> colormapTsTS;
 std::unordered_map<QString, int> colormapCTS;
 std::unordered_map<QString, int> colormapCobolTS;
+std::unordered_map<QString, int> colormapCssTS;
 
 std::unordered_map<QString, int> storedLineNumbers;
 
@@ -176,6 +179,7 @@ QString defGLSLTag = "";
 QString defJavaTag = "javac \"[filename]\"\njava \"[filename]\"";
 QString defCTag = "call \"C:\\Program Files\\Microsoft Visual Studio\\[VERSION_NUMBER]\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat\" x64\ncl \"[filename]\" && \"[filenameWoutExt].exe\"";
 QString defCobolTag = "cobc -x \"[filename]\"";
+QString defCssTag = "\"[filenameWoutExt].html\"";
 
 QString pythonTag = defPythonTag;
 QString rustTag = defRustTag;
@@ -192,6 +196,7 @@ QString GLSLTag = defGLSLTag;
 QString javaTag = defJavaTag;
 QString cTag = defCTag;
 QString cobolTag = defCTag;
+QString cssTag = defCssTag;
 
 QString pythonLSP = "";
 QString rustLSP = "";
@@ -208,6 +213,7 @@ QString GLSLLSP = "";
 QString javaLSP = "";
 QString cLSP = "";
 QString cobolLSP = "";
+QString cssLSP = "";
 
 float fontSize = 11.0;
 
@@ -292,6 +298,7 @@ QStringList defWordListGLSL;
 QStringList defWordListJava;
 QStringList defWordListC;
 QStringList defWordListCobol;
+QStringList defWordListCss;
 
 QSet<QString> wrdLstDefQSetted;
 QStringList wrdLstDefQStringy;
@@ -641,7 +648,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	prevTerm2->setFixedWidth(prevTerm1->height());
 	nextTerm2->setFixedWidth(prevTerm1->height());
 	addTerm2->setFixedWidth(prevTerm1->height());
-	
+
 	nextWebButton->setFixedWidth(nextWebButton->height());
 	prevWebButton->setFixedWidth(prevWebButton->height());
 	reloadButton->setFixedWidth(reloadButton->height());
@@ -714,7 +721,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	textEdit->setWordWrapMode(QTextOption::NoWrap);
 	textEdit->useMultiCursors = true;
 	textDocument = textEdit->document();
-	
+
 	QFont monacoFont("Monaco");
 	textEdit->setFont(monacoFont);
 
@@ -786,13 +793,14 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	colormapJsTS = {{"identifier", 3}, {"property_identifier", 4}, {"function_expression/.CodeWiz./identifier", 5}, {"function_declaration/.CodeWiz./identifier", 5}, {"method_definition/.CodeWiz./property_identifier", 5}, {"pair", 5}, {"pair/.CodeWiz./property_identifier", 5}, {"function_expression/.CodeWiz./arrow_function", 5}, {"arrow_function/.CodeWiz./assignment_expression", 5}, {"assignment_expression/.CodeWiz./member_expression", 5}, {"member_expression/.CodeWiz./property_identifier", 5}, {"arrow_function/.CodeWiz./variable_declarator", 5}, {"variable_declarator/.CodeWiz./identifier", 5}, {"assignment_expression/.CodeWiz./identifier", 5}, {"arrow_function/.CodeWiz./call_expression", 5}, {"call_expression/.CodeWiz./identifier", 5}, {"call_expression/.CodeWiz./member_expression", 5}, {"identifier/.CodeWiz./shorthand_property_identifier", 3}, {"shorthand_property_identifier/.CodeWiz./shorthand_property_identifier_pattern", 3}, {"arguments", 3}, {"arguments/.CodeWiz./module", 3}, {"module", 3}, {"module/.CodeWiz./console", 3}, {"console", 3}, {"console/.CodeWiz./window", 3}, {"window", 3}, {"window/.CodeWiz./document", 3}, {"document", 3}, {"require", 5}, {"this", 3}, {"super", 3}, {"true/.CodeWiz./false", 3}, {"false/.CodeWiz./null", 3}, {"null/.CodeWiz./undefined", 3}, {"comment", 2}, {"string", 1}, {"string/.CodeWiz./template_string", 1}, {"template_string", 1}, {"regex", 1}, {"number", 8}, {";", 7}, {";/.CodeWiz./optional_chain", 7}, {"optional_chain", 7}, {"optional_chain/.CodeWiz./.", 7}, {".", 7}, {"./.CodeWiz./,", 7}, {",", 7}, {"-", 7}, {"-/.CodeWiz./--", 7}, {"--", 7}, {"--/.CodeWiz./-=", 7}, {"-=", 7}, {"-=/.CodeWiz./+", 7}, {"+", 7}, {"+/.CodeWiz./++", 7}, {"++", 7}, {"++/.CodeWiz./+=", 7}, {"+=", 7}, {"+=/.CodeWiz./*", 7}, {"*", 7}, {"*/.CodeWiz./*=", 7}, {"*=", 7}, {"*=/.CodeWiz./**", 7}, {"**", 7}, {"**/.CodeWiz./**=", 7}, {"**=", 7}, {"**=/.CodeWiz.//", 7}, {"/", 7}, {"//.CodeWiz.//=", 7}, {"/=", 7}, {"/=/.CodeWiz./%", 7}, {"%", 7}, {"%/.CodeWiz./%=", 7}, {"%=", 7}, {"%=/.CodeWiz./<", 7}, {"<", 7}, {"</.CodeWiz./<=", 7}, {"<=", 7}, {"<=/.CodeWiz./<<", 7}, {"<<", 7}, {"<</.CodeWiz./<<=", 7}, {"<<=", 7}, {"<<=/.CodeWiz./=", 7}, {"=", 7}, {"=/.CodeWiz./==", 7}, {"==", 7}, {"==/.CodeWiz./===", 7}, {"===", 7}, {"===/.CodeWiz./!", 7}, {"!", 7}, {"!/.CodeWiz./!=", 7}, {"!=", 7}, {"!=/.CodeWiz./!==", 7}, {"!==", 7}, {"!==/.CodeWiz./=>", 7}, {"=>", 7}, {"=>/.CodeWiz./>", 7}, {">", 7}, {">/.CodeWiz./>=", 7}, {">=", 7}, {">=/.CodeWiz./>>", 7}, {">>", 7}, {">>/.CodeWiz./>>=", 7}, {">>=", 7}, {">>=/.CodeWiz./>>>", 7}, {">>>", 7}, {">>>/.CodeWiz./>>>=", 7}, {">>>=", 7}, {">>>=/.CodeWiz./~", 7}, {"~", 7}, {"~/.CodeWiz./^", 7}, {"^", 7}, {"^/.CodeWiz./&", 7}, {"&", 7}, {"&/.CodeWiz./|", 7}, {"|", 7}, {"|/.CodeWiz./^=", 7}, {"^=", 7}, {"^=/.CodeWiz./&=", 7}, {"&=", 7}, {"&=/.CodeWiz./|=", 7}, {"|=", 7}, {"|=/.CodeWiz./&&", 7}, {"&&", 7}, {"&&/.CodeWiz./||", 7}, {"||", 7}, {"||/.CodeWiz./??", 7}, {"??", 7}, {"??/.CodeWiz./&&=", 7}, {"&&=", 7}, {"&&=/.CodeWiz./||=", 7}, {"||=", 7}, {"||=/.CodeWiz./??=", 7}, {"??=", 7}, {"(", 7}, {"(/.CodeWiz./)", 7}, {")", 7}, {")/.CodeWiz./[", 7}, {"[", 7}, {"[/.CodeWiz./]", 7}, {"]", 7}, {"]/.CodeWiz./{", 7}, {"{", 7}, {"{/.CodeWiz./}", 7}, {"}", 7}, {"template_substitution", 7}, {"template_substitution/.CodeWiz./${", 7}, {"${", 7}, {"as", 6}, {"as/.CodeWiz./async", 6}, {"async", 6}, {"async/.CodeWiz./await", 6}, {"await", 6}, {"await/.CodeWiz./break", 6}, {"break", 6}, {"break/.CodeWiz./case", 6}, {"case", 6}, {"case/.CodeWiz./catch", 6}, {"catch", 6}, {"catch/.CodeWiz./class", 6}, {"class", 6}, {"class/.CodeWiz./const", 6}, {"const", 6}, {"const/.CodeWiz./continue", 6}, {"continue", 6}, {"continue/.CodeWiz./debugger", 6}, {"debugger", 6}, {"debugger/.CodeWiz./default", 6}, {"default", 6}, {"default/.CodeWiz./delete", 6}, {"delete", 6}, {"delete/.CodeWiz./do", 6}, {"do", 6}, {"do/.CodeWiz./else", 6}, {"else", 6}, {"else/.CodeWiz./export", 6}, {"export", 6}, {"export/.CodeWiz./extends", 6}, {"extends", 6}, {"extends/.CodeWiz./finally", 6}, {"finally", 6}, {"finally/.CodeWiz./for", 6}, {"for", 6}, {"for/.CodeWiz./from", 6}, {"from", 6}, {"from/.CodeWiz./function", 6}, {"function", 6}, {"function/.CodeWiz./get", 6}, {"get", 6}, {"get/.CodeWiz./if", 6}, {"if", 6}, {"if/.CodeWiz./import", 6}, {"import", 6}, {"import/.CodeWiz./in", 6}, {"in", 6}, {"in/.CodeWiz./instanceof", 6}, {"instanceof", 6}, {"instanceof/.CodeWiz./let", 6}, {"let", 6}, {"let/.CodeWiz./new", 6}, {"new", 6}, {"new/.CodeWiz./of", 6}, {"of", 6}, {"of/.CodeWiz./return", 6}, {"return", 6}, {"return/.CodeWiz./set", 6}, {"set", 6}, {"set/.CodeWiz./static", 6}, {"static", 6}, {"static/.CodeWiz./switch", 6}, {"switch", 6}, {"switch/.CodeWiz./target", 6}, {"target", 6}, {"target/.CodeWiz./throw", 6}, {"throw", 6}, {"throw/.CodeWiz./try", 6}, {"try", 6}, {"try/.CodeWiz./typeof", 6}, {"typeof", 6}, {"typeof/.CodeWiz./var", 6}, {"var", 6}, {"var/.CodeWiz./void", 6}, {"void", 6}, {"void/.CodeWiz./while", 6}, {"while", 6}, {"while/.CodeWiz./with", 6}, {"with", 6}, {"with/.CodeWiz./yield", 6}, {"yield", 6}, {"expression_statement/.CodeWiz./undefined", 6}};
 	colormapHTMLTS = {{"tag_name", 6}, {"erroneous_end_tag_name", 6}, {"doctype", 3}, {"attribute_name", 4}, {"attribute_value", 1}, {"comment", 2}, {"<", 7}, {"</.CodeWiz./>", 7}, {">", 7}, {">/.CodeWiz./</", 7}, {"</", 7}, {"<//.CodeWiz.//>", 7}, {"/>", 7}};
 	colormapGoTS = {{"call_expression", 5}, {"call_expression/.CodeWiz./identifier", 5}, {"identifier", 3}, {"append", 5}, {"append/.CodeWiz./cap", 5}, {"cap", 5}, {"cap/.CodeWiz./close", 5}, {"close", 5}, {"close/.CodeWiz./complex", 5}, {"complex", 5}, {"complex/.CodeWiz./copy", 5}, {"copy", 5}, {"copy/.CodeWiz./delete", 5}, {"delete", 5}, {"delete/.CodeWiz./imag", 5}, {"imag", 5}, {"imag/.CodeWiz./len", 5}, {"len", 5}, {"len/.CodeWiz./make", 5}, {"make", 5}, {"make/.CodeWiz./new", 5}, {"new", 5}, {"new/.CodeWiz./panic", 5}, {"panic", 5}, {"panic/.CodeWiz./print", 5}, {"print", 5}, {"print/.CodeWiz./println", 5}, {"println", 5}, {"println/.CodeWiz./real", 5}, {"real", 5}, {"real/.CodeWiz./recover", 5}, {"recover", 5}, {"call_expression/.CodeWiz./selector_expression", 5}, {"selector_expression/.CodeWiz./field_identifier", 5}, {"function_declaration/.CodeWiz./identifier", 5}, {"method_declaration/.CodeWiz./field_identifier", 5}, {"type_identifier", 4}, {"field_identifier", 4}, {"--", 7}, {"--/.CodeWiz./-", 7}, {"-", 7}, {"-/.CodeWiz./-=", 7}, {"-=", 7}, {"-=/.CodeWiz./:=", 7}, {":=", 7}, {":=/.CodeWiz./!", 7}, {"!", 7}, {"!/.CodeWiz./!=", 7}, {"!=", 7}, {"!=/.CodeWiz./...", 7}, {"...", 7}, {".../.CodeWiz./*", 7}, {"*", 7}, {"*/.CodeWiz./*=", 7}, {"*=", 7}, {"*=/.CodeWiz.//", 7}, {"/", 7}, {"//.CodeWiz.//=", 7}, {"/=", 7}, {"/=/.CodeWiz./&", 7}, {"&", 7}, {"&/.CodeWiz./&&", 7}, {"&&", 7}, {"&&/.CodeWiz./&=", 7}, {"&=", 7}, {"&=/.CodeWiz./%", 7}, {"%", 7}, {"%/.CodeWiz./%=", 7}, {"%=", 7}, {"%=/.CodeWiz./^", 7}, {"^", 7}, {"^/.CodeWiz./^=", 7}, {"^=", 7}, {"^=/.CodeWiz./+", 7}, {"+", 7}, {"+/.CodeWiz./++", 7}, {"++", 7}, {"++/.CodeWiz./+=", 7}, {"+=", 7}, {"+=/.CodeWiz./<-", 7}, {"<-", 7}, {"<-/.CodeWiz./<", 7}, {"<", 7}, {"</.CodeWiz./<<", 7}, {"<<", 7}, {"<</.CodeWiz./<<=", 7}, {"<<=", 7}, {"<<=/.CodeWiz./<=", 7}, {"<=", 7}, {"<=/.CodeWiz./=", 7}, {"=", 7}, {"=/.CodeWiz./==", 7}, {"==", 7}, {"==/.CodeWiz./>", 7}, {">", 7}, {">/.CodeWiz./>=", 7}, {">=", 7}, {">=/.CodeWiz./>>", 7}, {">>", 7}, {">>/.CodeWiz./>>=", 7}, {">>=", 7}, {">>=/.CodeWiz./|", 7}, {"|", 7}, {"|/.CodeWiz./|=", 7}, {"|=", 7}, {"|=/.CodeWiz./||", 7}, {"||", 7}, {"||/.CodeWiz./~", 7}, {"~", 7}, {"break", 6}, {"break/.CodeWiz./case", 6}, {"case", 6}, {"case/.CodeWiz./chan", 6}, {"chan", 6}, {"chan/.CodeWiz./const", 6}, {"const", 6}, {"const/.CodeWiz./continue", 6}, {"continue", 6}, {"continue/.CodeWiz./default", 6}, {"default", 6}, {"default/.CodeWiz./defer", 6}, {"defer", 6}, {"defer/.CodeWiz./else", 6}, {"else", 6}, {"else/.CodeWiz./fallthrough", 6}, {"fallthrough", 6}, {"fallthrough/.CodeWiz./for", 6}, {"for", 6}, {"for/.CodeWiz./func", 6}, {"func", 6}, {"func/.CodeWiz./go", 6}, {"go", 6}, {"go/.CodeWiz./goto", 6}, {"goto", 6}, {"goto/.CodeWiz./if", 6}, {"if", 6}, {"if/.CodeWiz./import", 6}, {"import", 6}, {"import/.CodeWiz./interface", 6}, {"interface", 6}, {"interface/.CodeWiz./map", 6}, {"map", 6}, {"map/.CodeWiz./package", 6}, {"package", 6}, {"package/.CodeWiz./range", 6}, {"range", 6}, {"range/.CodeWiz./return", 6}, {"return", 6}, {"return/.CodeWiz./select", 6}, {"select", 6}, {"select/.CodeWiz./struct", 6}, {"struct", 6}, {"struct/.CodeWiz./switch", 6}, {"switch", 6}, {"switch/.CodeWiz./type", 6}, {"type", 6}, {"type/.CodeWiz./var", 6}, {"var", 6}, {"interpreted_string_literal/.CodeWiz./raw_string_literal", 1}, {"raw_string_literal/.CodeWiz./rune_literal", 1}, {"escape_sequence", 1}, {"int_literal/.CodeWiz./float_literal", 8}, {"float_literal/.CodeWiz./imaginary_literal", 8}, {"true/.CodeWiz./false", 3}, {"false/.CodeWiz./nil", 3}, {"nil/.CodeWiz./iota", 3}, {"comment", 2}};
-	colormapLuaTS = {{"if_start/.CodeWiz./if_then", 6}, {"if_then/.CodeWiz./if_elseif", 6}, {"if_elseif/.CodeWiz./if_else", 6}, {"if_else/.CodeWiz./if_end", 6}, {"for_start/.CodeWiz./for_in", 6}, {"for_in/.CodeWiz./for_do", 6}, {"for_do/.CodeWiz./for_end", 6}, {"while_start/.CodeWiz./while_do", 6}, {"while_do/.CodeWiz./while_end", 6}, {"repeat_start", 6}, {"repeat_start/.CodeWiz./repeat_until", 6}, {"repeat_until", 6}, {"break_statement", 6}, {"return_statement", 6}, {"return_statement/.CodeWiz./module_return_statement", 6}, {"module_return_statement", 6}, {"do_start", 6}, {"do_start/.CodeWiz./do_end", 6}, {"do_end", 6}, {"not", 6}, {"not/.CodeWiz./and", 6}, {"and", 6}, {"and/.CodeWiz./or", 6}, {"or", 6}, {"=", 7}, {"=/.CodeWiz./~=", 7}, {"~=", 7}, {"~=/.CodeWiz./==", 7}, {"==", 7}, {"==/.CodeWiz./<=", 7}, {"<=", 7}, {"<=/.CodeWiz./>=", 7}, {">=", 7}, {">=/.CodeWiz./<", 7}, {"<", 7}, {"</.CodeWiz./>", 7}, {">", 7}, {">/.CodeWiz./+", 7}, {"+", 7}, {"+/.CodeWiz./-", 7}, {"-", 7}, {"-/.CodeWiz./%", 7}, {"%", 7}, {"%/.CodeWiz.//", 7}, {"/", 7}, {"//.CodeWiz.///", 7}, {"//", 7}, {"///.CodeWiz./*", 7}, {"*", 7}, {"*/.CodeWiz./^", 7}, {"^", 7}, {"^/.CodeWiz./&", 7}, {"&", 7}, {"&/.CodeWiz./~", 7}, {"~", 7}, {"~/.CodeWiz./|", 7}, {"|", 7}, {"|/.CodeWiz./>>", 7}, {">>", 7}, {">>/.CodeWiz./<<", 7}, {"<<", 7}, {"<</.CodeWiz./..", 7}, {"..", 7}, {"../.CodeWiz./#", 7}, {"#", 7}, {",", 7}, {",/.CodeWiz./.", 7}, {".", 7}, {"left_paren", 7}, {"left_paren/.CodeWiz./right_paren", 7}, {"right_paren", 7}, {"right_paren/.CodeWiz./[", 7}, {"[", 7}, {"[/.CodeWiz./]", 7}, {"]", 7}, {"]/.CodeWiz./{", 7}, {"{", 7}, {"{/.CodeWiz./}", 7}, {"}", 7}, {"identifier", 3}, {"self", 3}, {"boolean", 8}, {"nil", 3}, {"ellipsis", 3}, {"local", 6}, {"function_call_paren", 7}, {"function_start", 6}, {"function_start/.CodeWiz./function_end", 6}, {"function_end", 6}, {"emmy_type", 4}, {"emmy_literal", 1}, {"emmy_parameter", 4}, {"emmy_parameter/.CodeWiz./identifier", 4}, {"_", 2}, {"emmy_class", 2}, {"emmy_function_parameter/.CodeWiz./_", 4}, {"emmy_note", 2}, {"emmy_see", 2}, {"emmy_return", 2}, {"emmy_header", 2}, {"emmy_ignore", 2}, {"documentation_brief", 2}, {"documentation_command", 2}, {"function_call/.CodeWiz./identifier", 3}, {"identifier/.CodeWiz./function_call_paren", 3}, {"function_call", 5}, {"string_argument", 1}, {"table_argument", 2}, {"table_argument/.CodeWiz./comment", 2}, {"comment", 2}, {"string", 1}, {"number", 8}, {"ERROR", 6}};
+	colormapLuaTS = {{"if_start/.CodeWiz./if_then", 6}, {"if_then/.CodeWiz./if_elseif", 6}, {"if_elseif/.CodeWiz./if_else", 6}, {"if_else/.CodeWiz./if_end", 6}, {"for_start/.CodeWiz./for_in", 6}, {"for_in/.CodeWiz./for_do", 6}, {"for_do/.CodeWiz./for_end", 6}, {"while_start/.CodeWiz./while_do", 6}, {"while_do/.CodeWiz./while_end", 6}, {"repeat_start", 6}, {"repeat_start/.CodeWiz./repeat_until", 6}, {"repeat_until", 6}, {"break_statement", 6}, {"return_statement", 6}, {"return_statement/.CodeWiz./module_return_statement", 6}, {"module_return_statement", 6}, {"do_start", 6}, {"do_start/.CodeWiz./do_end", 6}, {"do_end", 6}, {"not", 6}, {"not/.CodeWiz./and", 6}, {"and", 6}, {"and/.CodeWiz./or", 6}, {"or", 6}, {"=", 7}, {"=/.CodeWiz./~=", 7}, {"~=", 7}, {"~=/.CodeWiz./==", 7}, {"==", 7}, {"==/.CodeWiz./<=", 7}, {"<=", 7}, {"<=/.CodeWiz./>=", 7}, {">=", 7}, {">=/.CodeWiz./<", 7}, {"<", 7}, {"</.CodeWiz./>", 7}, {">", 7}, {">/.CodeWiz./+", 7}, {"+", 7}, {"+/.CodeWiz./-", 7}, {"-", 7}, {"-/.CodeWiz./%", 7}, {"%", 7}, {"%/.CodeWiz.//", 7}, {"/", 7}, {"//.CodeWiz.///", 7}, {"//", 7}, {"///.CodeWiz./*", 7}, {"*", 7}, {"*/.CodeWiz./^", 7}, {"^", 7}, {"^/.CodeWiz./&", 7}, {"&", 7}, {"&/.CodeWiz./~", 7}, {"~", 7}, {"~/.CodeWiz./|", 7}, {"|", 7}, {"|/.CodeWiz./>>", 7}, {">>", 7}, {">>/.CodeWiz./<<", 7}, {"<<", 7}, {"<</.CodeWiz./..", 7}, {"..", 7}, {"../.CodeWiz./#", 7}, {"#", 7}, {",", 7}, {",/.CodeWiz./.", 7}, {".", 7}, {"left_paren", 7}, {"left_paren/.CodeWiz./right_paren", 7}, {"right_paren", 7}, {"right_paren/.CodeWiz./[", 7}, {"[", 7}, {"[/.CodeWiz./]", 7}, {"]", 7}, {"]/.CodeWiz./{", 7}, {"{", 7}, {"{/.CodeWiz./}", 7}, {"}", 7}, {"identifier", 3}, {"self", 3}, {"boolean", 8}, {"nil", 3}, {"ellipsis", 3}, {"local", 6}, {"function_call_paren", 7}, {"function_start", 6}, {"function_start/.CodeWiz./function_end", 6}, {"function_end", 6}, {"emmy_type", 4}, {"emmy_literal", 1}, {"emmy_parameter", 4}, {"emmy_parameter/.CodeWiz./identifier", 4}, {"_", 2}, {"emmy_class", 2}, {"emmy_function_parameter/.CodeWiz./_", 4}, {"emmy_note", 2}, {"emmy_see", 2}, {"emmy_return", 2}, {"emmy_header", 2}, {"emmy_ignore", 2}, {"documentation_brief", 2}, {"documentation_command", 2}, {"function_call/.CodeWiz./identifier", 3}, {"identifier/.CodeWiz./function_call_paren", 3}, {"function_call", 5}, {"string_argument", 1}, {"table_argument", 2}, {"table_argument/.CodeWiz./comment", 2}, {"comment", 2}, {"string", 1}, {"number", 8}, {"ERROR", 8}};
 	colormapCsharpTS = {{"invocation_expression/.CodeWiz./identifier", 5}, {"member_access_expression/.CodeWiz./identifier", 5}, {"variable_declaration/.CodeWiz./identifier", 4}, {"identifier", 3}, {"predefined_type", 4}, {"real_literal", 8}, {"real_literal/.CodeWiz./integer_literal", 8}, {"integer_literal", 8}, {"character_literal/.CodeWiz./string_literal", 1}, {"string_literal/.CodeWiz./raw_string_literal", 1}, {"raw_string_literal/.CodeWiz./verbatim_string_literal", 1}, {"verbatim_string_literal/.CodeWiz./interpolated_string_expression", 1}, {"interpolated_string_expression/.CodeWiz./interpolation_start", 1}, {"interpolation_start/.CodeWiz./interpolation_quote", 1}, {"escape_sequence", 1}, {"boolean_literal", 3}, {"boolean_literal/.CodeWiz./null_literal", 3}, {"null_literal", 3}, {"comment", 2}, {";", 7}, {";/.CodeWiz./.", 7}, {".", 7}, {"./.CodeWiz./,", 7}, {",", 7}, {"--", 7}, {"--/.CodeWiz./-", 7}, {"-", 7}, {"-/.CodeWiz./-=", 7}, {"-=", 7}, {"-=/.CodeWiz./&", 7}, {"&", 7}, {"&/.CodeWiz./&=", 7}, {"&=", 7}, {"&=/.CodeWiz./&&", 7}, {"&&", 7}, {"&&/.CodeWiz./+", 7}, {"+", 7}, {"+/.CodeWiz./++", 7}, {"++", 7}, {"++/.CodeWiz./+=", 7}, {"+=", 7}, {"+=/.CodeWiz./<", 7}, {"<", 7}, {"</.CodeWiz./<=", 7}, {"<=", 7}, {"<=/.CodeWiz./<<", 7}, {"<<", 7}, {"<</.CodeWiz./<<=", 7}, {"<<=", 7}, {"<<=/.CodeWiz./=", 7}, {"=", 7}, {"=/.CodeWiz./==", 7}, {"==", 7}, {"==/.CodeWiz./!", 7}, {"!", 7}, {"!/.CodeWiz./!=", 7}, {"!=", 7}, {"!=/.CodeWiz./=>", 7}, {"=>", 7}, {"=>/.CodeWiz./>", 7}, {">", 7}, {">/.CodeWiz./>=", 7}, {">=", 7}, {">=/.CodeWiz./>>", 7}, {">>", 7}, {">>/.CodeWiz./>>=", 7}, {">>=", 7}, {">>=/.CodeWiz./>>>", 7}, {">>>", 7}, {">>>/.CodeWiz./>>>=", 7}, {">>>=", 7}, {">>>=/.CodeWiz./|", 7}, {"|", 7}, {"|/.CodeWiz./|=", 7}, {"|=", 7}, {"|=/.CodeWiz./||", 7}, {"||", 7}, {"||/.CodeWiz./?", 7}, {"?", 7}, {"?/.CodeWiz./??", 7}, {"??", 7}, {"??/.CodeWiz./??=", 7}, {"??=", 7}, {"??=/.CodeWiz./^", 7}, {"^", 7}, {"^/.CodeWiz./^=", 7}, {"^=", 7}, {"^=/.CodeWiz./~", 7}, {"~", 7}, {"~/.CodeWiz./*", 7}, {"*", 7}, {"*/.CodeWiz./*=", 7}, {"*=", 7}, {"*=/.CodeWiz.//", 7}, {"/", 7}, {"//.CodeWiz.//=", 7}, {"/=", 7}, {"/=/.CodeWiz./%", 7}, {"%", 7}, {"%/.CodeWiz./%=", 7}, {"%=", 7}, {"%=/.CodeWiz./:", 7}, {":", 7}, {"(", 7}, {"(/.CodeWiz./)", 7}, {")", 7}, {")/.CodeWiz./[", 7}, {"[", 7}, {"[/.CodeWiz./]", 7}, {"]", 7}, {"]/.CodeWiz./{", 7}, {"{", 7}, {"{/.CodeWiz./}", 7}, {"}", 7}, {"}/.CodeWiz./interpolation_brace", 7}, {"interpolation_brace", 7}, {"modifier", 6}, {"modifier/.CodeWiz./this", 6}, {"this", 6}, {"this/.CodeWiz./implicit_type", 6}, {"implicit_type", 6}, {"add", 6}, {"add/.CodeWiz./alias", 6}, {"alias", 6}, {"alias/.CodeWiz./as", 6}, {"as", 6}, {"as/.CodeWiz./base", 6}, {"base", 6}, {"base/.CodeWiz./break", 6}, {"break", 6}, {"break/.CodeWiz./case", 6}, {"case", 6}, {"case/.CodeWiz./catch", 6}, {"catch", 6}, {"catch/.CodeWiz./checked", 6}, {"checked", 6}, {"checked/.CodeWiz./class", 6}, {"class", 6}, {"class/.CodeWiz./continue", 6}, {"continue", 6}, {"continue/.CodeWiz./default", 6}, {"default", 6}, {"default/.CodeWiz./delegate", 6}, {"delegate", 6}, {"delegate/.CodeWiz./do", 6}, {"do", 6}, {"do/.CodeWiz./else", 6}, {"else", 6}, {"else/.CodeWiz./enum", 6}, {"enum", 6}, {"enum/.CodeWiz./event", 6}, {"event", 6}, {"event/.CodeWiz./explicit", 6}, {"explicit", 6}, {"explicit/.CodeWiz./extern", 6}, {"extern", 6}, {"extern/.CodeWiz./finally", 6}, {"finally", 6}, {"finally/.CodeWiz./for", 6}, {"for", 6}, {"for/.CodeWiz./foreach", 6}, {"foreach", 6}, {"foreach/.CodeWiz./global", 6}, {"global", 6}, {"global/.CodeWiz./goto", 6}, {"goto", 6}, {"goto/.CodeWiz./if", 6}, {"if", 6}, {"if/.CodeWiz./implicit", 6}, {"implicit", 6}, {"implicit/.CodeWiz./interface", 6}, {"interface", 6}, {"interface/.CodeWiz./is", 6}, {"is", 6}, {"is/.CodeWiz./lock", 6}, {"lock", 6}, {"lock/.CodeWiz./namespace", 6}, {"namespace", 6}, {"namespace/.CodeWiz./notnull", 6}, {"notnull", 6}, {"notnull/.CodeWiz./operator", 6}, {"operator", 6}, {"operator/.CodeWiz./params", 6}, {"params", 6}, {"params/.CodeWiz./return", 6}, {"return", 6}, {"return/.CodeWiz./remove", 6}, {"remove", 6}, {"remove/.CodeWiz./sizeof", 6}, {"sizeof", 6}, {"sizeof/.CodeWiz./stackalloc", 6}, {"stackalloc", 6}, {"stackalloc/.CodeWiz./static", 6}, {"static", 6}, {"static/.CodeWiz./struct", 6}, {"struct", 6}, {"struct/.CodeWiz./switch", 6}, {"switch", 6}, {"switch/.CodeWiz./throw", 6}, {"throw", 6}, {"throw/.CodeWiz./try", 6}, {"try", 6}, {"try/.CodeWiz./typeof", 6}, {"typeof", 6}, {"typeof/.CodeWiz./unchecked", 6}, {"unchecked", 6}, {"unchecked/.CodeWiz./using", 6}, {"using", 6}, {"using/.CodeWiz./while", 6}, {"while", 6}, {"while/.CodeWiz./new", 6}, {"new", 6}, {"new/.CodeWiz./await", 6}, {"await", 6}, {"await/.CodeWiz./in", 6}, {"in", 6}, {"in/.CodeWiz./yield", 6}, {"yield", 6}, {"yield/.CodeWiz./get", 6}, {"get", 6}, {"get/.CodeWiz./set", 6}, {"set", 6}, {"set/.CodeWiz./when", 6}, {"when", 6}, {"when/.CodeWiz./out", 6}, {"out", 6}, {"out/.CodeWiz./ref", 6}, {"ref", 6}, {"ref/.CodeWiz./from", 6}, {"from", 6}, {"from/.CodeWiz./where", 6}, {"where", 6}, {"where/.CodeWiz./select", 6}, {"select", 6}, {"select/.CodeWiz./record", 6}, {"record", 6}, {"record/.CodeWiz./init", 6}, {"init", 6}, {"init/.CodeWiz./with", 6}, {"with", 6}, {"with/.CodeWiz./let", 6}, {"let", 6}, {"parameter/.CodeWiz./identifier", 3}};
 	colormapGLSLTS = {{"break", 6}, {"case", 6}, {"const", 6}, {"continue", 6}, {"default", 6}, {"do", 6}, {"else", 6}, {"enum", 6}, {"extern", 6}, {"for", 6}, {"if", 6}, {"inline", 6}, {"return", 6}, {"sizeof", 6}, {"static", 6}, {"struct", 6}, {"switch", 6}, {"typedef", 6}, {"union", 6}, {"volatile", 6}, {"while", 6}, {"#define", 6}, {"#elif", 6}, {"#else", 6}, {"#endif", 6}, {"#if", 6}, {"#ifdef", 6}, {"#ifndef", 6}, {"#include", 6}, {"preproc_directive", 6}, {"--", 7}, {"-", 7}, {"-=", 7}, {"->", 7}, {"=", 7}, {"!=", 7}, {"*", 7}, {"&", 7}, {"&&", 7}, {"+", 7}, {"++", 7}, {"+=", 7}, {"<", 7}, {"==", 7}, {">", 7}, {"||", 7}, {".", 7}, {";", 7}, {"string_literal", 1}, {"system_lib_string", 1}, {"null", 3}, {"number_literal", 8}, {"char_literal", 8}, {"call_expression", 5}, {"call_expression/.CodeWiz./identifier", 5}, {"identifier", 3}, {"call_expression/.CodeWiz./field_expression", 5}, {"field_expression/.CodeWiz./field_identifier", 5}, {"function_declarator", 5}, {"function_declarator/.CodeWiz./identifier", 5}, {"preproc_function_def/.CodeWiz./identifier", 5}, {"field_identifier", 4}, {"statement_identifier", 4}, {"type_identifier", 4}, {"primitive_type", 4}, {"sized_type_specifier", 4}, {"comment", 2}, {"in", 4}, {"in/.CodeWiz./out", 4}, {"out", 4}, {"out/.CodeWiz./inout", 4}, {"inout", 4}, {"inout/.CodeWiz./uniform", 4}, {"uniform", 4}, {"uniform/.CodeWiz./shared", 4}, {"shared", 4}, {"shared/.CodeWiz./layout", 4}, {"layout", 4}, {"layout/.CodeWiz./attribute", 4}, {"attribute", 4}, {"attribute/.CodeWiz./varying", 4}, {"varying", 4}, {"varying/.CodeWiz./buffer", 4}, {"buffer", 4}, {"buffer/.CodeWiz./coherent", 4}, {"coherent", 4}, {"coherent/.CodeWiz./readonly", 4}, {"readonly", 4}, {"readonly/.CodeWiz./writeonly", 4}, {"writeonly", 4}, {"writeonly/.CodeWiz./precision", 4}, {"precision", 4}, {"precision/.CodeWiz./highp", 4}, {"highp", 4}, {"highp/.CodeWiz./mediump", 4}, {"mediump", 4}, {"mediump/.CodeWiz./lowp", 4}, {"lowp", 4}, {"lowp/.CodeWiz./centroid", 4}, {"centroid", 4}, {"centroid/.CodeWiz./sample", 4}, {"sample", 4}, {"sample/.CodeWiz./patch", 4}, {"patch", 4}, {"patch/.CodeWiz./smooth", 4}, {"smooth", 4}, {"smooth/.CodeWiz./flat", 4}, {"flat", 4}, {"flat/.CodeWiz./noperspective", 4}, {"noperspective", 4}, {"noperspective/.CodeWiz./invariant", 4}, {"invariant", 4}, {"invariant/.CodeWiz./precise", 4}, {"precise", 4}, {"subroutine", 6}, {"extension_storage_class", 6}, {"^gl_", 3}};
 	colormapJavaTS = {{"identifier", 3}, {"method_declaration/.CodeWiz./identifier", 5}, {"method_invocation/.CodeWiz./identifier", 5}, {"super", 5}, {"annotation/.CodeWiz./identifier", 4}, {"marker_annotation/.CodeWiz./identifier", 4}, {"@", 7}, {"type_identifier", 4}, {"interface_declaration/.CodeWiz./identifier", 4}, {"class_declaration/.CodeWiz./identifier", 4}, {"enum_declaration/.CodeWiz./identifier", 4}, {"field_access", 4}, {"field_access/.CodeWiz./identifier", 4}, {"scoped_identifier", 4}, {"scoped_identifier/.CodeWiz./identifier", 4}, {"method_invocation", 4}, {"method_reference", 4}, {"method_reference/.CodeWiz./identifier", 4}, {"constructor_declaration/.CodeWiz./identifier", 4}, {"boolean_type/.CodeWiz./integral_type", 4}, {"integral_type/.CodeWiz./floating_point_type", 4}, {"floating_point_type/.CodeWiz./void_type", 4}, {"this", 3}, {"hex_integer_literal/.CodeWiz./decimal_integer_literal", 8}, {"decimal_integer_literal/.CodeWiz./octal_integer_literal", 8}, {"octal_integer_literal/.CodeWiz./decimal_floating_point_literal", 8}, {"decimal_floating_point_literal/.CodeWiz./hex_floating_point_literal", 8}, {"character_literal", 1}, {"character_literal/.CodeWiz./string_literal", 1}, {"string_literal", 1}, {"escape_sequence", 1}, {"true/.CodeWiz./false", 3}, {"false/.CodeWiz./null_literal", 3}, {"line_comment", 2}, {"line_comment/.CodeWiz./block_comment", 2}, {"block_comment", 2}, {"abstract", 6}, {"abstract/.CodeWiz./assert", 6}, {"assert", 6}, {"assert/.CodeWiz./break", 6}, {"break", 6}, {"break/.CodeWiz./case", 6}, {"case", 6}, {"case/.CodeWiz./catch", 6}, {"catch", 6}, {"catch/.CodeWiz./class", 6}, {"class", 6}, {"class/.CodeWiz./continue", 6}, {"continue", 6}, {"continue/.CodeWiz./default", 6}, {"default", 6}, {"default/.CodeWiz./do", 6}, {"do", 6}, {"do/.CodeWiz./else", 6}, {"else", 6}, {"else/.CodeWiz./enum", 6}, {"enum", 6}, {"enum/.CodeWiz./exports", 6}, {"exports", 6}, {"exports/.CodeWiz./extends", 6}, {"extends", 6}, {"extends/.CodeWiz./final", 6}, {"final", 6}, {"final/.CodeWiz./finally", 6}, {"finally", 6}, {"finally/.CodeWiz./for", 6}, {"for", 6}, {"for/.CodeWiz./if", 6}, {"if", 6}, {"if/.CodeWiz./implements", 6}, {"implements", 6}, {"implements/.CodeWiz./import", 6}, {"import", 6}, {"import/.CodeWiz./instanceof", 6}, {"instanceof", 6}, {"instanceof/.CodeWiz./interface", 6}, {"interface", 6}, {"interface/.CodeWiz./module", 6}, {"module", 6}, {"module/.CodeWiz./native", 6}, {"native", 6}, {"native/.CodeWiz./new", 6}, {"new", 6}, {"new/.CodeWiz./non-sealed", 6}, {"non-sealed", 6}, {"non-sealed/.CodeWiz./open", 6}, {"open", 6}, {"open/.CodeWiz./opens", 6}, {"opens", 6}, {"opens/.CodeWiz./package", 6}, {"package", 6}, {"package/.CodeWiz./permits", 6}, {"permits", 6}, {"permits/.CodeWiz./private", 6}, {"private", 6}, {"private/.CodeWiz./protected", 6}, {"protected", 6}, {"protected/.CodeWiz./provides", 6}, {"provides", 6}, {"provides/.CodeWiz./public", 6}, {"public", 6}, {"public/.CodeWiz./requires", 6}, {"requires", 6}, {"requires/.CodeWiz./record", 6}, {"record", 6}, {"record/.CodeWiz./return", 6}, {"return", 6}, {"return/.CodeWiz./sealed", 6}, {"sealed", 6}, {"sealed/.CodeWiz./static", 6}, {"static", 6}, {"static/.CodeWiz./strictfp", 6}, {"strictfp", 6}, {"strictfp/.CodeWiz./switch", 6}, {"switch", 6}, {"switch/.CodeWiz./synchronized", 6}, {"synchronized", 6}, {"synchronized/.CodeWiz./throw", 6}, {"throw", 6}, {"throw/.CodeWiz./throws", 6}, {"throws", 6}, {"throws/.CodeWiz./to", 6}, {"to", 6}, {"to/.CodeWiz./transient", 6}, {"transient", 6}, {"transient/.CodeWiz./transitive", 6}, {"transitive", 6}, {"transitive/.CodeWiz./try", 6}, {"try", 6}, {"try/.CodeWiz./uses", 6}, {"uses", 6}, {"uses/.CodeWiz./volatile", 6}, {"volatile", 6}, {"volatile/.CodeWiz./when", 6}, {"when", 6}, {"when/.CodeWiz./while", 6}, {"while", 6}, {"while/.CodeWiz./with", 6}, {"with", 6}, {"with/.CodeWiz./yield", 6}, {"yield", 6}};
 	colormapTsTS = {{"type_identifier", 4}, {"predefined_type", 4}, {"identifier", 4}, {"type_arguments", 7}, {"type_arguments/.CodeWiz./<", 7}, {"<", 7}, {">", 7}, {"abstract", 6}, {"abstract/.CodeWiz./declare", 6}, {"declare", 6}, {"declare/.CodeWiz./enum", 6}, {"enum", 6}, {"enum/.CodeWiz./export", 6}, {"export", 6}, {"export/.CodeWiz./implements", 6}, {"implements", 6}, {"implements/.CodeWiz./interface", 6}, {"interface", 6}, {"interface/.CodeWiz./keyof", 6}, {"keyof", 6}, {"keyof/.CodeWiz./namespace", 6}, {"namespace", 6}, {"namespace/.CodeWiz./private", 6}, {"private", 6}, {"private/.CodeWiz./protected", 6}, {"protected", 6}, {"protected/.CodeWiz./public", 6}, {"public", 6}, {"public/.CodeWiz./type", 6}, {"type", 6}, {"type/.CodeWiz./readonly", 6}, {"readonly", 6}, {"readonly/.CodeWiz./override", 6}, {"override", 6}, {"override/.CodeWiz./satisfies", 6}, {"satisfies", 6}, {"property_identifier", 4}, {"function_expression/.CodeWiz./identifier", 5}, {"function_declaration/.CodeWiz./identifier", 5}, {"method_definition/.CodeWiz./property_identifier", 5}, {"pair", 5}, {"pair/.CodeWiz./property_identifier", 5}, {"function_expression/.CodeWiz./arrow_function", 5}, {"arrow_function/.CodeWiz./assignment_expression", 5}, {"assignment_expression/.CodeWiz./member_expression", 5}, {"member_expression/.CodeWiz./property_identifier", 5}, {"arrow_function/.CodeWiz./variable_declarator", 5}, {"variable_declarator/.CodeWiz./identifier", 5}, {"assignment_expression/.CodeWiz./identifier", 5}, {"arrow_function/.CodeWiz./call_expression", 5}, {"call_expression/.CodeWiz./identifier", 5}, {"call_expression/.CodeWiz./member_expression", 5}, {"identifier/.CodeWiz./shorthand_property_identifier", 3}, {"shorthand_property_identifier/.CodeWiz./shorthand_property_identifier_pattern", 3}, {"arguments", 3}, {"arguments/.CodeWiz./module", 3}, {"module", 3}, {"module/.CodeWiz./console", 3}, {"console", 3}, {"console/.CodeWiz./window", 3}, {"window", 3}, {"window/.CodeWiz./document", 3}, {"document", 3}, {"require", 5}, {"this", 3}, {"super", 3}, {"true/.CodeWiz./false", 3}, {"false/.CodeWiz./null", 3}, {"null/.CodeWiz./undefined", 3}, {"comment", 2}, {"string", 1}, {"string/.CodeWiz./template_string", 1}, {"template_string", 1}, {"regex", 1}, {"number", 8}, {";", 7}, {";/.CodeWiz./optional_chain", 7}, {"optional_chain", 7}, {"optional_chain/.CodeWiz./.", 7}, {".", 7}, {"./.CodeWiz./,", 7}, {",", 7}, {"-", 7}, {"-/.CodeWiz./--", 7}, {"--", 7}, {"--/.CodeWiz./-=", 7}, {"-=", 7}, {"-=/.CodeWiz./+", 7}, {"+", 7}, {"+/.CodeWiz./++", 7}, {"++", 7}, {"++/.CodeWiz./+=", 7}, {"+=", 7}, {"+=/.CodeWiz./*", 7}, {"*", 7}, {"*/.CodeWiz./*=", 7}, {"*=", 7}, {"*=/.CodeWiz./**", 7}, {"**", 7}, {"**/.CodeWiz./**=", 7}, {"**=", 7}, {"**=/.CodeWiz.//", 7}, {"/", 7}, {"//.CodeWiz.//=", 7}, {"/=", 7}, {"/=/.CodeWiz./%", 7}, {"%", 7}, {"%/.CodeWiz./%=", 7}, {"%=", 7}, {"%=/.CodeWiz./<", 7}, {"</.CodeWiz./<=", 7}, {"<=", 7}, {"<=/.CodeWiz./<<", 7}, {"<<", 7}, {"<</.CodeWiz./<<=", 7}, {"<<=", 7}, {"<<=/.CodeWiz./=", 7}, {"=", 7}, {"=/.CodeWiz./==", 7}, {"==", 7}, {"==/.CodeWiz./===", 7}, {"===", 7}, {"===/.CodeWiz./!", 7}, {"!", 7}, {"!/.CodeWiz./!=", 7}, {"!=", 7}, {"!=/.CodeWiz./!==", 7}, {"!==", 7}, {"!==/.CodeWiz./=>", 7}, {"=>", 7}, {"=>/.CodeWiz./>", 7}, {">/.CodeWiz./>=", 7}, {">=", 7}, {">=/.CodeWiz./>>", 7}, {">>", 7}, {">>/.CodeWiz./>>=", 7}, {">>=", 7}, {">>=/.CodeWiz./>>>", 7}, {">>>", 7}, {">>>/.CodeWiz./>>>=", 7}, {">>>=", 7}, {">>>=/.CodeWiz./~", 7}, {"~", 7}, {"~/.CodeWiz./^", 7}, {"^", 7}, {"^/.CodeWiz./&", 7}, {"&", 7}, {"&/.CodeWiz./|", 7}, {"|", 7}, {"|/.CodeWiz./^=", 7}, {"^=", 7}, {"^=/.CodeWiz./&=", 7}, {"&=", 7}, {"&=/.CodeWiz./|=", 7}, {"|=", 7}, {"|=/.CodeWiz./&&", 7}, {"&&", 7}, {"&&/.CodeWiz./||", 7}, {"||", 7}, {"||/.CodeWiz./??", 7}, {"??", 7}, {"??/.CodeWiz./&&=", 7}, {"&&=", 7}, {"&&=/.CodeWiz./||=", 7}, {"||=", 7}, {"||=/.CodeWiz./??=", 7}, {"??=", 7}, {"(", 7}, {"(/.CodeWiz./)", 7}, {")", 7}, {")/.CodeWiz./[", 7}, {"[", 7}, {"[/.CodeWiz./]", 7}, {"]", 7}, {"]/.CodeWiz./{", 7}, {"{", 7}, {"{/.CodeWiz./}", 7}, {"}", 7}, {"template_substitution", 7}, {"template_substitution/.CodeWiz./${", 7}, {"${", 7}, {"as", 6}, {"as/.CodeWiz./async", 6}, {"async", 6}, {"async/.CodeWiz./await", 6}, {"await", 6}, {"await/.CodeWiz./break", 6}, {"break", 6}, {"break/.CodeWiz./case", 6}, {"case", 6}, {"case/.CodeWiz./catch", 6}, {"catch", 6}, {"catch/.CodeWiz./class", 6}, {"class", 6}, {"class/.CodeWiz./const", 6}, {"const", 6}, {"const/.CodeWiz./continue", 6}, {"continue", 6}, {"continue/.CodeWiz./debugger", 6}, {"debugger", 6}, {"debugger/.CodeWiz./default", 6}, {"default", 6}, {"default/.CodeWiz./delete", 6}, {"delete", 6}, {"delete/.CodeWiz./do", 6}, {"do", 6}, {"do/.CodeWiz./else", 6}, {"else", 6}, {"else/.CodeWiz./export", 6}, {"export/.CodeWiz./extends", 6}, {"extends", 6}, {"extends/.CodeWiz./finally", 6}, {"finally", 6}, {"finally/.CodeWiz./for", 6}, {"for", 6}, {"for/.CodeWiz./from", 6}, {"from", 6}, {"from/.CodeWiz./function", 6}, {"function", 6}, {"function/.CodeWiz./get", 6}, {"get", 6}, {"get/.CodeWiz./if", 6}, {"if", 6}, {"if/.CodeWiz./import", 6}, {"import", 6}, {"import/.CodeWiz./in", 6}, {"in", 6}, {"in/.CodeWiz./instanceof", 6}, {"instanceof", 6}, {"instanceof/.CodeWiz./let", 6}, {"let", 6}, {"let/.CodeWiz./new", 6}, {"new", 6}, {"new/.CodeWiz./of", 6}, {"of", 6}, {"of/.CodeWiz./return", 6}, {"return", 6}, {"return/.CodeWiz./set", 6}, {"set", 6}, {"set/.CodeWiz./static", 6}, {"static", 6}, {"static/.CodeWiz./switch", 6}, {"switch", 6}, {"switch/.CodeWiz./target", 6}, {"target", 6}, {"target/.CodeWiz./throw", 6}, {"throw", 6}, {"throw/.CodeWiz./try", 6}, {"try", 6}, {"try/.CodeWiz./typeof", 6}, {"typeof", 6}, {"typeof/.CodeWiz./var", 6}, {"var", 6}, {"var/.CodeWiz./void", 6}, {"void", 6}, {"void/.CodeWiz./while", 6}, {"while", 6}, {"while/.CodeWiz./with", 6}, {"with", 6}, {"with/.CodeWiz./yield", 6}, {"yield", 6}};
 	colormapCTS = {{"identifier", 3}, {"break", 6}, {"case", 6}, {"const", 6}, {"continue", 6}, {"default", 6}, {"do", 6}, {"else", 6}, {"enum", 6}, {"extern", 6}, {"for", 6}, {"if", 6}, {"inline", 6}, {"return", 6}, {"sizeof", 6}, {"static", 6}, {"struct", 6}, {"switch", 6}, {"typedef", 6}, {"union", 6}, {"volatile", 6}, {"while", 6}, {"#define", 6}, {"#elif", 6}, {"#else", 6}, {"#endif", 6}, {"#if", 6}, {"#ifdef", 6}, {"#ifndef", 6}, {"#include", 6}, {"preproc_directive", 6}, {"--", 7}, {"-", 7}, {"-=", 7}, {"->", 7}, {"=", 7}, {"!=", 7}, {"*", 7}, {"&", 7}, {"&&", 7}, {"+", 7}, {"++", 7}, {"+=", 7}, {"<", 7}, {"==", 7}, {">", 7}, {"||", 7}, {".", 7}, {";", 7}, {"string_literal", 1}, {"system_lib_string", 1}, {"null", 3}, {"number_literal", 8}, {"char_literal", 8}, {"field_identifier", 4}, {"statement_identifier", 4}, {"type_identifier", 4}, {"primitive_type", 4}, {"sized_type_specifier", 4}, {"call_expression", 5}, {"call_expression/.CodeWiz./identifier", 5}, {"call_expression/.CodeWiz./field_expression", 5}, {"field_expression/.CodeWiz./field_identifier", 5}, {"function_declarator", 5}, {"function_declarator/.CodeWiz./identifier", 5}, {"preproc_function_def/.CodeWiz./identifier", 5}, {"comment", 2}};
 	colormapCobolTS = colormapLuaTS;
+	colormapCssTS = {{"comment", 2}, {"tag_name", 6}, {"nesting_selector", 6}, {"universal_selector", 6}, {"~", 7}, {">", 7}, {"+", 7}, {"-", 7}, {"*", 7}, {"/", 7}, {"=", 7}, {"^=", 7}, {"|=", 7}, {"~=", 7}, {"$=", 7}, {"*=", 7}, {"and", 7}, {"or", 7}, {"not", 7}, {"only", 7}, {"plain_value", 1}, {"property_name", 3}, {"class_name", 4}, {"id_name", 4}, {"namespace_name", 4}, {"feature_name", 4}, {"attribute_name", 4}, {"function_name", 5}, {"@media", 1}, {"@import", 6}, {"@charset", 1}, {"@namespace", 6}, {"@supports", 6}, {"@keyframes", 6}, {"at_keyword", 6}, {"to", 6}, {"from", 6}, {"important", 6}, {"string_value", 1}, {"color_value", 1}, {"integer_value", 8}, {"float_value", 8}, {"unit", 4}, {"#", 7}, {"#/.CodeWiz./,", 7}, {",", 7}, {",/.CodeWiz./.", 7}, {".", 7}, {"./.CodeWiz./:", 7}, {":", 7}, {":/.CodeWiz./::", 7}, {"::", 7}, {"::/.CodeWiz./;", 7}, {";", 7}, {"{", 7}, {"{/.CodeWiz./)", 7}, {")", 7}, {")/.CodeWiz./(", 7}, {"(", 7}, {"(/.CodeWiz./}", 7}, {"}", 7}};
 
 	extraWordList = {};
 
@@ -994,7 +1002,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	cLang.defWordList = defWordListC;
 	cLang.fileExtensions = QStringList() << ".c";
 	cLang.colorMapTS = colormapCTS;
-	
+
 	cobolLang.name = "Cobol";
 	cobolLang.strings = QStringList() << "\'" << "\"";
 	cobolLang.stringExtensions = QStringList() << "" << "";
@@ -1010,7 +1018,22 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	cobolLang.fileExtensions = QStringList() << ".cob";
 	cobolLang.colorMapTS = colormapCobolTS;
 
-	supportedLangs = {pythonLang, rustLang, WGSLLang, cppLang, txtLang, jsLang, HTMLLang, goLang, luaLang, csharpLang, GLSLLang, javaLang, tsLang, cLang, cobolLang};
+	cssLang.name = "Css";
+	cssLang.strings = QStringList() << "\'" << "\"";
+	cssLang.stringExtensions = QStringList() << "" << "";
+	cssLang.comments = QStringList();
+	cssLang.multiLineStringsStart = QStringList();
+	cssLang.multiLineStringsEnd = QStringList();
+	cssLang.multiLineCommentsStart = QStringList() << "/*";
+	cssLang.multiLineCommentsEnd = QStringList() << "*/";
+	cssLang.openIndents = QStringList() << "{";
+	cssLang.closeIndents = QStringList() << "}";
+	cssLang.closeIndentsWords = QStringList();
+	cssLang.defWordList = defWordListCss;
+	cssLang.fileExtensions = QStringList() << ".css";
+	cssLang.colorMapTS = colormapCssTS;
+
+	supportedLangs = {pythonLang, rustLang, WGSLLang, cppLang, txtLang, jsLang, HTMLLang, goLang, luaLang, csharpLang, GLSLLang, javaLang, tsLang, cLang, cobolLang, cssLang};
 
 	for (int i = 0; i < supportedLangs.count(); i ++){
 		supportedLangs[i].index = i;
@@ -1174,11 +1197,11 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(openInExplorerAction, &QAction::triggered, this, &MainWindow::onOpenInExplorer);
 	connect(copyPathAction, &QAction::triggered, this, &MainWindow::onCopyPath);
 	connect(openOutsideAction, &QAction::triggered, this, &MainWindow::onOpenOutside);
-	
+
 	connect(reloadButton, &QPushButton::clicked, this, &MainWindow::reloadWebView);
 	connect(nextWebButton, &QPushButton::clicked, this, &MainWindow::nextWebView);
 	connect(prevWebButton, &QPushButton::clicked, this, &MainWindow::backWebView);
-	
+
 	connect(webView, &QWebEngineView::urlChanged, this, &MainWindow::urlChanged);
 
 	fileModel = new QFileSystemModel;
@@ -1249,7 +1272,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		prevWebButton->hide();
 		urlBar->hide();
 	}
-	
+
 	webView->setMaximumHeight(textEdit->height()-urlBar->height());
 }
 
@@ -1276,7 +1299,7 @@ void MainWindow::nextWebView(){
 
 void MainWindow::useWebViewToggled(){
 	qDebug() << "useWebViewToggled";
-	
+
 	if (useWebView->isChecked()){
 		webView->show();
 		urlBar->show();
@@ -2098,7 +2121,7 @@ void MainWindow::updateMargins(bool force) {
 	qDebug() << "updateMargins - " << force;
 
 	errMenu.reposition();
-	
+
 	webView->setMaximumHeight(textEdit->height()-urlBar->height());
 
 	QFontMetrics metrics(textEdit->font());
@@ -2519,14 +2542,19 @@ void MainWindow::onContentsChange(int position, int charsRemoved, int charsAdded
 
 	// Apply edit to the Tree-sitter tree
 	applyEditToTree(startByte, oldEndByte, newEndByte, startRow, startCol, oldEndRow, oldEndCol, newEndRow, newEndCol);
-
+	
 	// Parse incrementally
 	QByteArray documentText = textDocument->toPlainText().toLatin1().constData();
+	
+	if (currentLang.name == "Cobol"){
+		documentText = documentText.replace("*", "#"); // we use the python tree-sitter parser, so we replace the * with # to create comments... I love this
+	}
+	
 	TSTree* newTree = ts_parser_parse_string(parser, tree, documentText, documentText.size());
-
+	
 	treeParserSyntaxHighlighter.setLanguage(currentLang.name); // we do this because I'm too lazy to do it any other way
 	treeParserSyntaxHighlighter.updateHighlighting(textDocument, position, charsAdded+charsRemoved, tree, newTree, charsAdded == textDocument->characterCount());
-
+	
 	if (tree) {
 		ts_tree_delete(tree);
 	}
@@ -3108,6 +3136,8 @@ void MainWindow::on_actionLSP_triggered()
 		lspPath = cLSP;
 	}else if (currentLang.name == "Cobol"){
 		lspPath = cobolLSP;
+	}else if (currentLang.name == "Css"){
+		lspPath = cssLSP;
 	}
 
 	QInputDialog dialog;
@@ -3156,6 +3186,8 @@ void MainWindow::on_actionLSP_triggered()
 		cLSP = lspPath;
 	}else if (currentLang.name == "Cobol"){
 		cobolLSP = lspPath;
+	}else if (currentLang.name == "Css"){
+		cssLSP = lspPath;
 	}
 
 	saveWantedTheme();
@@ -3229,6 +3261,8 @@ void MainWindow::setupLSP(QString oldFile)
 		lspPath = cLSP;
 	}else if (currentLang.name == "Cobol"){
 		lspPath = cobolLSP;
+	}else if (currentLang.name == "Css"){
+		lspPath = cssLSP;
 	}
 
 	if (client && client->lspPath == lspPath){
@@ -3759,7 +3793,7 @@ void MainWindow::updateFonts()
 	nextWebButton->setFixedWidth(nextWebButton->height());
 	prevWebButton->setFixedWidth(prevWebButton->height());
 	reloadButton->setFixedWidth(reloadButton->height());
-	
+
 	prevTerm1->setFixedWidth(prevTerm1->height());
 	nextTerm1->setFixedWidth(prevTerm1->height());
 	addTerm1->setFixedWidth(prevTerm1->height());
@@ -3919,6 +3953,8 @@ void MainWindow::saveWantedTheme()
 		cTag = lineEdit->toPlainText();
 	}else if (currentLang.name == "Cobol"){
 		cobolTag = lineEdit->toPlainText();
+	}else if (currentLang.name == "Css"){
+		cssTag = lineEdit->toPlainText();
 	}
 
 	QSettings settings("FoundationTechnologies", "CodeWizard");
@@ -3938,6 +3974,7 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("javaTag", javaTag);
 	settings.setValue("cTag", cTag);
 	settings.setValue("cobolTag", cobolTag);
+	settings.setValue("cssTag", cssTag);
 
 	settings.setValue("pythonLSP", pythonLSP);
 	settings.setValue("rustLSP", rustLSP);
@@ -3954,6 +3991,7 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("javaLSP", javaLSP);
 	settings.setValue("cLSP", cLSP);
 	settings.setValue("cobolLSP", cobolLSP);
+	settings.setValue("cssLSP", cssLSP);
 
 	settings.setValue("showWarnings", showWarnings->isChecked());
 	settings.setValue("showErrors", showErrors->isChecked());
@@ -4062,6 +4100,7 @@ bool MainWindow::wantedTheme()
 			javaTag = settings.value("javaTag", defJavaTag).toString();
 			cTag = settings.value("cTag", defCTag).toString();
 			cobolTag = settings.value("cobolTag", defCobolTag).toString();
+			cssTag = settings.value("cssTag", defCssTag).toString();
 		}
 		if (compareVersionNumbers(existingVersion, "8.6.3") < 0){ // less than v863
 			CppTag = defCppTag;
@@ -4083,6 +4122,7 @@ bool MainWindow::wantedTheme()
 		javaLSP = settings.value("javaLSP", "").toString();
 		cLSP = settings.value("cLSP", "").toString();
 		cobolLSP = settings.value("cobolLSP", "").toString();
+		cssLSP = settings.value("cssLSP", "").toString();
 
 		groqApiKey = settings.value("groqApiKey", "").toString();
 		groq->setApiKey(groqApiKey);
@@ -4591,7 +4631,9 @@ void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
 	}else if (currentLang.name == "C"){
 		ts_parser_set_language(parser, tree_sitter_c());
 	}else if (currentLang.name == "Cobol"){
-		ts_parser_set_language(parser, tree_sitter_lua());
+		ts_parser_set_language(parser, tree_sitter_python());
+	}else if (currentLang.name == "Css"){
+		ts_parser_set_language(parser, tree_sitter_css());
 	}
 
 	QElapsedTimer timer;
@@ -4812,6 +4854,8 @@ void MainWindow::updateTagLine(){
 		lineEdit->setPlainText(cTag);
 	}else if (currentLang.name == "Cobol"){
 		lineEdit->setPlainText(cobolTag);
+	}else if (currentLang.name == "Css"){
+		lineEdit->setPlainText(cssTag);
 	}
 }
 
@@ -5060,6 +5104,8 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 			intermediateTag = cTag;
 		} else if (currentLang.name == "Cobol") {
 			intermediateTag = cobolTag;
+		} else if (currentLang.name == "Css") {
+			intermediateTag = cssTag;
 		}
 
 		intermediateTag.replace("[filename]", fileNameName).replace("[filenameWoutExt]", fileNameName.split('.')[0]);
@@ -5922,7 +5968,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				webView->setUrl(QUrl("about:blank")); // Or a default homepage
 				return true;
 			}
-			
+
 			QUrl url(userInput);
 			if ((!url.isValid() || url.scheme().isEmpty()) && userInput.contains(".")) {
 				if (!userInput.startsWith("http://") && !userInput.startsWith("https://")) {
@@ -5930,12 +5976,12 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				}
 				url = QUrl(userInput);
 			}
-			
+
 			if (!url.isValid() || !userInput.contains(".")) {
 				QString searchUrl = "https://www.google.com/search?q=" + QUrl::toPercentEncoding(userInput);
 				url = QUrl(searchUrl);
 			}
-			
+
 			webView->setUrl(url);
 			return true;
 		}
@@ -8040,6 +8086,15 @@ void MainWindow::on_actionPython_2_triggered(){
 
 	currentLang = pythonLang;
 	lineEdit->setPlainText(pythonTag);
+	updateDefaultWordLists();
+	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
+}
+
+void MainWindow::on_actionCss_triggered(){
+	qDebug() << "on_actionCss_triggered";
+
+	currentLang = cssLang;
+	lineEdit->setPlainText(cssTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }

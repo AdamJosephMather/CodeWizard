@@ -11,7 +11,7 @@ if(MSVC)
 	# Add MSVC-specific compile options
 	add_compile_options(/w)
 	set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-        add_link_options(/FORCE:MULTIPLE)
+		add_link_options(/FORCE:MULTIPLE)
 endif()
 
 set(CMAKE_AUTOUIC ON)
@@ -32,9 +32,9 @@ include(FetchContent)
 
 # Declare cmark to be fetched
 FetchContent_Declare(
-    cmark
-    GIT_REPOSITORY https://github.com/commonmark/cmark.git
-    GIT_TAG        0.31.0 # Use a specific release for stability (check latest on GitHub)
+	cmark
+	GIT_REPOSITORY https://github.com/commonmark/cmark.git
+	GIT_TAG        0.31.0 # Use a specific release for stability (check latest on GitHub)
 )
 FetchContent_MakeAvailable(cmark)
 
@@ -45,7 +45,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/tree-sitter)
 
 set_target_properties(tree-sitter PROPERTIES
-    POSITION_INDEPENDENT_CODE ON  # Useful for static linking
+	POSITION_INDEPENDENT_CODE ON  # Useful for static linking
 )
 
 add_library(tree-sitter-cpp STATIC
@@ -106,7 +106,12 @@ add_library(tree-sitter-java STATIC
 )
 
 add_library(tree-sitter-c STATIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-c/src/parser.c
+		${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-c/src/parser.c
+)
+
+add_library(tree-sitter-css STATIC
+                ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-css/src/parser.c
+                ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-css/src/scanner.c
 )
 
 target_include_directories(tree-sitter-cpp PUBLIC
@@ -161,6 +166,10 @@ target_include_directories(tree-sitter-c PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-c/src
 )
 
+target_include_directories(tree-sitter-css PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers/tree-sitter-css/src
+)
+
 set(PROJECT_SOURCES
 	main.cpp
 	mainwindow.cpp
@@ -176,10 +185,10 @@ set(PROJECT_SOURCES
 	languageserverclient.cpp
 	recordinglight.h
 	recordinglight.cpp
-        customhorizontalscrollarea.h
-        customhorizontalscrollarea.cpp
-        tabwidget.h
-        tabwidget.cpp
+		customhorizontalscrollarea.h
+		customhorizontalscrollarea.cpp
+		tabwidget.h
+		tabwidget.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -202,13 +211,13 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 			syntaxhighlighter.h syntaxhighlighter.cpp
 			resources.qrc
 			recordinglight.h recordinglight.cpp
-                        customhorizontalscrollarea.h customhorizontalscrollarea.cpp
-                        tabwidget.h tabwidget.cpp
+						customhorizontalscrollarea.h customhorizontalscrollarea.cpp
+						tabwidget.h tabwidget.cpp
 			groqai.h groqai.cpp
 			myers.h myers.cpp
 			errorsmenu.h errorsmenu.cpp
-                        tabwidget.h tabwidget.cpp
-                        customhorizontalscrollarea.h customhorizontalscrollarea.cpp
+						tabwidget.h tabwidget.cpp
+						customhorizontalscrollarea.h customhorizontalscrollarea.cpp
 		)
 	else()
 		qt_add_executable(CodeWizard
@@ -229,8 +238,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 
 			resources.qrc
 			recordinglight.h recordinglight.cpp
-                        customhorizontalscrollarea.h customhorizontalscrollarea.cpp
-                        tabwidget.h tabwidget.cpp
+						customhorizontalscrollarea.h customhorizontalscrollarea.cpp
+						tabwidget.h tabwidget.cpp
 			groqai.h groqai.cpp
 			myers.h myers.cpp
 			errorsmenu.h errorsmenu.cpp
@@ -240,8 +249,8 @@ endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter/lib/include
-        #${cmark_SOURCE_DIR}/src
-        #${cmark_BINARY_DIR}/src
+		#${cmark_SOURCE_DIR}/src
+		#${cmark_BINARY_DIR}/src
 )
 
 # add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/extern/tree-sitter-parsers)
@@ -256,8 +265,8 @@ endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	Qt::Core
 	Qt::Widgets
-    Qt::Network
-    Qt6::WebEngineWidgets
+	Qt::Network
+	Qt6::WebEngineWidgets
 	tree-sitter
 	tree-sitter-cpp
 	tree-sitter-python
@@ -272,7 +281,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	tree-sitter-go
 	tree-sitter-c
 	tree-sitter-c-sharp
-    cmark
+        tree-sitter-css
+	cmark
 )
 
 target_link_libraries(CodeWizard PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
@@ -316,7 +326,8 @@ if(WIN32)
 		tree-sitter-go
 		tree-sitter-c
 		tree-sitter-c-sharp
-        cmark
+                tree-sitter-css
+		cmark
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION bin
 	)
