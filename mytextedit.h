@@ -34,6 +34,12 @@ protected:
 	void contextMenuEvent(QContextMenuEvent *event) override;
 	
 	void mouseMoveEvent(QMouseEvent *event) override {
+		if (startedDrag && hasFocus()){
+			emit dragEvent(startDrag, event->pos(), false);
+		}else{
+			startedDrag = false;
+		}
+		
 		QTextEdit::mouseMoveEvent(event);
 		QPoint pos = event->pos();
 		emit mousePositionChanged(pos);
@@ -42,6 +48,11 @@ protected:
 	void mousePressEvent(QMouseEvent *event) override {
 		if (event->button() == Qt::LeftButton) {
 			auto *mouseEvent = static_cast<QMouseEvent *>(event);
+			
+			if (mouseEvent->buttons() & Qt::LeftButton){
+				startDrag = event->pos();
+				startedDrag = true;
+			}
 
 			if (mouseEvent->buttons() & Qt::LeftButton && QGuiApplication::keyboardModifiers() & Qt::AltModifier) {
 				QPoint relativePos = mapFromGlobal(QCursor::pos());
@@ -64,8 +75,14 @@ protected:
 	
 	void mouseReleaseEvent(QMouseEvent *event) override {
 		QTextEdit::mouseReleaseEvent(event);
-	
+		
+		
 		if (event->button() == Qt::LeftButton) {
+			if (startedDrag && hasFocus()){
+				emit dragEvent(startDrag, event->pos(), true);
+			}
+			startedDrag = false;
+			
 			emit mouseReleased(event->pos());  // Emit position on mouse release
 			// If you want to also emit the text cursor position on mouse release:
 			QTextCursor cursor = cursorForPosition(event->pos());
@@ -87,12 +104,14 @@ protected:
 	
 private:
 	QTextCursor m_originalCursor;
+	QPoint startDrag;
+	bool startedDrag;
 	void drawCursor(QPainter &painter, const QTextCursor &cursor, const QColor &color);
 	void applyToAllCursors(const std::function<void(QTextCursor&)>& operation);
 	void insertTextAtAllCursors(const QString &text);
 	void handleNavigationKey(QKeyEvent *event);
 	void handleDeletionKey(QKeyEvent *event);
-	void drawSelection(QPainter &painter, QTextCursor cursor);
+	void drawSelection(QPainter &painter, QTextCursor cursor, bool onEnd);
 	
 	void toggleCursorVisibility();
 	QTimer cursorBlinkTimer;
@@ -106,6 +125,7 @@ signals:
 	void mouseClickedAtCursor(QTextCursor cursor); // New signal with cursor info
 	void mouseReleasedAtCursor(QTextCursor cursor); // New signal with cursor info
 	void handleSizeChange(bool force);
+	void dragEvent(QPoint start, QPoint end, bool endODrag);
 };
 
 #endif // MYTEXTEDIT_H

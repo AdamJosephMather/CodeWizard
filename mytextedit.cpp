@@ -121,10 +121,15 @@ void MyTextEdit::wheelEvent(QWheelEvent *event) {
 	}
 }
 
-void MyTextEdit::drawSelection(QPainter &painter, QTextCursor cursor)
+void MyTextEdit::drawSelection(QPainter &painter, QTextCursor cursor, bool onEnd)
 {
 	if (!cursor.hasSelection())
 		return;
+	
+	qreal extra;
+	if (onEnd){
+		extra = fontMetrics().horizontalAdvance("M")/2;
+	}
 	
 	// Get the rectangle for the selection
 	QTextDocument *doc = cursor.document();
@@ -140,7 +145,7 @@ void MyTextEdit::drawSelection(QPainter &painter, QTextCursor cursor)
 	qreal x2 = line.cursorToX(selectionEnd);
 	qreal y = line.y() + layout->position().y() - 4;
 	qreal height = line.height();
-	qreal width = x2 - x1;
+	qreal width = x2 - x1 + extra;
 	
 	QRectF selectionRect(x1, y, width, height);
 	
@@ -171,10 +176,10 @@ void MyTextEdit::drawCursor(QPainter &painter, const QTextCursor &cursor, const 
 			c.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
 			if (c.position() >= cursor.selectionEnd()){
 				c.setPosition(cursor.selectionEnd(), QTextCursor::KeepAnchor);
-				drawSelection(painter, c);
+				drawSelection(painter, c, false);
 				break;
 			}
-			drawSelection(painter, c);
+			drawSelection(painter, c, true);
 			c.movePosition(QTextCursor::Down);
 			c.movePosition(QTextCursor::StartOfLine);
 		}

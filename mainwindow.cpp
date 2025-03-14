@@ -1068,11 +1068,10 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	terminalInputLine->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	terminalInputLineHORZ->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-	connect(textEdit->verticalScrollBar(), &QScrollBar::valueChanged,
-			this, &MainWindow::updateScrollBarValue);
+	connect(textEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, &MainWindow::updateScrollBarValue);
 
-	connect(lineNumberTextEdit->verticalScrollBar(), &QScrollBar::valueChanged,
-			this, &MainWindow::updateScrollBarValue2);
+	connect(lineNumberTextEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, &MainWindow::updateScrollBarValue2);
+	connect(lineNumberTextEdit, &MyTextEdit::dragEvent, this, &MainWindow::lineDragEvent);
 
 	textEdit->installEventFilter(this);
 	findTextEdit->installEventFilter(this);
@@ -1279,6 +1278,40 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	}
 
 	webView->setMaximumHeight(textEdit->height()-urlBar->height());
+}
+
+void MainWindow::lineDragEvent(QPoint start, QPoint end, bool endODrag){
+	qDebug() << "lineDragEvent";
+	
+	QTextCursor sCur = lineNumberTextEdit->cursorForPosition(start);
+	QTextCursor eCur = lineNumberTextEdit->cursorForPosition(end);
+	
+	int sLine = sCur.blockNumber();
+	int eLine = eCur.blockNumber();
+	
+	QTextBlock b1 = textDocument->findBlockByLineNumber(sLine);
+	QTextBlock b2 = textDocument->findBlockByLineNumber(eLine);
+	
+	if (!b1.isValid() || !b2.isValid()){
+		return;
+	}
+	
+	QTextCursor c1(b1);
+	QTextCursor c2(b2);
+	
+	if (c1.position() <= c2.position()){
+		c2.movePosition(QTextCursor::EndOfLine);
+	}else{
+		c1.movePosition(QTextCursor::EndOfLine);
+	}
+	
+	c1.setPosition(c2.position(), QTextCursor::KeepAnchor);
+	
+	textEdit->setTextCursor(c1);
+	
+	if (endODrag){
+		textEdit->setFocus();
+	}
 }
 
 void MainWindow::urlChanged(const QUrl &url){
@@ -5736,7 +5769,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			}
 		}
 
-		if (key_event->key() == Qt::Key_Down && key_event->modifiers() & Qt::AltModifier){
+		if (key_event->key() == Qt::Key_Down && key_event->modifiers() & Qt::AltModifier && currentVimMode == "i"){
 			QTextCursor c = textEdit->textCursor();
 			int highest = c.blockNumber();
 			for (QTextCursor curs : textEdit->additionalCursors){
@@ -5753,7 +5786,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			suggestionBox->hide();
 			actionBox->hide();
 			return true;
-		}else if (key_event->key() == Qt::Key_Up && key_event->modifiers() & Qt::AltModifier){
+		}else if (key_event->key() == Qt::Key_Up && key_event->modifiers() & Qt::AltModifier && currentVimMode == "i"){
 			QTextCursor c = textEdit->textCursor();
 			int lowest = c.blockNumber();
 			for (QTextCursor curs : textEdit->additionalCursors){
@@ -5813,7 +5846,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				updateSyntaxAdd = QString("}])").at(QString("{[(").indexOf(key_event->text()));
 				updateSyntaxPosition = textEdit->textCursor().position()+1;
 			}
-		}else if (key_event->key() == Qt::Key_BraceRight && currentLang.closeIndents.contains("}")){
+		}else if (key_event->key() == Qt::Key_BraceRight && currentLang.closeIndents.contains("}") && textEdit->additionalCursors.empty()){
 			removeOneTabAndAddChar("}");
 			return true; // Mark as handled
 		}else if (key_sequence == QKeySequence("Alt+Return")) {
