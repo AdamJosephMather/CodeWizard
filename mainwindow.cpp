@@ -398,12 +398,47 @@ QPushButton *nextWebButton;
 QPushButton *prevWebButton;
 QLineEdit *urlBar;
 
+MyTextEdit *searchBar;
+int correctSearchBarWidth = 600; // will be multiplied by .8 so... Whatevs yo.
+QListWidget *searchMenu;
+QStringList allIndexedFiles;
+QStringList displayPaths;
+QStringList allDisplayPaths;
+QStringList allIndexedFilesPath;
+QStringList indexedFiles;
+QStringList indexedFilesPath;
+int selectedSearchFile = 0;
+
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
 	qDebug() << "MainWindow";
 
 	ui->setupUi(this);
-
+	
+	searchBar = new MyTextEdit(this);
+	//the size will be set by another process
+	searchBar->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	searchBar->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	searchBar->setPlaceholderText("New File");
+	
+	searchMenu = new QListWidget(this);
+	searchMenu->hide();
+	
+	connect(searchBar, &QTextEdit::textChanged, this, [this](){
+		narrowDownSearchFiles();
+		fillSearchMenu();
+	});
+	
+	connect(searchBar, &MyTextEdit::focusChange, this, [this](bool isFocused) {
+		qDebug() << "searchBar focus: " << isFocused;
+		if (isFocused){
+			indexFiles();
+			searchMenu->show();
+		}else{
+			searchMenu->hide();
+		}
+	});
+	
 	// Replace with new splitters
 
 	QWidget *placeholderWidget = ui->horizontalLayout_4;  // Get the widget holding the layout
@@ -1087,6 +1122,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	terminalInputLine->installEventFilter(this);
 	terminalInputLineHORZ->installEventFilter(this);
 	urlBar->installEventFilter(this);
+	searchBar->installEventFilter(this);
 	this->installEventFilter(this); // for the fullscreen
 
 	darkmode = thm;
@@ -1144,6 +1180,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	connect(suggestionBox, &QListWidget::itemClicked, this, &MainWindow::onSuggestionItemClicked);
 	connect(actionBox, &QListWidget::itemClicked, this, &MainWindow::onActionsItemClicked);
+	connect(searchMenu, &QListWidget::itemClicked, this, &MainWindow::onSearchItemClicked);
 
 	connect(textEdit, &MyTextEdit::mousePositionChanged, this, &MainWindow::handleMouseMoved);
 	connect(textEdit, &MyTextEdit::gotoDefinitionActionTriggered, this, &MainWindow::gotoDefinitionActionTriggered);
@@ -1291,6 +1328,164 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	}
 
 	webView->setMaximumHeight(textEdit->height()-urlBar->height());
+}
+
+void MainWindow::repositionSearchBar() {
+	qDebug() << "repositionTextEdit";
+	QMenuBar *bar = menuBar();
+	
+	QAction *lastAction = bar->actions().last();
+	QRect lastMenuRect = bar->actionGeometry(lastAction);  // Get menu position
+
+	int startPos = lastMenuRect.right();  // Right edge of last menu
+	int menuBarHeight = bar->height();
+	
+	int endPos = ui->menuBar->width();
+	
+	int correctWidth = correctSearchBarWidth;
+	if (endPos-startPos < correctWidth){
+		correctWidth = endPos-startPos;
+	}
+	
+	correctWidth = correctWidth*.8;
+	
+	searchBar->setFixedSize(correctWidth, menuBar()->height()*.9);
+	
+	int center = (endPos+startPos)/2;
+	int searchStart = center-searchBar->width()/2;
+	
+	qDebug() << startPos << endPos << center << searchStart;
+	
+	searchBar->move(searchStart, menuBarHeight / 2 - searchBar->height() / 2);
+	
+	QFontMetrics metrics(textEdit->font());
+	
+	searchMenu->resize(correctWidth, metrics.height()*8);
+	searchMenu->move(searchStart, menuBarHeight / 2 + searchBar->height() / 2);
+}
+
+void MainWindow::onSearchItemClicked(QListWidgetItem *item){
+	qDebug() << "onActionsItemClicked";
+
+	selectedSearchFile = searchMenu->row(item);
+	
+	runSearchItem();
+}
+
+void MainWindow::runSearchItem(){
+	qDebug() << "runSearchItem";
+	qDebug() << selectedSearchFile;
+	qDebug() << indexedFilesPath.length();
+	qDebug() << "Running on: " << indexedFilesPath[selectedSearchFile];
+	globalArgFileName = indexedFilesPath[selectedSearchFile];
+	textEdit->setFocus();
+	searchBar->setPlainText("");
+	on_actionOpen_triggered(true);
+}
+
+void MainWindow::fillSearchMenu(){
+	searchMenu->clear();
+	
+	for (int i = 0; i < indexedFiles.length(); i++){
+		if (i == selectedSearchFile){
+			searchMenu->addItem(" > "+displayPaths[i]);
+		}else{
+			searchMenu->addItem(displayPaths[i]);
+		}
+	}
+	
+	if (selectedSearchFile < indexedFiles.length()){
+		QListWidgetItem* item = searchMenu->item(selectedSearchFile);
+		if (item) {
+			searchMenu->scrollToItem(item, QAbstractItemView::PositionAtCenter);
+		}
+	}
+	searchMenu->update();
+}
+
+void MainWindow::narrowDownSearchFiles(){
+	indexedFiles.clear();
+	indexedFilesPath.clear();
+	displayPaths.clear();
+	
+	int currentCount = 0;
+	int maxCount = 1000;
+	
+	QString starterText = searchBar->toPlainText().toLower();
+	qDebug() << "Must start with" << starterText;
+	
+	for (int i = 0; i < allIndexedFiles.length(); i++){
+		if (allIndexedFiles[i].toLower().startsWith(starterText)){
+			indexedFiles.push_back(allIndexedFiles[i]);
+			displayPaths.push_back(allDisplayPaths[i]);
+			indexedFilesPath.push_back(allIndexedFilesPath[i]);
+			currentCount ++;
+			if (currentCount > maxCount){
+				break;
+			}
+		}
+	}
+}
+
+void MainWindow::indexFiles(){
+	allIndexedFiles.clear();
+	allDisplayPaths.clear();
+	allIndexedFilesPath.clear();
+	
+	qDebug() << fileModel->rootPath();
+	
+	QStringList files;
+	QQueue<QString> queue;
+	QString rootPath = fileModel->rootPath();
+	int starterPathLen = rootPath.length()+1;
+	queue.enqueue(rootPath);
+	
+	int maxFiles = 100000; // rough max number of files to see, prevents C:/ from breaking it
+	int seen = 0;
+	
+	QFontMetrics metrics(textEdit->font());
+	
+	int maxLen = (searchMenu->width()*.95)/metrics.horizontalAdvance("M") - 3; // -3 for the " > " we add
+
+	while (!queue.isEmpty()) {
+		QString currentDirPath = queue.dequeue();
+		QDir currentDir(currentDirPath);
+		QFileInfoList entries = currentDir.entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
+
+		for (const QFileInfo &entry : entries) {
+			if (entry.isDir()) {
+				queue.enqueue(entry.absoluteFilePath());
+			} else {
+				allIndexedFilesPath.append(entry.absoluteFilePath());
+				
+				QString relativePath = entry.absoluteFilePath().mid(starterPathLen).trimmed();
+				if (relativePath.length() > maxLen){
+					relativePath = relativePath.mid(relativePath.length()-maxLen);
+				}
+				
+				allDisplayPaths.append(relativePath);
+				
+				allIndexedFiles.append(entry.fileName());
+				seen ++;
+			}
+		}
+		
+		if (seen >= maxFiles){
+			break;
+		}
+	}
+	
+	qDebug() << allIndexedFiles.length();
+	
+	selectedSearchFile = 0;
+	
+	narrowDownSearchFiles();
+	fillSearchMenu();
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event) {
+	QMainWindow::resizeEvent(event);
+	repositionSearchBar();
 }
 
 void MainWindow::lineDragEvent(QPoint start, QPoint end, bool endODrag){
@@ -2053,6 +2248,7 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 	}
 
 	fileName = "";
+	searchBar->setPlaceholderText("Comparison");
 
 	isOpeningFile = true;
 
@@ -2892,6 +3088,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 		QString fileNameName = fileInfo.fileName();
 
 		windowName = fileNameName+" - CodeWizard V"+versionNumber+" - "+fileName;
+		searchBar->setPlaceholderText(fileNameName);
 
 		QTextStream in(&file);
 		QString fileContent = in.readAll();
@@ -3758,7 +3955,10 @@ void MainWindow::updateFonts()
 	replaceTextEdit->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
 	replaceTextEdit->setMinimumHeight(adjustedHeight);
 	replaceTextEdit->setMaximumHeight(adjustedHeight);
-
+	
+	searchBar->setFont(font);
+	repositionSearchBar();
+	
 	terminalInputLine->setFont(font);
 	terminalInputLine->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
 	terminalInputLine->setMinimumHeight(adjustedHeight);
@@ -3818,6 +4018,7 @@ void MainWindow::updateFonts()
 	suggestionBox->setFont(font);
 	actionBox->setFont(font);
 	hoverBox->setFont(font);
+	searchMenu->setFont(font);
 
 	fileTree->setFont(font);
 
@@ -4793,6 +4994,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	QString fileNameName = fileInfo.fileName();
 
 	windowName = fileNameName+" - CodeWizard V"+versionNumber+" - "+fileName;
+	searchBar->setPlaceholderText(fileNameName);
 
 	QTextStream in(&file);
 	QString fileContent = in.readAll();
@@ -5006,6 +5208,7 @@ void MainWindow::on_actionNew_triggered()
 	windowName = defWindowTitle;
 	setWindowTitle(windowName);
 	fileName = "";
+	searchBar->setPlaceholderText("New File");
 	previousLineCount = 1;
 
 	int cnt = 1;
@@ -5230,6 +5433,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 			} else {
 				on_actionSave_triggered();
 			}
+		}else if (event->key() == Qt::Key_O && event->modifiers() & Qt::ShiftModifier){
+			on_actionOpen_Folder_triggered();
 		}else if (event->key() == Qt::Key_O){
 			on_actionOpen_triggered();
 		}else if (event->key() == Qt::Key_B){
@@ -5261,6 +5466,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 		}else if (event->key() == Qt::Key_F || event->key() == Qt::Key_H){
 			changeFindSectionVisibility(true);
 			openFind();
+		}else if (event->key() == Qt::Key_P && event->modifiers() & Qt::ShiftModifier){
+			searchBar->setPlainText("");
+			searchBar->setFocus();
 		}else if (event->key() == Qt::Key_P){
 			on_actionReplay_Macro_triggered();
 		}else if (event->key() == Qt::Key_Plus || event->key() == Qt::Key_Equal){
@@ -5698,8 +5906,27 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 	QKeyEvent *key_event = dynamic_cast<QKeyEvent*>(event);
 	QKeySequence key_sequence{static_cast<int>(key_event->modifiers()) + key_event->key()};
-
-	if (watched == textEdit){
+	
+	if (watched == searchBar){
+		if (key_event->key() == Qt::Key_Escape){
+			textEdit->setFocus();
+			return true;
+		}else if (key_event->key() == Qt::Key_Up){
+			selectedSearchFile = (selectedSearchFile-1 + indexedFiles.length())%indexedFiles.length();
+			fillSearchMenu();
+			return true;
+		}else if (key_event->key() == Qt::Key_Down){
+			selectedSearchFile = (selectedSearchFile+1)%indexedFiles.length();
+			fillSearchMenu();
+			return true;
+		}else if (key_event->key() == Qt::Key_Enter || key_event->key() == Qt::Key_Return || key_event->key() == Qt::Key_Tab){
+			if (indexedFiles.isEmpty()){
+				return true;
+			}
+			runSearchItem();
+			return true;
+		}
+	}if (watched == textEdit){
 		if (isSettingUpLSP || isOpeningFile){
 			return false;
 		}
@@ -6532,13 +6759,18 @@ void MainWindow::on_actionSave_triggered()
 				double value = QRandomGenerator::global()->generateDouble();
 				if (value > 0.5){
 					fileName += ".py";
+					fileNameName += ".py";
 				}else{
 					fileName += ".cpp";
+					fileNameName += ".cpp";
 				}
 			}else{
 				fileName += ".py";
+				fileNameName += ".py";
 			}
 		}
+		
+		searchBar->setPlaceholderText(fileNameName);
 
 		setLangOffFilename(fileName, true);
 		setupSyntaxTreeOnOpen(textEdit->toPlainText());
@@ -6987,13 +7219,18 @@ void MainWindow::on_actionSave_As_triggered()
 			double value = QRandomGenerator::global()->generateDouble();
 			if (value > 0.5){
 				fileName += ".py";
+				fileNameName += ".py";
 			}else{
 				fileName += ".cpp";
+				fileNameName += ".cpp";
 			}
 		}else{
 			fileName += ".py";
+			fileNameName += ".py";
 		}
 	}
+	
+	searchBar->setPlaceholderText(fileNameName);
 
 	setLangOffFilename(fileName, true);
 	setupSyntaxTreeOnOpen(textEdit->toPlainText());
@@ -7694,6 +7931,10 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 	palette = actionBox->palette();
 	palette.setColor(QPalette::Base, color2);
 	actionBox->setPalette(palette);
+	
+	palette = searchMenu->palette();
+	palette.setColor(QPalette::Base, color2);
+	searchMenu->setPalette(palette);
 
 	palette = suggestionBox->palette();
 	palette.setColor(QPalette::Base, color2);
@@ -7730,6 +7971,10 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 	palette = lineEdit->palette();
 	palette.setColor(QPalette::Base, color2);
 	lineEdit->setPalette(palette);
+	
+	palette = searchBar->palette();
+	palette.setColor(QPalette::Base, color2);
+	searchBar->setPalette(palette);
 
 	palette = findButton->palette();
 	palette.setColor(QPalette::Button, color2);
@@ -8092,27 +8337,29 @@ void MainWindow::on_actionKeybindings_triggered(){
 
 	openHelpMenu("Keybindings:\n\
   \n\
-  Ctrl+K ------- Toggle web view\n\
-  Ctrl+B ------- Toggle filetree\n\
-  Ctrl+T ------- Toggle builtin terminal\n\
-  Ctrl+S ------- Save file\n\
-  Ctrl+O ------- Open file\n\
-  Ctrl+N ------- New file\n\
-  Ctrl+'+' ----- Increase text size\n\
-  Ctrl+'-' ----- Decrease text size\n\
-  Alt ---------- Start/End macro recording\n\
-  Ctrl+P ------- Replay Macro\n\
-  Ctrl+F/H ----- Find\n\
-  Ctrl+[ ------- De-indent\n\
-  Ctrl+] ------- Indent\n\
-  Alt+Enter ---- Code actions (LSP)\n\
-  Alt+3 -------- Comment out section\n\
-  Alt+4 -------- De-comment out section\n\
-  Alt+A -------- Activate AI suggestion\n\
-  F5 ----------- Run code\n\
-  Ctrl+, ------- Jumps to left corresponding bracket\n\
-  Ctrl+. ------- Jumps to right corresponding bracket\n\
-  Crtl+/ ------- Toggle Comment");
+  Ctrl+K ---------- Toggle web view\n\
+  Ctrl+B ---------- Toggle filetree\n\
+  Ctrl+T ---------- Toggle builtin terminal\n\
+  Ctrl+S ---------- Save file\n\
+  Ctrl+O ---------- Open file\n\
+  Ctrl+Shift+O ---- Open folder\n\
+  Ctrl+Shift+P ---- Focus on search bar\n\
+  Ctrl+N ---------- New file\n\
+  Ctrl+'+' -------- Increase text size\n\
+  Ctrl+'-' -------- Decrease text size\n\
+  Alt ------------- Start/End macro recording\n\
+  Ctrl+P ---------- Replay Macro\n\
+  Ctrl+F/H -------- Find\n\
+  Ctrl+[ ---------- De-indent\n\
+  Ctrl+] ---------- Indent\n\
+  Alt+Enter ------- Code actions (LSP)\n\
+  Alt+3 ----------- Comment out section\n\
+  Alt+4 ----------- De-comment out section\n\
+  Alt+A ----------- Activate AI suggestion\n\
+  F5 -------------- Run code\n\
+  Ctrl+, ---------- Jumps to left corresponding bracket\n\
+  Ctrl+. ---------- Jumps to right corresponding bracket\n\
+  Crtl+/ ---------- Toggle Comment");
 }
 
 void MainWindow::openMenuWithHTML(QString name, QString html) {
@@ -8404,7 +8651,8 @@ void MainWindow::openRecentFile(QString newFile){
 	QString fileNameName = fileInfo.fileName();
 
 	windowName = fileNameName+" - CodeWizard V"+versionNumber+" - "+fileName;
-
+	searchBar->setPlaceholderText(fileNameName);
+	
 	QTextStream in(&file);
 	QString fileContent = in.readAll();
 	previousLineCount = 1;

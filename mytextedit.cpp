@@ -28,6 +28,16 @@ MyTextEdit::MyTextEdit(QWidget *parent) : QTextEdit(parent) {
 	cursorBlinkTimer.start();
 }
 
+void MyTextEdit::focusInEvent(QFocusEvent *event){
+	QTextEdit::focusInEvent(event);
+	emit focusChange(true);
+}
+
+void MyTextEdit::focusOutEvent(QFocusEvent *event) {
+	QTextEdit::focusOutEvent(event);
+	emit focusChange(false);
+}
+
 void MyTextEdit::toggleCursorVisibility() {
 	cursorBlinking = !cursorBlinking;
 	updateViewport();  // Trigger a repaint if needed

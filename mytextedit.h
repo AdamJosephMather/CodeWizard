@@ -104,8 +104,10 @@ protected:
 	void keyPressEvent(QKeyEvent *event) override;
 	
 	void getCopyText();
-	
 	void pasteText();
+	
+	void focusInEvent(QFocusEvent *event) override;
+	void focusOutEvent(QFocusEvent *event) override;
 	
 private:
 	QTextCursor m_originalCursor;
@@ -131,6 +133,7 @@ signals:
 	void mouseReleasedAtCursor(QTextCursor cursor); // New signal with cursor info
 	void handleSizeChange(bool force);
 	void dragEvent(QPoint start, QPoint end, bool endODrag);
+	void focusChange(bool focused);
 };
 
 #endif // MYTEXTEDIT_H

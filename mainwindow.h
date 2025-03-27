@@ -26,6 +26,11 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void runSearchItem();
+	void narrowDownSearchFiles();
+	void fillSearchMenu();
+	void indexFiles();
+	void repositionSearchBar();
 	void useRelativeLineNumbersTriggered();
 	void lineDragEvent(QPoint start, QPoint end, bool endODrag);
 	void on_actionMultiple_Cursors_triggered();
@@ -123,6 +128,7 @@ private slots:
 	void onWindowStateChanged();
 	void onSuggestionItemClicked(QListWidgetItem*);
 	void onActionsItemClicked(QListWidgetItem*);
+	void onSearchItemClicked(QListWidgetItem*);
 	void on_actionOpen_Folder_triggered();
 	void on_actionStart_Macro_Recording_triggered();
 	void on_actionEnd_Macro_Recording_triggered();
@@ -211,6 +217,7 @@ private slots:
 protected:
 	void keyPressEvent(QKeyEvent *) override;
 	void changeEvent(QEvent *event) override;
+	void resizeEvent(QResizeEvent *event) override;
 
 private:
 	Ui::MainWindow *ui;
