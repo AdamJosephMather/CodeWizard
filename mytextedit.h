@@ -25,6 +25,7 @@ public:
 	bool cursorBlinking;
 	bool useMultiCursors = false;
 	void handleDuplicateCursors();
+	QStringList coppies;
 
 protected:
 	QString changeToTabs(QString text);
@@ -101,6 +102,10 @@ protected:
 	void paintEvent(QPaintEvent *event) override;
 	
 	void keyPressEvent(QKeyEvent *event) override;
+	
+	void getCopyText();
+	
+	void pasteText();
 	
 private:
 	QTextCursor m_originalCursor;

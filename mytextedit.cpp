@@ -268,10 +268,10 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event)
 			
 		default:
 			if (event->modifiers() & Qt::ControlModifier && event->key() == Qt::Key_V){
-				QClipboard *clipboard = QGuiApplication::clipboard();
-				QString textToPaste = changeToTabs(clipboard->text());
-				insertTextAtAllCursors(textToPaste);
-			}else if (!event->text().isEmpty() && event->text()[0].isPrint() && !(event->modifiers() & Qt::ControlModifier)) {
+				pasteText();
+			} else if (event->modifiers() & Qt::ControlModifier && event->key() == Qt::Key_C){
+				getCopyText();
+			} else if (!event->text().isEmpty() && event->text()[0].isPrint() && !(event->modifiers() & Qt::ControlModifier)) {
 				insertTextAtAllCursors(event->text());
 			} else {
 				// For special keys we haven't specifically handled, use default behavior
@@ -283,6 +283,35 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event)
 	// Ensure viewport is updated to reflect cursor changes
 	cursorBlinking = false;
 	viewport()->update();
+}
+
+void MyTextEdit::pasteText(){
+	if (coppies.length() != additionalCursors.length()+1){
+		QClipboard *clipboard = QGuiApplication::clipboard();
+		QString textToPaste = changeToTabs(clipboard->text());
+		insertTextAtAllCursors(textToPaste);
+	}else{
+		QTextCursor mainCursor = textCursor();
+		mainCursor.beginEditBlock();
+		
+		mainCursor.insertText(coppies[0]);
+		
+		for (int i = 0; i < additionalCursors.length(); i++){
+			QTextCursor cursor = additionalCursors[i];
+			cursor.insertText(coppies[i+1]);
+		}
+		
+		mainCursor.endEditBlock();
+	}
+}
+
+void MyTextEdit::getCopyText(){
+	coppies.clear();
+	coppies.push_back(textCursor().selectedText());
+	
+	for (QTextCursor cursor : additionalCursors){
+		coppies.push_back(cursor.selectedText());
+	}
 }
 
 void MyTextEdit::applyToAllCursors(const std::function<void(QTextCursor&)>& operation)
