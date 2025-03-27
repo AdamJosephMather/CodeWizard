@@ -1374,20 +1374,9 @@ void MainWindow::onSearchItemClicked(QListWidgetItem *item){
 	runSearchItem();
 }
 
-void MainWindow::runSearchItem(){
-	qDebug() << "runSearchItem";
-	qDebug() << selectedSearchFile;
-	qDebug() << indexedFilesPath.length();
-	qDebug() << "Running on: " << indexedFilesPath[selectedSearchFile];
-	globalArgFileName = indexedFilesPath[selectedSearchFile];
-	textEdit->setFocus();
-	searchBar->setPlainText("");
-	on_actionOpen_triggered(true);
-}
-
 void MainWindow::fillSearchMenu(){
 	searchMenu->clear();
-	
+		
 	for (int i = 0; i < indexedFiles.length(); i++){
 		if (i == selectedSearchFile){
 			searchMenu->addItem(" > "+displayPaths[i]);
@@ -1405,6 +1394,31 @@ void MainWindow::fillSearchMenu(){
 	searchMenu->update();
 }
 
+QStringList MainWindow::extractStringWords(QString word){
+	QStringList wordsRaw = {""};
+	
+	QString keepers = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0987654321.";
+	
+	for (QChar c : word){
+		if (!keepers.contains(c)){
+			wordsRaw.push_back(c);
+			wordsRaw.push_back("");
+		}else{
+			wordsRaw[wordsRaw.length()-1] += c;
+		}
+	}
+	
+	QStringList words;
+	
+	for (QString word : wordsRaw){
+		if (!word.isEmpty() && word != " "){
+			words.push_back(word);
+		}
+	}
+	
+	return words;
+}
+
 void MainWindow::narrowDownSearchFiles(){
 	indexedFiles.clear();
 	indexedFilesPath.clear();
@@ -1414,10 +1428,18 @@ void MainWindow::narrowDownSearchFiles(){
 	int maxCount = 1000;
 	
 	QString starterText = searchBar->toPlainText().toLower();
-	qDebug() << "Must start with" << starterText;
+	QStringList words = extractStringWords(starterText);
 	
 	for (int i = 0; i < allIndexedFiles.length(); i++){
-		if (allIndexedFiles[i].toLower().startsWith(starterText)){
+		bool works = true;
+		QString lowered = allIndexedFiles[i].toLower();
+		for (QString word : words){
+			if (!lowered.contains(word)){
+				works = false;
+				break;
+			}
+		}
+		if (works){
 			indexedFiles.push_back(allIndexedFiles[i]);
 			displayPaths.push_back(allDisplayPaths[i]);
 			indexedFilesPath.push_back(allIndexedFilesPath[i]);
@@ -1477,12 +1499,70 @@ void MainWindow::indexFiles(){
 		}
 	}
 	
-	qDebug() << allIndexedFiles.length();
+	QStringList commands = {"Dark Mode", "Light Mode", "Increase Text Size", "Decrease Text Size", "Reset Text Size", "Toggle File Tabs", "Toggle Builtin Terminal", "Toggle Terminal Positioning", "Toggle Auto Add Brackets", "Fix It", "Convert To Spaces", "Toggle Vim Mode", "Reset LSP", "Quit", "Toggle No Autocomplete", "Toggle Only CodeWizard Autocomplete", "Toggle LSP Show Errors", "Toggle LSP Show Other", "Toggle LSP Show Warnings", "Lang: Python", "Lang: C", "Lang: C#", "Lang: C++", "Lang: JS", "Lang: TS", "Lang: CSS", "Lang: HTML", "Lang: Go", "Lang: Rust", "Lang: Lua", "Lang: Plaintext", "Lang: Cobol", "Lang: GLSL", "Lang: WGSL", "Lang: Java", "Git Push", "Git Pull", "Git Force Pull"};
+	
+	for (QString cmd : commands){
+		allIndexedFilesPath << ":"+cmd;
+		allIndexedFiles << ":"+cmd;
+		allDisplayPaths << ":"+cmd;
+	}
+	
 	
 	selectedSearchFile = 0;
 	
 	narrowDownSearchFiles();
 	fillSearchMenu();
+}
+
+void MainWindow::runSearchItem(){
+	qDebug() << "runSearchItem";
+	QString cmd = indexedFilesPath[selectedSearchFile];
+	
+	if (cmd.startsWith(":")){
+		if (cmd == ":Dark Mode") on_actionDark_Mode_triggered();
+		if (cmd == ":Light Mode") on_actionLight_Mode_triggered();
+		if (cmd == ":Increase Text Size") on_actionIncrease_Text_Size_triggered();
+		if (cmd == ":Decrease Text Size") on_actionDecrease_Text_Size_triggered();
+		if (cmd == ":Reset Text Size") on_actionReset_Text_Size_triggered();
+		if (cmd == ":Toggle File Tabs") useTabs->toggle();
+		if (cmd == ":Toggle Builtin Terminal") useBuiltinTerminal->toggle();
+		if (cmd == ":Toggle Terminal Positioning") preferHorizontalTerminal->toggle();
+		if (cmd == ":Toggle Auto Add Brackets") autoAddBrackets->toggle();
+		if (cmd == ":Fix It") on_actionFix_It_triggered();
+		if (cmd == ":Convert To Spaces") on_actionChange_to_IDLE_format_triggered();
+		if (cmd == ":Toggle Vim Mode") useVimMode->toggle();
+		if (cmd == ":Reset LSP") resetLSP();
+		if (cmd == ":Quit") on_actionExit_triggered();
+		if (cmd == ":Toggle No Autocomplete") ui->actionNo_Autocomplete->toggle();
+		if (cmd == ":Toggle Only CodeWizard Autocomplete") ui->actionOnly_Use_CodeWizard_Built_In->toggle();
+		if (cmd == ":Toggle LSP Show Errors") ui->actionShow_Errors->toggle();
+		if (cmd == ":Toggle LSP Show Other") ui->actionShow_Other->toggle();
+		if (cmd == ":Toggle LSP Show Warnings") ui->actionShow_Warnings->toggle();
+		if (cmd == ":Lang: Python") on_actionPython_2_triggered();
+		if (cmd == ":Lang: C") on_actionC_3_triggered();
+		if (cmd == ":Lang: C#") on_actionC_2_triggered();
+		if (cmd == ":Lang: C++") on_actionC_triggered();
+		if (cmd == ":Lang: JS") on_actionJavaScript_triggered();
+		if (cmd == ":Lang: TS") on_actionTypeScript_triggered();
+		if (cmd == ":Lang: CSS") on_actionCss_triggered();
+		if (cmd == ":Lang: HTML") on_actionHTML_triggered();
+		if (cmd == ":Lang: Go") on_actionGo_triggered();
+		if (cmd == ":Lang: Rust") on_actionRust_triggered();
+		if (cmd == ":Lang: Lua") on_actionLua_triggered();
+		if (cmd == ":Lang: Plaintext") on_actionPlaintext_triggered();
+		if (cmd == ":Lang: Cobol") on_actionCobol_triggered();
+		if (cmd == ":Lang: GLSL") on_actionGLSL_triggered();
+		if (cmd == ":Lang: WGSL") on_actionWGSL_triggered();
+		if (cmd == ":Lang: Java") on_actionJava_triggered();
+		if (cmd == ":Git Push") on_actionPush_triggered();
+		if (cmd == ":Git Pull") on_actionRegular_triggered();
+		if (cmd == ":Git Force Pull") on_actionDiscard_Local_Changes_triggered();
+	}else{
+		globalArgFileName = cmd;
+		textEdit->setFocus();
+		searchBar->setPlainText("");
+		on_actionOpen_triggered(true);
+	}
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
@@ -3471,6 +3551,15 @@ void MainWindow::gotoDefinitionReceived(int line1, int character1, int line, int
 	cursor.setPosition(textDocument->findBlockByNumber(line).position() + character, QTextCursor::KeepAnchor);
 	textEdit->setTextCursor(cursor);
 	textEdit->ensureCursorVisible();
+}
+
+void MainWindow::resetLSP(){
+	if (client){
+		client->shutdown();
+		delete client;
+		client = nullptr;
+	}
+	setupLSP("");
 }
 
 void MainWindow::setupLSP(QString oldFile)
@@ -5998,6 +6087,9 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				QTextCursor cursor = textEdit->textCursor();
 				cursor.setPosition(loc);
 				textEdit->setTextCursor(cursor);
+			}else if (key_event->key() == Qt::Key_Colon){
+				searchBar->setFocus();
+				searchBar->textCursor().insertText(":");
 			}
 
 			return true; // always handle inputs in normal mode - normal is a strange term for this but whatever - it'll work.

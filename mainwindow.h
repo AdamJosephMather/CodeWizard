@@ -26,6 +26,8 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void resetLSP();
+	QStringList extractStringWords(QString word);
 	void runSearchItem();
 	void narrowDownSearchFiles();
 	void fillSearchMenu();
