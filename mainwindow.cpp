@@ -1339,22 +1339,28 @@ void MainWindow::repositionSearchBar() {
 	QAction *lastAction = bar->actions().last();
 	QRect lastMenuRect = bar->actionGeometry(lastAction);  // Get menu position
 
-	int startPos = lastMenuRect.right();  // Right edge of last menu
 	int menuBarHeight = bar->height();
-	
 	int endPos = ui->menuBar->width();
+	
+	int startPos = lastMenuRect.right();  // Right edge of last menu
 	
 	int correctWidth = correctSearchBarWidth;
 	if (endPos-startPos < correctWidth){
 		correctWidth = endPos-startPos;
 	}
 	
+	int leftPad = correctWidth*.1;
 	correctWidth = correctWidth*.8;
 	
 	searchBar->setFixedSize(correctWidth, menuBar()->height()*.9);
 	
 	int center = (endPos+startPos)/2;
-	int searchStart = center-searchBar->width()/2;
+	int searchStart = startPos+leftPad;//center-correctWidth/2;
+	
+	int prefferedStart = bar->width()/2-correctWidth/2;
+	if (prefferedStart >= searchStart){
+		searchStart = prefferedStart;
+	}
 	
 	qDebug() << startPos << endPos << center << searchStart;
 	
