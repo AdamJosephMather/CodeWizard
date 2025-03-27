@@ -232,6 +232,10 @@ void MyTextEdit::paintEvent(QPaintEvent *event)
 void MyTextEdit::keyPressEvent(QKeyEvent *event)
 {
 	if (additionalCursors.isEmpty() || !useMultiCursors) {
+		if (event->modifiers() & Qt::ControlModifier && event->key() == Qt::Key_C){
+			coppies.clear();
+		}
+		
 		QTextEdit::keyPressEvent(event);
 		return;
 	}
