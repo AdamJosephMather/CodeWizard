@@ -5337,9 +5337,6 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 	if (unsaved){
 		on_actionSave_triggered();
 	}
-
-	builtinTerminalTextEdit->insertPlainText("\nRequesting process gracefully stop.");
-	builtinTerminalTextEditHORZ->insertPlainText("\nRequesting process gracefully stop.");
 	
 	if (useBuiltinTerminal->isChecked()){
 		#ifdef _WIN32
@@ -7331,11 +7328,13 @@ void MainWindow::on_actionSave_As_triggered()
 	addTab(fileNameName, fileName);
 	onContentsChange(0, 0, 0);
 	addFileToRecentList(fileName);
-
-	fileModel->setRootPath(fileInfo.absolutePath());
-	QSettings settings("FoundationTechnologies", "CodeWizard");
-	settings.setValue("mostRecentFolder", fileInfo.absolutePath());
-	fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
+	
+	if (!fileName.startsWith(fileModel->rootPath())){
+		fileModel->setRootPath(fileInfo.absolutePath());
+		QSettings settings("FoundationTechnologies", "CodeWizard");
+		settings.setValue("mostRecentFolder", fileInfo.absolutePath());
+		fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
+	}
 
 	windowName = fileNameName + " - CodeWizard V"+versionNumber + " - " + fileName;
 	setWindowTitle(windowName);
