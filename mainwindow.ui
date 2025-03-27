@@ -596,6 +596,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="actionAuto_Add_Brackets"/>
     <addaction name="actionUse_File_Tabs"/>
     <addaction name="actionUse_Web_View_Crtl_K"/>
+    <addaction name="actionUse_Relative_Line_Numbers"/>
    </widget>
    <widget class="QMenu" name="menuFixit">
     <property name="title">
@@ -1316,6 +1317,14 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionCss">
    <property name="text">
     <string>Css</string>
+   </property>
+  </action>
+  <action name="actionUse_Relative_Line_Numbers">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Use Relative Line Numbers</string>
    </property>
   </action>
  </widget>

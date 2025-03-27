@@ -258,6 +258,9 @@ QList<TabWidget *> tabs;
 QHBoxLayout *tabLayout;
 QAction *useTabs;
 
+QAction *useRelativeLineNumbers;
+int prevLineNumberForRelativity = -1;
+
 QHBoxLayout *horizontalLayout;
 
 QAction *recordMacroButton;
@@ -627,6 +630,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	menuSubFonts->addAction(fontAction);
 
 	useTabs = ui->actionUse_File_Tabs;
+	
+	useRelativeLineNumbers = ui->actionUse_Relative_Line_Numbers;
 
 	useWebView = ui->actionUse_Web_View_Crtl_K;
 
@@ -1054,6 +1059,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	setupSyntaxTreeOnOpen("");
 	
+	prevLineNumberForRelativity = -1;
+	
 	lineNumberTextEdit->setReadOnly(true);
 	lineNumberTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
 	lineNumberTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -1145,6 +1152,12 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(textEdit, &MyTextEdit::mouseReleased, this, &MainWindow::mouseReleased);
 	connect(textEdit, &MyTextEdit::handleSizeChange, this, &MainWindow::updateMargins);
 	connect(textDocument, &QTextDocument::contentsChange, this, &MainWindow::onContentsChange);
+	connect(textEdit, &QTextEdit::cursorPositionChanged, [=]() {
+		qDebug() << "lamda textEdit cursorPositionChanged1";
+		if (useRelativeLineNumbers->isChecked() && textEdit->textCursor().blockNumber()+1 != prevLineNumberForRelativity){
+			updateLineNumbers(globalLineCount);
+		}
+	});
 
 	connect(showWarnings, &QAction::toggled, this, &MainWindow::saveWantedTheme); // down here because they will call saveWantedTheme when being set otherwise
 	connect(showErrors, &QAction::toggled, this, &MainWindow::saveWantedTheme);
@@ -1164,6 +1177,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(splitter, &QSplitter::splitterMoved, this, &MainWindow::storeResizeOfSplitters);
 	connect(splitter2, &QSplitter::splitterMoved, this, &MainWindow::storeResizeOfSplitters);
 	connect(useTabs, &QAction::toggled, this, &MainWindow::useTabsToggled);
+	connect(useRelativeLineNumbers, &QAction::toggled, this, &MainWindow::useRelativeLineNumbersTriggered);
 	connect(useWebView, &QAction::toggled, this, &MainWindow::useWebViewToggled);
 
 	connect(fileTree, &QTreeView::doubleClicked, this, &MainWindow::fileTreeOpened);
@@ -1364,6 +1378,12 @@ void MainWindow::on_actionRender_As_Markdown_triggered(){
 	free(htmlCStr);
 
 	openMenuWithHTML("Markdown", html);
+}
+
+void MainWindow::useRelativeLineNumbersTriggered(){
+	qDebug() << "useRelativeLineNumbersTriggered";
+	updateLineNumbers(globalLineCount);
+	saveWantedTheme();
 }
 
 void MainWindow::useTabsToggled(){
@@ -4044,6 +4064,7 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("useFiletreeIfFullscreen",  useFileTreeIfFullscreen->isChecked());
 	settings.setValue("useTabs", useTabs->isChecked());
 	settings.setValue("useWebView", useWebView->isChecked());
+	settings.setValue("useRelativeLineNumbers", useRelativeLineNumbers->isChecked());
 
 	settings.setValue("autoSaveAct", autoSaveAct->isChecked());
 	settings.setValue("randomSelectFileTypeAct",randomSelectFileTypeAct->isChecked());
@@ -4189,6 +4210,7 @@ bool MainWindow::wantedTheme()
 		useFileTreeIfFullscreen->setChecked(settings.value("useFileTreeIfFullscreen", true).toBool());
 		useTabs->setChecked(settings.value("useTabs", false).toBool());
 		useWebView->setChecked(settings.value("useWebView", false).toBool());
+		useRelativeLineNumbers->setChecked(settings.value("useRelativeLineNumbers", false).toBool());
 
 		bool defaultRandomSelect = false;
 		QString name = qgetenv("USER"); // this env is LINUX - might as well right?
@@ -7354,9 +7376,12 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 void MainWindow::updateLineNumbers(int count) // good enough
 {
 	qDebug() << "updateLineNumbers";
-
+	
 	lineNumberTextEdit->blockSignals(true);
-
+	lineNumberTextEdit->verticalScrollBar()->blockSignals(true);
+	
+	QStringList lineNumbers;
+	
 	int globalDigits = QString::number(globalLineCount).length();
 	int countDigits = std::to_string(count).length();
 
@@ -7367,19 +7392,39 @@ void MainWindow::updateLineNumbers(int count) // good enough
 	if (globalDigits != countDigits) {
 		updateFonts();
 	}
-
-	QStringList lineNumbers;
-
-	for (int i = 1; i < count; ++i) {
-		QString nm = QString::number(i);
-		int spaces = countDigits-nm.length();
-
-		lineNumbers << QString(spaces, ' ')+nm;
+	
+	if (!useRelativeLineNumbers->isChecked()){
+		for (int i = 1; i < count; ++i) {
+			QString nm = QString::number(i);
+			int spaces = countDigits-nm.length();
+	
+			lineNumbers << QString(spaces, ' ')+nm;
+		}
+	}else{
+		QTextCursor cursor = textEdit->textCursor();
+		int lineNum = cursor.blockNumber()+1;
+		
+		for (int i = 1; i < count; ++i) {
+			int value = lineNum-i;
+			if (value == 0){
+				lineNumbers << QString::number(lineNum); // we don't put spaces so it's clearer
+				continue;
+			}
+			
+			QString nm = QString::number(abs(value));
+			int spaces = countDigits-nm.length();
+	
+			lineNumbers << QString(spaces, ' ')+nm;
+		}
+		
+		prevLineNumberForRelativity = lineNum;
 	}
 
 	QString text = lineNumbers.join("\n") + QString(1000, '\n');
 
 	lineNumberTextEdit->setPlainText(text);
+	lineNumberTextEdit->verticalScrollBar()->setValue(textEdit->verticalScrollBar()->value());
+	lineNumberTextEdit->verticalScrollBar()->blockSignals(false);
 	lineNumberTextEdit->blockSignals(false);
 }
 
