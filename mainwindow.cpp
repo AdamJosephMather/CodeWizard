@@ -57,7 +57,7 @@ extern "C" {
 	TSLanguage* tree_sitter_css(void);
 }
 
-QString versionNumber = "9.3.0";
+QString versionNumber = "9.4.0";
 
 QList<QLineEdit*> hexColorsList;
 
@@ -422,6 +422,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	searchBar->setPlaceholderText("New File");
 	
 	searchMenu = new QListWidget(this);
+	searchMenu->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	searchMenu->hide();
 	
 	connect(searchBar, &QTextEdit::textChanged, this, [this](){
@@ -435,6 +436,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 			indexFiles();
 			searchMenu->show();
 		}else{
+			searchBar->setPlainText("");
 			searchMenu->hide();
 		}
 	});
@@ -1360,7 +1362,7 @@ void MainWindow::repositionSearchBar() {
 	
 	QFontMetrics metrics(textEdit->font());
 	
-	searchMenu->resize(correctWidth, metrics.height()*8);
+	searchMenu->resize(correctWidth, metrics.height()*12);
 	searchMenu->move(searchStart, menuBarHeight / 2 + searchBar->height() / 2);
 }
 

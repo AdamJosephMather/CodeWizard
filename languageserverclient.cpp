@@ -113,7 +113,7 @@ void LanguageServerClient::initialize(const QString &rootUri)
 			{"configuration", true}
 		}}
 	};
-	
+
 	QJsonObject params {
 		{"rootUri", fileRootURI},
 		{"capabilities", capabilities},
@@ -168,7 +168,7 @@ void LanguageServerClient::initialize(const QString &rootUri)
 	};
 
 	sendMessage(initializedMessage);
-	
+
 	/*
 	{
   jsonrpc = "2.0",
@@ -190,7 +190,7 @@ void LanguageServerClient::initialize(const QString &rootUri)
 			{"python", QJsonObject()}
 		}}
 	};
-	
+
 	QJsonObject workspaceChanged {
 		{"jsonrpc", "2.0"},
 		{"method", "workspace/didChangeConfiguration"},
@@ -198,7 +198,7 @@ void LanguageServerClient::initialize(const QString &rootUri)
 	};
 
 	sendMessage(workspaceChanged);
-	
+
 	isInitialized = true;
 }
 
@@ -445,7 +445,6 @@ void LanguageServerClient::requestRename(int line, int character, const QString&
 	sendMessage(message);
 }
 
-
 QJsonArray LanguageServerClient::filterDiagnostics(const QJsonArray &diagnostics, int lineStart, int columnStart, int lineEnd, int columnEnd)
 {
 	QJsonArray filteredDiagnostics;
@@ -615,7 +614,7 @@ void LanguageServerClient::onServerReadyRead()
 		QString responseType = "";
 		if (requestsMap.contains(id)){
 			responseType = requestsMap[id];
-        }
+		}
 
 		QJsonObject result = response["result"].toObject();
 
@@ -640,11 +639,11 @@ void LanguageServerClient::onServerReadyRead()
 			QJsonObject location = array[0].toObject()["range"].toObject()["end"].toObject();
 			int line = location["line"].toInt();
 			int character = location["character"].toInt();
-			
+
 			location = array[0].toObject()["range"].toObject()["start"].toObject();
 			int line1 = location["line"].toInt();
 			int character1 = location["character"].toInt();
-			
+
 			QString locFile = response["result"].toArray()[0].toObject()["uri"].toString();
 
 			emit gotoDefinitionsReceived(line1, character1, line, character, locFile);
