@@ -615,7 +615,7 @@ void LanguageServerClient::onServerReadyRead()
 		QString responseType = "";
 		if (requestsMap.contains(id)){
 			responseType = requestsMap[id];
-		}
+        }
 
 		QJsonObject result = response["result"].toObject();
 

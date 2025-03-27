@@ -57,7 +57,7 @@ extern "C" {
 	TSLanguage* tree_sitter_css(void);
 }
 
-QString versionNumber = "9.2.0";
+QString versionNumber = "9.3.0";
 
 QList<QLineEdit*> hexColorsList;
 
@@ -804,7 +804,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	colormapCTS = getter->GetC();
 	colormapCobolTS = getter->GetCobol();
 	colormapCssTS = getter->GetCss();
-	
+
 	delete getter;
 
 	extraWordList = {};
@@ -1053,12 +1053,11 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	codeWizForm.setForeground(codeWizCol);
 
 	setupSyntaxTreeOnOpen("");
-
+	
 	lineNumberTextEdit->setReadOnly(true);
 	lineNumberTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
 	lineNumberTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	lineNumberTextEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn); // So that it can't get out of sync w/ main textedit
-	lineNumberTextEdit->setAlignment(Qt::AlignRight);
 
 	textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
@@ -1282,33 +1281,33 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 void MainWindow::lineDragEvent(QPoint start, QPoint end, bool endODrag){
 	qDebug() << "lineDragEvent";
-	
+
 	QTextCursor sCur = lineNumberTextEdit->cursorForPosition(start);
 	QTextCursor eCur = lineNumberTextEdit->cursorForPosition(end);
-	
+
 	int sLine = sCur.blockNumber();
 	int eLine = eCur.blockNumber();
-	
+
 	QTextBlock b1 = textDocument->findBlockByLineNumber(sLine);
 	QTextBlock b2 = textDocument->findBlockByLineNumber(eLine);
-	
+
 	if (!b1.isValid() || !b2.isValid()){
 		return;
 	}
-	
+
 	QTextCursor c1(b1);
 	QTextCursor c2(b2);
-	
+
 	if (c1.position() <= c2.position()){
 		c2.movePosition(QTextCursor::EndOfLine);
 	}else{
 		c1.movePosition(QTextCursor::EndOfLine);
 	}
-	
+
 	c1.setPosition(c2.position(), QTextCursor::KeepAnchor);
-	
+
 	textEdit->setTextCursor(c1);
-	
+
 	if (endODrag){
 		textEdit->setFocus();
 	}
@@ -2580,19 +2579,19 @@ void MainWindow::onContentsChange(int position, int charsRemoved, int charsAdded
 
 	// Apply edit to the Tree-sitter tree
 	applyEditToTree(startByte, oldEndByte, newEndByte, startRow, startCol, oldEndRow, oldEndCol, newEndRow, newEndCol);
-	
+
 	// Parse incrementally
 	QByteArray documentText = textDocument->toPlainText().toLatin1().constData();
-	
+
 	if (currentLang.name == "Cobol"){
 		documentText = documentText.replace("*", "#"); // we use the python tree-sitter parser, so we replace the * with # to create comments... I love this
 	}
-	
+
 	TSTree* newTree = ts_parser_parse_string(parser, tree, documentText, documentText.size());
-	
+
 	treeParserSyntaxHighlighter.setLanguage(currentLang.name); // we do this because I'm too lazy to do it any other way
 	treeParserSyntaxHighlighter.updateHighlighting(textDocument, position, charsAdded+charsRemoved, tree, newTree, charsAdded == textDocument->characterCount());
-	
+
 	if (tree) {
 		ts_tree_delete(tree);
 	}
@@ -5025,15 +5024,16 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 
 	builtinTerminalTextEdit->insertPlainText("\nRequesting process gracefully stop.");
 	builtinTerminalTextEditHORZ->insertPlainText("\nRequesting process gracefully stop.");
-
-	activeTerminals[currentTerminalIndex]->terminate();
-	if (!activeTerminals[currentTerminalIndex]->waitForFinished(100)) {
-		builtinTerminalTextEdit->insertPlainText("\nForcing process to terminate.");
-		builtinTerminalTextEditHORZ->insertPlainText("\nForcing process to terminate.");
-		activeTerminals[currentTerminalIndex]->kill();
-		activeTerminals[currentTerminalIndex]->waitForFinished();
+	
+	if (useBuiltinTerminal->isChecked()){
+		#ifdef _WIN32
+			QProcess::startDetached("taskkill", {"/F", "/T", "/PID", QString::number(activeTerminals[currentTerminalIndex]->processId())});
+		#else
+			activeTerminals[currentTerminalIndex]->kill();
+			activeTerminals[currentTerminalIndex]->waitForFinished();
+		#endif
 	}
-
+	
 	delete activeTerminals[currentTerminalIndex];
 
 	builtinTerminalTextEdit->insertPlainText("\n\nHard Reset CodeWizard Builtin Terminal." + QString::number(currentTerminalIndex+1)+"\n\n");

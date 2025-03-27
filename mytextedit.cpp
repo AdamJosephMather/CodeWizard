@@ -107,16 +107,17 @@ void MyTextEdit::contextMenuEvent(QContextMenuEvent *event) {
 	
 	menu->exec(event->globalPos());
 	
-	delete menu;  // Clean up the menu
+	delete menu;
 }
 
 void MyTextEdit::wheelEvent(QWheelEvent *event) {
-	// Check if Shift key is pressed
 	if (event->modifiers() & Qt::ShiftModifier) {
-		// Scroll horizontally
 		horizontalScrollBar()->setValue(horizontalScrollBar()->value() - event->angleDelta().y());
+		event->accept();
+	} if (event->modifiers() & Qt::ControlModifier) { // override the default behavior
+		verticalScrollBar()->setValue(verticalScrollBar()->value() - event->angleDelta().y()*2);
+		event->accept();
 	} else {
-		// Default vertical scrolling behavior
 		QTextEdit::wheelEvent(event);
 	}
 }
