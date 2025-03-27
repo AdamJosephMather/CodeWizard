@@ -82,7 +82,7 @@ bool playingMacro = false;
 RecordingLight *recordingLight;
 
 QString fileName = "";
-QString defWindowTitle = "CodeWizard V"+versionNumber+" - New File";
+QString defWindowTitle = "New File - CodeWizard V"+versionNumber;
 QString windowName = defWindowTitle;
 MyTextEdit *textEdit;
 QTextEdit *lineEdit;
@@ -2088,7 +2088,7 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 	}
 
 	fileContent = fileContentLst.join("\n");
-	windowName = "CodeWizard V"+versionNumber+" - Comparison";
+	windowName = "Comparison - CodeWizard V"+versionNumber;
 
 	previousLineCount = 1;
 	savedText = fileContent;
@@ -2891,7 +2891,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 
 		QString fileNameName = fileInfo.fileName();
 
-		windowName = "CodeWizard V"+versionNumber+" - "+fileNameName+" - "+fileName;
+		windowName = fileNameName+" - CodeWizard V"+versionNumber+" - "+fileName;
 
 		QTextStream in(&file);
 		QString fileContent = in.readAll();
@@ -4792,7 +4792,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	unsaved = false;
 	QString fileNameName = fileInfo.fileName();
 
-	windowName = "CodeWizard V"+versionNumber+" - "+fileNameName+" - "+fileName;
+	windowName = fileNameName+" - CodeWizard V"+versionNumber+" - "+fileName;
 
 	QTextStream in(&file);
 	QString fileContent = in.readAll();
@@ -6549,7 +6549,7 @@ void MainWindow::on_actionSave_triggered()
 		settings.setValue("mostRecentFolder", fileInfo.absolutePath());
 		fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
 
-		windowName = "CodeWizard V"+versionNumber+" - "+fileNameName+" - "+fileName;
+		windowName = fileNameName+" - CodeWizard V"+versionNumber+" - "+fileName;
 
 		addFileToRecentList(fileName);
 
@@ -7006,7 +7006,7 @@ void MainWindow::on_actionSave_As_triggered()
 	settings.setValue("mostRecentFolder", fileInfo.absolutePath());
 	fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
 
-	windowName = "CodeWizard V"+versionNumber+" - " + fileNameName + " - " + fileName;
+	windowName = fileNameName + " - CodeWizard V"+versionNumber + " - " + fileName;
 	setWindowTitle(windowName);
 	saveToFile(textEdit->toPlainText());
 	savedText = textEdit->toPlainText();
@@ -8403,7 +8403,7 @@ void MainWindow::openRecentFile(QString newFile){
 	QString fileDir = fileInfo.absolutePath();
 	QString fileNameName = fileInfo.fileName();
 
-	windowName = "CodeWizard V"+versionNumber+" - "+fileNameName+" - "+fileName;
+	windowName = fileNameName+" - CodeWizard V"+versionNumber+" - "+fileName;
 
 	QTextStream in(&file);
 	QString fileContent = in.readAll();
