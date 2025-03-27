@@ -1442,7 +1442,7 @@ void MainWindow::indexFiles(){
 	int starterPathLen = rootPath.length()+1;
 	queue.enqueue(rootPath);
 	
-	int maxFiles = 100000; // rough max number of files to see, prevents C:/ from breaking it
+	int maxFiles = 30000; // rough max number of files to see, prevents C:/ from breaking it
 	int seen = 0;
 	
 	QFontMetrics metrics(textEdit->font());
