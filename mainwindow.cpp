@@ -7903,15 +7903,18 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 	QColor color1;
 	QColor color2;
 	QColor color3;
+	QColor placeholdertext;
 
 	if (darkmode){
 		color1 = QColor(23, 23, 23);
 		color2 = QColor(32, 32, 32);
 		color3 = QColor(25, 25, 25);
+		placeholdertext = QColor(150, 150, 150);
 	} else {
 		color1 = QColor(230, 230, 230);
 		color2 = QColor(245, 245, 245);
 		color3 = QColor(245, 245, 245);
+		placeholdertext = QColor(100, 100, 100);
 	}
 
 	errMenu.recolor(color2);
@@ -7974,6 +7977,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 	
 	palette = searchBar->palette();
 	palette.setColor(QPalette::Base, color2);
+	palette.setColor(QPalette::PlaceholderText, placeholdertext);
 	searchBar->setPalette(palette);
 
 	palette = findButton->palette();
