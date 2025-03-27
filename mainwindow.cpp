@@ -6090,7 +6090,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				QTextCursor cursor = textEdit->textCursor();
 				cursor.setPosition(loc);
 				textEdit->setTextCursor(cursor);
-			}else if (key_event->key() == Qt::Key_Colon){
+			}else if (key_event->key() == Qt::Key_Colon || key_event->key() == Qt::Key_Semicolon){
 				searchBar->setFocus();
 				searchBar->textCursor().insertText(":");
 			}
