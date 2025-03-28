@@ -417,6 +417,7 @@ QString globalCols3;
 QString globalColsHover;
 QString globalColsMoreThanHover;
 QString globalColsPressed;
+QString globalColsText;
 
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -4376,10 +4377,21 @@ void MainWindow::updateFonts()
 	}
 	
 	fileTabBar->setFixedHeight(metrics.height()*1.2);
-
-	nextWebButton->setFixedWidth(nextWebButton->height());
-	prevWebButton->setFixedWidth(prevWebButton->height());
+	
+	nextWebButton->setFont(font);
+	prevWebButton->setFont(font);
+	reloadButton->setFont(font);
+	
+	nextWebButton->setFixedWidth(reloadButton->height());
+	prevWebButton->setFixedWidth(reloadButton->height());
 	reloadButton->setFixedWidth(reloadButton->height());
+	
+	prevTerm1->setFont(font);
+	nextTerm1->setFont(font);
+	addTerm1->setFont(font);
+	prevTerm2->setFont(font);
+	nextTerm2->setFont(font);
+	addTerm2->setFont(font);
 
 	prevTerm1->setFixedWidth(prevTerm1->height());
 	nextTerm1->setFixedWidth(prevTerm1->height());
@@ -8238,6 +8250,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		globalColsHover = "rgb(52,52,52)";
 		globalColsMoreThanHover = "rgb(62,62,62)";
 		globalColsPressed = "rgb(32,32,32)";
+		globalColsText = "rgb(255, 255, 255)";
 		
 	} else {
 		color1 = QColor(230, 230, 230);
@@ -8251,6 +8264,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		globalColsHover = "rgb(220,220,220)";
 		globalColsMoreThanHover = "rgb(210,210,210)";
 		globalColsPressed = "rgb(255,255,255)";
+		globalColsText = "rgb(0, 0, 0)";
 	}
 
 	errMenu.recolor(color2);
@@ -8558,10 +8572,10 @@ void MainWindow::applyScrollBarStyles(QWidget *widget) {
 		button->setStyleSheet(R"(
 			QPushButton {
 				background-color: )"+globalCols2+R"(;
-				color: white;
+				color: )"+globalColsText+R"(;
 				border: 1px solid )"+globalColsHover+R"(;
 				border-radius: 4px;
-				padding: 4px 8px;
+				padding: 2px 4px;
 			}
 			QPushButton:hover {
 				background-color: )"+globalColsHover+R"(;
