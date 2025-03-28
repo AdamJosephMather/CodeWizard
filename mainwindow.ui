@@ -640,6 +640,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="actionGit_Integration"/>
     <addaction name="actionVim_Modes"/>
     <addaction name="actionMultiple_Cursors"/>
+    <addaction name="actionCommand_Palette"/>
    </widget>
    <widget class="QMenu" name="menuLanguage">
     <property name="title">
@@ -1325,6 +1326,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </property>
    <property name="text">
     <string>Use Relative Line Numbers</string>
+   </property>
+  </action>
+  <action name="actionCommand_Palette">
+   <property name="text">
+    <string>Command Palette</string>
    </property>
   </action>
  </widget>

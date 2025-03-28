@@ -26,6 +26,10 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void applyScrollBarStyles(QWidget *widget);
+	void applyStylesToAllScrollBars();
+	void Ctrl_C();
+	void on_actionCommand_Palette_triggered();
 	std::pair<bool, double> calcExpression(QString expression);
 	void resetLSP();
 	QStringList extractStringWords(QString word);

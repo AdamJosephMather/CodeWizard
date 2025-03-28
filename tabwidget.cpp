@@ -7,8 +7,8 @@ TabWidget::TabWidget(bool darkmode, int index, QWidget *parent) : QWidget{parent
 	
 	m_index = index;
 	
-	tabButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-	closeButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+	tabButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+	closeButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
 	
 	connect(tabButton, &QPushButton::clicked, this, [this]{
 		emit tabClicked(m_index);
@@ -42,10 +42,10 @@ void TabWidget::updateStyles(bool darkmode){
 	QString text = "rgb(0, 0, 0)";
 	
 	if (darkmode){
-		regular = "rgb(36, 36, 36)";
-		hover = "rgb(46, 46, 46)";
-		click = "rgb(56, 56, 56)";
-		oneStepFurther = "rgb(66, 66, 66)";
+		regular = "rgb(40, 40, 40)";
+		hover = "rgb(50, 50, 50)";
+		click = "rgb(60, 60, 60)";
+		oneStepFurther = "rgb(70, 70, 70)";
 		text = "rgb(255, 255, 255)";
 	}
 	

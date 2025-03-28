@@ -410,6 +410,14 @@ QStringList indexedFiles;
 QStringList indexedFilesPath;
 int selectedSearchFile = 0;
 
+
+QString globalCols1;
+QString globalCols2;
+QString globalCols3;
+QString globalColsHover;
+QString globalColsMoreThanHover;
+QString globalColsPressed;
+
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
 	qDebug() << "MainWindow";
@@ -1260,6 +1268,30 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(prevWebButton, &QPushButton::clicked, this, &MainWindow::backWebView);
 
 	connect(webView, &QWebEngineView::urlChanged, this, &MainWindow::urlChanged);
+	
+	connect(qApp, &QApplication::aboutToQuit, [this]() {
+		qDebug() << "Application is quitting.";
+		
+		for (int indx = 0; indx < activeTerminals.length(); indx++){
+			currentTerminalIndex = indx;
+			Ctrl_C();
+		}
+	
+		QSettings settings("FoundationTechnologies", "CodeWizard");
+		settings.setValue("wasFullScreened", (isFullScreen() || isMaximized()));
+	
+		lspMutex.lock();
+		if (client){
+			client->shutdown();
+			delete client;
+			client = nullptr;
+		}
+		lspMutex.unlock();
+	
+		if (unsaved && fileName != ""){
+			pullUpSaveDialogue();
+		}
+	});
 
 	fileModel = new QFileSystemModel;
 
@@ -2066,7 +2098,6 @@ void MainWindow::addTab(QString name, QString file){
 	tab->setText(name);
 	tab->extraText = file;
 	tabLayout->insertWidget(tabLayout->count()-1, tab);
-	fileTabBar->setFixedHeight(tab->height());
 
 	if (useTabs->isChecked()){
 		fileTabBar->show();
@@ -4343,10 +4374,8 @@ void MainWindow::updateFonts()
 	for (TabWidget *tab : tabs){
 		tab->stFnt(font);
 	}
-
-	if (tabs.length() != 0){
-		fileTabBar->setFixedHeight(tabs[0]->height());
-	}
+	
+	fileTabBar->setFixedHeight(metrics.height()*1.2);
 
 	nextWebButton->setFixedWidth(nextWebButton->height());
 	prevWebButton->setFixedWidth(prevWebButton->height());
@@ -4924,36 +4953,52 @@ void MainWindow::on_actionSet_Groq_AI_API_Key_triggered(){
 	saveWantedTheme();
 }
 
-MainWindow::~MainWindow()
-{
+void MainWindow::Ctrl_C(){
+	#ifdef _WIN32
+		qDebug() << "Kill ctrl+c";
+		QProcess::startDetached("taskkill", {"/F", "/T", "/PID", QString::number(activeTerminals[currentTerminalIndex]->processId())});
+	#else
+		activeTerminals[currentTerminalIndex]->kill();
+		activeTerminals[currentTerminalIndex]->waitForFinished();
+	#endif
+
+	activeTerminals[currentTerminalIndex] = new QProcess(this);
+	activeTerminals[currentTerminalIndex]->setProcessChannelMode(QProcess::MergedChannels);
+
+	connect(activeTerminals[currentTerminalIndex], &QProcess::readyReadStandardOutput, this, [this, currentIndex = currentTerminalIndex]{
+		handleTerminalStdout(currentIndex);
+	});
+	connect(activeTerminals[currentTerminalIndex], &QProcess::readyReadStandardError, this, [this, currentIndex = currentTerminalIndex]{
+		handleTerminalStdout(currentIndex);
+	});
+
+	QFileInfo fileInfo(fileName);
+	QString fileDir = fileInfo.absolutePath();
+	activeTerminals[currentTerminalIndex]->setWorkingDirectory(fileDir);
+
+	builtinTerminalTextEdit->insertPlainText("\n\n");
+	builtinTerminalTextEditHORZ->insertPlainText("\n\n");
+	#ifdef _WIN32
+		activeTerminals[currentTerminalIndex]->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1));
+	#else
+		activeTerminals[currentTerminalIndex]->setEnvironment(QStringList() << "TERM=dumb" << "LANG=C");
+		activeTerminals[currentTerminalIndex]->start("setsid", QStringList() << "bash" << "--login" << "-i"); //<< "echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1));
+		QString instruction = "echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1)+"\n";
+		activeTerminals[currentTerminalIndex]->write(instruction.toUtf8());
+	#endif
+}
+
+MainWindow::~MainWindow() {
 	qDebug() << "~MainWindow";
-
-	QSettings settings("FoundationTechnologies", "CodeWizard");
-	settings.setValue("wasFullScreened", (isFullScreen() || isMaximized()));
-
-	lspMutex.lock();
-	if (client){
-		client->shutdown();
-		delete client;
-		client = nullptr;
-	}
-	lspMutex.unlock();
-
-	if (unsaved && fileName != ""){
-		pullUpSaveDialogue();
-	}
-
 	delete ui;
 }
 
-void MainWindow::updateScrollBarValue(int value)
-{
+void MainWindow::updateScrollBarValue(int value) {
 //	qDebug() << "updateScrollBarValue";
 	lineNumberTextEdit->verticalScrollBar()->setValue(value);
 }
 
-void MainWindow::updateScrollBarValue2(int value)
-{
+void MainWindow::updateScrollBarValue2(int value) {
 //	qDebug() << "updateScrollBarValue2";
 	if (value <= textEdit->verticalScrollBar()->maximum()){
 		textEdit->verticalScrollBar()->setValue(value);
@@ -4962,8 +5007,7 @@ void MainWindow::updateScrollBarValue2(int value)
 	}
 }
 
-void MainWindow::findTriggered()
-{
+void MainWindow::findTriggered() {
 	qDebug() << "findTriggered";
 
 	QString text = textEdit->toPlainText();
@@ -5551,19 +5595,7 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 		on_actionSave_triggered();
 	}
 	
-	if (useBuiltinTerminal->isChecked()){
-		#ifdef _WIN32
-			QProcess::startDetached("taskkill", {"/F", "/T", "/PID", QString::number(activeTerminals[currentTerminalIndex]->processId())});
-		#else
-			activeTerminals[currentTerminalIndex]->kill();
-			activeTerminals[currentTerminalIndex]->waitForFinished();
-		#endif
-	}
-	
-	delete activeTerminals[currentTerminalIndex];
-
-	builtinTerminalTextEdit->insertPlainText("\n\nHard Reset CodeWizard Builtin Terminal." + QString::number(currentTerminalIndex+1)+"\n\n");
-	builtinTerminalTextEditHORZ->insertPlainText("\n\nHard Reset CodeWizard Builtin Terminal" + QString::number(currentTerminalIndex+1)+"\n\n");
+	Ctrl_C();
 
 	activeTerminals[currentTerminalIndex] = new QProcess(this);
 
@@ -5707,12 +5739,12 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 	} else {
 		#ifdef _WIN32
 			activeTerminals[currentTerminalIndex]->start("cmd.exe");
+			QString moveD = "cd /d " + fileDir + "\n" + finalRun + "\n";
 		#else
 			activeTerminals[currentTerminalIndex]->setEnvironment(QStringList() << "TERM=dumb" << "LANG=C");
 			activeTerminals[currentTerminalIndex]->start("setsid", QStringList() << "bash" << "--login" << "-i"); //<< "echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1));
+			QString moveD = "cd " + fileDir + "\n" + finalRun + "\n";
 		#endif
-
-		QString moveD = "cd " + fileDir + "\n" + finalRun + "\n";
 		activeTerminals[currentTerminalIndex]->write(moveD.toUtf8());
 	}
 }
@@ -6041,37 +6073,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			QString selectedText = cursor.selectedText();
 
 			if (key_sequence == QKeySequence("Ctrl+C") && selectedText.isEmpty()){
-				#ifdef _WIN32
-					QProcess::startDetached("taskkill", {"/F", "/T", "/PID", QString::number(activeTerminals[currentTerminalIndex]->processId())});
-				#else
-					activeTerminals[currentTerminalIndex]->kill();
-					activeTerminals[currentTerminalIndex]->waitForFinished();
-				#endif
-
-				activeTerminals[currentTerminalIndex] = new QProcess(this);
-				activeTerminals[currentTerminalIndex]->setProcessChannelMode(QProcess::MergedChannels);
-
-				connect(activeTerminals[currentTerminalIndex], &QProcess::readyReadStandardOutput, this, [this, currentIndex = currentTerminalIndex]{
-					handleTerminalStdout(currentIndex);
-				});
-				connect(activeTerminals[currentTerminalIndex], &QProcess::readyReadStandardError, this, [this, currentIndex = currentTerminalIndex]{
-					handleTerminalStdout(currentIndex);
-				});
-
-				QFileInfo fileInfo(fileName);
-				QString fileDir = fileInfo.absolutePath();
-				activeTerminals[currentTerminalIndex]->setWorkingDirectory(fileDir);
-
-				builtinTerminalTextEdit->insertPlainText("\n\n");
-				builtinTerminalTextEditHORZ->insertPlainText("\n\n");
-				#ifdef _WIN32
-					activeTerminals[currentTerminalIndex]->start("cmd.exe", QStringList() << "/k" << "echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1));
-				#else
-					activeTerminals[currentTerminalIndex]->setEnvironment(QStringList() << "TERM=dumb" << "LANG=C");
-					activeTerminals[currentTerminalIndex]->start("setsid", QStringList() << "bash" << "--login" << "-i"); //<< "echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1));
-					QString instruction = "echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1)+"\n";
-					activeTerminals[currentTerminalIndex]->write(instruction.toUtf8());
-				#endif
+				Ctrl_C();
 			}
 
 			if (keyEvent->key() == Qt::Key_Escape){
@@ -6313,7 +6315,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				textEdit->setTextCursor(cursor);
 			}else if (key_event->key() == Qt::Key_Colon || key_event->key() == Qt::Key_Semicolon){
 				searchBar->setFocus();
-				searchBar->textCursor().insertText(":");
 			}
 
 			return true; // always handle inputs in normal mode - normal is a strange term for this but whatever - it'll work.
@@ -8226,15 +8227,30 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 	QColor placeholdertext;
 
 	if (darkmode){
-		color1 = QColor(23, 23, 23);
-		color2 = QColor(32, 32, 32);
+		color1 = QColor(15, 15, 15);
+		color2 = QColor(42, 42, 42);
 		color3 = QColor(25, 25, 25);
 		placeholdertext = QColor(150, 150, 150);
+		
+		globalCols1 = "rgb(15,15,15)";
+		globalCols2 = "rgb(42,42,42)";
+		globalCols3 = "rgb(25,25,25)";
+		globalColsHover = "rgb(52,52,52)";
+		globalColsMoreThanHover = "rgb(62,62,62)";
+		globalColsPressed = "rgb(32,32,32)";
+		
 	} else {
 		color1 = QColor(230, 230, 230);
 		color2 = QColor(245, 245, 245);
 		color3 = QColor(245, 245, 245);
 		placeholdertext = QColor(100, 100, 100);
+		
+		globalCols1 = "rgb(230,230,230)";
+		globalCols2 = "rgb(245,245,245)";
+		globalCols3 = "rgb(25,25,25)";
+		globalColsHover = "rgb(220,220,220)";
+		globalColsMoreThanHover = "rgb(210,210,210)";
+		globalColsPressed = "rgb(255,255,255)";
 	}
 
 	errMenu.recolor(color2);
@@ -8390,13 +8406,13 @@ void MainWindow::changeTheme(bool darkMode)
 		}
 	)";
 
-	if (windowsVersion == 11) {
-		qApp->setStyle(QStyleFactory::create("Macintosh"));
-	} else {
-		// Use Fusion style on Windows 10
-		qApp->setStyle(QStyleFactory::create("Fusion"));
-	}
-
+//	if (windowsVersion == 11) {
+//		qApp->setStyle(QStyleFactory::create("Macintosh"));
+//	} else {
+//		// Use Fusion style on Windows 10
+	qApp->setStyle(QStyleFactory::create("Fusion"));
+//	}
+	
 	if (darkMode) {
 		QPalette lightPalette = qApp->palette();
 
@@ -8507,6 +8523,69 @@ void MainWindow::changeTheme(bool darkMode)
 
 	updateSyntax();
 	centerCursor();
+	
+	applyStylesToAllScrollBars();
+}
+
+void MainWindow::applyScrollBarStyles(QWidget *widget) {
+	if (auto *scrollBar = qobject_cast<QScrollBar *>(widget)) {
+		scrollBar->setStyleSheet(R"(
+			QScrollBar:vertical {
+				border: none;
+				background: transparent;
+				width: 6px;  /* Thinner scrollbar */
+			}
+			QScrollBar:horizontal {
+				border: none;
+				background: transparent;
+				height: 6px;  /* Thinner scrollbar */
+			}
+			QScrollBar::handle:vertical, QScrollBar::handle:horizontal {
+				background: )"+globalColsHover+R"(;
+				border-radius: 3px;  /* Smaller radius for thinner look */
+			}
+			QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover {
+				background: )"+globalColsMoreThanHover +R"(;
+			}
+			QScrollBar::add-line, QScrollBar::sub-line {
+				background: none;
+				border: none;
+			}
+		)");
+	}
+	
+	if (auto *button = qobject_cast<QPushButton *>(widget)) {
+		button->setStyleSheet(R"(
+			QPushButton {
+				background-color: )"+globalCols2+R"(;
+				color: white;
+				border: 1px solid )"+globalColsHover+R"(;
+				border-radius: 4px;
+				padding: 4px 8px;
+			}
+			QPushButton:hover {
+				background-color: )"+globalColsHover+R"(;
+				border: 1px solid )"+globalCols2+R"(;
+			}
+			QPushButton:pressed {
+				background-color: )"+globalColsPressed +R"(;
+				border: 1px solid )"+globalColsHover+R"(;
+			}
+		)");
+	}
+
+	// Recursively apply to child widgets
+	for (QObject *child : widget->children()) {
+		if (auto *childWidget = qobject_cast<QWidget *>(child)) {
+			applyScrollBarStyles(childWidget);
+		}
+	}
+}
+
+void MainWindow::applyStylesToAllScrollBars() {
+	for (QWidget *widget : QApplication::allWidgets()) {
+		applyScrollBarStyles(widget);
+	}
 }
 
 void MainWindow::on_actionCourier_New_2_triggered()
@@ -8602,7 +8681,7 @@ void MainWindow::on_actionRunning_Files_triggered(){
 void MainWindow::on_actionVim_Modes_triggered(){
 	qDebug() << "on_actionVim_Modes_triggered";
 
-	openHelpMenu("Vim Modes\n\nAs of CodeWizard V8.8.9 we now support a modified set of the vim actions. Namely, when enabled, CodeWizard has a 'Normal' mode and an 'Insert' mode.\nIn normal mode there are a set of commands which work - which will be listed below. In insert mode, all keys are the same as regular (unless you press escape under the right circumstances to enter normal mode.)\n\nHere is the list of shortcuts which work in normal mode:\n    1. H - Moves left\n    2. J - Moves Down\n    3. K - Moves Up\n    4. L - Moves Right\n    5. W - Equivalent to Ctrl+Left\n    6. E - Equivalent to Ctrl+Right\n    7. All commands containing 'Ctrl' - Normal\n    8. All commands containing 'Alt' - Normal\n    9. Return/Enter/Backspace - Normal\n    10. PageDown, PageUp, Home, End - Normal\n    11. Comma/Less Than (<) - Jumps to corresponding previous bracket to the left\n    12. Period/Greater Than (>) - Jumps to corresponding bracket to the right\n    13. $ - Jumps to end of line\n    14. A - Jumps to end of line and enters insert mode\n    15. O - Inserts line below current line and enters insert mode");
+	openHelpMenu("Vim Modes\n\nAs of CodeWizard V8.8.9 we now support a modified set of the vim actions. Namely, when enabled, CodeWizard has a 'Normal' mode and an 'Insert' mode.\nIn normal mode there are a set of commands which work - which will be listed below. In insert mode, all keys are the same as regular (unless you press escape under the right circumstances to enter normal mode.)\n\nHere is the list of shortcuts which work in normal mode:\n    1. H - Moves left\n    2. J - Moves Down\n    3. K - Moves Up\n    4. L - Moves Right\n    5. W - Equivalent to Ctrl+Left\n    6. E - Equivalent to Ctrl+Right\n    7. All commands containing 'Ctrl' - Normal\n    8. All commands containing 'Alt' - Normal\n    9. Return/Enter/Backspace - Normal\n    10. PageDown, PageUp, Home, End - Normal\n    11. Comma/Less Than (<) - Jumps to corresponding previous bracket to the left\n    12. Period/Greater Than (>) - Jumps to corresponding bracket to the right\n    13. $ - Jumps to end of line\n    14. A - Jumps to end of line and enters insert mode\n    15. O - Inserts line below current line and enters insert mode\n    16. : - Brings focus to the command palette");
 }
 
 void MainWindow::on_actionThe_Fix_It_Button_triggered(){
@@ -8618,6 +8697,15 @@ void MainWindow::on_actionCodeWizard_triggered(){
 	qDebug() << "on_actionCodeWizard_triggered";
 
 	openHelpMenu("Designed by Adam Mather.\n\nVersion "+versionNumber);
+}
+
+void MainWindow::on_actionCommand_Palette_triggered(){
+	qDebug() << "on_actionCommand_Palette_triggered";
+
+	openHelpMenu("Command Palette:\n\
+\n\
+The command palette is the bar at the top of the window. It is most useful for hopping between files, executing commands in CodeWizard, or doing math. Furthermore, to quickly access it, use Ctrl+Shift+P.\n\
+");
 }
 
 void MainWindow::on_actionSettings_triggered(){
