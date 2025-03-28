@@ -1768,7 +1768,7 @@ void MainWindow::narrowDownSearchFiles(){
 	displayPaths.clear();
 	
 	int currentCount = 0;
-	int maxCount = 1000;
+	int maxCount = 500;
 	
 	QString starterText = searchBar->toPlainText().toLower();
 	
@@ -1818,7 +1818,7 @@ void MainWindow::indexFiles(){
 	int starterPathLen = rootPath.length()+1;
 	queue.enqueue(rootPath);
 	
-	int maxFiles = 30000; // rough max number of files to see, prevents C:/ from breaking it
+	int maxFiles = 10000; // rough max number of files to see, prevents C:/ from breaking it
 	int seen = 0;
 	
 	QFontMetrics metrics(textEdit->font());
