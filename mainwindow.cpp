@@ -157,6 +157,7 @@ std::unordered_map<QString, int> colormapCobolTS;
 std::unordered_map<QString, int> colormapCssTS;
 
 std::unordered_map<QString, int> storedLineNumbers;
+std::unordered_map<QString, int> storedPositions;
 
 QString bfrChars = " \n(\t=!-+/%*[{&}])\"$^@|><,`~#:;'?\\";
 
@@ -2085,8 +2086,6 @@ void MainWindow::addTab(QString name, QString file){
 
 void MainWindow::tabClicked(int id){
 	qDebug() << "tabClicked - " << id;
-
-	storedLineNumbers[fileName] = textEdit->verticalScrollBar()->value();
 
 	int loc = -1;
 	int loc2 = -1;
@@ -5226,6 +5225,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	qDebug() << "on_actionOpen_triggered";
 	
 	storedLineNumbers[fileName] = textEdit->verticalScrollBar()->value();
+	storedPositions[fileName] = textEdit->textCursor().position();
 	
 	if (isSettingUpLSP){
 		showWeDontFuckWithTheLSP();
@@ -5336,6 +5336,13 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	if (it != storedLineNumbers.end()) {
 		textEdit->verticalScrollBar()->setValue(it->second);
 	}
+	
+	auto it2 = storedPositions.find(fileName);
+	if (it2 != storedPositions.end()) {
+		QTextCursor cursor = textEdit->textCursor();
+		cursor.setPosition(it2->second);
+		textEdit->setTextCursor(cursor);
+	}
 
 	lspMutex.lock();
 	setupLSP(oldFile);
@@ -5352,6 +5359,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	isOpeningFile = false;
 
 	checkForFixitDialogue();
+	textEdit->setFocus();
 }
 
 void MainWindow::setLangOffFilename(QString fileName, bool rehigh){
