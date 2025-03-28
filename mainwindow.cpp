@@ -1774,11 +1774,12 @@ void MainWindow::narrowDownSearchFiles(){
 	
 	auto [isValid, result] = calcExpression(starterText);
 	
-	starterText.replace(" ", "");
+	QString cpy = starterText;
+	cpy.replace(" ", "");
 	
-	if (isValid && QString::number(result) != starterText){
+	if (isValid && QString::number(result) != cpy){
 		indexedFilesPath.push_back("/.CodeWiz./MoveResultToTop");
-		displayPaths.push_back(starterText + " = " + QString::number(result));
+		displayPaths.push_back(cpy + " = " + QString::number(result));
 		indexedFiles.push_back(QString::number(result));
 	}
 	
@@ -8421,13 +8422,8 @@ void MainWindow::changeTheme(bool darkMode)
 			margin: 2px 4px;
 		}
 	)";
-
-//	if (windowsVersion == 11) {
-//		qApp->setStyle(QStyleFactory::create("Macintosh"));
-//	} else {
-//		// Use Fusion style on Windows 10
+	
 	qApp->setStyle(QStyleFactory::create("Fusion"));
-//	}
 	
 	if (darkMode) {
 		QPalette lightPalette = qApp->palette();
@@ -8541,6 +8537,10 @@ void MainWindow::changeTheme(bool darkMode)
 	centerCursor();
 	
 	applyStylesToAllScrollBars();
+	
+	prevTerm1->parentWidget()->layout()->setSpacing(3);
+	prevTerm2->parentWidget()->layout()->setSpacing(3);
+	urlBar->parentWidget()->layout()->setSpacing(3);
 }
 
 void MainWindow::applyScrollBarStyles(QWidget *widget) {
