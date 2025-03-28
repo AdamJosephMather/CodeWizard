@@ -400,7 +400,7 @@ QPushButton *prevWebButton;
 QLineEdit *urlBar;
 
 MyTextEdit *searchBar;
-int correctSearchBarWidth = 800; // will be multiplied by .8 so... Whatevs yo.
+int correctSearchBarWidth = 600; // will be multiplied by .__ so... Whatevs yo.
 QListWidget *searchMenu;
 QStringList allIndexedFiles;
 QStringList displayPaths;
@@ -1383,10 +1383,10 @@ void MainWindow::repositionSearchBar() {
 		correctWidth = endPos-startPos;
 	}
 	
-	int leftPad = correctWidth*.1;
-	correctWidth = correctWidth*.8;
+	int leftPad = correctWidth*.025;
+	correctWidth = correctWidth*.95;
 	
-	searchBar->setFixedSize(correctWidth, menuBar()->height()*.9);
+	searchBar->setFixedSize(correctWidth, menuBar()->height());
 	
 	int center = (endPos+startPos)/2;
 	int searchStart = startPos+leftPad;//center-correctWidth/2;
