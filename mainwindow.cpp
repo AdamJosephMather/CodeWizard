@@ -4389,6 +4389,11 @@ void MainWindow::updateFonts()
 	prevWebButton->setFixedWidth(reloadButton->height());
 	reloadButton->setFixedWidth(reloadButton->height());
 	
+	nextWebButton->setFixedHeight(reloadButton->height());
+	prevWebButton->setFixedHeight(reloadButton->height());
+	reloadButton->setFixedHeight(reloadButton->height());
+	urlBar->setFixedHeight(reloadButton->height());
+	
 	prevTerm1->setFont(font);
 	nextTerm1->setFont(font);
 	addTerm1->setFont(font);
