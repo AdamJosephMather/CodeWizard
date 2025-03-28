@@ -399,7 +399,7 @@ QPushButton *prevWebButton;
 QLineEdit *urlBar;
 
 MyTextEdit *searchBar;
-int correctSearchBarWidth = 600; // will be multiplied by .8 so... Whatevs yo.
+int correctSearchBarWidth = 800; // will be multiplied by .8 so... Whatevs yo.
 QListWidget *searchMenu;
 QStringList allIndexedFiles;
 QStringList displayPaths;
@@ -1384,18 +1384,14 @@ void MainWindow::fillSearchMenu(){
 	searchMenu->clear();
 		
 	for (int i = 0; i < indexedFiles.length(); i++){
-		if (i == selectedSearchFile){
-			searchMenu->addItem(" > "+displayPaths[i]);
-		}else{
-			searchMenu->addItem(displayPaths[i]);
-		}
+		searchMenu->addItem(displayPaths[i]);
 	}
 	
-	if (selectedSearchFile < indexedFiles.length()){
-		QListWidgetItem* item = searchMenu->item(selectedSearchFile);
-		if (item) {
-			searchMenu->scrollToItem(item, QAbstractItemView::PositionAtCenter);
-		}
+	if (selectedSearchFile >= indexedFiles.length() || selectedSearchFile >= 0){
+		selectedSearchFile = 0;
+	}
+	if (!indexedFiles.isEmpty()){
+		searchMenu->setCurrentRow(selectedSearchFile);
 	}
 	searchMenu->update();
 }
@@ -1425,6 +1421,313 @@ QStringList MainWindow::extractStringWords(QString word){
 	return words;
 }
 
+std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we are going to recurse on brackets...
+	if (expression == "") return {false, 0.0};
+	
+	expression.replace(" ", "");
+	expression.replace(",", "");
+	expression.replace(")(", ")*(");
+	
+	QString allowed = "0987654321=+-/*()%^.";
+	
+	QString newExpression = "";
+	
+	int openedBrackets = 0;
+	QString subExpression = "";
+	
+	for (QChar c : expression) {
+		if (!allowed.contains(c)) return {false, 0.0};
+		
+		if (c == '('){
+			openedBrackets += 1;
+			if (openedBrackets == 1){
+				subExpression = "";
+			}
+		}else if (c == ')'){
+			openedBrackets -= 1;
+			if (openedBrackets < 0){
+				return {false, 0.0};
+			}else if (openedBrackets == 0){
+				auto [isValid, result] = calcExpression(subExpression);
+				if (!isValid) return {false, 0.0};
+				
+				newExpression += QString::number(result);
+			}
+		}else if (openedBrackets != 0) {
+			subExpression += c;
+		}else{
+			newExpression += c;
+		}
+	}
+	
+	if (openedBrackets != 0) return {false, 0.0};
+	
+	// our resulting expression will no longer contain brackets. They have been recursively removed. And replaced with numbers. (note they are decimal numbers)
+	// thus we just need to do a work from left to right where we find the ops in "b e dm as" order.
+	
+	// the plan is to itterate over the expression 3 times, we already did b. So we'll do exponents, dm, and as.
+	
+	QString val1;
+	QString val2;
+	
+	QString afterItterationExpression = "";
+	
+	QString partsOfDigit = "0987654321.";
+	
+	while (newExpression.contains("^")){
+		QStringList parts = newExpression.split("^");
+		QString p1 = parts[0];
+		QString p2 = parts[1];
+		
+		QString trueDig1 = "";
+		QString trueDig2 = "";
+		
+		bool seenDot = false;
+		for (int i = p1.length()-1; i >= 0; i--){
+			QChar c = p1.at(i);
+			if (c == '.'){
+				if (seenDot) return {false, 0.0};
+				seenDot = true;
+			}else if (c == '-') {
+				trueDig1 = c + trueDig1;
+				break;
+			}else if (!c.isDigit()) break;
+			
+			trueDig1 = c + trueDig1;
+		}
+		
+		seenDot = false;
+		bool added = false;
+		for (int i = 0; i < p2.length(); i++){
+			QChar c = p2.at(i);
+			if (c == '.'){
+				if (seenDot) return {false, 0.0};
+				seenDot = true;
+			}else if (c == '-' && !added) {
+			}else if (!c.isDigit()) break;
+			
+			trueDig2 += c;
+			if (c != '-'){
+				added = true;
+			}
+		}
+		
+		bool ok;
+		double v1 = trueDig1.toDouble(&ok);
+		if (!ok) return {false, 0.0};
+		double v2 = trueDig2.toDouble(&ok);
+		if (!ok) return {false, 0.0};
+		
+		double res = pow(v1, v2);
+		
+		QString startedWith = trueDig1+"^"+trueDig2;
+		
+		int index = newExpression.indexOf(startedWith);
+		if (index != -1) {
+			newExpression = newExpression.left(index) + QString::number(res) + newExpression.mid(index + startedWith.length());
+		}
+	}
+	
+	while (newExpression.contains("*")){
+		QStringList parts = newExpression.split("*");
+		QString p1 = parts[0];
+		QString p2 = parts[1];
+		
+		QString trueDig1 = "";
+		QString trueDig2 = "";
+		
+		bool seenDot = false;
+		for (int i = p1.length()-1; i >= 0; i--){
+			QChar c = p1.at(i);
+			if (c == '.'){
+				if (seenDot) return {false, 0.0};
+				seenDot = true;
+			}else if (!c.isDigit()) break;
+			
+			trueDig1 = c + trueDig1;
+		}
+		
+		seenDot = false;
+		bool added = false;
+		for (int i = 0; i < p2.length(); i++){
+			QChar c = p2.at(i);
+			if (c == '.'){
+				if (seenDot) return {false, 0.0};
+				seenDot = true;
+			}else if (c == '-' && !added) {
+			}else if (!c.isDigit()) break;
+			
+			trueDig2 += c;
+			if (c != '-'){
+				added = true;
+			}
+		}
+		
+		bool ok;
+		double v1 = trueDig1.toDouble(&ok);
+		if (!ok) return {false, 0.0};
+		double v2 = trueDig2.toDouble(&ok);
+		if (!ok) return {false, 0.0};
+		
+		double res = v1*v2;
+		
+		QString startedWith = trueDig1+"*"+trueDig2;
+		
+		int index = newExpression.indexOf(startedWith);
+		if (index != -1) {
+			newExpression = newExpression.left(index) + QString::number(res) + newExpression.mid(index + startedWith.length());
+		}
+	}
+	
+	while (newExpression.contains("/")){
+		QStringList parts = newExpression.split("/");
+		QString p1 = parts[0];
+		QString p2 = parts[1];
+		
+		QString trueDig1 = "";
+		QString trueDig2 = "";
+		
+		bool seenDot = false;
+		for (int i = p1.length()-1; i >= 0; i--){
+			QChar c = p1.at(i);
+			if (c == '.'){
+				if (seenDot) return {false, 0.0};
+				seenDot = true;
+			}else if (!c.isDigit()) break;
+			
+			trueDig1 = c + trueDig1;
+		}
+		
+		seenDot = false;
+		bool added = false;
+		for (int i = 0; i < p2.length(); i++){
+			QChar c = p2.at(i);
+			if (c == '.'){
+				if (seenDot) return {false, 0.0};
+				seenDot = true;
+			}else if (c == '-' && !added) {
+			}else if (!c.isDigit()) break;
+			
+			trueDig2 += c;
+			if (c != '-'){
+				added = true;
+			}
+		}
+		
+		bool ok;
+		double v1 = trueDig1.toDouble(&ok);
+		if (!ok) return {false, 0.0};
+		double v2 = trueDig2.toDouble(&ok);
+		if (!ok) return {false, 0.0};
+		
+		if (v2 == 0) return {false, 0.0};
+		
+		double res = v1/v2;
+		
+		QString startedWith = trueDig1+"/"+trueDig2;
+		
+		int index = newExpression.indexOf(startedWith);
+		if (index != -1) {
+			newExpression = newExpression.left(index) + QString::number(res) + newExpression.mid(index + startedWith.length());
+		}
+	}
+	
+	while (newExpression.contains("%")){
+		QStringList parts = newExpression.split("%");
+		QString p1 = parts[0];
+		QString p2 = parts[1];
+		
+		QString trueDig1 = "";
+		QString trueDig2 = "";
+		
+		bool seenDot = false;
+		for (int i = p1.length()-1; i >= 0; i--){
+			QChar c = p1.at(i);
+			if (c == '.'){
+				if (seenDot) return {false, 0.0};
+				seenDot = true;
+			}else if (!c.isDigit()) break;
+			
+			trueDig1 = c + trueDig1;
+		}
+		
+		seenDot = false;
+		bool added = false;
+		for (int i = 0; i < p2.length(); i++){
+			QChar c = p2.at(i);
+			if (c == '.'){
+				if (seenDot) return {false, 0.0};
+				seenDot = true;
+			}else if (c == '-' && !added) {
+			}else if (!c.isDigit()) break;
+			
+			trueDig2 += c;
+			if (c != '-'){
+				added = true;
+			}
+		}
+		
+		bool ok;
+		double v1 = trueDig1.toDouble(&ok);
+		if (!ok) return {false, 0.0};
+		double v2 = trueDig2.toDouble(&ok);
+		if (!ok) return {false, 0.0};
+		
+		if (v2 == 0) return {false, 0.0};
+		
+		double res = std::fmod(v1, v2);
+		
+		QString startedWith = trueDig1+"%"+trueDig2;
+		
+		int index = newExpression.indexOf(startedWith);
+		if (index != -1) {
+			newExpression = newExpression.left(index) + QString::number(res) + newExpression.mid(index + startedWith.length());
+		}
+	}
+	
+	while (newExpression.contains("--") || newExpression.contains("++") || newExpression.contains("+-")){
+		if (newExpression.contains("--")) newExpression.replace("--", "+");
+		if (newExpression.contains("++")) newExpression.replace("++", "+");
+		if (newExpression.contains("+-")) newExpression.replace("+-", "-");
+	}
+	
+	double runningTotal = 0.0;
+	QString next;
+	QString op;
+	
+	for (int i = 0; i < newExpression.length(); i++){
+		QChar c = newExpression[i];
+		
+		if (c.isDigit() || c == '.'){
+			next += c;
+		}
+		if (c == '+' || c == '-' || i == newExpression.length()-1){
+			bool ok;
+			double nextDub = next.toDouble(&ok);
+			if (next == ""){
+				nextDub = 0;
+			}else if (!ok) return {false, 0.0};
+			
+			if (op == ""){
+				runningTotal = nextDub;
+				next = "";
+			}else{
+				if (op == '+'){
+					runningTotal += nextDub;
+				}else{
+					runningTotal -= nextDub;
+				}
+				
+				next = "";
+			}
+			
+			op = c;
+		}
+	}
+	
+	return {true, runningTotal};
+}
+
 void MainWindow::narrowDownSearchFiles(){
 	indexedFiles.clear();
 	indexedFilesPath.clear();
@@ -1434,6 +1737,15 @@ void MainWindow::narrowDownSearchFiles(){
 	int maxCount = 1000;
 	
 	QString starterText = searchBar->toPlainText().toLower();
+	
+	auto [isValid, result] = calcExpression(starterText);
+	
+	if (isValid){
+		indexedFilesPath.push_back("/.CodeWiz./MoveResultToTop");
+		displayPaths.push_back(starterText.replace(" ", "") + " = " + QString::number(result));
+		indexedFiles.push_back(QString::number(result));
+	}
+	
 	QStringList words = extractStringWords(starterText);
 	
 	for (int i = 0; i < allIndexedFiles.length(); i++){
@@ -1458,6 +1770,8 @@ void MainWindow::narrowDownSearchFiles(){
 }
 
 void MainWindow::indexFiles(){
+	qDebug() << "indexFiles";
+	
 	allIndexedFiles.clear();
 	allDisplayPaths.clear();
 	allIndexedFilesPath.clear();
@@ -1475,7 +1789,7 @@ void MainWindow::indexFiles(){
 	
 	QFontMetrics metrics(textEdit->font());
 	
-	int maxLen = (searchMenu->width()*.95)/metrics.horizontalAdvance("M") - 3; // -3 for the " > " we add
+	int maxLen = searchMenu->width()/metrics.horizontalAdvance("M") - 1;
 
 	while (!queue.isEmpty()) {
 		QString currentDirPath = queue.dequeue();
@@ -1491,6 +1805,10 @@ void MainWindow::indexFiles(){
 				QString relativePath = entry.absoluteFilePath().mid(starterPathLen).trimmed();
 				if (relativePath.length() > maxLen){
 					relativePath = relativePath.mid(relativePath.length()-maxLen);
+					if (relativePath.contains("/")){
+						int indx = relativePath.indexOf("/");
+						relativePath = relativePath.mid(indx);
+					}
 				}
 				
 				allDisplayPaths.append(relativePath);
@@ -1523,6 +1841,16 @@ void MainWindow::indexFiles(){
 void MainWindow::runSearchItem(){
 	qDebug() << "runSearchItem";
 	QString cmd = indexedFilesPath[selectedSearchFile];
+	
+	if (cmd == ""){
+		return;
+	}else if(cmd == "/.CodeWiz./MoveResultToTop"){
+		QTextCursor cursor = searchBar->textCursor();
+		cursor.select(QTextCursor::Document);
+		cursor.insertText(indexedFiles[selectedSearchFile]);
+		searchBar->setTextCursor(cursor);
+		return;
+	}
 	
 	if (cmd.startsWith(":")){
 		if (cmd == ":Dark Mode") on_actionDark_Mode_triggered();
@@ -3102,129 +3430,11 @@ void MainWindow::checkForFixitDialogue(){
 void MainWindow::fileTreeOpened(const QModelIndex &index){
 	qDebug() << "fileTreeOpened";
 
-	if (isSettingUpLSP){
-		showWeDontFuckWithTheLSP();
-		return;
-	}
-
-	if (isOpeningFile){
-		showHoldYourHorses();
-		return;
-	}
-
-	QString oldFile = fileName;
-
-	isOpeningFile = true;
-
-	storedLineNumbers[fileName] = textEdit->verticalScrollBar()->value();
-
-	int loc = -1;
-	for (int i = 0; i < tabs.length(); i++){
-		TabWidget *tabHere = tabs[i];
-		if (tabHere->extraText == fileName){
-			loc = i;
-			break;
-		}
-	}
-
-	if (loc != -1){
-		tabs[loc]->lineNum = textEdit->verticalScrollBar()->value();
-	}
-
 	if (!index.model()->hasChildren(index)) {
 		QString newFile = index.data(QFileSystemModel::FilePathRole).toString();
-
-		if (newFile.isEmpty()){
-			isOpeningFile = false;
-			return;
-		}
-
-		if (useSpeakerAction->isChecked()){
-			#ifdef _WIN32
-				speech->say("Opening File");
-			#endif
-		}
-
-		if (unsaved && fileName != ""){
-			pullUpSaveDialogue();
-		}
-
-		QFileInfo fileInfo(newFile);
-		QFile file(newFile);
-		if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-			QMessageBox newWarningBox;
-			newWarningBox.setIcon(QMessageBox::Warning);
-			newWarningBox.setText(tr("Cannot open file: %1").arg(file.errorString()));
-			newWarningBox.setWindowTitle(tr("Error"));
-			newWarningBox.setFont(textEdit->font());
-			newWarningBox.exec();
-			isOpeningFile = false;
-			return;
-		}
-
-		if (!checkForLargeFile(&file)){
-			isOpeningFile = false;
-			return;
-		}
-
-		fileName = newFile;
-
-		setLangOffFilename(fileName, false);
-
-		unsaved = false;
-
-		QString fileNameName = fileInfo.fileName();
-
-		windowName = fileNameName+" - CodeWizard V"+versionNumber+" - "+fileName;
-		searchBar->setPlaceholderText(fileNameName);
-
-		QTextStream in(&file);
-		QString fileContent = in.readAll();
-
-		previousLineCount = 1;
-		savedText = fileContent;
-
-		setupSyntaxTreeOnOpen(fileContent);
-		addTab(fileNameName, fileName);
-
-		highlightDiagnostics(true);
-
-		textEdit->setPlainText(fileContent);
-		toCompareTo = fileContent;
-		textEdit->additionalCursors.clear();
-		textEdit->updateViewport();
-
-		previousLineCount = fileContent.count('\xa')+1;
-		file.close();
-
-		int cnt = fileContent.count('\n') + 1;
-
-		updateLineNumbers(cnt);
-		updateExtraWordsList();
-
-		setWindowTitle(windowName);
-		addFileToRecentList(fileName);
-
-		auto it = storedLineNumbers.find(fileName);
-		if (it != storedLineNumbers.end()) {
-			textEdit->verticalScrollBar()->setValue(it->second);
-		}
-
-		lspMutex.lock();
-		setupLSP(oldFile);
-		lspMutex.unlock();
-
-		updateMargins(true); // called on open - every time
-
-		if (useSpeakerAction->isChecked()){
-			#ifdef _WIN32
-				speech->say("File Opened");
-			#endif
-		}
+		globalArgFileName = newFile;
+		on_actionOpen_triggered(true);
 	}
-	isOpeningFile = false;
-
-	checkForFixitDialogue();
 }
 
 bool MainWindow::checkForLargeFile(QFile *file){
@@ -3810,19 +4020,13 @@ void MainWindow::fillActionsBox(){
 	actionBox->clear();
 	for (int i = 0; i < codeActions.count(); i++){
 		QString copiedString = codeActions[i].toObject()["title"].toString();
-		if (i == currentSelectionAction){
-			actionBox->addItem(" > "+copiedString);
-		}else{
-			actionBox->addItem(copiedString);
-		}
+		actionBox->addItem(copiedString);
 	}
-
-	if (currentSelectionAction < codeActions.count()){
-		QListWidgetItem* item = actionBox->item(currentSelectionAction);
-		if (item) {
-			actionBox->scrollToItem(item, QAbstractItemView::PositionAtCenter);
-		}
+	
+	if (currentSelectionAction >= codeActions.count() || currentSelectionAction >= 0){
+		currentSelectionAction = 0;
 	}
+	actionBox->setCurrentRow(currentSelectionAction);
 	actionBox->update();
 }
 
@@ -4241,19 +4445,14 @@ void MainWindow::fillSuggestions(){
 	for (int i = 0; i < suggestion.length(); i++){
 		QString copiedString = suggestion[i];
 		copiedString.replace("\n", " ");
-		if (i == currentSelection){
-			suggestionBox->addItem(" > "+copiedString);
-		}else{
-			suggestionBox->addItem(copiedString);
-		}
+		suggestionBox->addItem(copiedString);
 	}
-
-	if (currentSelection < suggestion.length()){
-		QListWidgetItem* item = suggestionBox->item(currentSelection);
-		if (item) {
-			suggestionBox->scrollToItem(item, QAbstractItemView::PositionAtCenter);
-		}
+	
+	if (currentSelection < suggestion.length() && currentSelection >= 0){
+		currentSelection = 0;
 	}
+	
+	suggestionBox->setCurrentRow(currentSelection);
 	suggestionBox->update();
 }
 
@@ -5025,7 +5224,9 @@ void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
 void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 {
 	qDebug() << "on_actionOpen_triggered";
-
+	
+	storedLineNumbers[fileName] = textEdit->verticalScrollBar()->value();
+	
 	if (isSettingUpLSP){
 		showWeDontFuckWithTheLSP();
 		return;
@@ -5055,8 +5256,6 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 		isOpeningFile = false;
 		return;
 	}
-
-	storedLineNumbers[newFile] = textEdit->verticalScrollBar()->value();
 
 	if (useSpeakerAction->isChecked()){
 		#ifdef _WIN32
@@ -6006,12 +6205,26 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			textEdit->setFocus();
 			return true;
 		}else if (key_event->key() == Qt::Key_Up){
+			if (indexedFiles.isEmpty()){
+				return true;
+			}
 			selectedSearchFile = (selectedSearchFile-1 + indexedFiles.length())%indexedFiles.length();
-			fillSearchMenu();
+			if (selectedSearchFile < indexedFiles.length()){
+				qDebug() << "Setting current row";
+				searchMenu->setCurrentRow(selectedSearchFile);
+				qDebug() << "Set current row";
+			}
 			return true;
 		}else if (key_event->key() == Qt::Key_Down){
+			if (indexedFiles.isEmpty()){
+				return true;
+			}
 			selectedSearchFile = (selectedSearchFile+1)%indexedFiles.length();
-			fillSearchMenu();
+			if (selectedSearchFile < indexedFiles.length()){
+				qDebug() << "Setting current row";
+				searchMenu->setCurrentRow(selectedSearchFile);
+				qDebug() << "Set current row";
+			}
 			return true;
 		}else if (key_event->key() == Qt::Key_Enter || key_event->key() == Qt::Key_Return || key_event->key() == Qt::Key_Tab){
 			if (indexedFiles.isEmpty()){
@@ -6240,11 +6453,11 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		if (suggestionBox->isVisible() && !suggestion.isEmpty()) {
 			if (key_event->key() == Qt::Key_Down) {
 				currentSelection = (currentSelection + 1) % suggestion.length();
-				fillSuggestions();
+				suggestionBox->setCurrentRow(currentSelection);
 				return true; // Mark as handled
 			} else if (key_event->key() == Qt::Key_Up) {
 				currentSelection = (currentSelection - 1 + suggestion.length()) % suggestion.length();
-				fillSuggestions();
+				suggestionBox->setCurrentRow(currentSelection);
 				return true; // Mark as handled
 			} else if (key_event->key() == Qt::Key_Escape) {
 				suggestionBox->setVisible(false);
@@ -6255,11 +6468,11 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		}if (actionBox->isVisible() && !codeActions.isEmpty()) {
 			if (key_event->key() == Qt::Key_Down) {
 				currentSelectionAction = (currentSelectionAction + 1) % codeActions.count();
-				fillActionsBox();
+				actionBox->setCurrentRow(currentSelectionAction);
 				return true; // Mark as handled
 			} else if (key_event->key() == Qt::Key_Up) {
 				currentSelectionAction = (currentSelectionAction - 1 + codeActions.count()) % codeActions.count();
-				fillActionsBox();
+				actionBox->setCurrentRow(currentSelectionAction);
 				return true; // Mark as handled
 			} else if (key_event->key() == Qt::Key_Escape) {
 				actionBox->setVisible(false);
@@ -8694,125 +8907,6 @@ void MainWindow::updateRecentList(QStringList files){
 void MainWindow::openRecentFile(QString newFile){
 	qDebug() << "openRecentFile";
 
-	if (isSettingUpLSP){
-		showWeDontFuckWithTheLSP();
-		return;
-	}
-
-	if (isOpeningFile){
-		showHoldYourHorses();
-		return;
-	}
-
-	QString oldFile = fileName;
-
-	isOpeningFile = true;
-
-	if (useSpeakerAction->isChecked()){
-		#ifdef _WIN32
-			speech->say("Opening File");
-		#endif
-	}
-
-	if (unsaved && fileName != ""){
-		pullUpSaveDialogue();
-	}
-
-	if (newFile.isEmpty()){
-		isOpeningFile = false;
-		return;
-	}
-
-	storedLineNumbers[newFile] = textEdit->verticalScrollBar()->value();
-
-	QFileInfo fileInfo(newFile);
-	QFile file(newFile);
-	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-		QMessageBox newWarningBox;
-		newWarningBox.setIcon(QMessageBox::Warning);
-		newWarningBox.setText(tr("Cannot open file: %1").arg(file.errorString()));
-		newWarningBox.setWindowTitle(tr("Error"));
-		newWarningBox.setFont(textEdit->font());
-		newWarningBox.exec();
-		isOpeningFile = false;
-		return;
-	}
-
-	bool ret = checkForLargeFile(&file);
-
-	if (!ret){
-		isOpeningFile = false;
-		return;
-	}
-
-	fileName = newFile;
-
-	setLangOffFilename(fileName, false);
-	unsaved = false;
-
-	QString fileDir = fileInfo.absolutePath();
-	QString fileNameName = fileInfo.fileName();
-
-	windowName = fileNameName+" - CodeWizard V"+versionNumber+" - "+fileName;
-	searchBar->setPlaceholderText(fileNameName);
-	
-	QTextStream in(&file);
-	QString fileContent = in.readAll();
-	previousLineCount = 1;
-	savedText = fileContent;
-
-	setupSyntaxTreeOnOpen(fileContent);
-	addTab(fileNameName, fileName);
-
-	highlightDiagnostics(true);
-
-	textEdit->setPlainText(fileContent);
-	toCompareTo = fileContent;
-	textEdit->additionalCursors.clear();
-	textEdit->updateViewport();
-
-	previousLineCount = fileContent.count('\xa')+1;
-	file.close();
-
-	addFileToRecentList(fileName);
-
-	int cnt = fileContent.count('\n') + 1;
-	updateLineNumbers(cnt);
-
-	updateExtraWordsList();
-
-	setWindowTitle(windowName);
-
-	fileModel->setRootPath(fileInfo.absolutePath());
-	QSettings settings("FoundationTechnologies", "CodeWizard");
-	settings.setValue("mostRecentFolder", fileInfo.absolutePath());
-
-	fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
-
-	if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())){ // BACK TO HERE YO
-		fileTree->show();
-	}else{
-		fileTree->hide();
-	}
-
-	auto it = storedLineNumbers.find(fileName);
-	if (it != storedLineNumbers.end()) {
-		textEdit->verticalScrollBar()->setValue(it->second);
-	}
-
-	lspMutex.lock();
-	setupLSP(oldFile);
-	lspMutex.unlock();
-
-	updateMargins(true); // called on open - every time
-
-	if (useSpeakerAction->isChecked()){
-		#ifdef _WIN32
-			speech->say("File Opened");
-		#endif
-	}
-
-	isOpeningFile = false;
-
-	checkForFixitDialogue();
+	globalArgFileName = newFile;
+	on_actionOpen_triggered(true);
 }

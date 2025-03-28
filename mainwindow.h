@@ -26,6 +26,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	std::pair<bool, double> calcExpression(QString expression);
 	void resetLSP();
 	QStringList extractStringWords(QString word);
 	void runSearchItem();
