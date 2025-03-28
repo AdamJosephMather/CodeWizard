@@ -1462,7 +1462,7 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 	expression.replace(",", "");
 	expression.replace(")(", ")*(");
 	
-	QString allowed = "0987654321=+-/*()%^.";
+	QString allowed = "0987654321+-/*()%^.";
 	
 	QString newExpression = "";
 	
@@ -1774,9 +1774,11 @@ void MainWindow::narrowDownSearchFiles(){
 	
 	auto [isValid, result] = calcExpression(starterText);
 	
-	if (isValid){
+	starterText.replace(" ", "");
+	
+	if (isValid && QString::number(result) != starterText){
 		indexedFilesPath.push_back("/.CodeWiz./MoveResultToTop");
-		displayPaths.push_back(starterText.replace(" ", "") + " = " + QString::number(result));
+		displayPaths.push_back(starterText + " = " + QString::number(result));
 		indexedFiles.push_back(QString::number(result));
 	}
 	
