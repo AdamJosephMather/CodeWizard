@@ -81,7 +81,6 @@ private slots:
 	void on_actionPush_triggered();
 	void on_actionKeybindings_triggered();
 	void on_actionOpen_Find_Menu_triggered();
-	void highlightComparisons();
 	QString changeToTabs(QString text);
 	void on_actionCompare_2_Files_triggered();
 	void on_actionSet_Groq_AI_API_Key_triggered();

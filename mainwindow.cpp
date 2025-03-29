@@ -374,6 +374,7 @@ bool holdingAnEvent = false;
 
 QAction *useSpeakerAction;
 Myers* diffAlgo;
+QList<QStringList> differences;
 
 QString currentVimMode = "i";
 QList<QProcess *> activeTerminals;
@@ -418,6 +419,8 @@ QString globalColsHover;
 QString globalColsMoreThanHover;
 QString globalColsPressed;
 QString globalColsText;
+
+int globalDigits;
 
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -2725,7 +2728,9 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 	QTextStream in2(&file2);
 	QString fileContent2 = in2.readAll();
 
-	auto differences = diffAlgo->getDiff(fileContent, fileContent2);
+	differences = diffAlgo->getDiff(fileContent, fileContent2);
+	
+	qDebug() << "DIFFERENCES" << differences;
 
 	QStringList fileContentLst;
 
@@ -2752,14 +2757,6 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 
 	int cnt = fileContent.count('\n') + 1;
 	updateLineNumbers(cnt);
-	QString linesText = lineNumberTextEdit->toPlainText();
-	QStringList linesList = linesText.split("\n");
-
-	for (int i = 0; i < differences.length(); i++){
-		linesList[i] += " " + differences[i][0];
-	}
-
-	lineNumberTextEdit->setPlainText(linesList.join("\n"));
 
 	QFontMetrics metrics(textEdit->font());
 
@@ -2775,7 +2772,6 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 	setWindowTitle(windowName);
 
 	rehighlightFullDoc();
-	highlightComparisons();
 	updateMargins(true);
 
 	isOpeningFile = false;
@@ -4316,7 +4312,7 @@ void MainWindow::updateFonts()
 
 	lineEdit->setFont(font);
 
-	int charCount = QString::number(globalLineCount).length();
+	int charCount = globalDigits;
 	int width = metrics.horizontalAdvance('M') * charCount+15;
 
 	lineNumberTextEdit->setMinimumWidth(width);
@@ -5015,16 +5011,18 @@ MainWindow::~MainWindow() {
 
 void MainWindow::updateScrollBarValue(int value) {
 //	qDebug() << "updateScrollBarValue";
+	updateLineNumbers(globalLineCount);
 	lineNumberTextEdit->verticalScrollBar()->setValue(value);
 }
 
 void MainWindow::updateScrollBarValue2(int value) {
 //	qDebug() << "updateScrollBarValue2";
-	if (value <= textEdit->verticalScrollBar()->maximum()){
-		textEdit->verticalScrollBar()->setValue(value);
-	}else{
-		lineNumberTextEdit->verticalScrollBar()->setValue(textEdit->verticalScrollBar()->maximum());
-	}
+	updateLineNumbers(globalLineCount);
+//	if (value <= textEdit->verticalScrollBar()->maximum()){
+//		textEdit->verticalScrollBar()->setValue(value);
+//	}else{
+//		lineNumberTextEdit->verticalScrollBar()->setValue(textEdit->verticalScrollBar()->maximum());
+//	}
 }
 
 void MainWindow::findTriggered() {
@@ -5372,7 +5370,9 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	textEdit->updateViewport();
 	previousLineCount = fileContent.count('\xa')+1;
 	file.close();
-
+	
+	differences.clear();
+	
 	int cnt = fileContent.count('\n') + 1;
 	updateLineNumbers(cnt);
 
@@ -5578,7 +5578,9 @@ void MainWindow::on_actionNew_triggered()
 	fileName = "";
 	searchBar->setPlaceholderText("New File");
 	previousLineCount = 1;
-
+	
+	differences.clear();
+	
 	int cnt = 1;
 	updateLineNumbers(cnt);
 }
@@ -7775,45 +7777,6 @@ void MainWindow::on_actionChange_to_IDLE_format_triggered(){
 	updateSyntax();
 }
 
-void MainWindow::highlightComparisons()
-{
-	qDebug() << "highlightComparisons";
-
-	QTextBlock block = lineNumberTextEdit->document()->firstBlock();
-
-	int ln = QString::number(globalLineCount).length()+2;
-
-	while (block.isValid()) {
-		QTextLayout* layout = block.layout();
-		if (!layout) {
-			continue;
-		}
-
-		QString blockText = block.text();
-
-		QTextLayout::FormatRange range;
-
-		if (blockText.endsWith("+")){
-			range.format = compFormats[0];
-		}else if (blockText.endsWith("-")){
-			range.format = compFormats[1];
-		}else if (blockText.endsWith("=")){
-			range.format = compFormats[2];
-		}
-
-		range.start = 0;
-		range.length = ln;
-
-		QVector<QTextLayout::FormatRange> formats = layout->formats();
-		formats.append(range);
-		layout->setFormats(formats);
-
-		block = block.next();
-	}
-
-	lineNumberTextEdit->document()->markContentsDirty(0, textDocument->characterCount());
-}
-
 void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to get right - don't touch a single line of this shit
 {
 	qDebug() << "highlightDiagnostics - reverse: " << reverseTheProcess;
@@ -7955,53 +7918,120 @@ void MainWindow::updateLineNumbers(int count) // good enough
 {
 	qDebug() << "updateLineNumbers";
 	
-	lineNumberTextEdit->blockSignals(true);
-	lineNumberTextEdit->verticalScrollBar()->blockSignals(true);
-	
-	QStringList lineNumbers;
-	
-	int globalDigits = QString::number(globalLineCount).length();
 	int countDigits = std::to_string(count).length();
-
-	count += 1;
-
-	globalLineCount = count - 1;
-
+	
+	if (!differences.isEmpty()){
+		countDigits += 2;
+	}
+	
+	globalLineCount = count;
+	
 	if (globalDigits != countDigits) {
+		globalDigits = countDigits;
 		updateFonts();
 	}
 	
-	if (!useRelativeLineNumbers->isChecked()){
-		for (int i = 1; i < count; ++i) {
-			QString nm = QString::number(i);
-			int spaces = countDigits-nm.length();
+	if (!differences.isEmpty()){
+		countDigits -= 2; // we do this so that the spaces don't take up the space for the +-=
+	}
 	
-			lineNumbers << QString(spaces, ' ')+nm;
+	lineNumberTextEdit->blockSignals(true);
+	lineNumberTextEdit->verticalScrollBar()->blockSignals(true);
+	
+	//calculate number of rows to fill
+	QFontMetrics fm(lineNumberTextEdit->font());
+	int lineHeight = fm.lineSpacing();
+	int numberOfLinesNeeded = floor(lineNumberTextEdit->height()/lineHeight)+2;
+	
+	int textEditScrolledTo = textEdit->verticalScrollBar()->value();
+	int modulos = textEditScrolledTo%lineHeight;
+	int topLine = floor(textEditScrolledTo/lineHeight)+1; // +1 for 0 based indexing...
+	
+	//fill the rows now.
+	
+	QStringList lineNumbers;
+	int numDiffs = differences.length();
+	
+	if (!useRelativeLineNumbers->isChecked()){
+		for (int i = 0; i < numberOfLinesNeeded; i++){
+			int number = topLine+i;
+			if (number > count){
+				lineNumbers << ""; // we can't break here glhf trying to find out why
+			}else{
+				QString nm = QString::number(number);
+				int spaces = countDigits-nm.length();
+				
+				QString addon = "";
+				if (numDiffs >= number){
+					addon = " "+differences[number-1][0];
+				}
+				
+				lineNumbers << QString(spaces, ' ')+nm+addon;
+			}
 		}
 	}else{
 		QTextCursor cursor = textEdit->textCursor();
 		int lineNum = cursor.blockNumber()+1;
 		
-		for (int i = 1; i < count; ++i) {
-			int value = lineNum-i;
-			if (value == 0){
-				lineNumbers << QString::number(lineNum); // we don't put spaces so it's clearer
-				continue;
+		for (int i = 0; i < numberOfLinesNeeded; i++){
+			int number = topLine+i;
+			
+			if (number > count){
+				lineNumbers << ""; // we can't break here glhf trying to find out why
+			}else{
+				QString addon = "";
+				if (numDiffs >= number){
+					addon = " "+differences[number-1][0];
+				}
+				
+				int value = lineNum-number;
+				if (value == 0){
+					lineNumbers << QString::number(lineNum)+addon; // we don't put spaces so it's clearer
+					continue;
+				}
+				
+				QString nm = QString::number(abs(value));
+				int spaces = countDigits-nm.length();
+				
+				lineNumbers << QString(spaces, ' ')+nm + addon;
+			}
+		}
+	}
+	
+	QString text = lineNumbers.join("\n");
+	lineNumberTextEdit->setPlainText(text);
+	
+	if (!differences.isEmpty()){
+		qDebug() << "Highlighting";
+		QTextCursor cursor(lineNumberTextEdit->document());
+		cursor.movePosition(QTextCursor::Start);
+		
+		QTextBlock block = lineNumberTextEdit->document()->begin();
+		int lineNumber = 0;
+		
+		while (block.isValid()) {
+			cursor.setPosition(block.position());
+			cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+			
+			QTextCharFormat format;
+			
+			if (block.text().contains("-")) {
+				format.setForeground(Qt::red);
+			} else if (block.text().contains("+")) {
+				format.setForeground(Qt::green);
+			} else if (block.text().contains("=")) {
+				format.setForeground(Qt::blue);
 			}
 			
-			QString nm = QString::number(abs(value));
-			int spaces = countDigits-nm.length();
-	
-			lineNumbers << QString(spaces, ' ')+nm;
+			cursor.mergeCharFormat(format);
+			
+			block = block.next();
+			lineNumber++;
 		}
-		
-		prevLineNumberForRelativity = lineNum;
 	}
-
-	QString text = lineNumbers.join("\n") + QString(1000, '\n');
-
-	lineNumberTextEdit->setPlainText(text);
-	lineNumberTextEdit->verticalScrollBar()->setValue(textEdit->verticalScrollBar()->value());
+	
+	lineNumberTextEdit->verticalScrollBar()->setValue(modulos);
+	
 	lineNumberTextEdit->verticalScrollBar()->blockSignals(false);
 	lineNumberTextEdit->blockSignals(false);
 }
