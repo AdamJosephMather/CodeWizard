@@ -8432,8 +8432,8 @@ void MainWindow::changeTheme(bool darkMode)
 		QMenu::item {
 			background-color: transparent;
 			color: white;
-			padding: 3px 12px;
-			margin: 1px 2px;
+			padding: 3px 3px;
+			margin: 1px 1px;
 			border-radius: 4px;
 		}
 
@@ -8462,8 +8462,8 @@ void MainWindow::changeTheme(bool darkMode)
 		QMenu::item {
 			background-color: transparent;
 			color: rgb(40, 40, 40);
-			padding: 3px 12px;
-			margin: 1px 2px;
+			padding: 3px 3px;
+			margin: 1px 1px;
 			border-radius: 4px;
 		}
 
@@ -8504,7 +8504,7 @@ void MainWindow::changeTheme(bool darkMode)
 							   "QMenu { background-color: rgb(20, 20, 20); color: white; }"
 							   "QMenu::item:selected { background-color: rgb(45, 45, 45); color: white; }"
 							   "QMenu::separator {height: 1px;background-color: rgb(255, 255, 255); margin: 2px 4px;}"
-							   "QMenuBar::item { background-color: rgb(25, 25, 25); padding: 2px 4px; border-radius: 4px; margin: 3px 3px 3px 3px; }"
+							   "QMenuBar::item { background-color: rgb(25, 25, 25); padding: 2px 4px; border-radius: 4px; margin: 3px 2px 3px 2px; }"
 							   "QMenuBar::item:hover { background-color: rgb(70, 70, 70); }"
 							   "QMenuBar::item:selected { background-color: rgb(70, 70, 70); }";
 
@@ -8557,7 +8557,7 @@ void MainWindow::changeTheme(bool darkMode)
 								"QMenu { background-color: rgb(251, 251, 251); color: black; }"
 								"QMenu::item:selected { background-color: rgb(150, 150, 150); color: black; }"
 								"QMenu::separator {height: 1px; background-color: rgb(0, 0, 0); margin: 2px 4px;}"
-								"QMenuBar::item { background-color: rgb(251, 251, 251); padding: 2px 4px; border-radius: 4px; margin: 3px 3px 3px 3px; }"
+								"QMenuBar::item { background-color: rgb(251, 251, 251); padding: 2px 4px; border-radius: 4px; margin: 3px 2px 3px 2px; }"
 								"QMenuBar::item:hover { background-color: rgb(200, 200, 200); }"
 								"QMenuBar::item:selected { background-color: rgb(200, 200, 200); }";
 

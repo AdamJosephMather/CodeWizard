@@ -58,7 +58,7 @@
            <x>0</x>
            <y>0</y>
            <width>1286</width>
-           <height>49</height>
+           <height>68</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -507,7 +507,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>0</x>
      <y>0</y>
      <width>1290</width>
-     <height>17</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -1214,7 +1214,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
   </action>
   <action name="actionPush">
    <property name="text">
-    <string>Push</string>
+    <string>Commit and Push</string>
    </property>
   </action>
   <action name="actionDiscard_Local_Changes">
