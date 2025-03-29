@@ -8,15 +8,19 @@ CodeWizard is a custom Code Editor / IDE designed by Adam Mather. The main point
 
 ## Screenshots
 
-<img width="1128" alt="Screenshot-1" src="https://github.com/user-attachments/assets/538a0b02-3b6b-4a2f-8861-b1a045c444fd" />
-<img width="564" alt="Screenshot-2" src="https://github.com/user-attachments/assets/28bd54b8-39ca-4870-848e-9d6bcde90df3" />
-<img width="1128" alt="Screenshot-3" src="https://github.com/user-attachments/assets/24addb29-0e4d-4352-8ddd-d71ee6c2d94c" />
-<img width="1128" alt="Screenshot-4" src="https://github.com/user-attachments/assets/4e3abc11-1c3c-4216-8875-e71f5147f0b9" />
-<img width="1128" alt="Screenshot-5" src="https://github.com/user-attachments/assets/d0d5fa64-ffdb-4e10-ab48-3714da3e1601" />
-<img width="1128" alt="Screenshot-6" src="https://github.com/user-attachments/assets/b5ffcfc1-9ca9-4d8e-84a6-042b40d942c5" />
-<img width="1128" alt="RickRoll" src="https://github.com/user-attachments/assets/58d8bfb3-7660-49c5-aa1c-18aecf26c190" />
+<img width="564" alt="4h3" src="https://github.com/user-attachments/assets/435bc15e-91e0-4f74-8149-61bbe9931c81" />
+<img width="564" alt="4h" src="https://github.com/user-attachments/assets/fe2c9f7d-e683-48b7-b5a7-373c311cc9aa" />
+<img width="1128" alt="4" src="https://github.com/user-attachments/assets/0feddde4-f8f3-4427-ba9b-6e4738c9e29b" />
+<img width="1128" alt="5" src="https://github.com/user-attachments/assets/333d0af0-fa19-4792-8956-adf86a224bc7" />
+<img width="1128" alt="13" src="https://github.com/user-attachments/assets/0f5831a8-e089-4c40-9c51-5d9d5ccd51b2" />
+<img width="1128" alt="3" src="https://github.com/user-attachments/assets/fe4522bf-403c-4011-bf5a-2abc25355fc3" />
+<img width="1128" alt="2" src="https://github.com/user-attachments/assets/ffd0fbcf-d0a1-48e1-9e1b-36fea80afcdb" />
+<img width="1128" alt="12" src="https://github.com/user-attachments/assets/aad17b53-2f83-455d-87c2-e77cb7f1bffd" />
+<img width="1128" alt="1" src="https://github.com/user-attachments/assets/d3321667-74d3-4d11-9e75-23570fee7cb5" />
+<img width="1128" alt="6" src="https://github.com/user-attachments/assets/40230f62-6f28-4a3a-902b-6ab6bb24b6bf" />
+<img width="564" alt="7" src="https://github.com/user-attachments/assets/5fb07a1f-d804-4ed2-93e6-5a9b5a8b90b3" />
 
-These screenshots show a wide variety of features in CodeWizard. Including the builtin terminal, filetree, comparison feature, syntax colors, multiple cursors, and bottom edit bar.
+These screenshots show a wide variety of features in CodeWizard. Including the builtin terminal, filetree, comparison feature, syntax colors, multiple cursors, command palette, and bottom edit bar.
 
 ## Why use CodeWizard?
 
@@ -55,6 +59,13 @@ CodeWizard now has an optional builtin terminal. It's far from perfect, and I do
 **Multiple Cursors**
 
 As of CodeWizard V8.9.5, using Alt+Click or Alt+Up/Down Arrow you can instantiate more cursors. Clear them by regular clicking or the escape key. Yes you can do multiple cursors inside a macro but only with Up/Down Arrows.
+
+**Command Palette**
+
+As of CodeWizard V9.4.0 we now have a command palette which is used for:
+1. Opening files fast
+2. Execute editor commands
+3. Do math (including brackets, exponents, etc)
 
 **Settings Export**
 
