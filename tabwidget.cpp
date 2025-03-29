@@ -51,11 +51,11 @@ void TabWidget::updateStyles(bool darkmode){
 	
 	tabButton->setStyleSheet(
 		"QPushButton {"
-		"   border-top-left-radius: 5px;"
-		"   border-bottom-left-radius: 5px;"
+		"   border-top-left-radius: 3px;"
+		"   border-bottom-left-radius: 3px;"
 		"   border-right: none;"
 		"	margin-top: 1px;"
-		"	margin-left: 3px;"
+		"	margin-left: 2px;"
 		"   padding: 1px;"
 		"   padding-top: 0px;"
 		"   padding-bottom: 0px;"
@@ -68,11 +68,11 @@ void TabWidget::updateStyles(bool darkmode){
 
 	closeButton->setStyleSheet(
 		"QPushButton {"
-		"   border-top-right-radius: 5px;"
-		"   border-bottom-right-radius: 5px;"
+		"   border-top-right-radius: 3px;"
+		"   border-bottom-right-radius: 3px;"
 		"   border-left: none;"
 		"	margin-top: 1px;"
-		"   padding: 1px;"
+		"   padding: 3px;"
 		"   padding-top: 0px;"
 		"   padding-bottom: 0px;"
 		"   background-color: "+hover+";"
