@@ -36,7 +36,7 @@ protected:
 	
 	void mouseMoveEvent(QMouseEvent *event) override {
 		if (startedDrag && hasFocus()){
-			emit dragEvent(startDrag, event->pos(), false);
+			emit dragEvent(startDrag, event->pos(), false, false);
 		}else{
 			startedDrag = false;
 		}
@@ -53,6 +53,7 @@ protected:
 			if (mouseEvent->buttons() & Qt::LeftButton){
 				startDrag = event->pos();
 				startedDrag = true;
+				emit dragEvent(startDrag, event->pos(), true, false);
 			}
 
 			if (mouseEvent->buttons() & Qt::LeftButton && QGuiApplication::keyboardModifiers() & Qt::AltModifier) {
@@ -77,10 +78,9 @@ protected:
 	void mouseReleaseEvent(QMouseEvent *event) override {
 		QTextEdit::mouseReleaseEvent(event);
 		
-		
 		if (event->button() == Qt::LeftButton) {
 			if (startedDrag && hasFocus()){
-				emit dragEvent(startDrag, event->pos(), true);
+				emit dragEvent(startDrag, event->pos(), false, true);
 			}
 			startedDrag = false;
 			
@@ -132,7 +132,7 @@ signals:
 	void mouseClickedAtCursor(QTextCursor cursor); // New signal with cursor info
 	void mouseReleasedAtCursor(QTextCursor cursor); // New signal with cursor info
 	void handleSizeChange(bool force);
-	void dragEvent(QPoint start, QPoint end, bool endODrag);
+	void dragEvent(QPoint start, QPoint end, bool startODrag, bool endODrag);
 	void focusChange(bool focused);
 };
 

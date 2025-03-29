@@ -421,6 +421,7 @@ QString globalColsPressed;
 QString globalColsText;
 
 int globalDigits;
+int startLineDrag;
 
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -449,8 +450,12 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 			indexFiles();
 			searchMenu->show();
 		}else{
-			searchBar->setPlainText("");
-			searchMenu->hide();
+			QWidget* focusedWidget = QApplication::focusWidget();
+			qDebug() << focusedWidget;
+			if (focusedWidget != searchMenu) {
+				searchBar->setPlainText("");
+				searchMenu->hide();
+			}
 		}
 	});
 	
@@ -1125,8 +1130,6 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	terminalInputLineHORZ->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 	connect(textEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, &MainWindow::updateScrollBarValue);
-
-	connect(lineNumberTextEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, &MainWindow::updateScrollBarValue2);
 	connect(lineNumberTextEdit, &MyTextEdit::dragEvent, this, &MainWindow::lineDragEvent);
 
 	textEdit->installEventFilter(this);
@@ -1134,6 +1137,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	replaceTextEdit->installEventFilter(this);
 	builtinTerminalTextEdit->installEventFilter(this);
 	builtinTerminalTextEditHORZ->installEventFilter(this);
+	lineNumberTextEdit->installEventFilter(this);
 	terminalInputLine->installEventFilter(this);
 	terminalInputLineHORZ->installEventFilter(this);
 	urlBar->installEventFilter(this);
@@ -1410,14 +1414,20 @@ void MainWindow::repositionSearchBar() {
 }
 
 void MainWindow::onSearchItemClicked(QListWidgetItem *item){
-	qDebug() << "onActionsItemClicked";
-
+	qDebug() << "onSearchItemClicked";
+	
+	searchMenu->show();
+	qDebug() << selectedSearchFile;
 	selectedSearchFile = searchMenu->row(item);
+	qDebug() << selectedSearchFile;
+	searchMenu->hide();
 	
 	runSearchItem();
 }
 
 void MainWindow::fillSearchMenu(){
+	qDebug() << "fillSearchMenu";
+	
 	searchMenu->clear();
 		
 	for (int i = 0; i < indexedFiles.length(); i++){
@@ -1434,6 +1444,8 @@ void MainWindow::fillSearchMenu(){
 }
 
 QStringList MainWindow::extractStringWords(QString word){
+	qDebug() << "extractStringWords";
+	
 	QStringList wordsRaw = {""};
 	
 	QString keepers = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0987654321.";
@@ -1863,7 +1875,7 @@ void MainWindow::indexFiles(){
 		}
 	}
 	
-	QStringList commands = {"Dark Mode", "Light Mode", "Increase Text Size", "Decrease Text Size", "Reset Text Size", "Toggle File Tabs", "Toggle Builtin Terminal", "Toggle Terminal Positioning", "Toggle Auto Add Brackets", "Fix It", "Convert To Spaces", "Toggle Vim Mode", "Reset LSP", "Quit", "Toggle No Autocomplete", "Toggle Only CodeWizard Autocomplete", "Toggle LSP Show Errors", "Toggle LSP Show Other", "Toggle LSP Show Warnings", "Lang: Python", "Lang: C", "Lang: C#", "Lang: C++", "Lang: JS", "Lang: TS", "Lang: CSS", "Lang: HTML", "Lang: Go", "Lang: Rust", "Lang: Lua", "Lang: Plaintext", "Lang: Cobol", "Lang: GLSL", "Lang: WGSL", "Lang: Java", "Git Push", "Git Pull", "Git Force Pull"};
+	QStringList commands = {"Dark Mode", "Light Mode", "Increase Text Size", "Decrease Text Size", "Reset Text Size", "Toggle Use File Tabs", "Toggle Use Builtin Terminal", "Toggle Terminal Positioning", "Toggle Auto Add Brackets", "Fix It", "Convert To Spaces", "Toggle Vim Mode", "Reset LSP", "Quit", "Toggle No Autocomplete", "Toggle Only CodeWizard Autocomplete", "Toggle LSP Show Errors", "Toggle LSP Show Other", "Toggle LSP Show Warnings", "Lang: Python", "Lang: C", "Lang: C#", "Lang: C++", "Lang: JS", "Lang: TS", "Lang: CSS", "Lang: HTML", "Lang: Go", "Lang: Rust", "Lang: Lua", "Lang: Plaintext", "Lang: Cobol", "Lang: GLSL", "Lang: WGSL", "Lang: Java", "Git Push", "Git Pull", "Git Force Pull", "Toggle Use Relative Line Numbers"};
 	
 	for (QString cmd : commands){
 		allIndexedFilesPath << ":"+cmd;
@@ -1898,8 +1910,8 @@ void MainWindow::runSearchItem(){
 		if (cmd == ":Increase Text Size") on_actionIncrease_Text_Size_triggered();
 		if (cmd == ":Decrease Text Size") on_actionDecrease_Text_Size_triggered();
 		if (cmd == ":Reset Text Size") on_actionReset_Text_Size_triggered();
-		if (cmd == ":Toggle File Tabs") useTabs->toggle();
-		if (cmd == ":Toggle Builtin Terminal") useBuiltinTerminal->toggle();
+		if (cmd == ":Toggle Use File Tabs") useTabs->toggle();
+		if (cmd == ":Toggle Use Builtin Terminal") useBuiltinTerminal->toggle();
 		if (cmd == ":Toggle Terminal Positioning") preferHorizontalTerminal->toggle();
 		if (cmd == ":Toggle Auto Add Brackets") autoAddBrackets->toggle();
 		if (cmd == ":Fix It") on_actionFix_It_triggered();
@@ -1931,6 +1943,7 @@ void MainWindow::runSearchItem(){
 		if (cmd == ":Git Push") on_actionPush_triggered();
 		if (cmd == ":Git Pull") on_actionRegular_triggered();
 		if (cmd == ":Git Force Pull") on_actionDiscard_Local_Changes_triggered();
+		if (cmd == ":Toggle Use Relative Line Numbers") ui->actionUse_Relative_Line_Numbers->toggle();
 	}else{
 		globalArgFileName = cmd;
 		textEdit->setFocus();
@@ -1944,14 +1957,25 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 	repositionSearchBar();
 }
 
-void MainWindow::lineDragEvent(QPoint start, QPoint end, bool endODrag){
+void MainWindow::lineDragEvent(QPoint start, QPoint end, bool startODrag, bool endODrag){
 	qDebug() << "lineDragEvent";
-
+	
 	QTextCursor sCur = lineNumberTextEdit->cursorForPosition(start);
 	QTextCursor eCur = lineNumberTextEdit->cursorForPosition(end);
-
-	int sLine = sCur.blockNumber();
-	int eLine = eCur.blockNumber();
+	
+	QFontMetrics fm(lineNumberTextEdit->font());
+	int lineHeight = fm.lineSpacing();
+	int numberOfLinesNeeded = floor(lineNumberTextEdit->height()/lineHeight)+2;
+	
+	int textEditScrolledTo = textEdit->verticalScrollBar()->value();
+	int topLine = floor(textEditScrolledTo/lineHeight); // 0 based
+	
+	if (startODrag){
+		startLineDrag = sCur.blockNumber()+topLine;
+	}
+	
+	int sLine = startLineDrag;
+	int eLine = eCur.blockNumber()+topLine;
 
 	QTextBlock b1 = textDocument->findBlockByLineNumber(sLine);
 	QTextBlock b2 = textDocument->findBlockByLineNumber(eLine);
@@ -3662,15 +3686,16 @@ void MainWindow::handleMouseMoved(QPoint pos)
 
 void MainWindow::onSuggestionItemClicked(QListWidgetItem* item){
 	qDebug() << "onSuggestionItemClicked";
-
+	
 	currentSelection = suggestionBox->row(item);
-	fillSuggestions();
+	
 	insertCompletion();
+	fillSuggestions();
 }
 
 void MainWindow::onActionsItemClicked(QListWidgetItem* item){
 	qDebug() << "onActionsItemClicked";
-
+	
 	currentSelectionAction = actionBox->row(item);
 	fillActionsBox();
 	activateCodeAction();
@@ -5010,19 +5035,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::updateScrollBarValue(int value) {
-//	qDebug() << "updateScrollBarValue";
 	updateLineNumbers(globalLineCount);
-	lineNumberTextEdit->verticalScrollBar()->setValue(value);
-}
-
-void MainWindow::updateScrollBarValue2(int value) {
-//	qDebug() << "updateScrollBarValue2";
-	updateLineNumbers(globalLineCount);
-//	if (value <= textEdit->verticalScrollBar()->maximum()){
-//		textEdit->verticalScrollBar()->setValue(value);
-//	}else{
-//		lineNumberTextEdit->verticalScrollBar()->setValue(textEdit->verticalScrollBar()->maximum());
-//	}
 }
 
 void MainWindow::findTriggered() {
@@ -6077,6 +6090,14 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 	if (event->type()==QEvent::WindowStateChange){
 		onWindowStateChanged();
+	}
+	
+	if (watched == lineNumberTextEdit && event->type() == QEvent::Wheel){
+		QWheelEvent* wheelEvent = static_cast<QWheelEvent*>(event);
+		int delta = wheelEvent->angleDelta().y();
+		QScrollBar* targetScrollBar = textEdit->verticalScrollBar();
+		targetScrollBar->setValue(targetScrollBar->value() - delta);
+		return true;
 	}
 
 	if (watched == terminalInputLine || watched == terminalInputLineHORZ) {
@@ -8584,16 +8605,22 @@ void MainWindow::applyScrollBarStyles(QWidget *widget) {
 			QScrollBar:vertical {
 				border: none;
 				background: transparent;
-				width: 6px;  /* Thinner scrollbar */
+				width: 6px; /* Thinner scrollbar */
 			}
 			QScrollBar:horizontal {
 				border: none;
 				background: transparent;
-				height: 6px;  /* Thinner scrollbar */
+				height: 6px; /* Thinner scrollbar */
 			}
-			QScrollBar::handle:vertical, QScrollBar::handle:horizontal {
+			QScrollBar::handle:vertical {
 				background: )"+globalColsHover+R"(;
-				border-radius: 3px;  /* Smaller radius for thinner look */
+				border-radius: 3px; /* Smaller radius for thinner look */
+				min-height: 30px; /* Minimum handle size */
+			}
+			QScrollBar::handle:horizontal {
+				background: )"+globalColsHover+R"(;
+				border-radius: 3px; /* Smaller radius for thinner look */
+				min-width: 30px; /* Minimum handle size */
 			}
 			QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover {
 				background: )"+globalColsMoreThanHover +R"(;
@@ -8602,7 +8629,7 @@ void MainWindow::applyScrollBarStyles(QWidget *widget) {
 				background: none;
 				border: none;
 			}
-		)");
+			)");
 	}
 	
 	if (auto *button = qobject_cast<QPushButton *>(widget)) {

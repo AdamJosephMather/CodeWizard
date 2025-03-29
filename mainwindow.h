@@ -39,7 +39,7 @@ private slots:
 	void indexFiles();
 	void repositionSearchBar();
 	void useRelativeLineNumbersTriggered();
-	void lineDragEvent(QPoint start, QPoint end, bool endODrag);
+	void lineDragEvent(QPoint start, QPoint end, bool startODrag, bool endODrag);
 	void on_actionMultiple_Cursors_triggered();
 	void urlChanged(const QUrl &url);
 	void nextWebView();
@@ -195,7 +195,6 @@ private slots:
 	void replaceAllTriggered();
 	void updateLineNumbers(int);
 	void updateScrollBarValue(int);
-	void updateScrollBarValue2(int);
 	void changeTheme(bool);
 	void on_actionDark_Mode_triggered();
 	void on_actionLight_Mode_triggered();
