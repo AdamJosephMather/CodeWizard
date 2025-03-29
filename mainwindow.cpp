@@ -2400,8 +2400,6 @@ void MainWindow::addTerminal(){
 		QString instruction = "echo CodeWizard Builtin Terminal. " + QString::number(currentTerminalIndex+1)+"\n";
 		activeTerminals[currentTerminalIndex]->write(instruction.toUtf8());
 	#endif
-
-	qDebug() << "Finished add";
 }
 
 void MainWindow::prevTerminal(){
@@ -2753,8 +2751,6 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 	QString fileContent2 = in2.readAll();
 
 	differences = diffAlgo->getDiff(fileContent, fileContent2);
-	
-	qDebug() << "DIFFERENCES" << differences;
 
 	QStringList fileContentLst;
 
@@ -5915,7 +5911,6 @@ void MainWindow::on_actionStart_Macro_Recording_triggered() {
 	recordingLight->move(textEdit->width() - recordingLight->width() - margin, margin);
 	recordingLight->raise();
 	recordingLight->show();
-	qDebug() << "Moved to: " << textEdit->width() - recordingLight->width() - margin;
 }
 
 void MainWindow::on_actionEnd_Macro_Recording_triggered() {
@@ -6263,9 +6258,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			}
 			selectedSearchFile = (selectedSearchFile-1 + indexedFiles.length())%indexedFiles.length();
 			if (selectedSearchFile < indexedFiles.length()){
-				qDebug() << "Setting current row";
 				searchMenu->setCurrentRow(selectedSearchFile);
-				qDebug() << "Set current row";
 			}
 			return true;
 		}else if (key_event->key() == Qt::Key_Down){
@@ -6274,9 +6267,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			}
 			selectedSearchFile = (selectedSearchFile+1)%indexedFiles.length();
 			if (selectedSearchFile < indexedFiles.length()){
-				qDebug() << "Setting current row";
 				searchMenu->setCurrentRow(selectedSearchFile);
-				qDebug() << "Set current row";
 			}
 			return true;
 		}else if (key_event->key() == Qt::Key_Enter || key_event->key() == Qt::Key_Return || key_event->key() == Qt::Key_Tab){
@@ -8023,7 +8014,6 @@ void MainWindow::updateLineNumbers(int count) // good enough
 	lineNumberTextEdit->setPlainText(text);
 	
 	if (!differences.isEmpty()){
-		qDebug() << "Highlighting";
 		QTextCursor cursor(lineNumberTextEdit->document());
 		cursor.movePosition(QTextCursor::Start);
 		
@@ -8780,10 +8770,7 @@ void MainWindow::on_actionCodeWizard_triggered(){
 void MainWindow::on_actionCommand_Palette_triggered(){
 	qDebug() << "on_actionCommand_Palette_triggered";
 
-	openHelpMenu("Command Palette:\n\
-\n\
-The command palette is the bar at the top of the window. It is most useful for hopping between files, executing commands in CodeWizard, or doing math. Furthermore, to quickly access it, use Ctrl+Shift+P.\n\
-");
+	openHelpMenu("Command Palette:\n\nThe command palette is the bar at the top of the window. It is most useful for hopping between files, executing commands in CodeWizard, or doing math.\n\nTo quickly access it, use Ctrl+Shift+P.\n\nBy the way, I put a lot of work into the math calculator. And it's not perfect, large numbers make it overflow, it mostly follows bedmas, and it's super cool.");
 }
 
 void MainWindow::on_actionSettings_triggered(){
