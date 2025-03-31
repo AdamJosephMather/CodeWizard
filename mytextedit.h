@@ -97,6 +97,12 @@ protected:
 		QTextEdit::resizeEvent(event);
 		// Call your function here
 		emit handleSizeChange(false);
+		emit anyGeometryChange();
+	}
+	
+	void moveEvent(QMoveEvent* event) override {
+		QTextEdit::moveEvent(event);
+		emit anyGeometryChange();
 	}
 	
 	void paintEvent(QPaintEvent *event) override;
@@ -124,6 +130,7 @@ private:
 	QTimer cursorBlinkTimer;
 
 signals:
+	void anyGeometryChange();
 	void mousePositionChanged(QPoint pos);
 	void gotoDefinitionActionTriggered();
 	void renameActionTriggered();

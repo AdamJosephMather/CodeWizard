@@ -57,7 +57,7 @@ extern "C" {
 	TSLanguage* tree_sitter_css(void);
 }
 
-QString versionNumber = "9.4.0";
+QString versionNumber = "9.4.1";
 
 QList<QLineEdit*> hexColorsList;
 
@@ -365,6 +365,7 @@ bool isOpeningFile = false;
 
 QPoint suggestedPosition;
 QMenu* fileTreeContextMenu;
+bool showingError;
 
 bool holdingAnEvent = false;
 
@@ -411,7 +412,6 @@ QStringList indexedFiles;
 QStringList indexedFilesPath;
 int selectedSearchFile = 0;
 
-
 QString globalCols1;
 QString globalCols2;
 QString globalCols3;
@@ -422,10 +422,15 @@ QString globalColsText;
 
 int globalDigits;
 int startLineDrag;
+bool firstStartup;
+
+QStringList previousFiles;
 
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
 	qDebug() << "MainWindow";
+	
+	firstStartup = true;
 
 	ui->setupUi(this);
 	
@@ -1200,7 +1205,11 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(suggestionBox, &QListWidget::itemClicked, this, &MainWindow::onSuggestionItemClicked);
 	connect(actionBox, &QListWidget::itemClicked, this, &MainWindow::onActionsItemClicked);
 	connect(searchMenu, &QListWidget::itemClicked, this, &MainWindow::onSearchItemClicked);
-
+	
+	connect(lineNumberTextEdit, &MyTextEdit::handleSizeChange, this, [this](bool force){
+		updateLineNumbers(globalLineCount);
+	});
+	
 	connect(textEdit, &MyTextEdit::mousePositionChanged, this, &MainWindow::handleMouseMoved);
 	connect(textEdit, &MyTextEdit::gotoDefinitionActionTriggered, this, &MainWindow::gotoDefinitionActionTriggered);
 	connect(textEdit, &MyTextEdit::renameActionTriggered, this, &MainWindow::renameActionTriggered);
@@ -1243,7 +1252,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		c.insertText(changeToTabs(response));
 		textEdit->setTextCursor(c);
 	});
-
+	
 	updateLineNumbers(1);
 
 	//autosave
@@ -1371,10 +1380,13 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	}
 
 	webView->setMaximumHeight(textEdit->height()-urlBar->height());
+	
+	firstStartup = false;
 }
 
 void MainWindow::repositionSearchBar() {
 	qDebug() << "repositionTextEdit";
+	
 	QMenuBar *bar = menuBar();
 	
 	QAction *lastAction = bar->actions().last();
@@ -3598,7 +3610,7 @@ void MainWindow::handleMouseMoved(QPoint pos)
 	QPoint cursorPos = cursorRect.topLeft();
 	suggestedPosition = cursorRect.bottomLeft();
 
-	if (qAbs(difference.x()) < 30 && qAbs(difference.y()) < 30){
+	if (qAbs(difference.x()) < 20 && qAbs(difference.y()) < 20){
 		return;
 	}
 
@@ -3654,6 +3666,7 @@ void MainWindow::handleMouseMoved(QPoint pos)
 	}
 
 	if (bestIndx != -1){
+		showingError = true; // we are making it so the the errors take priority over the hover recieved (there are cases in which the hover will show up on top of the errors)
 		moveHoverBox(suggestedPosition, errMessages[bestIndx], "plaintext");
 		return;
 	}
@@ -3933,7 +3946,10 @@ void MainWindow::setupLSP(QString oldFile)
 
 	connect(client, &LanguageServerClient::hoverInformationReceived, [this](QString info, QString type, int id) {
 		if (id == expectedHoverInfoId){
-			moveHoverBox(suggestedPosition, info, type);
+			if (!showingError || hoverBox->isHidden()){
+				showingError = false;
+				moveHoverBox(suggestedPosition, info, type);
+			}
 		}
 	});
 
@@ -4308,9 +4324,6 @@ void MainWindow::updateFonts()
 	replaceTextEdit->setMinimumHeight(adjustedHeight);
 	replaceTextEdit->setMaximumHeight(adjustedHeight);
 	
-	searchBar->setFont(font);
-	repositionSearchBar();
-	
 	terminalInputLine->setFont(font);
 	terminalInputLine->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
 	terminalInputLine->setMinimumHeight(adjustedHeight);
@@ -4373,7 +4386,7 @@ void MainWindow::updateFonts()
 	searchMenu->setFont(font);
 
 	fileTree->setFont(font);
-
+	
 	fontList->setFont(font);
 
 	//I hate this
@@ -4424,6 +4437,10 @@ void MainWindow::updateFonts()
 	prevTerm2->setFixedWidth(prevTerm1->height());
 	nextTerm2->setFixedWidth(prevTerm1->height());
 	addTerm2->setFixedWidth(prevTerm1->height());
+	
+	searchBar->setFont(font);
+	QApplication::processEvents(); //Lets the menubar resize
+	repositionSearchBar();
 }
 
 void MainWindow::setupCompleter() {
@@ -5433,6 +5450,11 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 
 	checkForFixitDialogue();
 	textEdit->setFocus();
+	
+	if (previousFiles.contains(fileName)){
+		previousFiles.removeOne(fileName);
+	}
+	previousFiles.push_back(fileName);
 }
 
 void MainWindow::setLangOffFilename(QString fileName, bool rehigh){
@@ -5839,6 +5861,25 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 			on_actionIncrease_Text_Size_triggered();
 		}else if (event->key() == Qt::Key_Minus || event->key() == Qt::Key_Underscore){
 			on_actionDecrease_Text_Size_triggered();
+		}else if (event->key() == Qt::Key_Q){ // I had to choose a key. Q was doing diddly squat.
+			if (isSettingUpLSP){
+				showWeDontFuckWithTheLSP();
+				return;
+			}
+			if (isOpeningFile){
+				showHoldYourHorses();
+				return;
+			}
+			
+			qDebug() << "Backpedal";
+			
+			if (previousFiles.length() < 2){ // current file and prev file.
+				 return;
+			}
+			previousFiles.pop_back();
+			
+			globalArgFileName = previousFiles[previousFiles.length()-1];
+			on_actionOpen_triggered();
 		}
 	}
 }
@@ -6315,6 +6356,33 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				return false;
 			}else if (key_event->key() == Qt::Key_Backspace || key_event->key() == Qt::Key_Home || key_event->key() == Qt::Key_End || key_event->key() == Qt::Key_PageUp || key_event->key() == Qt::Key_PageDown || key_event->key() == Qt::Key_F5){
 				return false; // I am electing not to handle these in any special way - also CodeWizard for the win
+			}else if (key_event->key() == Qt::Key_C){
+				QKeyEvent *copyEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_C, Qt::ControlModifier);
+				QCoreApplication::postEvent(textEdit, copyEvent);
+			}else if (key_event->key() == Qt::Key_X){
+				QKeyEvent *copyEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_X, Qt::ControlModifier);
+				QCoreApplication::postEvent(textEdit, copyEvent);
+			}else if (key_event->key() == Qt::Key_V){
+				QKeyEvent *copyEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_V, Qt::ControlModifier);
+				QCoreApplication::postEvent(textEdit, copyEvent);
+			}else if (key_event->key() == Qt::Key_G){ // gotoline
+				QTextCursor cursor = textEdit->textCursor();
+				int curLine = cursor.blockNumber()+1; // 0 based
+				int diff = vimRepeater-curLine;
+				
+				auto keepers = QTextCursor::MoveAnchor;
+				if (key_event->modifiers() & Qt::ShiftModifier){
+					keepers = QTextCursor::KeepAnchor;
+				}
+				
+				if (diff > 0){
+					cursor.movePosition(QTextCursor::Down, keepers, diff);
+				}if (diff < 0){
+					cursor.movePosition(QTextCursor::Up, keepers, abs(diff));
+				}
+				
+				textEdit->setTextCursor(cursor);
+				vimRepeater = 0;
 			}else if (key_event->key() == Qt::Key_O){
 				currentVimMode = "i";
 				textEdit->setCursorWidth(1);
@@ -6334,6 +6402,9 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			}else if (key_event->key() == Qt::Key_Dollar || key_event->key() == Qt::Key_4 && key_event->modifiers() & Qt::ShiftModifier){
 				vimRepeater = 0;
 				executeNormalAct(QTextCursor::EndOfLine, new QKeyEvent(QEvent::KeyPress, Qt::Key_unknown, Qt::NoModifier));
+			}else if (key_event->key() == Qt::Key_AsciiCircum || key_event->key() == Qt::Key_6 && key_event->modifiers() & Qt::ShiftModifier){
+				vimRepeater = 0;
+				executeNormalAct(QTextCursor::StartOfLine, new QKeyEvent(QEvent::KeyPress, Qt::Key_unknown, Qt::NoModifier));
 			}else if (key_event->key() == Qt::Key_Less || key_event->key() == Qt::Key_Comma){
 				QTextCursor cursor = textEdit->textCursor();
 				int initLoc = cursor.position();
@@ -7955,6 +8026,10 @@ void MainWindow::updateLineNumbers(int count) // good enough
 	int lineHeight = fm.lineSpacing();
 	int numberOfLinesNeeded = floor(lineNumberTextEdit->height()/lineHeight)+2;
 	
+	if (firstStartup){
+		numberOfLinesNeeded = 600; // the initial size of the element is not set properly on startup, so we'll just draw 600 lines to ensure we cover the screen.
+	}
+	
 	int textEditScrolledTo = textEdit->verticalScrollBar()->value();
 	int modulos = textEditScrolledTo%lineHeight;
 	int topLine = floor(textEditScrolledTo/lineHeight)+1; // +1 for 0 based indexing...
@@ -8749,7 +8824,7 @@ void MainWindow::on_actionRunning_Files_triggered(){
 void MainWindow::on_actionVim_Modes_triggered(){
 	qDebug() << "on_actionVim_Modes_triggered";
 
-	openHelpMenu("Vim Modes\n\nAs of CodeWizard V8.8.9 we now support a modified set of the vim actions. Namely, when enabled, CodeWizard has a 'Normal' mode and an 'Insert' mode.\nIn normal mode there are a set of commands which work - which will be listed below. In insert mode, all keys are the same as regular (unless you press escape under the right circumstances to enter normal mode.)\n\nHere is the list of shortcuts which work in normal mode:\n    1. H - Moves left\n    2. J - Moves Down\n    3. K - Moves Up\n    4. L - Moves Right\n    5. W - Equivalent to Ctrl+Left\n    6. E - Equivalent to Ctrl+Right\n    7. All commands containing 'Ctrl' - Normal\n    8. All commands containing 'Alt' - Normal\n    9. Return/Enter/Backspace - Normal\n    10. PageDown, PageUp, Home, End - Normal\n    11. Comma/Less Than (<) - Jumps to corresponding previous bracket to the left\n    12. Period/Greater Than (>) - Jumps to corresponding bracket to the right\n    13. $ - Jumps to end of line\n    14. A - Jumps to end of line and enters insert mode\n    15. O - Inserts line below current line and enters insert mode\n    16. : - Brings focus to the command palette");
+	openHelpMenu("Vim Modes\n\nAs of CodeWizard V8.8.9 we now support a modified set of the vim actions. Namely, when enabled, CodeWizard has a 'Normal' mode and an 'Insert' mode.\nIn normal mode there are a set of commands which work - which will be listed below. In insert mode, all keys are the same as regular (unless you press escape under the right circumstances to enter normal mode.)\n\nHere is the list of shortcuts which work in normal mode:\n    1. H - Moves left\n    2. J - Moves Down\n    3. K - Moves Up\n    4. L - Moves Right\n    5. W - Equivalent to Ctrl+Left\n    6. E - Equivalent to Ctrl+Right\n    7. All commands containing 'Ctrl' - Normal\n    8. All commands containing 'Alt' - Normal\n    9. Return/Enter/Backspace - Normal\n    10. PageDown, PageUp, Home, End - Normal\n    11. Comma/Less Than (<) - Jumps to corresponding previous bracket to the left\n    12. Period/Greater Than (>) - Jumps to corresponding bracket to the right\n    13. $ - Jumps to end of line\n    14. A - Jumps to end of line and enters insert mode\n    15. O - Inserts line below current line and enters insert mode\n    16. : - Brings focus to the command palette\n    17. G - Move to specified line number. (usage: '<linenumber>g')");
 }
 
 void MainWindow::on_actionThe_Fix_It_Button_triggered(){
@@ -8820,6 +8895,7 @@ void MainWindow::on_actionKeybindings_triggered(){
   Ctrl+S ---------- Save file\n\
   Ctrl+O ---------- Open file\n\
   Ctrl+Shift+O ---- Open folder\n\
+  Ctrl+Q ---------- Back to previous file\n\
   Ctrl+Shift+P ---- Focus on search bar\n\
   Ctrl+N ---------- New file\n\
   Ctrl+'+' -------- Increase text size\n\

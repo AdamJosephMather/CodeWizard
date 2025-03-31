@@ -31,11 +31,13 @@ MyTextEdit::MyTextEdit(QWidget *parent) : QTextEdit(parent) {
 void MyTextEdit::focusInEvent(QFocusEvent *event){
 	QTextEdit::focusInEvent(event);
 	emit focusChange(true);
+	updateViewport(); // focus bar
 }
 
 void MyTextEdit::focusOutEvent(QFocusEvent *event) {
 	QTextEdit::focusOutEvent(event);
 	emit focusChange(false);
+	updateViewport(); // focus bar
 }
 
 void MyTextEdit::toggleCursorVisibility() {
@@ -242,7 +244,7 @@ void MyTextEdit::paintEvent(QPaintEvent *event)
 void MyTextEdit::keyPressEvent(QKeyEvent *event)
 {
 	if (additionalCursors.isEmpty() || !useMultiCursors) {
-		if (event->modifiers() & Qt::ControlModifier && event->key() == Qt::Key_C){
+		if (event->modifiers() & Qt::ControlModifier && (event->key() == Qt::Key_C || event->key() == Qt::Key_X)){
 			coppies.clear();
 		}
 		
@@ -285,6 +287,9 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event)
 				pasteText();
 			} else if (event->modifiers() & Qt::ControlModifier && event->key() == Qt::Key_C){
 				getCopyText();
+			} else if (event->modifiers() & Qt::ControlModifier && event->key() == Qt::Key_X){
+				getCopyText();
+				insertTextAtAllCursors("");
 			} else if (!event->text().isEmpty() && event->text()[0].isPrint() && !(event->modifiers() & Qt::ControlModifier)) {
 				insertTextAtAllCursors(event->text());
 			} else {

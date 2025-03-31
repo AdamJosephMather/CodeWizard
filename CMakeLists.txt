@@ -221,6 +221,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
             tabwidget.h tabwidget.cpp
             customhorizontalscrollarea.h customhorizontalscrollarea.cpp
             getcolormaptss.h getcolormaptss.cpp
+
         )
     else()
         qt_add_executable(CodeWizard
