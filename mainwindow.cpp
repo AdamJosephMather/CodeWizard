@@ -4047,8 +4047,8 @@ void MainWindow::ShowSuggestionsWithSuperSet(QStringList completions){
 		QFontMetrics metrics(textEdit->font());
 		int height;
 
-		if (7 < suggestion.length()){
-			height = metrics.height() * 7;
+		if (10 < suggestion.length()){
+			height = metrics.height() * 10;
 		}else{
 			height = metrics.height() * (suggestion.length()+1);
 		}
