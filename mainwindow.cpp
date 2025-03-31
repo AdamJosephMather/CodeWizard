@@ -6410,13 +6410,24 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				int initLoc = cursor.position();
 				int loc = findMatchingBracket(-1);
 				if (initLoc != loc){
-					cursor.setPosition(loc+1);
+					if (key_event->modifiers() & Qt::ShiftModifier){
+						cursor.setPosition(loc+1, QTextCursor::KeepAnchor);
+					}else{
+						cursor.setPosition(loc+1);
+					}
+					
 					textEdit->setTextCursor(cursor);
 				}
 			}else if (key_event->key() == Qt::Key_Greater || key_event->key() == Qt::Key_Period){
 				int loc = findMatchingBracket(1);
 				QTextCursor cursor = textEdit->textCursor();
-				cursor.setPosition(loc);
+				
+				if (key_event->modifiers() & Qt::ShiftModifier){
+					cursor.setPosition(loc, QTextCursor::KeepAnchor);
+				}else{
+					cursor.setPosition(loc);
+				}
+				
 				textEdit->setTextCursor(cursor);
 			}else if (key_event->key() == Qt::Key_Colon || key_event->key() == Qt::Key_Semicolon){
 				searchBar->setFocus();
