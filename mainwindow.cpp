@@ -1125,6 +1125,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	lineNumberTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
 	lineNumberTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	lineNumberTextEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn); // So that it can't get out of sync w/ main textedit
+	lineNumberTextEdit->dontScroll = true;
 
 	textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
@@ -1136,7 +1137,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	connect(textEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, &MainWindow::updateScrollBarValue);
 	connect(lineNumberTextEdit, &MyTextEdit::dragEvent, this, &MainWindow::lineDragEvent);
-
+	
 	textEdit->installEventFilter(this);
 	findTextEdit->installEventFilter(this);
 	replaceTextEdit->installEventFilter(this);

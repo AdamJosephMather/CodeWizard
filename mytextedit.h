@@ -25,6 +25,7 @@ public:
 	bool cursorBlinking;
 	bool useMultiCursors = false;
 	void handleDuplicateCursors();
+	bool dontScroll = false;
 	QStringList coppies;
 
 protected:
@@ -130,6 +131,7 @@ private:
 	QTimer cursorBlinkTimer;
 
 signals:
+	void wheelSignal(QWheelEvent* event);
 	void anyGeometryChange();
 	void mousePositionChanged(QPoint pos);
 	void gotoDefinitionActionTriggered();

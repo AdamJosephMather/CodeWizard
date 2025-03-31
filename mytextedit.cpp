@@ -123,6 +123,13 @@ void MyTextEdit::contextMenuEvent(QContextMenuEvent *event) {
 }
 
 void MyTextEdit::wheelEvent(QWheelEvent *event) {
+	emit wheelSignal(event);
+	
+	if (dontScroll){
+		event->ignore();
+		return;
+	}
+	
 	if (event->modifiers() & Qt::ShiftModifier) {
 		horizontalScrollBar()->setValue(horizontalScrollBar()->value() - event->angleDelta().y());
 		event->accept();
