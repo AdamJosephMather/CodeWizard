@@ -6527,8 +6527,10 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			return true; // Mark as handled
 		}else if (QString("{[(").contains(key_event->text()) && !isACtrl && (key_event->key() == Qt::Key_ParenLeft || key_event->key() == Qt::Key_BracketLeft || key_event->key() == Qt::Key_BraceLeft)) {
 			if (autoAddBrackets->isChecked()){
-				updateSyntaxAdd = QString("}])").at(QString("{[(").indexOf(key_event->text()));
 				updateSyntaxPosition = textEdit->textCursor().position()+1;
+				QString addon = QString("}])").at(QString("{[(").indexOf(key_event->text()));
+				textEdit->textCursor().insertText(key_event->text()+addon);
+				return true;
 			}
 		}else if (key_event->key() == Qt::Key_BraceRight && currentLang.closeIndents.contains("}") && textEdit->additionalCursors.empty()){
 			removeOneTabAndAddChar("}");
