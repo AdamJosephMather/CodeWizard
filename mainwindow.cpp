@@ -1861,6 +1861,11 @@ void MainWindow::indexFiles(){
 	QFontMetrics metrics(textEdit->font());
 	
 	int maxLen = searchMenu->width()/metrics.horizontalAdvance("M") - 1;
+	
+	searchMenu->clear();
+	searchMenu->show();
+	
+	bool notDoneAdding = true;
 
 	while (!queue.isEmpty()) {
 		QString currentDirPath = queue.dequeue();
@@ -1883,6 +1888,13 @@ void MainWindow::indexFiles(){
 				}
 				
 				allDisplayPaths.append(relativePath);
+				
+				if (seen < 30){
+					searchMenu->addItem(relativePath);
+				}else if (notDoneAdding){
+					QApplication::processEvents();
+					notDoneAdding = false;
+				}
 				
 				allIndexedFiles.append(entry.fileName());
 				seen ++;
