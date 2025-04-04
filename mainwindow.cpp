@@ -6364,7 +6364,38 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		qDebug() << "Got to here?" << textEdit->currentVimMode << isACtrl << key_event;
 
 		if (!isACtrl && textEdit->currentVimMode == "n"){
-			if (key_event->key() == Qt::Key_Less || key_event->key() == Qt::Key_Comma){
+			if (key_event->key() == Qt::Key_J) { // down
+				if (suggestionBox->isVisible()){
+					currentSelection = (currentSelection + 1) % suggestion.length();
+					suggestionBox->setCurrentRow(currentSelection);
+					return true; // Mark as handled
+				}
+				if (actionBox->isVisible()){
+					currentSelectionAction = (currentSelectionAction + 1) % codeActions.count();
+					actionBox->setCurrentRow(currentSelectionAction);
+					return true; // Mark as handled
+				}
+			}else if (key_event->key() == Qt::Key_K) { // up
+				if (suggestionBox->isVisible()){
+					currentSelection = (currentSelection - 1 + suggestion.length()) % suggestion.length();
+					suggestionBox->setCurrentRow(currentSelection);
+					return true;
+				}
+				if (actionBox->isVisible()){
+					currentSelectionAction = (currentSelectionAction - 1 + codeActions.count()) % codeActions.count();
+					actionBox->setCurrentRow(currentSelectionAction);
+					return true;
+				}
+			}else if (key_event->key() == Qt::Key_Escape) {
+				if (suggestionBox->isVisible()){
+					suggestionBox->setVisible(false);
+					return true;
+				}
+				if (actionBox->isVisible()){
+					actionBox->setVisible(false);
+					return false;
+				}
+			}else if (key_event->key() == Qt::Key_Less || key_event->key() == Qt::Key_Comma){
 				QTextCursor cursor = textEdit->textCursor();
 				int initLoc = cursor.position();
 				int loc = findMatchingBracket(-1);
@@ -6395,8 +6426,10 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				searchBar->setFocus();
 				return true;
 			}
-			qDebug() << "returning false for textedit keypress event";
-			return false;
+			
+			if ((key_event->key() != Qt::Key_Tab || !suggestionBox->isVisible()) && (key_event->key() != Qt::Key_Enter && key_event->key() != Qt::Key_Return || !actionBox->isVisible())){
+				return false;
+			}
 		}
 
 		if (isACtrl) {
@@ -6550,9 +6583,12 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				suggestionBox->setCurrentRow(currentSelection);
 				return true; // Mark as handled
 			} else if (key_event->key() == Qt::Key_Escape) {
-				suggestionBox->setVisible(false);
-				return true; // Mark as handled
+				if (textEdit->currentVimMode == "n" || !textEdit->useVIM){
+					suggestionBox->setVisible(false);
+					return true; // Mark as handled
+				}
 			}else if (key_event->key() == Qt::Key_Tab) {
+				qDebug() << "TAB KEY GOOTTOO";
 				return insertCompletion();
 			}
 		}if (actionBox->isVisible() && !codeActions.isEmpty()) {
