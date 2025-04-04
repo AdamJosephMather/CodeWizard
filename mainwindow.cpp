@@ -1041,7 +1041,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	javaLang.defWordList = defWordListJava;
 	javaLang.fileExtensions = QStringList() << ".java" << ".xml";
 	javaLang.colorMapTS = colormapJavaTS;
-
+	
 	tsLang.name = "TS";
 	tsLang.strings = QStringList() << "\"" << "\'";
 	tsLang.stringExtensions = QStringList() << "\\" << "\\";
@@ -6571,10 +6571,17 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			QString textCopied = textEdit->toPlainText();
 			QTextCursor c = textEdit->textCursor();
 			int pos = c.position();
-			textCopied.insert(pos, "[INSERT_CODE_HERE]");
+			
+			int start = qMax(0, pos - 600);
+			int end = qMin(textCopied.length(), pos + 600);
+			
+			QString trimmed = textCopied.mid(start, end - start);
+			int markerPos = pos - start;
+			trimmed.insert(markerPos, "[INSERT_CODE_HERE]");
+			
 
 			QList<QPair<QString, QString>> conversation = {
-				{"user", "Please create just the code which should be inserted at the specified point (the specified point is '[INSERT_CODE_HERE]'). Do not include any other text with you response. Just pick up exactly where was left off. If there is no code which makes sense to insert at that point, just do your best to create code which could fit there, never include text other than the code in your response. Also your response should be plaintext, not markdown. Do not include the name of the language you are writing. ONLY the text to insert at that position. Here's the current code:\n\n"+textCopied}
+				{"user", "Please create just the code which should be inserted at the specified point (the specified point is '[INSERT_CODE_HERE]'). Do not include any other text with you response. Just pick up exactly where was left off. If there is no code which makes sense to insert at that point, just do your best to create code which could fit there, never include text other than the code in your response. Also your response should be plaintext, not markdown. Do not include the name of the language you are writing. ONLY the text to insert at that position. Here's the current code:\n\n"+trimmed}
 			};
 			groq->generateResponse(conversation);
 			return true;
