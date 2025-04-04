@@ -26,6 +26,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void searchNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event, int vimRepeater);
 	void applyScrollBarStyles(QWidget *widget);
 	void applyStylesToAllScrollBars();
 	void Ctrl_C();
@@ -72,7 +73,6 @@ private slots:
 	void handleTerminalStdout(int index);
 	void useBuiltinTerminalTriggered();
 	void on_actionVim_Modes_triggered();
-	void executeNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event);
 	void useVimModesTriggered();
 	void on_actionSet_Font_By_Name_triggered();
 	void on_actionGit_Integration_triggered();

@@ -248,8 +248,151 @@ void MyTextEdit::paintEvent(QPaintEvent *event)
 	}
 }
 
+void MyTextEdit::setCurrentVim(QString vmMd){
+	currentVimMode = vmMd;
+	additionalCursors.clear();
+	vimRepeater = 0;
+	
+	if (vmMd == "i"){
+		setCursorWidth(1);
+	}else{
+		QFontMetrics metrics(font());
+		int charWidth = metrics.horizontalAdvance("M");
+		setCursorWidth(charWidth);
+	}
+	
+	updateViewport();
+}
+
+void MyTextEdit::setVIM(bool uV){
+	useVIM = uV;
+	additionalCursors.clear();
+	currentVimMode = "i";
+	setCursorWidth(1);
+	vimRepeater = 0;
+	updateViewport();
+}
+
+void MyTextEdit::executeNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event){
+	if (vimRepeater == 0){
+		vimRepeater = 1;
+	}
+
+	QTextCursor cursor = textCursor();
+	if (key_event->modifiers() && Qt::ShiftModifier){
+		cursor.movePosition(move, QTextCursor::KeepAnchor, vimRepeater);
+	}else{
+		cursor.movePosition(move, QTextCursor::MoveAnchor, vimRepeater);
+	}
+	setTextCursor(cursor);
+	vimRepeater = 0;
+	
+	emit executedNormalAct(move, key_event, vimRepeater);
+}
+
+bool MyTextEdit::eventFilter(QObject *watched, QEvent *event){
+	return false;
+}
+
 void MyTextEdit::keyPressEvent(QKeyEvent *event)
 {
+	qDebug() << "keyPressEvent" << event << useVIM;
+	if (useVIM) {
+		bool isACtrl = event->modifiers() & Qt::ControlModifier || event->modifiers() & Qt::AltModifier;
+		
+		if (!isACtrl && currentVimMode == "n"){
+			QString keyText = event->text();
+
+			if (keyText.length() == 1 && keyText[0].isDigit()){
+				vimRepeater = vimRepeater*10 + keyText[0].digitValue();
+			}
+			
+			if (event->key() == Qt::Key_I){
+				currentVimMode = "i";
+				setCursorWidth(1);
+				additionalCursors.clear();
+				updateViewport();
+				vimRepeater = 0;
+			}else if (event->key() == Qt::Key_J || event->key() == Qt::Key_Down){
+				executeNormalAct(QTextCursor::Down, event);
+			}else if (event->key() == Qt::Key_K || event->key() == Qt::Key_Up){
+				executeNormalAct(QTextCursor::Up, event);
+			}else if (event->key() == Qt::Key_H || event->key() == Qt::Key_Left){
+				executeNormalAct(QTextCursor::Left, event);
+			}else if (event->key() == Qt::Key_L || event->key() == Qt::Key_Right){
+				executeNormalAct(QTextCursor::Right, event);
+			}else if (event->key() == Qt::Key_E){
+				executeNormalAct(QTextCursor::WordRight, event);
+			}else if (event->key() == Qt::Key_W){
+				executeNormalAct(QTextCursor::WordLeft, event);
+			}else if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Home || event->key() == Qt::Key_End || event->key() == Qt::Key_PageUp || event->key() == Qt::Key_PageDown || event->key() == Qt::Key_F5){
+				return QTextEdit::keyPressEvent(event); // I am electing not to handle these in any special way - also CodeWizard for the win
+			}else if (event->key() == Qt::Key_C){
+				QKeyEvent *copyEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_C, Qt::ControlModifier);
+				QCoreApplication::postEvent(this, copyEvent);
+			}else if (event->key() == Qt::Key_X){
+				QKeyEvent *copyEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_X, Qt::ControlModifier);
+				QCoreApplication::postEvent(this, copyEvent);
+			}else if (event->key() == Qt::Key_V){
+				QKeyEvent *copyEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_V, Qt::ControlModifier);
+				QCoreApplication::postEvent(this, copyEvent);
+			}else if (event->key() == Qt::Key_G){ // gotoline
+				QTextCursor cursor = textCursor();
+				int curLine = cursor.blockNumber()+1; // 0 based
+				int diff = vimRepeater-curLine;
+				
+				auto keepers = QTextCursor::MoveAnchor;
+				if (event->modifiers() & Qt::ShiftModifier){
+					keepers = QTextCursor::KeepAnchor;
+				}
+				
+				if (diff > 0){
+					cursor.movePosition(QTextCursor::Down, keepers, diff);
+				}if (diff < 0){
+					cursor.movePosition(QTextCursor::Up, keepers, abs(diff));
+				}
+				
+				setTextCursor(cursor);
+				vimRepeater = 0;
+			}else if (event->key() == Qt::Key_O){
+				currentVimMode = "i";
+				setCursorWidth(1);
+				additionalCursors.clear();
+				updateViewport();
+				vimRepeater = 0;
+				executeNormalAct(QTextCursor::EndOfLine, event);
+				QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier, "");
+				QCoreApplication::postEvent(this, event);
+			}else if (event->key() == Qt::Key_A){
+				currentVimMode = "i";
+				setCursorWidth(1);
+				additionalCursors.clear();
+				updateViewport();
+				vimRepeater = 0;
+				executeNormalAct(QTextCursor::EndOfLine, event);
+			}else if (event->key() == Qt::Key_Dollar || event->key() == Qt::Key_4 && event->modifiers() & Qt::ShiftModifier){
+				vimRepeater = 0;
+				executeNormalAct(QTextCursor::EndOfLine, new QKeyEvent(QEvent::KeyPress, Qt::Key_unknown, Qt::NoModifier));
+			}else if (event->key() == Qt::Key_AsciiCircum || event->key() == Qt::Key_6 && event->modifiers() & Qt::ShiftModifier){
+				vimRepeater = 0;
+				executeNormalAct(QTextCursor::StartOfLine, new QKeyEvent(QEvent::KeyPress, Qt::Key_unknown, Qt::NoModifier));
+			}
+
+			return; // always handle inputs in normal mode - normal is a strange term for this but whatever - it'll work.
+		}else if (currentVimMode == "i"){
+			if (event->key() == Qt::Key_Escape){
+				currentVimMode = "n";
+				additionalCursors.clear();
+				QFontMetrics metrics(font());
+				int charWidth = metrics.horizontalAdvance("M");
+				setCursorWidth(charWidth);
+				vimRepeater = 0;
+				updateViewport();
+				return;
+			}
+		}
+	}
+	
 	if (additionalCursors.isEmpty() || !useMultiCursors) {
 		if (event->modifiers() & Qt::ControlModifier && (event->key() == Qt::Key_C || event->key() == Qt::Key_X)){
 			coppies.clear();

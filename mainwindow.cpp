@@ -87,8 +87,8 @@ QString windowName = defWindowTitle;
 MyTextEdit *textEdit;
 QTextEdit *lineEdit;
 MyTextEdit *lineNumberTextEdit;
-QTextEdit *findTextEdit;
-QTextEdit *replaceTextEdit;
+MyTextEdit *findTextEdit;
+MyTextEdit *replaceTextEdit;
 QTextEdit *builtinTerminalTextEdit;
 QTextEdit *builtinTerminalTextEditHORZ;
 MyTextEdit *terminalInputLine;
@@ -352,8 +352,6 @@ QAction* autoAddBrackets;
 
 QString inputLineToTerminal;
 
-int vimRepeater = 0;
-
 QAction* autoSaveAct;
 QList<QTextBlock> errHighlightedBlocks;
 QAction* randomSelectFileTypeAct;
@@ -377,7 +375,6 @@ QAction *useSpeakerAction;
 Myers* diffAlgo;
 QList<QStringList> differences;
 
-QString currentVimMode = "i";
 QList<QProcess *> activeTerminals;
 QStringList terminalStdOuts;
 int currentTerminalIndex = 0;
@@ -463,6 +460,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 			}
 		}
 	});
+	
+	connect(searchBar, &MyTextEdit::executedNormalAct, this, &MainWindow::searchNormalAct);
 	
 	// Replace with new splitters
 
@@ -1381,6 +1380,13 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	}
 
 	webView->setMaximumHeight(textEdit->height()-urlBar->height());
+	
+	textEdit->setVIM(useVimMode->isChecked());
+	searchBar->setVIM(useVimMode->isChecked());
+	findTextEdit->setVIM(useVimMode->isChecked());
+	replaceTextEdit->setVIM(useVimMode->isChecked());
+	terminalInputLine->setVIM(useVimMode->isChecked());
+	terminalInputLineHORZ->setVIM(useVimMode->isChecked());
 	
 	firstStartup = false;
 }
@@ -2469,23 +2475,41 @@ void MainWindow::handleTerminalStdout(int index){
 
 void MainWindow::useVimModesTriggered(){
 	qDebug() << "useVimModesTriggered";
+	
+	textEdit->setVIM(useVimMode->isChecked());
+	searchBar->setVIM(useVimMode->isChecked());
+	findTextEdit->setVIM(useVimMode->isChecked());
+	replaceTextEdit->setVIM(useVimMode->isChecked());
+	terminalInputLine->setVIM(useVimMode->isChecked());
+	terminalInputLineHORZ->setVIM(useVimMode->isChecked());
 
 	if (!useVimMode->isChecked()){
-		currentVimMode = "i";
-		textEdit->setCursorWidth(1);
-		textEdit->additionalCursors.clear();
-		textEdit->updateViewport();
+		textEdit->setCurrentVim("i");
 	}else{
-		currentVimMode = "n";
-		QFontMetrics metrics(textEdit->font());
-		int charWidth = metrics.horizontalAdvance("M");
-		textEdit->setCursorWidth(charWidth);
-		textEdit->additionalCursors.clear();
-		textEdit->updateViewport();
+		textEdit->setCurrentVim("n");
 	}
 
-	vimRepeater = 0;
 	saveWantedTheme();
+}
+
+void MainWindow::searchNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event, int vimRepeater){
+	if (move == QTextCursor::Up){
+		if (indexedFiles.isEmpty()){
+			return;
+		}
+		selectedSearchFile = (selectedSearchFile-1 + indexedFiles.length())%indexedFiles.length();
+		if (selectedSearchFile < indexedFiles.length()){
+			searchMenu->setCurrentRow(selectedSearchFile);
+		}
+	}else if (move == QTextCursor::Down){
+		if (indexedFiles.isEmpty()){
+			return;
+		}
+		selectedSearchFile = (selectedSearchFile+1)%indexedFiles.length();
+		if (selectedSearchFile < indexedFiles.length()){
+			searchMenu->setCurrentRow(selectedSearchFile);
+		}
+	}
 }
 
 void MainWindow::switchTerminalType(){
@@ -3316,7 +3340,7 @@ void MainWindow::mouseClicked(){
 	qDebug() << "mouseClicked";
 
 	holdingAnEvent = false;
-	if (!(QGuiApplication::keyboardModifiers() & Qt::AltModifier) || (currentVimMode != "i" || recordingMacro)){
+	if (!(QGuiApplication::keyboardModifiers() & Qt::AltModifier) || (textEdit->currentVimMode != "i" || recordingMacro)){
 		textEdit->additionalCursors.clear();
 		textEdit->updateViewport();
 	}
@@ -5855,6 +5879,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 			openFind();
 		}else if (event->key() == Qt::Key_P && event->modifiers() & Qt::ShiftModifier){
 			searchBar->setPlainText("");
+			searchBar->setCurrentVim("i");
 			searchBar->setFocus();
 		}else if (event->key() == Qt::Key_P){
 			on_actionReplay_Macro_triggered();
@@ -5901,6 +5926,7 @@ void MainWindow::openFind()
 	//QApplication::postEvent(findTextEdit, event);
 
 	findTextEdit->setFocus();
+	findTextEdit->setCurrentVim("i");
 
 	QFont currentFont = findTextEdit->font(); // Get the current font from the QTextEdit
 	//I shouldn't have to do this. BUT when selecting with selectAll() or whatever it changes the font, but you can't see it in findTextEdit->font()... Whatever.
@@ -6052,21 +6078,6 @@ void MainWindow::on_actionReplay_Macro_triggered() {
 	replayMacroButton->setEnabled(true);
 }
 
-void MainWindow::executeNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event){
-	if (vimRepeater == 0){
-		vimRepeater = 1;
-	}
-
-	QTextCursor cursor = textEdit->textCursor();
-	if (key_event->modifiers() && Qt::ShiftModifier){
-		cursor.movePosition(move, QTextCursor::KeepAnchor, vimRepeater);
-	}else{
-		cursor.movePosition(move, QTextCursor::MoveAnchor, vimRepeater);
-	}
-	textEdit->setTextCursor(cursor);
-	vimRepeater = 0;
-}
-
 int MainWindow::findMatchingBracket(int direction){
 	qDebug() << "findMatchingBracket";
 
@@ -6157,7 +6168,19 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			}
 
 			if (keyEvent->key() == Qt::Key_Escape){
-				textEdit->setFocus();
+				if (useVimMode->isChecked()){
+					QString curVimMode = "i";
+					if (watched == terminalInputLine){
+						curVimMode = terminalInputLine->currentVimMode;
+					}else{
+						curVimMode = terminalInputLineHORZ->currentVimMode;
+					}
+					if (curVimMode == "n"){
+						textEdit->setFocus(); // if we use vim, require double tap on esc key.
+					}
+				}else{
+					textEdit->setFocus();
+				}
 			}if (keyEvent->key() == Qt::Key_Up){
 				indexInSentCommands += 1;
 				QString toset;
@@ -6283,7 +6306,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		}
 	}
 
-	if( event->type() != QEvent::KeyPress){
+	if(event->type() != QEvent::KeyPress){
 		return false;
 	}
 
@@ -6292,27 +6315,38 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 	
 	if (watched == searchBar){
 		if (key_event->key() == Qt::Key_Escape){
-			textEdit->setFocus();
-			return true;
-		}else if (key_event->key() == Qt::Key_Up){
-			if (indexedFiles.isEmpty()){
+			if (useVimMode->isChecked()){
+				if (searchBar->currentVimMode == "n"){ // double tap
+					textEdit->setFocus();
+					return true;
+				}
+			}else{
+				textEdit->setFocus();
 				return true;
 			}
-			selectedSearchFile = (selectedSearchFile-1 + indexedFiles.length())%indexedFiles.length();
-			if (selectedSearchFile < indexedFiles.length()){
-				searchMenu->setCurrentRow(selectedSearchFile);
-			}
-			return true;
-		}else if (key_event->key() == Qt::Key_Down){
-			if (indexedFiles.isEmpty()){
+		}
+		if (searchBar->currentVimMode == "i" || !searchBar->useVIM){
+			if (key_event->key() == Qt::Key_Up){
+				if (indexedFiles.isEmpty()){
+					return true;
+				}
+				selectedSearchFile = (selectedSearchFile-1 + indexedFiles.length())%indexedFiles.length();
+				if (selectedSearchFile < indexedFiles.length()){
+					searchMenu->setCurrentRow(selectedSearchFile);
+				}
+				return true;
+			}else if (key_event->key() == Qt::Key_Down){
+				if (indexedFiles.isEmpty()){
+					return true;
+				}
+				selectedSearchFile = (selectedSearchFile+1)%indexedFiles.length();
+				if (selectedSearchFile < indexedFiles.length()){
+					searchMenu->setCurrentRow(selectedSearchFile);
+				}
 				return true;
 			}
-			selectedSearchFile = (selectedSearchFile+1)%indexedFiles.length();
-			if (selectedSearchFile < indexedFiles.length()){
-				searchMenu->setCurrentRow(selectedSearchFile);
-			}
-			return true;
-		}else if (key_event->key() == Qt::Key_Enter || key_event->key() == Qt::Key_Return || key_event->key() == Qt::Key_Tab){
+		}
+		if (key_event->key() == Qt::Key_Enter || key_event->key() == Qt::Key_Return || key_event->key() == Qt::Key_Tab){
 			if (indexedFiles.isEmpty()){
 				return true;
 			}
@@ -6325,88 +6359,11 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		}
 
 		bool isACtrl = key_event->modifiers() & Qt::ControlModifier || key_event->modifiers() & Qt::AltModifier;
+		
+		qDebug() << "Got to here?" << textEdit->currentVimMode << isACtrl << key_event;
 
-		if (!isACtrl && currentVimMode == "n"){
-			QString keyText = key_event->text();
-
-			if (keyText.length() == 1 && keyText[0].isDigit()){
-				vimRepeater = vimRepeater*10 + keyText[0].digitValue();
-			}
-
-			if (key_event->key() == Qt::Key_I){
-				currentVimMode = "i";
-				textEdit->setCursorWidth(1);
-				textEdit->additionalCursors.clear();
-				textEdit->updateViewport();
-				vimRepeater = 0;
-			}else if (key_event->key() == Qt::Key_J || key_event->key() == Qt::Key_Down){
-				executeNormalAct(QTextCursor::Down, key_event);
-			}else if (key_event->key() == Qt::Key_K || key_event->key() == Qt::Key_Up){
-				executeNormalAct(QTextCursor::Up, key_event);
-			}else if (key_event->key() == Qt::Key_H || key_event->key() == Qt::Key_Left){
-				executeNormalAct(QTextCursor::Left, key_event);
-			}else if (key_event->key() == Qt::Key_L || key_event->key() == Qt::Key_Right){
-				executeNormalAct(QTextCursor::Right, key_event);
-			}else if (key_event->key() == Qt::Key_E){
-				executeNormalAct(QTextCursor::WordRight, key_event);
-			}else if (key_event->key() == Qt::Key_W){
-				executeNormalAct(QTextCursor::WordLeft, key_event);
-			}else if (key_event->key() == Qt::Key_Return){
-				handleTabs();
-				handleBracketsOnEnter();
-				return false;
-			}else if (key_event->key() == Qt::Key_Backspace || key_event->key() == Qt::Key_Home || key_event->key() == Qt::Key_End || key_event->key() == Qt::Key_PageUp || key_event->key() == Qt::Key_PageDown || key_event->key() == Qt::Key_F5){
-				return false; // I am electing not to handle these in any special way - also CodeWizard for the win
-			}else if (key_event->key() == Qt::Key_C){
-				QKeyEvent *copyEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_C, Qt::ControlModifier);
-				QCoreApplication::postEvent(textEdit, copyEvent);
-			}else if (key_event->key() == Qt::Key_X){
-				QKeyEvent *copyEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_X, Qt::ControlModifier);
-				QCoreApplication::postEvent(textEdit, copyEvent);
-			}else if (key_event->key() == Qt::Key_V){
-				QKeyEvent *copyEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_V, Qt::ControlModifier);
-				QCoreApplication::postEvent(textEdit, copyEvent);
-			}else if (key_event->key() == Qt::Key_G){ // gotoline
-				QTextCursor cursor = textEdit->textCursor();
-				int curLine = cursor.blockNumber()+1; // 0 based
-				int diff = vimRepeater-curLine;
-				
-				auto keepers = QTextCursor::MoveAnchor;
-				if (key_event->modifiers() & Qt::ShiftModifier){
-					keepers = QTextCursor::KeepAnchor;
-				}
-				
-				if (diff > 0){
-					cursor.movePosition(QTextCursor::Down, keepers, diff);
-				}if (diff < 0){
-					cursor.movePosition(QTextCursor::Up, keepers, abs(diff));
-				}
-				
-				textEdit->setTextCursor(cursor);
-				vimRepeater = 0;
-			}else if (key_event->key() == Qt::Key_O){
-				currentVimMode = "i";
-				textEdit->setCursorWidth(1);
-				textEdit->additionalCursors.clear();
-				textEdit->updateViewport();
-				vimRepeater = 0;
-				executeNormalAct(QTextCursor::EndOfLine, key_event);
-				QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier, "");
-				QCoreApplication::postEvent(textEdit, event);
-			}else if (key_event->key() == Qt::Key_A){
-				currentVimMode = "i";
-				textEdit->setCursorWidth(1);
-				textEdit->additionalCursors.clear();
-				textEdit->updateViewport();
-				vimRepeater = 0;
-				executeNormalAct(QTextCursor::EndOfLine, key_event);
-			}else if (key_event->key() == Qt::Key_Dollar || key_event->key() == Qt::Key_4 && key_event->modifiers() & Qt::ShiftModifier){
-				vimRepeater = 0;
-				executeNormalAct(QTextCursor::EndOfLine, new QKeyEvent(QEvent::KeyPress, Qt::Key_unknown, Qt::NoModifier));
-			}else if (key_event->key() == Qt::Key_AsciiCircum || key_event->key() == Qt::Key_6 && key_event->modifiers() & Qt::ShiftModifier){
-				vimRepeater = 0;
-				executeNormalAct(QTextCursor::StartOfLine, new QKeyEvent(QEvent::KeyPress, Qt::Key_unknown, Qt::NoModifier));
-			}else if (key_event->key() == Qt::Key_Less || key_event->key() == Qt::Key_Comma){
+		if (!isACtrl && textEdit->currentVimMode == "n"){
+			if (key_event->key() == Qt::Key_Less || key_event->key() == Qt::Key_Comma){
 				QTextCursor cursor = textEdit->textCursor();
 				int initLoc = cursor.position();
 				int loc = findMatchingBracket(-1);
@@ -6419,6 +6376,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 					
 					textEdit->setTextCursor(cursor);
 				}
+				return true;
 			}else if (key_event->key() == Qt::Key_Greater || key_event->key() == Qt::Key_Period){
 				int loc = findMatchingBracket(1);
 				QTextCursor cursor = textEdit->textCursor();
@@ -6430,11 +6388,14 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				}
 				
 				textEdit->setTextCursor(cursor);
+				return true;
 			}else if (key_event->key() == Qt::Key_Colon || key_event->key() == Qt::Key_Semicolon){
+				searchBar->setCurrentVim("i");
 				searchBar->setFocus();
+				return true;
 			}
-
-			return true; // always handle inputs in normal mode - normal is a strange term for this but whatever - it'll work.
+			qDebug() << "returning false for textedit keypress event";
+			return false;
 		}
 
 		if (isACtrl) {
@@ -6454,7 +6415,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			}
 		}
 
-		if (key_event->key() == Qt::Key_Down && key_event->modifiers() & Qt::AltModifier && currentVimMode == "i"){
+		if (key_event->key() == Qt::Key_Down && key_event->modifiers() & Qt::AltModifier && textEdit->currentVimMode == "i"){
 			QTextCursor c = textEdit->textCursor();
 			int highest = c.blockNumber();
 			for (QTextCursor curs : textEdit->additionalCursors){
@@ -6471,7 +6432,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			suggestionBox->hide();
 			actionBox->hide();
 			return true;
-		}else if (key_event->key() == Qt::Key_Up && key_event->modifiers() & Qt::AltModifier && currentVimMode == "i"){
+		}else if (key_event->key() == Qt::Key_Up && key_event->modifiers() & Qt::AltModifier && textEdit->currentVimMode == "i"){
 			QTextCursor c = textEdit->textCursor();
 			int lowest = c.blockNumber();
 			for (QTextCursor curs : textEdit->additionalCursors){
@@ -6653,15 +6614,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				textEdit->updateViewport();
 			}else{
 				changeFindSectionVisibility(false);
-				if (useVimMode->isChecked()){
-					QFontMetrics metrics(textEdit->font());
-					int charWidth = metrics.horizontalAdvance("M");
-					textEdit->setCursorWidth(charWidth);
-					textEdit->additionalCursors.clear();
-					textEdit->updateViewport();
-					currentVimMode = "n";
-					vimRepeater = 0;
-				}
 			}
 		}
 
@@ -6671,19 +6623,28 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		}
 	}else if (watched == findTextEdit || watched == replaceTextEdit) {
 		if (key_event->key() == Qt::Key_Escape) {
-			textEdit->setFocus();
-			changeFindSectionVisibility(false);
-			return true;
+			if (useVimMode->isChecked()){
+				QString curVimMode = "i";
+				if (watched == findTextEdit){
+					curVimMode = findTextEdit->currentVimMode;
+				}else{
+					curVimMode = replaceTextEdit->currentVimMode;
+				}
+				if (curVimMode == "n"){
+					textEdit->setFocus(); // if we use vim, require double tap on esc key.
+					changeFindSectionVisibility(false);
+					return true;
+				}
+			}else{
+				textEdit->setFocus();
+				changeFindSectionVisibility(false);
+				return true;
+			}
 		}else if (key_sequence == QKeySequence("Shift+Return")){
 			previousTriggered();
 			return true;
 		}else if (key_event->key() == Qt::Key_Return) {
 			nextTriggered();
-			return true;
-		}
-	}else if (watched == replaceTextEdit) {
-		if (key_event->key() == Qt::Key_Escape) {
-			textEdit->setFocus();
 			return true;
 		}
 	}else if (watched == urlBar){
@@ -6711,7 +6672,8 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			return true;
 		}
 	}
-
+	
+	qDebug() << "Final return false;";
 	return false;
 }
 

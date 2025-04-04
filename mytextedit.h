@@ -27,6 +27,12 @@ public:
 	void handleDuplicateCursors();
 	bool dontScroll = false;
 	QStringList coppies;
+	
+	void setVIM(bool vim);
+	void setCurrentVim(QString vmMd);
+	bool useVIM = false;
+	QString currentVimMode = "i";
+	int vimRepeater = 0;
 
 protected:
 	QString changeToTabs(QString text);
@@ -34,6 +40,8 @@ protected:
 	void insertFromMimeData(const QMimeData *source) override;
 	
 	void contextMenuEvent(QContextMenuEvent *event) override;
+	
+	bool eventFilter(QObject *obj, QEvent *event) override;
 	
 	void mouseMoveEvent(QMouseEvent *event) override {
 		if (startedDrag && hasFocus()){
@@ -129,6 +137,8 @@ private:
 	
 	void toggleCursorVisibility();
 	QTimer cursorBlinkTimer;
+	
+	void executeNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event);
 
 signals:
 	void wheelSignal(QWheelEvent* event);
@@ -143,6 +153,8 @@ signals:
 	void handleSizeChange(bool force);
 	void dragEvent(QPoint start, QPoint end, bool startODrag, bool endODrag);
 	void focusChange(bool focused);
+	
+	void executedNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event, int vimRepeater);
 };
 
 #endif // MYTEXTEDIT_H
