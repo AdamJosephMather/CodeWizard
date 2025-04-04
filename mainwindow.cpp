@@ -1968,7 +1968,7 @@ void MainWindow::runSearchItem(){
 		globalArgFileName = cmd;
 		textEdit->setFocus();
 		searchBar->setPlainText("");
-		on_actionOpen_triggered(true);
+		on_actionOpen_triggered();
 	}
 }
 
@@ -3521,7 +3521,7 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 	if (!index.model()->hasChildren(index)) {
 		QString newFile = index.data(QFileSystemModel::FilePathRole).toString();
 		globalArgFileName = newFile;
-		on_actionOpen_triggered(true);
+		on_actionOpen_triggered();
 	}
 }
 
@@ -5435,11 +5435,13 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	addFileToRecentList(fileName);
 
 	if (!dontUpdateFileTree){
-		fileModel->setRootPath(fileInfo.absolutePath());
-		QSettings settings("FoundationTechnologies", "CodeWizard");
-		settings.setValue("mostRecentFolder", fileInfo.absolutePath());
-
-		fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
+		if (!fileInfo.absolutePath().startsWith(fileModel->rootPath())){
+			fileModel->setRootPath(fileInfo.absolutePath());
+			QSettings settings("FoundationTechnologies", "CodeWizard");
+			settings.setValue("mostRecentFolder", fileInfo.absolutePath());
+	
+			fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
+		}
 	}
 
 	if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())){
@@ -6361,10 +6363,15 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 		bool isACtrl = key_event->modifiers() & Qt::ControlModifier || key_event->modifiers() & Qt::AltModifier;
 		
-		qDebug() << "Got to here?" << textEdit->currentVimMode << isACtrl << key_event;
-
 		if (!isACtrl && textEdit->currentVimMode == "n"){
-			if (key_event->key() == Qt::Key_J) { // down
+			
+			if (key_event->key() == Qt::Key_P) {
+				QTextCursor crsr = textEdit->textCursor();
+				suggestedPosition = textEdit->cursorRect(crsr).bottomLeft();
+				lspMutex.lock();
+				expectedHoverInfoId = client->requestHover(crsr.blockNumber(), crsr.columnNumber());
+				lspMutex.unlock();
+			}else if (key_event->key() == Qt::Key_J) { // down
 				if (suggestionBox->isVisible()){
 					currentSelection = (currentSelection + 1) % suggestion.length();
 					suggestionBox->setCurrentRow(currentSelection);
@@ -8837,7 +8844,7 @@ void MainWindow::on_actionRunning_Files_triggered(){
 void MainWindow::on_actionVim_Modes_triggered(){
 	qDebug() << "on_actionVim_Modes_triggered";
 
-	openHelpMenu("Vim Modes\n\nAs of CodeWizard V8.8.9 we now support a modified set of the vim actions. Namely, when enabled, CodeWizard has a 'Normal' mode and an 'Insert' mode.\nIn normal mode there are a set of commands which work - which will be listed below. In insert mode, all keys are the same as regular (unless you press escape under the right circumstances to enter normal mode.)\n\nHere is the list of shortcuts which work in normal mode:\n    1. H - Moves left\n    2. J - Moves Down\n    3. K - Moves Up\n    4. L - Moves Right\n    5. W - Equivalent to Ctrl+Left\n    6. E - Equivalent to Ctrl+Right\n    7. All commands containing 'Ctrl' - Normal\n    8. All commands containing 'Alt' - Normal\n    9. Return/Enter/Backspace - Normal\n    10. PageDown, PageUp, Home, End - Normal\n    11. Comma/Less Than (<) - Jumps to corresponding previous bracket to the left\n    12. Period/Greater Than (>) - Jumps to corresponding bracket to the right\n    13. $ - Jumps to end of line\n    14. A - Jumps to end of line and enters insert mode\n    15. O - Inserts line below current line and enters insert mode\n    16. : - Brings focus to the command palette\n    17. G - Move to specified line number. (usage: '<linenumber>g')");
+	openHelpMenu("Vim Modes\n\nAs of CodeWizard V8.8.9 we now support a modified set of the vim actions. Namely, when enabled, CodeWizard has a 'Normal' mode and an 'Insert' mode.\nIn normal mode there are a set of commands which work - which will be listed below. In insert mode, all keys are the same as regular (unless you press escape under the right circumstances to enter normal mode.)\n\nHere is the list of shortcuts which work in normal mode:\n    1. H - Moves left\n    2. J - Moves Down\n    3. K - Moves Up\n    4. L - Moves Right\n    5. W - Equivalent to Ctrl+Left\n    6. E - Equivalent to Ctrl+Right\n    7. All commands containing 'Ctrl' - Normal\n    8. All commands containing 'Alt' - Normal\n    9. Return/Enter/Backspace - Normal\n    10. PageDown, PageUp, Home, End - Normal\n    11. Comma/Less Than (<) - Jumps to corresponding previous bracket to the left\n    12. Period/Greater Than (>) - Jumps to corresponding bracket to the right\n    13. $ - Jumps to end of line\n    14. A - Jumps to end of line and enters insert mode\n    15. O - Inserts line below current line and enters insert mode\n    16. : - Brings focus to the command palette\n    17. G - Move to specified line number. (usage: '<linenumber>g')\n    18. P - Requests hover menu for current cursor position (LSP feature)");
 }
 
 void MainWindow::on_actionThe_Fix_It_Button_triggered(){
@@ -9158,5 +9165,5 @@ void MainWindow::openRecentFile(QString newFile){
 	qDebug() << "openRecentFile";
 
 	globalArgFileName = newFile;
-	on_actionOpen_triggered(true);
+	on_actionOpen_triggered();
 }
