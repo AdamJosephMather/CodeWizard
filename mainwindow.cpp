@@ -1894,7 +1894,7 @@ void MainWindow::indexFiles(){
 		}
 	}
 	
-	QStringList commands = {"Dark Mode", "Light Mode", "Increase Text Size", "Decrease Text Size", "Reset Text Size", "Toggle Use File Tabs", "Toggle Use Builtin Terminal", "Toggle Terminal Positioning", "Toggle Auto Add Brackets", "Fix It", "Convert To Spaces", "Toggle Vim Mode", "Reset LSP", "Quit", "Toggle No Autocomplete", "Toggle Only CodeWizard Autocomplete", "Toggle LSP Show Errors", "Toggle LSP Show Other", "Toggle LSP Show Warnings", "Lang: Python", "Lang: C", "Lang: C#", "Lang: C++", "Lang: JS", "Lang: TS", "Lang: CSS", "Lang: HTML", "Lang: Go", "Lang: Rust", "Lang: Lua", "Lang: Plaintext", "Lang: Cobol", "Lang: GLSL", "Lang: WGSL", "Lang: Java", "Git Push", "Git Pull", "Git Force Pull", "Toggle Use Relative Line Numbers"};
+	QStringList commands = {"Dark Mode", "Light Mode", "Increase Text Size", "Decrease Text Size", "Reset Text Size", "Toggle Use File Tabs", "Toggle Use Vim Mode", "Toggle Use Builtin Terminal", "Toggle Terminal Positioning", "Toggle Auto Add Brackets", "Fix It", "Convert To Spaces", "Toggle Vim Mode", "Reset LSP", "Quit", "Toggle No Autocomplete", "Toggle Only CodeWizard Autocomplete", "Toggle LSP Show Errors", "Toggle LSP Show Other", "Toggle LSP Show Warnings", "Lang: Python", "Lang: C", "Lang: C#", "Lang: C++", "Lang: JS", "Lang: TS", "Lang: CSS", "Lang: HTML", "Lang: Go", "Lang: Rust", "Lang: Lua", "Lang: Plaintext", "Lang: Cobol", "Lang: GLSL", "Lang: WGSL", "Lang: Java", "Git Push", "Git Pull", "Git Force Pull", "Toggle Use Relative Line Numbers"};
 	
 	for (QString cmd : commands){
 		allIndexedFilesPath << ":"+cmd;
@@ -1930,6 +1930,7 @@ void MainWindow::runSearchItem(){
 		if (cmd == ":Decrease Text Size") on_actionDecrease_Text_Size_triggered();
 		if (cmd == ":Reset Text Size") on_actionReset_Text_Size_triggered();
 		if (cmd == ":Toggle Use File Tabs") useTabs->toggle();
+		if (cmd == ":Toggle Use Vim Mode") useVimMode->toggle();
 		if (cmd == ":Toggle Use Builtin Terminal") useBuiltinTerminal->toggle();
 		if (cmd == ":Toggle Terminal Positioning") preferHorizontalTerminal->toggle();
 		if (cmd == ":Toggle Auto Add Brackets") autoAddBrackets->toggle();
