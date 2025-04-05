@@ -287,7 +287,7 @@ void MyTextEdit::paintEvent(QPaintEvent *event)
 		QPointF blockPos = layout->blockBoundingRect(block).topLeft();
 		qreal top = blockPos.y() + line.y();
 		
-		QPointF pos(blockPos.x() + x + offset.x() + 15, top + offset.y() + line.height() - fm.descent());
+		QPointF pos(blockPos.x() + x + offset.x() + 35, top + offset.y() + line.height() - fm.descent());
 		painter.drawText(pos, errMessage);
 	}
 }
