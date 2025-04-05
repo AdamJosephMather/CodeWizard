@@ -33,6 +33,10 @@ public:
 	bool useVIM = false;
 	QString currentVimMode = "i";
 	int vimRepeater = 0;
+	
+	QList<int> errLineNums; 
+	QStringList errMessages;
+	QList<int> errTypes;
 
 protected:
 	QString changeToTabs(QString text);

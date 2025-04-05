@@ -246,6 +246,50 @@ void MyTextEdit::paintEvent(QPaintEvent *event)
 			drawCursor(painter, cursor, QColor(255, 165, 0)); // Orange color
 		}
 	}
+	
+	QAbstractTextDocumentLayout *layout = document()->documentLayout();
+	QPoint offset = -QPoint(horizontalScrollBar()->value(), verticalScrollBar()->value());
+	
+	QPainter painter(viewport());
+	painter.setPen(Qt::red);
+	
+	QColor warnings = QColor(217, 159, 0);
+	QColor other = QColor(38, 175, 199);
+	QColor errors = QColor(255, 70, 0);
+	
+	QFontMetrics fm = painter.fontMetrics();
+	
+	for (int i = 0; i < errLineNums.length(); i++){
+		int lnNum = errLineNums[i];
+		QString errMessage = " ■ "+errMessages[i];
+		int sev = errTypes[i];
+		
+		if (sev == 1) { // Errors
+			painter.setPen(errors);
+		} else if (sev == 2) { // Warnings
+			painter.setPen(warnings);
+		} else { // Other
+			painter.setPen(other);
+		}
+		
+		QTextBlock block = document()->findBlockByLineNumber(lnNum);
+		if (!block.isValid()) continue;
+		QTextCursor cursor(block);
+		cursor.movePosition(QTextCursor::EndOfLine);
+		
+		int cursorPosition = cursor.position() - block.position();
+		QTextLine line = block.layout()->lineForTextPosition(cursorPosition);
+		if (!line.isValid()) {
+			return;
+		}
+		
+		qreal x = line.cursorToX(cursorPosition);
+		QPointF blockPos = layout->blockBoundingRect(block).topLeft();
+		qreal top = blockPos.y() + line.y();
+		
+		QPointF pos(blockPos.x() + x + offset.x() + 15, top + offset.y() + line.height() - fm.descent());
+		painter.drawText(pos, errMessage);
+	}
 }
 
 void MyTextEdit::setCurrentVim(QString vmMd){
@@ -325,7 +369,7 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event)
 				executeNormalAct(QTextCursor::WordRight, event);
 			}else if (event->key() == Qt::Key_W){
 				executeNormalAct(QTextCursor::WordLeft, event);
-			}else if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Home || event->key() == Qt::Key_End || event->key() == Qt::Key_PageUp || event->key() == Qt::Key_PageDown || event->key() == Qt::Key_F5){
+			}else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return || event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Home || event->key() == Qt::Key_End || event->key() == Qt::Key_PageUp || event->key() == Qt::Key_PageDown || event->key() == Qt::Key_F5){
 				return QTextEdit::keyPressEvent(event); // I am electing not to handle these in any special way - also CodeWizard for the win
 			}else if (event->key() == Qt::Key_C){
 				QKeyEvent *copyEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_C, Qt::ControlModifier);

@@ -3980,6 +3980,26 @@ void MainWindow::setupLSP(QString oldFile)
 		errMenu.UpdateErrors(startL, messages, severity);
 
 		highlightDiagnostics(false);
+		
+		textEdit->errLineNums.clear();
+		textEdit->errMessages.clear();
+		textEdit->errTypes.clear();
+		
+		QList<int> seenLineNums;
+		
+		for (int i = messages.length()-1; i >= 0; i--) { // we go backwards so that the errors are hit first, we sorted them in the languageserverclient.
+			if (seenLineNums.contains(errStartL[i])){
+				continue;
+			}
+			
+			seenLineNums.push_back(errStartL[i]);
+			QString msg = messages[i];
+			
+			textEdit->errMessages.push_back(msg.split("\n")[0]);
+			textEdit->errLineNums.push_back(errStartL[i]);
+			textEdit->errTypes.push_back(errSeverity[i]);
+		}
+		
 		isErrorHighlighted = true;
 	});
 
@@ -5126,7 +5146,7 @@ void MainWindow::findTextEditChanged()
 	cursor.mergeCharFormat(format);
 	cursor.setPosition(cursorPosition);
 	cursor.setPosition(currentAnchor, QTextCursor::KeepAnchor); // that's it you can look back now
-
+	
 	connect(findTextEdit, &QTextEdit::textChanged, this, &MainWindow::findTextEditChanged);
 }
 
@@ -6460,6 +6480,9 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				searchBar->setCurrentVim("i");
 				searchBar->setFocus();
 				return true;
+			}else if (!actionBox->isVisible() && (key_event->key() == Qt::Key_Return || key_event->key() == Qt::Key_Enter)) {
+				handleTabs();
+				handleBracketsOnEnter();
 			}
 			
 			if ((key_event->key() != Qt::Key_Tab || !suggestionBox->isVisible()) && (key_event->key() != Qt::Key_Enter && key_event->key() != Qt::Key_Return || !actionBox->isVisible())){
@@ -7927,6 +7950,10 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 
 	if (reverseTheProcess){
 		isErrorHighlighted = false;
+		
+		textEdit->errLineNums.clear();
+		textEdit->errMessages.clear();
+		textEdit->errTypes.clear();
 
 		// Only clear blocks that were highlighted
 		QTextBlock block = textDocument->begin();
