@@ -340,7 +340,6 @@ bool MyTextEdit::eventFilter(QObject *watched, QEvent *event){
 
 void MyTextEdit::keyPressEvent(QKeyEvent *event)
 {
-	qDebug() << "keyPressEvent" << event << useVIM;
 	if (useVIM) {
 		bool isACtrl = event->modifiers() & Qt::ControlModifier || event->modifiers() & Qt::AltModifier;
 		

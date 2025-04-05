@@ -6653,7 +6653,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 					return true; // Mark as handled
 				}
 			}else if (key_event->key() == Qt::Key_Tab) {
-				qDebug() << "TAB KEY GOOTTOO";
 				return insertCompletion();
 			}
 		}if (actionBox->isVisible() && !codeActions.isEmpty()) {
@@ -6775,7 +6774,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		}
 	}
 	
-	qDebug() << "Final return false;";
 	return false;
 }
 
