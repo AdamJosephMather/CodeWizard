@@ -189,7 +189,7 @@ private slots:
 	void updateDefaultWordLists();
 	void updateSyntax();
 	void findTriggered();
-	void nextTriggered();
+	void nextTriggered(bool dontRecurse = false);
 	void previousTriggered();
 	void replaceTriggered();
 	void replaceAllTriggered();

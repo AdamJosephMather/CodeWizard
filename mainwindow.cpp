@@ -5151,13 +5151,16 @@ void MainWindow::previousTriggered()
 
 	if (position != -1)
 	{
+		textEdit->setUpdatesEnabled(false);
+		textEdit->horizontalScrollBar()->setValue(0);
 		cursor.setPosition(position);
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, find.length());
 		textEdit->setTextCursor(cursor);
+		textEdit->setUpdatesEnabled(true);
 	}
 }
 
-void MainWindow::nextTriggered()
+void MainWindow::nextTriggered(bool dontRecurse)
 {
 	qDebug() << "nextTriggered";
 
@@ -5170,6 +5173,7 @@ void MainWindow::nextTriggered()
 	}
 
 	int startPosition = cursor.position();
+	int startAnchor = cursor.anchor();
 	int position = text.indexOf(find, startPosition, Qt::CaseInsensitive);
 
 	if (position == -1) {
@@ -5178,10 +5182,15 @@ void MainWindow::nextTriggered()
 
 	if (position != -1)
 	{
+		textEdit->setUpdatesEnabled(false);
 		textEdit->horizontalScrollBar()->setValue(0);
 		cursor.setPosition(position);
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, find.length());
 		textEdit->setTextCursor(cursor);
+		if (!dontRecurse && cursor.anchor() == startAnchor && cursor.position() == startPosition) {
+			nextTriggered(true); // prevent infinite loop with the true
+		}
+		textEdit->setUpdatesEnabled(true);
 	}
 }
 
