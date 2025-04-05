@@ -10,19 +10,19 @@ RecordingLight::RecordingLight(QWidget *parent)
 
 	pulseTimer = new QTimer(this);
 	connect(pulseTimer, &QTimer::timeout, this, &RecordingLight::updatePulse);
-	pulseTimer->start(50);
+	pulseTimer->start(35);
 }
 
 void RecordingLight::updatePulse(){
 	if (growing){
-		currentScale += 5;
+		currentScale += 7;
 	}else{
-		currentScale -= 5;
+		currentScale -= 7;
 	}
 	
-	if (currentScale < 160){
+	if (currentScale < 70){
 		growing = true;
-		currentScale = 160;
+		currentScale = 70;
 	}else if (currentScale > 255){
 		growing = false;
 		currentScale = 255;
