@@ -5459,8 +5459,6 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 		isOpeningFile = false;
 		return;
 	}
-	
-
 
 	for (int i = 0; i < tabs.length(); i++){
 		TabWidget *tab = tabs[i];
