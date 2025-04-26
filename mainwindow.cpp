@@ -1361,6 +1361,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	if (!argFileName.isEmpty()){
 		globalArgFileName = argFileName;
 		on_actionOpen_triggered();
+	}else{
+		on_actionNew_triggered();
 	}
 
 	QTimer::singleShot(50, this, &MainWindow::updateSplitsWidths);
@@ -1390,8 +1392,6 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	replaceTextEdit->setVIM(useVimMode->isChecked());
 	terminalInputLine->setVIM(useVimMode->isChecked());
 	terminalInputLineHORZ->setVIM(useVimMode->isChecked());
-	
-	on_actionNew_triggered();
 	
 	firstStartup = false;
 }
