@@ -57,7 +57,7 @@ extern "C" {
 	TSLanguage* tree_sitter_css(void);
 }
 
-QString versionNumber = "9.5.0";
+QString versionNumber = "9.5.1";
 
 QList<QLineEdit*> hexColorsList;
 
@@ -156,7 +156,6 @@ std::unordered_map<QString, int> colormapCTS;
 std::unordered_map<QString, int> colormapCobolTS;
 std::unordered_map<QString, int> colormapCssTS;
 
-std::unordered_map<QString, int> storedPositions;
 std::unordered_map<QString, MyTextEdit*> storedTextEdits;
 
 QString bfrChars = " \n(\t=!-+/%*[{&}])\"$^@|><,`~#:;'?\\";
@@ -234,6 +233,8 @@ QMenu *menuFonts;
 QMenu *menuHelp;
 QMenu *menuLanguage;
 QMenu *menuGit;
+QMenu *menuGitPull;
+QMenu *menuRender;
 QMenu *menuOpen_Recent;
 QMenu *menuLSP_Settings;
 QMenu *menuWarnings;
@@ -659,6 +660,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	menuHelp = ui->menuHelp;
 	menuLanguage = ui->menuLanguage;
 	menuGit = ui->menuGit;
+	menuGitPull = ui->menuPull;
+	menuRender = ui->menuRender;
 	menuOpen_Recent = ui->menuOpen_Recent;
 	menuLSP_Settings = ui->menuLSP_Settings;
 	menuWarnings = ui->menuWarnings;
@@ -2211,7 +2214,7 @@ void MainWindow::tabClicked(int id){
 	on_actionOpen_triggered();
 
 	qDebug() << loc << loc2 << tabs[loc2]->lineNum;
-	textEdit->verticalScrollBar()->setValue(tab->lineNum);
+//	textEdit->verticalScrollBar()->setValue(tab->lineNum);
 }
 
 void MainWindow::updateSplitsWidths(){
@@ -2827,7 +2830,8 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 	setupSyntaxTreeOnOpen(fileContent); // must be before setPlainText - don't ask why - I could tell you though...
 
 	highlightDiagnostics(true);
-
+	
+	qDebug() << "SETTING THE TEXTEDIT IN NEEDS HIGHLIGHTING ##################################### " << fileName;
 	textEdit->setPlainText(fileContent);
 	toCompareTo = fileContent;
 	textEdit->additionalCursors.clear();
@@ -4453,6 +4457,8 @@ void MainWindow::updateFonts()
 	menuHelp->setFont(font);
 	menuLanguage->setFont(font);
 	menuGit->setFont(font);
+	menuGitPull->setFont(font);
+	menuRender->setFont(font);
 	menuBarItem->setFont(font);
 	menuOpen_Recent->setFont(font);
 	menuLSP_Settings->setFont(font);
@@ -5401,7 +5407,6 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 {
 	qDebug() << "on_actionOpen_triggered";
 	
-	storedPositions[fileName] = textEdit->textCursor().position();
 	storedTextEdits[fileName] = textEdit;
 	
 	if (isSettingUpLSP){
@@ -5504,7 +5509,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 
 	setupSyntaxTreeOnOpen(fileContent); // must be before setPlainText - don't ask why - I could tell you though...
 	addTab(fileNameName, fileName);
-
+	
 	highlightDiagnostics(true);
 	
 	disconnect(textEdit, &MyTextEdit::mousePositionChanged, this, &MainWindow::handleMouseMoved);
@@ -5522,15 +5527,18 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	
 	auto it0 = storedTextEdits.find(fileName);
 	bool needsHighlighting = true;
+	bool isNewTextEdit = true;
 	
 	MyTextEdit *newTextEdit;
 	
 	if (it0 != storedTextEdits.end()) {
 		newTextEdit = it0->second;
 		needsHighlighting = false;
+		isNewTextEdit = false;
 	}else{
 		newTextEdit = new MyTextEdit();
 		needsHighlighting = true;
+		isNewTextEdit = true;
 	}
 	
 	needsHighlighting = needsHighlighting || newTextEdit->toPlainText() != fileContent;
@@ -5540,6 +5548,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	layout->replaceWidget(textEdit, newTextEdit);
 	textEdit->hide();
 	newTextEdit->show();
+	
 	textEdit = newTextEdit;
 	textDocument = textEdit->document();
 	
@@ -5550,16 +5559,19 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	connect(textEdit, &MyTextEdit::mouseReleased, this, &MainWindow::mouseReleased);
 	connect(textEdit, &MyTextEdit::handleSizeChange, this, &MainWindow::updateMargins);
 	connect(textDocument, &QTextDocument::contentsChange, this, &MainWindow::onContentsChange);
-	connect(textEdit, &QTextEdit::cursorPositionChanged, [=]() {
-		qDebug() << "lamda textEdit cursorPositionChanged1";
-		if (useRelativeLineNumbers->isChecked() && textEdit->textCursor().blockNumber()+1 != prevLineNumberForRelativity){
-			updateLineNumbers(globalLineCount);
-		}
-	});
 	textEdit->installEventFilter(this);
 	connect(textEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, &MainWindow::updateScrollBarValue);
 	connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
-	setupCompleter();
+	
+	if (isNewTextEdit){
+		connect(textEdit, &QTextEdit::cursorPositionChanged, [=]() {
+			qDebug() << "lamda textEdit cursorPositionChanged1";
+			if (useRelativeLineNumbers->isChecked() && textEdit->textCursor().blockNumber()+1 != prevLineNumberForRelativity){
+				updateLineNumbers(globalLineCount);
+			}
+		});
+		setupCompleter();
+	}
 	
 	groq->setTextEdit(textEdit);
 	errMenu.Setup(textEdit);
@@ -5579,14 +5591,12 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	
 	if (needsHighlighting){
+		qDebug() << "SETTING THE TEXTEDIT IN NEEDS HIGHLIGHTING ##################################### " << fileName;
 		textEdit->setPlainText(fileContent);
 		toCompareTo = fileContent;
 	}
 	
 	changeTheme(darkmode);
-	
-	textEdit->additionalCursors.clear();
-	textEdit->updateViewport();
 	
 	previousLineCount = fileContent.count('\xa')+1;
 	file.close();
@@ -5618,13 +5628,6 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 		fileTree->show();
 	}else{
 		fileTree->hide();
-	}
-	
-	auto it2 = storedPositions.find(fileName);
-	if (it2 != storedPositions.end()) {
-		QTextCursor cursor = textEdit->textCursor();
-		cursor.setPosition(it2->second);
-		textEdit->setTextCursor(cursor);
 	}
 
 	lspMutex.lock();
@@ -8472,6 +8475,7 @@ void MainWindow::updateSyntax()
 	}
 
 	if (updateSyntaxPosition != -1){
+		qDebug() << "Setting CURSOR at " << updateSyntaxPosition << " ####################################";
 		cursor.setPosition(updateSyntaxPosition);
 		updateSyntaxPosition = -1;
 		textEdit->setTextCursor(cursor);
