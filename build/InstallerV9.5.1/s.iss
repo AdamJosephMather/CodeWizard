@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "CodeWizard"
-#define MyAppVersion "9.5.0"
+#define MyAppVersion "9.5.1"
 #define MyAppPublisher "Foundation Technologies"
 #define MyAppURL "https://github.com/AdamJosephMather/CodeWizard"
 #define MyAppExeName "CodeWizard.exe"
@@ -36,8 +36,8 @@ DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users).
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputDir=C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\build\InstallerV9.5.0
-OutputBaseFilename=CodeWizard_V9.5.0_x64_Windows_Installer
+OutputDir=C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\build\InstallerV9.5.1
+OutputBaseFilename=CodeWizard_V9.5.1_x64_Windows_Installer
 SetupIconFile=C:\Users\adamj\OneDrive\Documents\QtProjects\CodeWizard\app.ico
 SolidCompression=yes
 WizardStyle=modern
