@@ -46,6 +46,7 @@ private slots:
 	void nextWebView();
 	void backWebView();
 	void reloadWebView();
+	void saveToFile(QString text);
 	void useWebViewToggled();
 	void openMenuWithHTML(QString name, QString html);
 	void on_actionRender_As_Markdown_triggered();
@@ -66,7 +67,7 @@ private slots:
 	void storeResizeOfSplitters();
 	void updateTermimalViews();
 	void on_actionToggleComments_triggered();
-	void pullUpReloadDialogue(QString message);
+	void pullUpReloadDialogue(QString message, QString content);
 	void switchTerminalType();
 	int findMatchingBracket(int direction);
 	void handleBracketsOnEnter();

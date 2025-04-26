@@ -57,7 +57,7 @@ extern "C" {
 	TSLanguage* tree_sitter_css(void);
 }
 
-QString versionNumber = "9.4.1";
+QString versionNumber = "9.5.0";
 
 QList<QLineEdit*> hexColorsList;
 
@@ -156,8 +156,8 @@ std::unordered_map<QString, int> colormapCTS;
 std::unordered_map<QString, int> colormapCobolTS;
 std::unordered_map<QString, int> colormapCssTS;
 
-std::unordered_map<QString, int> storedLineNumbers;
 std::unordered_map<QString, int> storedPositions;
+std::unordered_map<QString, MyTextEdit*> storedTextEdits;
 
 QString bfrChars = " \n(\t=!-+/%*[{&}])\"$^@|><,`~#:;'?\\";
 
@@ -1388,6 +1388,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	terminalInputLine->setVIM(useVimMode->isChecked());
 	terminalInputLineHORZ->setVIM(useVimMode->isChecked());
 	
+	on_actionNew_triggered();
+	
 	firstStartup = false;
 }
 
@@ -2360,7 +2362,7 @@ void MainWindow::changeEvent(QEvent *event) {
 						speech->say("Detected change in file, reload?");
 					#endif
 				}
-				pullUpReloadDialogue("Detected change in file, reload?");
+				pullUpReloadDialogue("Detected change in file, reload?", fileContent);
 			}
 
 			handlingReopen = false;
@@ -2385,7 +2387,7 @@ void MainWindow::changeEvent(QEvent *event) {
 	QMainWindow::changeEvent(event);
 }
 
-void MainWindow::pullUpReloadDialogue(QString message){
+void MainWindow::pullUpReloadDialogue(QString message, QString content){
 	qDebug() << "pullUpReloadDialogue";
 
 	QMessageBox dialog;
@@ -2398,7 +2400,14 @@ void MainWindow::pullUpReloadDialogue(QString message){
 	int response = dialog.exec();
 	if (response == QMessageBox::Yes) {
 		globalArgFileName = fileName;
-		on_actionOpen_triggered();
+		auto value = textEdit->verticalScrollBar()->value();
+		auto cursorPos = textEdit->textCursor().position();
+		
+		textEdit->setPlainText(content);
+		textEdit->verticalScrollBar()->setValue(value);
+		auto crsr = textEdit->textCursor();
+		crsr.setPosition(cursorPos);
+		textEdit->setTextCursor(crsr);
 	}
 }
 
@@ -3987,8 +3996,20 @@ void MainWindow::setupLSP(QString oldFile)
 		
 		QList<int> seenLineNums;
 		
+		QList<int> allowedSeverities;
+		if (showErrors->isChecked()){
+			allowedSeverities.append(1);
+		}
+		if (showWarnings->isChecked()){
+			allowedSeverities.append(2);
+		}
+		if (showOther->isChecked()){
+			allowedSeverities.append(3);
+			allowedSeverities.append(4);
+		}
+		
 		for (int i = messages.length()-1; i >= 0; i--) { // we go backwards so that the errors are hit first, we sorted them in the languageserverclient.
-			if (seenLineNums.contains(errStartL[i])){
+			if (seenLineNums.contains(errStartL[i]) || !allowedSeverities.contains(errSeverity[i])){
 				continue;
 			}
 			
@@ -5380,8 +5401,8 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 {
 	qDebug() << "on_actionOpen_triggered";
 	
-	storedLineNumbers[fileName] = textEdit->verticalScrollBar()->value();
 	storedPositions[fileName] = textEdit->textCursor().position();
+	storedTextEdits[fileName] = textEdit;
 	
 	if (isSettingUpLSP){
 		showWeDontFuckWithTheLSP();
@@ -5395,8 +5416,15 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 
 	isOpeningFile = true;
 	QString oldFile = fileName;
-
-	if (unsaved && fileName != ""){
+	
+	QString tempDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
+	QDir tempDir(tempDirPath);
+	QString absoluteTempPath = tempDir.absolutePath();
+	QString curAbsPath = QFileInfo(fileName).absoluteFilePath();
+	
+	if (unsaved && curAbsPath.startsWith(absoluteTempPath, Qt::CaseInsensitive)){
+		saveToFile(textEdit->toPlainText());
+	}else if (unsaved && fileName != ""){
 		pullUpSaveDialogue();
 	}
 
@@ -5431,6 +5459,29 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 		isOpeningFile = false;
 		return;
 	}
+	
+
+
+	for (int i = 0; i < tabs.length(); i++){
+		TabWidget *tab = tabs[i];
+		qDebug() << tab->extraText << absoluteTempPath;
+		
+		if (tab->extraText.startsWith(absoluteTempPath, Qt::CaseInsensitive)){
+			QFile existingFile(tab->extraText);
+			
+			bool del = false;
+			if (existingFile.open(QIODevice::ReadOnly)) {
+				if (existingFile.size() == 0) {
+					del = true;
+				}
+				existingFile.close();
+			}
+			
+			if (del){
+				closeTab(tab->m_index);
+			}
+		}
+	}
 
 	bool ret = checkForLargeFile(&file);
 
@@ -5438,7 +5489,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 		isOpeningFile = false;
 		return;
 	}
-
+	
 	fileName = newFile;
 
 	setLangOffFilename(fileName, false);
@@ -5457,11 +5508,88 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	addTab(fileNameName, fileName);
 
 	highlightDiagnostics(true);
-
-	textEdit->setPlainText(fileContent);
-	toCompareTo = fileContent;
+	
+	disconnect(textEdit, &MyTextEdit::mousePositionChanged, this, &MainWindow::handleMouseMoved);
+	disconnect(textEdit, &MyTextEdit::gotoDefinitionActionTriggered, this, &MainWindow::gotoDefinitionActionTriggered);
+	disconnect(textEdit, &MyTextEdit::renameActionTriggered, this, &MainWindow::renameActionTriggered);
+	disconnect(textEdit, &MyTextEdit::mouseClicked, this, &MainWindow::mouseClicked);
+	disconnect(textEdit, &MyTextEdit::mouseReleased, this, &MainWindow::mouseReleased);
+	disconnect(textEdit, &MyTextEdit::handleSizeChange, this, &MainWindow::updateMargins);
+	disconnect(textDocument, &QTextDocument::contentsChange, this, &MainWindow::onContentsChange);
+	disconnect(textEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, &MainWindow::updateScrollBarValue);
+	disconnect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
+	textEdit->removeEventFilter(this);
+	
+	auto layout = textEdit->parentWidget()->layout();
+	
+	auto it0 = storedTextEdits.find(fileName);
+	bool needsHighlighting = true;
+	
+	MyTextEdit *newTextEdit;
+	
+	if (it0 != storedTextEdits.end()) {
+		newTextEdit = it0->second;
+		needsHighlighting = false;
+	}else{
+		newTextEdit = new MyTextEdit();
+		needsHighlighting = true;
+	}
+	
+	needsHighlighting = needsHighlighting || newTextEdit->toPlainText() != fileContent;
+	
+	newTextEdit->setFont(textEdit->font());
+	
+	layout->replaceWidget(textEdit, newTextEdit);
+	textEdit->hide();
+	newTextEdit->show();
+	textEdit = newTextEdit;
+	textDocument = textEdit->document();
+	
+	connect(textEdit, &MyTextEdit::mousePositionChanged, this, &MainWindow::handleMouseMoved);
+	connect(textEdit, &MyTextEdit::gotoDefinitionActionTriggered, this, &MainWindow::gotoDefinitionActionTriggered);
+	connect(textEdit, &MyTextEdit::renameActionTriggered, this, &MainWindow::renameActionTriggered);
+	connect(textEdit, &MyTextEdit::mouseClicked, this, &MainWindow::mouseClicked);
+	connect(textEdit, &MyTextEdit::mouseReleased, this, &MainWindow::mouseReleased);
+	connect(textEdit, &MyTextEdit::handleSizeChange, this, &MainWindow::updateMargins);
+	connect(textDocument, &QTextDocument::contentsChange, this, &MainWindow::onContentsChange);
+	connect(textEdit, &QTextEdit::cursorPositionChanged, [=]() {
+		qDebug() << "lamda textEdit cursorPositionChanged1";
+		if (useRelativeLineNumbers->isChecked() && textEdit->textCursor().blockNumber()+1 != prevLineNumberForRelativity){
+			updateLineNumbers(globalLineCount);
+		}
+	});
+	textEdit->installEventFilter(this);
+	connect(textEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, &MainWindow::updateScrollBarValue);
+	connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
+	setupCompleter();
+	
+	groq->setTextEdit(textEdit);
+	errMenu.Setup(textEdit);
+	
+	delete recordingLight;
+	recordingLight = new RecordingLight(textEdit);
+	recordingLight->hide();
+	
+	suggestionBox->setParent(textEdit);
+	actionBox->setParent(textEdit);
+	hoverBox->setParent(textEdit);
+	
+	textEdit->setWordWrapMode(QTextOption::NoWrap);
+	textEdit->useMultiCursors = true;
+	textEdit->useVIM = useVimMode->isChecked();
+	
+	textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+	
+	if (needsHighlighting){
+		textEdit->setPlainText(fileContent);
+		toCompareTo = fileContent;
+	}
+	
+	changeTheme(darkmode);
+	
 	textEdit->additionalCursors.clear();
 	textEdit->updateViewport();
+	
 	previousLineCount = fileContent.count('\xa')+1;
 	file.close();
 	
@@ -5476,7 +5604,9 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 
 	addFileToRecentList(fileName);
 
-	if (!dontUpdateFileTree){
+	QString absoluteFilePath = fileInfo.absoluteFilePath();
+
+	if (!dontUpdateFileTree && !absoluteFilePath.startsWith(absoluteTempPath, Qt::CaseInsensitive)){
 		if (!fileInfo.absolutePath().startsWith(fileModel->rootPath())){
 			fileModel->setRootPath(fileInfo.absolutePath());
 			QSettings settings("FoundationTechnologies", "CodeWizard");
@@ -5490,11 +5620,6 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 		fileTree->show();
 	}else{
 		fileTree->hide();
-	}
-
-	auto it = storedLineNumbers.find(fileName);
-	if (it != storedLineNumbers.end()) {
-		textEdit->verticalScrollBar()->setValue(it->second);
 	}
 	
 	auto it2 = storedPositions.find(fileName);
@@ -5653,40 +5778,57 @@ void MainWindow::on_actionNew_triggered()
 {
 	qDebug() << "on_actionNew_triggered";
 
-	if (unsaved && fileName != ""){
-		pullUpSaveDialogue();
-	}
-
-	if (isSettingUpLSP || isOpeningFile){
-		return;
-	}
-
-	lspMutex.lock();
-	if (client){
-		client->shutdown();
-		delete client;
-		client = nullptr;
-	}
-	lspMutex.unlock();
-
-	savedText = "";
-	highlightDiagnostics(true);
-	textEdit->setPlainText("");
-	textEdit->additionalCursors.clear();
-	textEdit->updateViewport();
-	windowName = defWindowTitle;
-	setWindowTitle(windowName);
-	fileName = "";
-	searchBar->setPlaceholderText("New File");
-	previousLineCount = 1;
+	QString tempDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
+	QDir tempDir(tempDirPath);
 	
-	differences.clear();
+	QString curPath = QFileInfo(fileName).absoluteFilePath();
+	if (unsaved && curPath.startsWith(tempDirPath)){
+		saveToFile(textEdit->toPlainText());
+	}
+
+	QString baseName = "Untitled";
+	QString extension = ".py";
+	QString fileName = baseName + extension;
+	int counter = 0;
+
+	while (tempDir.exists(fileName)) {
+		bool use = false;
+		
+		QString fullPathCheck = tempDir.filePath(fileName);
+		QFile existingFile(fullPathCheck);
 	
-	int cnt = 1;
-	updateLineNumbers(cnt);
+		if (existingFile.open(QIODevice::ReadOnly)) {
+			if (existingFile.size() == 0) {
+				// Found an empty untitled file, reuse it
+				use = true;
+				existingFile.close();
+				break;
+			}
+			existingFile.close();
+		}
+		
+		if (use){
+			break;
+		}
+	
+		++counter;
+		fileName = baseName + QString::number(counter) + extension;
+	}
+	
+	QString fullPath = tempDir.filePath(fileName);
+
+	QFile file(fullPath);
+	if (file.open(QIODevice::WriteOnly)) {
+		file.close();
+	}else{
+		openHelpMenu("Failed to create the new file in a temporary directory!");
+	}
+	
+	globalArgFileName = fullPath;
+	on_actionOpen_triggered();
 }
 
-void saveToFile(QString text)
+void MainWindow::saveToFile(QString text)
 {
 	qDebug() << "saveToFile";
 
@@ -7243,52 +7385,12 @@ void MainWindow::on_actionSave_triggered()
 		setupLSP("");
 	}
 	lspMutex.unlock();
-
+	
 	if (fileName.isEmpty()){
-		fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "", tr("All Files (*)"));
-
-		if (fileName.isEmpty()){
-			return;
-		}
-
-		QFileInfo fileInfo(fileName);
-		QString fileNameName = fileInfo.fileName();
-
-		if (!fileNameName.contains('.')){
-			if (randomSelectFileTypeAct->isChecked()){ // This is the silly thing which randomly selects c++ - nobody will ever use it but it's relatively easy to implement
-				double value = QRandomGenerator::global()->generateDouble();
-				if (value > 0.5){
-					fileName += ".py";
-					fileNameName += ".py";
-				}else{
-					fileName += ".cpp";
-					fileNameName += ".cpp";
-				}
-			}else{
-				fileName += ".py";
-				fileNameName += ".py";
-			}
-		}
-		
-		searchBar->setPlaceholderText(fileNameName);
-
-		setLangOffFilename(fileName, true);
-		setupSyntaxTreeOnOpen(textEdit->toPlainText());
-		onContentsChange(0, 0, 0);
-
-		fileModel->setRootPath(fileInfo.absolutePath());
-		QSettings settings("FoundationTechnologies", "CodeWizard");
-		settings.setValue("mostRecentFolder", fileInfo.absolutePath());
-		fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
-
-		windowName = fileNameName+" - CodeWizard V"+versionNumber+" - "+fileName;
-
-		addFileToRecentList(fileName);
-
-		addTab(fileNameName, fileName);
-
-		updateMargins(true); // called on open - every time
+		on_actionSave_As_triggered();
+		return;
 	}
+	
 	saveToFile(textEdit->toPlainText());
 	savedText = textEdit->toPlainText();
 	setWindowTitle(windowName);
@@ -7730,33 +7832,11 @@ void MainWindow::on_actionSave_As_triggered()
 		}
 	}
 	
-	searchBar->setPlaceholderText(fileNameName);
-
-	setLangOffFilename(fileName, true);
-	setupSyntaxTreeOnOpen(textEdit->toPlainText());
-	addTab(fileNameName, fileName);
-	onContentsChange(0, 0, 0);
-	addFileToRecentList(fileName);
-	
-	if (!fileName.startsWith(fileModel->rootPath())){
-		fileModel->setRootPath(fileInfo.absolutePath());
-		QSettings settings("FoundationTechnologies", "CodeWizard");
-		settings.setValue("mostRecentFolder", fileInfo.absolutePath());
-		fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
-	}
-
-	windowName = fileNameName + " - CodeWizard V"+versionNumber + " - " + fileName;
-	setWindowTitle(windowName);
 	saveToFile(textEdit->toPlainText());
 	savedText = textEdit->toPlainText();
-
-	lspMutex.lock();
-	setupLSP(oldFile);
-	lspMutex.unlock();
-
-	addTab(fileNameName, fileName);
-
-	updateMargins(true); // called on open - every time
+	
+	globalArgFileName = fileName;
+	on_actionOpen_triggered();
 }
 
 void MainWindow::on_actionFix_It_triggered(){ // THE FIX IT BUTTON
