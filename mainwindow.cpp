@@ -57,7 +57,7 @@ extern "C" {
 	TSLanguage* tree_sitter_css(void);
 }
 
-QString versionNumber = "9.5.1";
+QString versionNumber = "9.5.2";
 
 QList<QLineEdit*> hexColorsList;
 
@@ -5587,6 +5587,8 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	textEdit->setWordWrapMode(QTextOption::NoWrap);
 	textEdit->useMultiCursors = true;
 	textEdit->useVIM = useVimMode->isChecked();
+	textEdit->setTabStopDistance(tabWidth * QFontMetrics(textEdit->font()).horizontalAdvance(' '));
+	textEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 	
 	textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	
