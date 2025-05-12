@@ -19,8 +19,9 @@ CodeWizard is a custom Code Editor / IDE designed by Adam Mather. The main point
 <img width="1128" alt="1" src="https://github.com/user-attachments/assets/d3321667-74d3-4d11-9e75-23570fee7cb5" />
 <img width="1128" alt="6" src="https://github.com/user-attachments/assets/40230f62-6f28-4a3a-902b-6ab6bb24b6bf" />
 <img width="564" alt="7" src="https://github.com/user-attachments/assets/5fb07a1f-d804-4ed2-93e6-5a9b5a8b90b3" />
+<img width="970" alt="image" src="https://github.com/user-attachments/assets/7731b080-a12d-411a-adec-584ffecd14cb" />
 
-These screenshots show a wide variety of features in CodeWizard. Including the builtin terminal, filetree, comparison feature, syntax colors, multiple cursors, command palette, and bottom edit bar.
+These screenshots show a wide variety of features in CodeWizard. Including the builtin terminal, filetree, comparison feature, syntax colors, multiple cursors, command palette, color tinting, and bottom edit bar.
 
 ## Why use CodeWizard?
 
