@@ -57,7 +57,7 @@ extern "C" {
 	TSLanguage* tree_sitter_css(void);
 }
 
-QString versionNumber = "9.5.2";
+QString versionNumber = "9.5.3";
 
 QList<QLineEdit*> hexColorsList;
 
@@ -102,6 +102,7 @@ QColor c4 = QColor(38, 143, 199);
 QColor c5 = QColor(160, 160, 160);
 
 QString defaultSyntaxNumbers = "186,143,63|122,122,122|212,72,81|204,125,55|124,147,153|136,64,237|115,115,115|69,143,222";
+QString tintColor = "255,255,255";
 
 QList<QTextCharFormat> coloredFormats;
 
@@ -1912,7 +1913,7 @@ void MainWindow::indexFiles(){
 		}
 	}
 	
-	QStringList commands = {"Dark Mode", "Light Mode", "Increase Text Size", "Decrease Text Size", "Reset Text Size", "Toggle Use File Tabs", "Toggle Use Vim Mode", "Toggle Use Builtin Terminal", "Toggle Terminal Positioning", "Toggle Auto Add Brackets", "Fix It", "Convert To Spaces", "Toggle Vim Mode", "Reset LSP", "Quit", "Toggle No Autocomplete", "Toggle Only CodeWizard Autocomplete", "Toggle LSP Show Errors", "Toggle LSP Show Other", "Toggle LSP Show Warnings", "Lang: Python", "Lang: C", "Lang: C#", "Lang: C++", "Lang: JS", "Lang: TS", "Lang: CSS", "Lang: HTML", "Lang: Go", "Lang: Rust", "Lang: Lua", "Lang: Plaintext", "Lang: Cobol", "Lang: GLSL", "Lang: WGSL", "Lang: Java", "Git Push", "Git Pull", "Git Force Pull", "Toggle Use Relative Line Numbers"};
+	QStringList commands = {"Dark Mode", "Light Mode", "Increase Text Size", "Decrease Text Size", "Reset Text Size", "Set Syntax Colors", "Set Tint Colors", "Toggle Use File Tabs", "Toggle Use Vim Mode", "Toggle Use Builtin Terminal", "Toggle Terminal Positioning", "Toggle Auto Add Brackets", "Fix It", "Convert To Spaces", "Toggle Vim Mode", "Reset LSP", "Quit", "Toggle No Autocomplete", "Toggle Only CodeWizard Autocomplete", "Toggle LSP Show Errors", "Toggle LSP Show Other", "Toggle LSP Show Warnings", "Lang: Python", "Lang: C", "Lang: C#", "Lang: C++", "Lang: JS", "Lang: TS", "Lang: CSS", "Lang: HTML", "Lang: Go", "Lang: Rust", "Lang: Lua", "Lang: Plaintext", "Lang: Cobol", "Lang: GLSL", "Lang: WGSL", "Lang: Java", "Git Push", "Git Pull", "Git Force Pull", "Toggle Use Relative Line Numbers"};
 	
 	for (QString cmd : commands){
 		allIndexedFilesPath << ":"+cmd;
@@ -1947,6 +1948,8 @@ void MainWindow::runSearchItem(){
 		if (cmd == ":Increase Text Size") on_actionIncrease_Text_Size_triggered();
 		if (cmd == ":Decrease Text Size") on_actionDecrease_Text_Size_triggered();
 		if (cmd == ":Reset Text Size") on_actionReset_Text_Size_triggered();
+		if (cmd == ":Set Syntax Colors") on_actionSet_Syntax_Colors_triggered();
+		if (cmd == ":Set Tint Colors") on_actionSet_Tint_Color_triggered();
 		if (cmd == ":Toggle Use File Tabs") useTabs->toggle();
 		if (cmd == ":Toggle Use Vim Mode") useVimMode->toggle();
 		if (cmd == ":Toggle Use Builtin Terminal") useBuiltinTerminal->toggle();
@@ -2097,6 +2100,29 @@ void MainWindow::useRelativeLineNumbersTriggered(){
 	qDebug() << "useRelativeLineNumbersTriggered";
 	updateLineNumbers(globalLineCount);
 	saveWantedTheme();
+}
+
+QColor MainWindow::getTintedColor(int r, int g, int b){
+	if (tintColor == "255,255,255"){
+		return QColor(r,g,b);
+	}
+	
+	float brightness = 0.299*(r/255.0)+0.587*(g/255.0)+0.114*(b/255.0);
+	
+	QStringList clrs = tintColor.split(",");
+	int r2 = clrs[0].toInt();
+	int g2 = clrs[1].toInt();
+	int b2 = clrs[2].toInt();
+	
+	float brightnes2 = 0.299*(r2/255.0)+0.587*(g2/255.0)+0.114*(b2/255.0);
+	
+	float scale = (brightness/brightnes2+brightness*2)/3; // stagger it closer to the first meassurement because it looks better.
+	
+	int newR = fmin(255, r2*scale);
+	int newG = fmin(255, g2*scale);
+	int newB = fmin(255, b2*scale);
+	
+	return QColor(newR, newG, newB);
 }
 
 void MainWindow::useTabsToggled(){
@@ -2919,6 +2945,52 @@ void MainWindow::updateMargins(bool force) {
 		format.setBottomMargin(marginBottomSize);
 		textDocument->rootFrame()->setFrameFormat(format);
 	}
+}
+
+void MainWindow::on_actionSet_Tint_Color_triggered() {
+	qDebug() << "on_actionSet_Tint_Color_triggered";
+	
+	QInputDialog dialog;
+	dialog.setFont(textEdit->font());  // Set the font to match textEdit's font
+	dialog.setWindowTitle("Set Tint Color");
+	dialog.setLabelText("New Color (Default is '255,255,255')");
+	dialog.setTextValue(tintColor);  // Default text value can be an empty string
+	dialog.setTextEchoMode(QLineEdit::Normal);  // You can change this to Password if needed
+	dialog.exec();
+
+	if (dialog.result() != QDialog::Accepted) {
+		return;
+	}
+
+	QString newcolor = dialog.textValue();
+	newcolor = newcolor.replace(" ", "");
+	
+	if (newcolor == ""){
+		newcolor = "255,255,255";
+	}
+	
+	QStringList lst = newcolor.split(',');
+	if (lst.count() != 3){
+		openHelpMenu("Did not find 3 values");
+		return;
+	}
+	
+	for (QString j : lst) {
+		try {
+			int num = j.toInt();
+			if (num < 0 || num > 255){
+				openHelpMenu("Color: "+j+" Not allowed");
+				return;
+			}
+		}catch (QException) {
+			openHelpMenu("Color: "+j+" Not decipherable");
+			return;
+		}
+	}
+	
+	tintColor = newcolor;
+	saveWantedTheme();
+	changeTheme(darkmode);
 }
 
 void MainWindow::on_actionSet_Syntax_Colors_triggered() {
@@ -4757,7 +4829,8 @@ void MainWindow::saveWantedTheme()
 	if (coloredFormats.length() == 9){
 		settings.setValue("syntaxColors", str);
 	}
-
+	
+	settings.setValue("tintColor", tintColor);
 	settings.setValue("groqApiKey", groqApiKey);
 	settings.setValue("fontSize", fontSize);
 	settings.setValue("darkModeEnabled", darkmode);
@@ -4859,6 +4932,8 @@ bool MainWindow::wantedTheme()
 		}
 
 		setFormatsFromMyList(numbers);
+		
+		tintColor = settings.value("tintColor", "255,255,255").toString();
 
 		showWarnings->setChecked(settings.value("showWarnings", true).toBool());
 		showErrors->setChecked(settings.value("showErrors", true).toBool());
@@ -6725,7 +6800,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			on_actionUn_Comment_Alt_5_triggered();
 			return true; // Mark as handled
 		}else if (QString("{[(").contains(key_event->text()) && !isACtrl && (key_event->key() == Qt::Key_ParenLeft || key_event->key() == Qt::Key_BracketLeft || key_event->key() == Qt::Key_BraceLeft)) {
-			if (autoAddBrackets->isChecked()){
+			if (autoAddBrackets->isChecked() && textEdit->additionalCursors.empty()){
 				updateSyntaxPosition = textEdit->textCursor().position()+1;
 				QString addon = QString("}])").at(QString("{[(").indexOf(key_event->text()));
 				textEdit->textCursor().insertText(key_event->text()+addon);
@@ -6887,11 +6962,25 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				return true;
 			}
 		}else if (key_sequence == QKeySequence("Shift+Return")){
-			previousTriggered();
+			if (watched == findTextEdit){
+				previousTriggered();
+			}else{
+				nextTriggered();
+			}
 			return true;
 		}else if (key_event->key() == Qt::Key_Return) {
-			nextTriggered();
+			if (watched == findTextEdit){
+				nextTriggered();
+			}else{
+				replaceTriggered();
+			}
 			return true;
+		}else if (key_event->key() == Qt::Key_Tab && key_event->modifiers() & Qt::ControlModifier){
+			if (findTextEdit == watched){
+				replaceTextEdit->setFocus();
+			}else{
+				findTextEdit->setFocus();
+			}
 		}
 	}else if (watched == urlBar){
 		if (key_sequence == QKeySequence("Shift+Return") || key_event->key() == Qt::Key_Return){
@@ -8518,6 +8607,10 @@ void MainWindow::changeHighlightColors(bool darkmode){
 	qApp->setPalette(lightPalette);
 }
 
+QString MainWindow::getStringOfColor(QColor col){
+	return "rgb("+QString::number(col.red())+","+QString::number(col.green())+","+QString::number(col.blue())+")";
+}
+
 void MainWindow::changeOnlyEditsTheme(bool darkmode){
 	qDebug() << "changeOnlyEditsTheme";
 
@@ -8527,33 +8620,36 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 	QColor placeholdertext;
 
 	if (darkmode){
-		color1 = QColor(15, 15, 15);
-		color2 = QColor(42, 42, 42);
-		color3 = QColor(25, 25, 25);
-		placeholdertext = QColor(150, 150, 150);
+		color1 = getTintedColor(15, 15, 15);
+		color2 = getTintedColor(42, 42, 42);
+		color3 = getTintedColor(25, 25, 25);
+		placeholdertext = getTintedColor(150, 150, 150);
 		
-		globalCols1 = "rgb(15,15,15)";
-		globalCols2 = "rgb(42,42,42)";
-		globalCols3 = "rgb(25,25,25)";
-		globalColsHover = "rgb(52,52,52)";
-		globalColsMoreThanHover = "rgb(62,62,62)";
-		globalColsPressed = "rgb(32,32,32)";
+		QColor colHover = getTintedColor(52, 52, 52);
+		QColor colHoverMore = getTintedColor(62, 62, 62);
+		QColor colPressed = getTintedColor(32, 32, 32);
+		globalColsHover = getStringOfColor(colHover);
+		globalColsMoreThanHover = getStringOfColor(colHoverMore);
+		globalColsPressed = getStringOfColor(colPressed);
 		globalColsText = "rgb(255, 255, 255)";
-		
 	} else {
-		color1 = QColor(230, 230, 230);
-		color2 = QColor(245, 245, 245);
-		color3 = QColor(245, 245, 245);
-		placeholdertext = QColor(100, 100, 100);
+		color1 = getTintedColor(230, 230, 230);
+		color2 = getTintedColor(245, 245, 245);
+		color3 = getTintedColor(245, 245, 245);
+		placeholdertext = getTintedColor(100, 100, 100);
 		
-		globalCols1 = "rgb(230,230,230)";
-		globalCols2 = "rgb(245,245,245)";
-		globalCols3 = "rgb(25,25,25)";
-		globalColsHover = "rgb(220,220,220)";
-		globalColsMoreThanHover = "rgb(210,210,210)";
-		globalColsPressed = "rgb(255,255,255)";
+		QColor colHover = getTintedColor(220, 220, 220);
+		QColor colHoverMore = getTintedColor(210, 210, 210);
+		QColor colPressed = getTintedColor(255, 255, 255);
+		globalColsHover = getStringOfColor(colHover);
+		globalColsMoreThanHover = getStringOfColor(colHoverMore);
+		globalColsPressed = getStringOfColor(colPressed);
 		globalColsText = "rgb(0, 0, 0)";
 	}
+	
+	globalCols1 = getStringOfColor(color1);
+	globalCols2 = getStringOfColor(color2);
+	globalCols3 = getStringOfColor(color3);
 
 	errMenu.recolor(color2);
 
@@ -8647,13 +8743,27 @@ void MainWindow::changeTheme(bool darkMode)
 	for (TabWidget *tab : tabs){
 		tab->updateStyles(darkmode);
 	}
-
+	
+	QString c20 = getStringOfColor(getTintedColor(20, 20, 20));
+	QString c30 = getStringOfColor(getTintedColor(30, 30, 30));
+	QString c70 = getStringOfColor(getTintedColor(70, 70, 70));
+	QString c25 = getStringOfColor(getTintedColor(25, 25, 25));
+	QString c45 = getStringOfColor(getTintedColor(45, 45, 45));
+	QString c40 = getStringOfColor(getTintedColor(40, 40, 40));
+	QString c150 = getStringOfColor(getTintedColor(150, 150, 150));
+	QString c220 = getStringOfColor(getTintedColor(220, 220, 220));
+	QString c230 = getStringOfColor(getTintedColor(230, 230, 230));
+	QString c200 = getStringOfColor(getTintedColor(200, 200, 200));
+	QString c245 = getStringOfColor(getTintedColor(245, 245, 245));
+	QString c251 = getStringOfColor(getTintedColor(251, 251, 251));
+	
+	
 	// Dark theme style
 	QString contextMenuSheet = R"(
 		QMenu {
-			background-color: rgb(25, 25, 25);
+			background-color: )"+c25+R"(;
 			color: white;
-			border: 1px solid rgb(45, 45, 45);
+			border: 1px solid )"+c45+R"(;
 			border-radius: 8px;
 			padding: 2px;
 		}
@@ -8667,7 +8777,7 @@ void MainWindow::changeTheme(bool darkMode)
 		}
 
 		QMenu::item:selected {
-			background-color: rgb(45, 45, 45);
+			background-color: )"+c45+R"(;
 			color: white;
 		}
 
@@ -8681,23 +8791,23 @@ void MainWindow::changeTheme(bool darkMode)
 	// Light theme style
 	QString contextMenuLightSheet = R"(
 		QMenu {
-			background-color: rgb(245, 245, 245);
-			color: rgb(40, 40, 40);
-			border: 1px solid rgb(220, 220, 220);
+			background-color: )"+c245+R"(;
+			color: "+c40+";
+			border: 1px solid )"+c220+R"(;
 			border-radius: 8px;
 			padding: 2px;
 		}
 
 		QMenu::item {
 			background-color: transparent;
-			color: rgb(40, 40, 40);
+			color: )"+c40+R"(;
 			padding: 3px 3px;
 			margin: 1px 1px;
 			border-radius: 4px;
 		}
 
 		QMenu::item:selected {
-			background-color: rgb(230, 230, 230);
+			background-color: )"+c230+R"(;
 			color: rgb(0, 0, 0);
 		}
 
@@ -8718,33 +8828,33 @@ void MainWindow::changeTheme(bool darkMode)
 		lightPalette.setColor(QPalette::Active, QPalette::Highlight, QColor("#FFFFFF"));
 		lightPalette.setColor(QPalette::Active, QPalette::HighlightedText, QColor("#000000"));
 
-		lightPalette.setColor(QPalette::Window, QColor(25, 25, 25));
+		lightPalette.setColor(QPalette::Window, getTintedColor(25, 25, 25));
 		lightPalette.setColor(QPalette::WindowText, Qt::white);
-		lightPalette.setColor(QPalette::Base, QColor(45, 45, 45));
+		lightPalette.setColor(QPalette::Base, getTintedColor(45, 45, 45));
 		lightPalette.setColor(QPalette::ButtonText, Qt::white);
 		lightPalette.setColor(QPalette::Text, Qt::white);
-		lightPalette.setColor(QPalette::AlternateBase, QColor(30, 30, 30));
-		lightPalette.setColor(QPalette::Button, QColor(45, 45, 45));
-		lightPalette.setColor(QPalette::ToolTipBase, QColor(201, 201, 201));
-		lightPalette.setColor(QPalette::Light, QColor(255, 255, 255));
-		lightPalette.setColor(QPalette::Dark, QColor(100, 100, 100));
+		lightPalette.setColor(QPalette::AlternateBase, getTintedColor(30, 30, 30));
+		lightPalette.setColor(QPalette::Button, getTintedColor(45, 45, 45));
+		lightPalette.setColor(QPalette::ToolTipBase, getTintedColor(201, 201, 201));
+		lightPalette.setColor(QPalette::Light, getTintedColor(255, 255, 255));
+		lightPalette.setColor(QPalette::Dark, getTintedColor(100, 100, 100));
 
-		QString menubarSheet = "QMenuBar {background-color: rgb(25, 25, 25); color: white; }"
-							   "QMenu { background-color: rgb(20, 20, 20); color: white; }"
-							   "QMenu::item:selected { background-color: rgb(45, 45, 45); color: white; }"
+		QString menubarSheet = "QMenuBar {background-color: "+c25+"; color: white; }"
+							   "QMenu { background-color: "+c20+"; color: white; }"
+							   "QMenu::item:selected { background-color: "+c45+"; color: white; }"
 							   "QMenu::separator {height: 1px;background-color: rgb(255, 255, 255); margin: 2px 4px;}"
-							   "QMenuBar::item { background-color: rgb(25, 25, 25); padding: 2px 4px; border-radius: 4px; margin: 3px 2px 3px 2px; }"
-							   "QMenuBar::item:hover { background-color: rgb(70, 70, 70); }"
-							   "QMenuBar::item:selected { background-color: rgb(70, 70, 70); }";
+							   "QMenuBar::item { background-color: "+c25+"; padding: 2px 4px; border-radius: 4px; margin: 3px 2px 3px 2px; }"
+							   "QMenuBar::item:hover { background-color: "+c70+"; }"
+							   "QMenuBar::item:selected { background-color: "+c70+"; }";
 
 		ui->menuBar->setStyleSheet(menubarSheet);
 
 		QString listWidgetSheet =
-		   "QListWidget{ background-color: rgb(20, 20, 20); color: white; }"
-		   "QListWidget::item:selected { background-color: rgb(45, 45, 45); color: white; }"
+		   "QListWidget{ background-color: "+c20+"; color: white; }"
+		   "QListWidget::item:selected { background-color: "+c45+"; color: white; }"
 		   "QListWidget::separator {height: 1px;background-color: rgb(255, 255, 255); margin: 2px 4px;}"
-		   "QListWidget::item { background-color: rgb(30, 30, 30); padding: 2px 2px; border-radius: 4px; margin: 3px 3px 3px 3px; }"
-		   "QListWidget::item:hover { background-color: rgb(70, 70, 70); }";
+		   "QListWidget::item { background-color: "+c30+"; padding: 2px 2px; border-radius: 4px; margin: 3px 3px 3px 3px; }"
+		   "QListWidget::item:hover { background-color: "+c70+"; }";
 
 		fontList->setStyleSheet(listWidgetSheet);
 
@@ -8771,33 +8881,33 @@ void MainWindow::changeTheme(bool darkMode)
 		lightPalette.setColor(QPalette::Active, QPalette::Highlight, QColor("#000000"));
 		lightPalette.setColor(QPalette::Active, QPalette::HighlightedText, QColor("#FFFFFF"));
 
-		lightPalette.setColor(QPalette::Window, QColor(220, 220, 220));
+		lightPalette.setColor(QPalette::Window, getTintedColor(220, 220, 220));
 		lightPalette.setColor(QPalette::WindowText, Qt::black);
-		lightPalette.setColor(QPalette::Base, QColor(251, 251, 251));
+		lightPalette.setColor(QPalette::Base, getTintedColor(251, 251, 251));
 		lightPalette.setColor(QPalette::ButtonText, Qt::black);
 		lightPalette.setColor(QPalette::Text, Qt::black);
-		lightPalette.setColor(QPalette::AlternateBase, QColor(201, 201, 201));
-		lightPalette.setColor(QPalette::Button, QColor(251, 251, 251));
-		lightPalette.setColor(QPalette::ToolTipBase, QColor(201, 201, 201));
-		lightPalette.setColor(QPalette::Light, QColor(255, 255, 255));
-		lightPalette.setColor(QPalette::Dark, QColor(100, 100, 100));
+		lightPalette.setColor(QPalette::AlternateBase, getTintedColor(201, 201, 201));
+		lightPalette.setColor(QPalette::Button, getTintedColor(251, 251, 251));
+		lightPalette.setColor(QPalette::ToolTipBase, getTintedColor(201, 201, 201));
+		lightPalette.setColor(QPalette::Light, getTintedColor(255, 255, 255));
+		lightPalette.setColor(QPalette::Dark, getTintedColor(100, 100, 100));
 
-		QString menubarSheet = "QMenuBar {background-color: rgb(251, 251, 251); color: black; }"
-								"QMenu { background-color: rgb(251, 251, 251); color: black; }"
-								"QMenu::item:selected { background-color: rgb(150, 150, 150); color: black; }"
+		QString menubarSheet = "QMenuBar {background-color: "+c251+"; color: black; }"
+								"QMenu { background-color: "+c251+"; color: black; }"
+								"QMenu::item:selected { background-color: "+c150+"; color: black; }"
 								"QMenu::separator {height: 1px; background-color: rgb(0, 0, 0); margin: 2px 4px;}"
-								"QMenuBar::item { background-color: rgb(251, 251, 251); padding: 2px 4px; border-radius: 4px; margin: 3px 2px 3px 2px; }"
-								"QMenuBar::item:hover { background-color: rgb(200, 200, 200); }"
-								"QMenuBar::item:selected { background-color: rgb(200, 200, 200); }";
+								"QMenuBar::item { background-color: "+c251+"; padding: 2px 4px; border-radius: 4px; margin: 3px 2px 3px 2px; }"
+								"QMenuBar::item:hover { background-color: "+c200+"; }"
+								"QMenuBar::item:selected { background-color: "+c200+"; }";
 
 		ui->menuBar->setStyleSheet(menubarSheet);
 
 		QString listWidgetSheet =
-								"QListWidget{ background-color: rgb(251, 251, 251); color: black; }"
-								"QListWidget::item:selected { background-color: rgb(150, 150, 150); color: black; }"
+								"QListWidget{ background-color: "+c251+"; color: black; }"
+								"QListWidget::item:selected { background-color: "+c150+"; color: black; }"
 								"QListWidget::separator {height: 1px; background-color: rgb(0, 0, 0); margin: 2px 4px;}"
-								"QListWidget::item { background-color: rgb(251, 251, 251); padding: 2px 2px; border-radius: 4px; margin: 3px 3px 3px 3px; }"
-								"QListWidget::item:hover { background-color: rgb(200, 200, 200); }";
+								"QListWidget::item { background-color: "+c251+"; padding: 2px 2px; border-radius: 4px; margin: 3px 3px 3px 3px; }"
+								"QListWidget::item:hover { background-color: "+c200+"; }";
 
 		fontList->setStyleSheet(listWidgetSheet);
 

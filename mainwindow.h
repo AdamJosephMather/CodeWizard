@@ -26,6 +26,8 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	QColor getTintedColor(int r, int g, int b);
+	QString getStringOfColor(QColor clr);
 	void searchNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event, int vimRepeater);
 	void applyScrollBarStyles(QWidget *widget);
 	void applyStylesToAllScrollBars();
@@ -102,6 +104,7 @@ private slots:
 	void resetSyntaxColors();
 	void validateAndConvert();
 	void on_actionSet_Syntax_Colors_triggered();
+	void on_actionSet_Tint_Color_triggered();
 	void printTree(TSNode node, int depth = 0);
 	void setupSyntaxTreeOnOpen(QString code, bool doHighlight=false);
 	void onContentsChange(int position, int charsRemoved, int charsAdded);
