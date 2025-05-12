@@ -4567,7 +4567,7 @@ void MainWindow::updateFonts()
 		tab->stFnt(font);
 	}
 	
-	fileTabBar->setFixedHeight(metrics.height()*1.2);
+	fileTabBar->setFixedHeight(metrics.height()+6);
 	
 	nextWebButton->setFont(font);
 	prevWebButton->setFont(font);
