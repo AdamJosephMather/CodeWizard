@@ -146,6 +146,7 @@ private slots:
 	void on_actionExit_triggered();
 	void on_actionOpen_triggered(bool dontUpdateFileTree = false);
 	void on_actionSave_triggered();
+	void doTrueSaveAction();
 	void on_actionSave_As_triggered();
 	void on_actionNew_triggered();
 	void on_actionRun_Module_F5_triggered();

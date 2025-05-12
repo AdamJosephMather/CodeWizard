@@ -368,7 +368,7 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event)
 				executeNormalAct(QTextCursor::WordRight, event);
 			}else if (event->key() == Qt::Key_W){
 				executeNormalAct(QTextCursor::WordLeft, event);
-			}else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Tab || event->key() == Qt::Key_Return || event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Home || event->key() == Qt::Key_End || event->key() == Qt::Key_PageUp || event->key() == Qt::Key_PageDown || event->key() == Qt::Key_F5){
+			}else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Space || event->key() == Qt::Key_Tab || event->key() == Qt::Key_Return || event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Home || event->key() == Qt::Key_End || event->key() == Qt::Key_PageUp || event->key() == Qt::Key_PageDown || event->key() == Qt::Key_F5){
 				return QTextEdit::keyPressEvent(event); // I am electing not to handle these in any special way - also CodeWizard for the win
 			}else if (event->key() == Qt::Key_C){
 				QKeyEvent *copyEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_C, Qt::ControlModifier);

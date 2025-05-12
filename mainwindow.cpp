@@ -3669,7 +3669,7 @@ void MainWindow::autoSave(){
 	}
 
 	if (unsaved && fileName != "" && autoSaveAct->isChecked()){
-		on_actionSave_triggered();
+		doTrueSaveAction();
 		setWindowTitle(windowName);
 		unsaved = false;
 	}
@@ -5829,7 +5829,7 @@ void MainWindow::pullUpSaveDialogue()
 	if (handlingReopen){return;}
 
 	if (autoSaveAct->isChecked()){
-		on_actionSave_triggered();
+		doTrueSaveAction();
 		return;
 	}
 
@@ -5848,7 +5848,7 @@ void MainWindow::pullUpSaveDialogue()
 
 	int response = dialog.exec();
 	if (response == QMessageBox::Yes) {
-		on_actionSave_triggered();
+		doTrueSaveAction();
 	}
 }
 
@@ -5935,7 +5935,7 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 	qDebug() << "on_actionRun_Module_F5_triggered";
 
 	if (unsaved){
-		on_actionSave_triggered();
+		doTrueSaveAction();
 	}
 	
 	Ctrl_C();
@@ -6104,10 +6104,15 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 	if(event->modifiers() & Qt::ControlModifier)
 	{
 		if (event->key() == Qt::Key_S){
-			if (event->modifiers() & Qt::ShiftModifier) {
+			QString tempDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
+			QDir tempDir(tempDirPath);
+			QString absoluteTempPath = tempDir.absolutePath();
+			QString curAbsPath = QFileInfo(fileName).absoluteFilePath();
+			
+			if (event->modifiers() & Qt::ShiftModifier || curAbsPath.startsWith(absoluteTempPath, Qt::CaseInsensitive)) {
 				on_actionSave_As_triggered();
 			} else {
-				on_actionSave_triggered();
+				doTrueSaveAction();
 			}
 		}else if (event->key() == Qt::Key_O && event->modifiers() & Qt::ShiftModifier){
 			on_actionOpen_Folder_triggered();
@@ -7463,9 +7468,23 @@ bool MainWindow::insertCompletion()
 	return false;
 }
 
-void MainWindow::on_actionSave_triggered()
-{
+void MainWindow::on_actionSave_triggered() {
 	qDebug() << "on_actionSave_triggered";
+	
+	QString tempDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
+	QDir tempDir(tempDirPath);
+	QString absoluteTempPath = tempDir.absolutePath();
+	QString curAbsPath = QFileInfo(fileName).absoluteFilePath();
+	
+	if (curAbsPath.startsWith(absoluteTempPath)){
+		on_actionSave_As_triggered();
+	}else{	
+		doTrueSaveAction();
+	}
+}
+
+void MainWindow::doTrueSaveAction() {
+	qDebug() << "doTrueSaveAction";
 
 	if (isSettingUpLSP){
 		showWeDontFuckWithTheLSP();
