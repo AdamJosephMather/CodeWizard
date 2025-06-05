@@ -1658,7 +1658,7 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 		
 		int index = newExpression.indexOf(startedWith);
 		if (index != -1) {
-			newExpression = newExpression.left(index) + QString::number(res) + newExpression.mid(index + startedWith.length());
+			newExpression = newExpression.left(index) + QString::number(res, 'f', 2) + newExpression.mid(index + startedWith.length());
 		}
 	}
 	
@@ -1709,7 +1709,7 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 		
 		int index = newExpression.indexOf(startedWith);
 		if (index != -1) {
-			newExpression = newExpression.left(index) + QString::number(res) + newExpression.mid(index + startedWith.length());
+			newExpression = newExpression.left(index) + QString::number(res, 'f', 2) + newExpression.mid(index + startedWith.length());
 		}
 	}
 	
@@ -1762,7 +1762,7 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 		
 		int index = newExpression.indexOf(startedWith);
 		if (index != -1) {
-			newExpression = newExpression.left(index) + QString::number(res) + newExpression.mid(index + startedWith.length());
+			newExpression = newExpression.left(index) + QString::number(res, 'f', 2) + newExpression.mid(index + startedWith.length());
 		}
 	}
 	
@@ -1815,7 +1815,7 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 		
 		int index = newExpression.indexOf(startedWith);
 		if (index != -1) {
-			newExpression = newExpression.left(index) + QString::number(res) + newExpression.mid(index + startedWith.length());
+			newExpression = newExpression.left(index) + QString::number(res, 'f', 2) + newExpression.mid(index + startedWith.length());
 		}
 	}
 	
@@ -1877,7 +1877,7 @@ void MainWindow::narrowDownSearchFiles(){
 	QString cpy = starterText;
 	cpy.replace(" ", "");
 	
-	if (isValid && QString::number(result) != cpy){
+	if (isValid && QString::number(result, 'f', 2) != cpy){
 		indexedFilesPath.push_back("/.CodeWiz./MoveResultToTop");
 		displayPaths.push_back(cpy + " = " + QString::number(result));
 		indexedFiles.push_back(QString::number(result));
