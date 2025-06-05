@@ -493,6 +493,11 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		if (currentlyCustom) {
 			toggleDefaultTitleBar(true);
 			showNormal();
+			
+			QScreen *screen = this->screen();
+			QRect screenGeometry = screen->geometry();
+			
+			setGeometry(screenGeometry.width()+screenGeometry.x()-1230, 60, 1200, 750);
 		}
 	});
 	
