@@ -26,6 +26,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void toggleDefaultTitleBar(bool show);
 	QColor getTintedColor(int r, int g, int b);
 	QString getStringOfColor(QColor clr);
 	void searchNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event, int vimRepeater);
@@ -52,6 +53,7 @@ private slots:
 	void useWebViewToggled();
 	void openMenuWithHTML(QString name, QString html);
 	void on_actionRender_As_Markdown_triggered();
+	void useCustomBarTriggered();
 	void addTerminal();
 	void nextTerminal();
 	void prevTerminal();

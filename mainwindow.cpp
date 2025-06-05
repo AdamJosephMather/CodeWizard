@@ -57,7 +57,7 @@ extern "C" {
 	TSLanguage* tree_sitter_css(void);
 }
 
-QString versionNumber = "9.5.3";
+QString versionNumber = "9.5.4";
 
 QList<QLineEdit*> hexColorsList;
 
@@ -351,6 +351,9 @@ QAction* useVimMode;
 QAction* useBuiltinTerminal;
 QAction* preferHorizontalTerminal;
 QAction* autoAddBrackets;
+QAction* actionUseCustomBar;
+
+bool currentlyCustom;
 
 QString inputLineToTerminal;
 
@@ -411,6 +414,11 @@ QStringList indexedFiles;
 QStringList indexedFilesPath;
 int selectedSearchFile = 0;
 
+QPushButton *closeWinButton;
+QPushButton *minWinButton;
+QPushButton *windowWinButton;
+
+QString globalColsFullBack;
 QString globalCols1;
 QString globalCols2;
 QString globalCols3;
@@ -432,6 +440,18 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	firstStartup = true;
 
 	ui->setupUi(this);
+	
+	closeWinButton = new QPushButton(this);
+	closeWinButton->setText("X");
+	closeWinButton->hide();
+	
+	minWinButton = new QPushButton(this);
+	minWinButton->setText("-");
+	minWinButton->hide();
+	
+	windowWinButton = new QPushButton(this);
+	windowWinButton->setText("🗗");
+	windowWinButton->hide();
 	
 	searchBar = new MyTextEdit(this);
 	//the size will be set by another process
@@ -464,6 +484,17 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	});
 	
 	connect(searchBar, &MyTextEdit::executedNormalAct, this, &MainWindow::searchNormalAct);
+	
+	connect(closeWinButton, &QPushButton::clicked, this, &MainWindow::on_actionExit_triggered);
+	connect(minWinButton, &QPushButton::clicked, this, [this]{
+		this->showMinimized();
+	});
+	connect(windowWinButton, &QPushButton::clicked, this, [this]{
+		if (currentlyCustom) {
+			toggleDefaultTitleBar(true);
+			showNormal();
+		}
+	});
 	
 	// Replace with new splitters
 
@@ -760,6 +791,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	useBuiltinTerminal = ui->actionUse_Builtin_Terminal;
 	preferHorizontalTerminal = ui->actionPrefer_Horizontal_Terminal;
 	autoAddBrackets = ui->actionAuto_Add_Brackets;
+	actionUseCustomBar = ui->actionUse_Custom_Title_Bar_If_Fullscreen;
 
 	autoSaveAct = ui->actionAuto_Save;
 	randomSelectFileTypeAct = ui->actionRandomly_Choose_Program_Type_On_Save;
@@ -1247,6 +1279,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(splitter2, &QSplitter::splitterMoved, this, &MainWindow::storeResizeOfSplitters);
 	connect(useTabs, &QAction::toggled, this, &MainWindow::useTabsToggled);
 	connect(useRelativeLineNumbers, &QAction::toggled, this, &MainWindow::useRelativeLineNumbersTriggered);
+	connect(actionUseCustomBar, &QAction::toggled, this, &MainWindow::useCustomBarTriggered);
 	connect(useWebView, &QAction::toggled, this, &MainWindow::useWebViewToggled);
 
 	connect(fileTree, &QTreeView::doubleClicked, this, &MainWindow::fileTreeOpened);
@@ -1335,7 +1368,9 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	}
 
 	if (foundationSettings.value("wasFullScreened", false).toBool()){
-		setWindowState(Qt::WindowMaximized);
+		if (!actionUseCustomBar->isChecked()){
+			setWindowState(Qt::WindowMaximized);
+		}
 	}
 
 	#ifdef _WIN32
@@ -1413,6 +1448,31 @@ void MainWindow::repositionSearchBar() {
 	int correctWidth = correctSearchBarWidth;
 	if (endPos-startPos < correctWidth){
 		correctWidth = endPos-startPos;
+	}
+	
+	int singleButtonWidth = menuBarHeight*1.5;
+	int controlButtonsWidth = singleButtonWidth*3;
+	
+	if (currentlyCustom) {
+		if (startPos+correctWidth > endPos-controlButtonsWidth) { // realistically, this code will _never_ be run. That's because the width of a monitor should determine codewizard's size here. (Much larger than the box thing)
+			correctWidth = endPos - (startPos+correctWidth);
+		}
+		
+		closeWinButton->setFixedSize(singleButtonWidth, menuBarHeight);
+		closeWinButton->move(endPos-singleButtonWidth, 0);
+		closeWinButton->show();
+		
+		windowWinButton->setFixedSize(singleButtonWidth, menuBarHeight);
+		windowWinButton->move(endPos-singleButtonWidth*2, 0);
+		windowWinButton->show();
+		
+		minWinButton->setFixedSize(singleButtonWidth, menuBarHeight);
+		minWinButton->move(endPos-singleButtonWidth*3, 0);
+		minWinButton->show();
+	}else{
+		closeWinButton->hide();
+		windowWinButton->hide();
+		minWinButton->hide();
 	}
 	
 	int leftPad = correctWidth*.025;
@@ -2360,6 +2420,8 @@ void MainWindow::moveWidgetsToSplitter(QLayout *layout, QWidget *toWidget) {
 }
 
 void MainWindow::changeEvent(QEvent *event) {
+	qDebug() << "changeEvent";
+	
 	if (event->type() == QEvent::ActivationChange) {
 		if (this->isActiveWindow()) {
 			qDebug() << "returnedToCodeWizard";
@@ -2413,7 +2475,65 @@ void MainWindow::changeEvent(QEvent *event) {
 			toCompareTo = in.readAll();
 		}
 	}
+	
+	if (event->type() == QEvent::WindowStateChange) {
+		auto *stateEvt = static_cast<QWindowStateChangeEvent*>(event);
+		Qt::WindowStates newState = windowState();
+		Qt::WindowStates oldState = stateEvt->oldState();
+		
+		if (currentlyCustom && !actionUseCustomBar->isChecked()) {
+			toggleDefaultTitleBar(true);
+			showNormal();
+			repositionSearchBar();
+		}
+		
+		if (actionUseCustomBar->isChecked()){
+			bool becomingFullScreen =  (newState & (Qt::WindowFullScreen | Qt::WindowMaximized)) && !(oldState & (Qt::WindowFullScreen | Qt::WindowMaximized));
+			
+			if (!currentlyCustom && becomingFullScreen) {
+				toggleDefaultTitleBar(false); // rid us of that awful default one...
+				showMaximized();
+				repositionSearchBar();
+			}
+		}
+	}
+	
 	QMainWindow::changeEvent(event);
+}
+
+void MainWindow::toggleDefaultTitleBar(bool show)
+{
+	qDebug() << "toggleTitleBar " << show << currentlyCustom;
+	
+	Qt::WindowFlags currentFlags = windowFlags();
+
+	if (show) {
+		// Remove the frameless hint to show the title bar
+		currentlyCustom = false;
+		setWindowFlags(currentFlags & ~Qt::FramelessWindowHint);
+	} else {
+		// Add the frameless hint to hide the title bar
+		currentlyCustom = true;
+		setWindowFlags(currentFlags | Qt::FramelessWindowHint);
+	}
+}
+
+void MainWindow::useCustomBarTriggered() {
+	qDebug() << "useCustomBarTriggered";
+	
+	if (!actionUseCustomBar->isChecked()){
+		if (currentlyCustom) {
+			toggleDefaultTitleBar(true);
+			showMaximized();
+		}
+	}else if ((isFullScreen() || isMaximized()) && !currentlyCustom) {
+		toggleDefaultTitleBar(false);
+		showMaximized();
+	}
+	
+	repositionSearchBar();
+	
+	saveWantedTheme();
 }
 
 void MainWindow::pullUpReloadDialogue(QString message, QString content){
@@ -3520,7 +3640,7 @@ void MainWindow::openFileTreeContextMenu(const QPoint &pos)
 
 void MainWindow::onWindowStateChanged(){
 	qDebug() << "onWindowStateChanged";
-
+	
 	if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())){
 		fileTree->show();
 	}else{
@@ -4542,6 +4662,10 @@ void MainWindow::updateFonts()
 	actionBox->setFont(font);
 	hoverBox->setFont(font);
 	searchMenu->setFont(font);
+	
+	closeWinButton->setFont(font);
+	minWinButton->setFont(font);
+	windowWinButton->setFont(font);
 
 	fileTree->setFont(font);
 	
@@ -4802,6 +4926,7 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("useTabs", useTabs->isChecked());
 	settings.setValue("useWebView", useWebView->isChecked());
 	settings.setValue("useRelativeLineNumbers", useRelativeLineNumbers->isChecked());
+	settings.setValue("useCustomBar", actionUseCustomBar->isChecked());
 
 	settings.setValue("autoSaveAct", autoSaveAct->isChecked());
 	settings.setValue("randomSelectFileTypeAct",randomSelectFileTypeAct->isChecked());
@@ -4951,6 +5076,7 @@ bool MainWindow::wantedTheme()
 		useTabs->setChecked(settings.value("useTabs", false).toBool());
 		useWebView->setChecked(settings.value("useWebView", false).toBool());
 		useRelativeLineNumbers->setChecked(settings.value("useRelativeLineNumbers", false).toBool());
+		actionUseCustomBar->setChecked(settings.value("useCustomBar", false).toBool());
 
 		bool defaultRandomSelect = false;
 		QString name = qgetenv("USER"); // this env is LINUX - might as well right?
@@ -8776,6 +8902,7 @@ void MainWindow::changeTheme(bool darkMode)
 	QString c245 = getStringOfColor(getTintedColor(245, 245, 245));
 	QString c251 = getStringOfColor(getTintedColor(251, 251, 251));
 	
+	globalColsFullBack = c25;
 	
 	// Dark theme style
 	QString contextMenuSheet = R"(
@@ -8991,23 +9118,42 @@ void MainWindow::applyScrollBarStyles(QWidget *widget) {
 	}
 	
 	if (auto *button = qobject_cast<QPushButton *>(widget)) {
-		button->setStyleSheet(R"(
-			QPushButton {
-				background-color: )"+globalCols2+R"(;
-				color: )"+globalColsText+R"(;
-				border: 1px solid )"+globalColsHover+R"(;
-				border-radius: 4px;
-				padding: 2px 4px;
-			}
-			QPushButton:hover {
-				background-color: )"+globalColsHover+R"(;
-				border: 1px solid )"+globalCols2+R"(;
-			}
-			QPushButton:pressed {
-				background-color: )"+globalColsPressed +R"(;
-				border: 1px solid )"+globalColsHover+R"(;
-			}
-		)");
+		if (widget != closeWinButton && widget != minWinButton && widget != windowWinButton){
+			button->setStyleSheet(R"(
+				QPushButton {
+					background-color: )"+globalCols2+R"(;
+					color: )"+globalColsText+R"(;
+					border: 1px solid )"+globalColsHover+R"(;
+					border-radius: 4px;
+					padding: 2px 4px;
+				}
+				QPushButton:hover {
+					background-color: )"+globalColsHover+R"(;
+					border: 1px solid )"+globalCols2+R"(;
+				}
+				QPushButton:pressed {
+					background-color: )"+globalColsPressed +R"(;
+					border: 1px solid )"+globalColsHover+R"(;
+				}
+			)");
+		}else{
+			button->setStyleSheet(R"(
+				QPushButton {
+					background-color: )"+globalColsFullBack+R"(;
+					color: )"+globalColsText+R"(;
+					padding: 2px 4px;
+					border: none;
+				}
+				QPushButton:hover {
+					background-color: )"+globalColsHover+R"(;
+					border: none;
+				}
+				QPushButton:pressed {
+					background-color: )"+globalColsPressed +R"(;
+					border: none;
+				}
+			)");
+		}
 	}
 
 	// Recursively apply to child widgets
