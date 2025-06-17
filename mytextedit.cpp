@@ -231,8 +231,7 @@ void MyTextEdit::drawCursor(QPainter &painter, const QTextCursor &cursor, const 
 						   height));
 }
 
-void MyTextEdit::paintEvent(QPaintEvent *event)
-{
+void MyTextEdit::paintEvent(QPaintEvent *event) {
 	// First let the standard paint event handle the default drawing
 	QTextEdit::paintEvent(event);
 	

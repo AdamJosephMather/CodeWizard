@@ -785,7 +785,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	fileTabBar->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	fileTabBar->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
+	
 	showWarnings = ui->actionShow_Warnings;
 	showErrors = ui->actionShow_Errors;
 	showOther = ui->actionShow_Other;
@@ -1260,9 +1260,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(textDocument, &QTextDocument::contentsChange, this, &MainWindow::onContentsChange);
 	connect(textEdit, &QTextEdit::cursorPositionChanged, [=]() {
 		qDebug() << "lamda textEdit cursorPositionChanged1";
-		if (useRelativeLineNumbers->isChecked() && textEdit->textCursor().blockNumber()+1 != prevLineNumberForRelativity){
-			updateLineNumbers(globalLineCount);
-		}
+		updateLineNumbers(globalLineCount);
 	});
 
 	connect(showWarnings, &QAction::toggled, this, &MainWindow::saveWantedTheme); // down here because they will call saveWantedTheme when being set otherwise
@@ -5771,10 +5769,8 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	
 	if (isNewTextEdit){
 		connect(textEdit, &QTextEdit::cursorPositionChanged, [=]() {
-			qDebug() << "lamda textEdit cursorPositionChanged1";
-			if (useRelativeLineNumbers->isChecked() && textEdit->textCursor().blockNumber()+1 != prevLineNumberForRelativity){
-				updateLineNumbers(globalLineCount);
-			}
+			qDebug() << "lamda textEdit cursorPositionChanged1.1";
+			updateLineNumbers(globalLineCount);
 		});
 		setupCompleter();
 	}
@@ -8440,8 +8436,12 @@ void MainWindow::updateLineNumbers(int count) // good enough
 	
 	QStringList lineNumbers;
 	int numDiffs = differences.length();
+	int lnNum = -1; // this is the line number of the cursor in the linenumbertextedit
+	QTextCursor cursor = textEdit->textCursor();
+	int lineNum = cursor.blockNumber()+1;
 	
 	if (!useRelativeLineNumbers->isChecked()){
+		
 		for (int i = 0; i < numberOfLinesNeeded; i++){
 			int number = topLine+i;
 			if (number > count){
@@ -8455,13 +8455,14 @@ void MainWindow::updateLineNumbers(int count) // good enough
 					addon = " "+differences[number-1][0];
 				}
 				
+				if (number == lineNum) { // have we found the cursor? Then store it.
+					lnNum = i;
+				}
+				
 				lineNumbers << QString(spaces, ' ')+nm+addon;
 			}
 		}
 	}else{
-		QTextCursor cursor = textEdit->textCursor();
-		int lineNum = cursor.blockNumber()+1;
-		
 		for (int i = 0; i < numberOfLinesNeeded; i++){
 			int number = topLine+i;
 			
@@ -8474,8 +8475,9 @@ void MainWindow::updateLineNumbers(int count) // good enough
 				}
 				
 				int value = lineNum-number;
-				if (value == 0){
+				if (value == 0){ // have we found the cursor? Then store it. and also the spaces don't go or whatever
 					lineNumbers << QString::number(lineNum)+addon; // we don't put spaces so it's clearer
+					lnNum = i;
 					continue;
 				}
 				
@@ -8489,6 +8491,31 @@ void MainWindow::updateLineNumbers(int count) // good enough
 	
 	QString text = lineNumbers.join("\n");
 	lineNumberTextEdit->setPlainText(text);
+	
+	auto pallete = lineNumberTextEdit->palette();
+	QColor cur_line_color;
+	pallete.setColor(QPalette::Text, getTintedColor(100, 100, 100));
+	
+	if (darkmode){
+		cur_line_color = getTintedColor(255, 255, 255);
+	}else{
+		cur_line_color = getTintedColor(10, 10, 10);
+	}
+	
+	lineNumberTextEdit->setPalette(pallete);
+	
+	if (lnNum != -1) {
+		auto block = lineNumberTextEdit->document()->findBlockByLineNumber(lnNum);
+		QTextCursor cursor(lineNumberTextEdit->document());
+		
+		if (block.isValid()) {
+			cursor.setPosition(block.position());
+			cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+			QTextCharFormat format;
+			format.setForeground(cur_line_color);
+			cursor.mergeCharFormat(format);
+		}
+	}
 	
 	if (!differences.isEmpty()){
 		QTextCursor cursor(lineNumberTextEdit->document());
@@ -8802,11 +8829,11 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 	globalCols3 = getStringOfColor(color3);
 
 	errMenu.recolor(color2);
-
+	
 	QPalette palette = textEdit->palette();
 	palette.setColor(QPalette::Base, color1);
 	textEdit->setPalette(palette);
-
+	
 	palette = lineNumberTextEdit->palette();
 	palette.setColor(QPalette::Base, color2);
 	lineNumberTextEdit->setPalette(palette);
@@ -8886,8 +8913,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 	fileTabBar->setStyleSheet("QScrollArea { border: none; }");
 }
 
-void MainWindow::changeTheme(bool darkMode)
-{
+void MainWindow::changeTheme(bool darkMode) {
 	qDebug() << "changeTheme";
 
 	for (TabWidget *tab : tabs){
@@ -8907,7 +8933,11 @@ void MainWindow::changeTheme(bool darkMode)
 	QString c245 = getStringOfColor(getTintedColor(245, 245, 245));
 	QString c251 = getStringOfColor(getTintedColor(251, 251, 251));
 	
-	globalColsFullBack = c25;
+	if (darkmode) {
+		globalColsFullBack = c25;
+	}else{
+		globalColsFullBack = c245;
+	}
 	
 	// Dark theme style
 	QString contextMenuSheet = R"(
@@ -9087,6 +9117,8 @@ void MainWindow::changeTheme(bool darkMode)
 	prevTerm1->parentWidget()->layout()->setSpacing(3);
 	prevTerm2->parentWidget()->layout()->setSpacing(3);
 	urlBar->parentWidget()->layout()->setSpacing(3);
+	
+	updateLineNumbers(globalLineCount);
 }
 
 void MainWindow::applyScrollBarStyles(QWidget *widget) {
