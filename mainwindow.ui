@@ -599,6 +599,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="actionUse_Relative_Line_Numbers"/>
     <addaction name="separator"/>
     <addaction name="actionProject_Specific_Settings"/>
+    <addaction name="actionSet_CodeWizard_UUID"/>
    </widget>
    <widget class="QMenu" name="menuFixit">
     <property name="title">
@@ -1353,6 +1354,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionProject_Specific_Settings">
    <property name="text">
     <string>Project Specific Settings</string>
+   </property>
+  </action>
+  <action name="actionSet_CodeWizard_UUID">
+   <property name="text">
+    <string>Set CodeWizard UUID</string>
    </property>
   </action>
  </widget>

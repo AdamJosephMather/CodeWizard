@@ -26,6 +26,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void on_actionSet_CodeWizard_UUID_triggered();
 	QString getProjectSettingsPath();
 	QString getProjectDataFrom(QString file_path, QString key);
 	void setProjectData(QString path, QStringList names, QStringList values);

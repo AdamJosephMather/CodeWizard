@@ -2009,6 +2009,20 @@ void MainWindow::indexFiles(){
 	fillSearchMenu();
 }
 
+void MainWindow::on_actionSet_CodeWizard_UUID_triggered() {
+	QInputDialog dialog;
+	dialog.setFont(textEdit->font());
+	dialog.setWindowTitle("CodeWizard");
+	dialog.setLabelText("UUID?");
+	dialog.setTextValue(CODEWIZARD_UUID);
+	dialog.exec();
+
+	if (dialog.result() == QDialog::Accepted) {
+		CODEWIZARD_UUID = dialog.textValue();
+		saveWantedTheme();
+	}
+}
+
 QString MainWindow::getProjectSettingsPath() {
 	qDebug() << "getProjectSettingsPath";
 	
