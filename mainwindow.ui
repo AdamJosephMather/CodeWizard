@@ -646,6 +646,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="actionVim_Modes"/>
     <addaction name="actionMultiple_Cursors"/>
     <addaction name="actionCommand_Palette"/>
+    <addaction name="actionProject_Settings"/>
    </widget>
    <widget class="QMenu" name="menuLanguage">
     <property name="title">
@@ -1359,6 +1360,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionSet_CodeWizard_UUID">
    <property name="text">
     <string>Set CodeWizard UUID</string>
+   </property>
+  </action>
+  <action name="actionProject_Settings">
+   <property name="text">
+    <string>Project Settings</string>
    </property>
   </action>
  </widget>

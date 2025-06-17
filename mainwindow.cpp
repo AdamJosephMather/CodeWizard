@@ -9547,6 +9547,17 @@ void MainWindow::on_actionKeybindings_triggered(){
   Crtl+/ ---------- Toggle Comment");
 }
 
+void MainWindow::on_actionProject_Settings_triggered() {
+	qDebug() << "on_actionProject_Settings_triggered";
+	
+	openHelpMenu("Project Settings:\n\
+\n\
+CodeWizard now supports project specific build commands and lsp. After opening a project folder (Ctrl+Shift+O), you can go to `Edit->Project Specific Settings`. Then one can write out the commands for the run/build/compile/whatever (tagline) which is specific to that folder, and the command to start the lsp specific to the project. A blank entry for either will go to defaults. CodeWizard will then provide a file in that directory using this name: UUID.cdwzrd, where the UUID is specific to that CodeWizard install, and can be changed under `Edit->Set CodeWizard UUID`\n\
+\n\
+This feature is particularly useful for projects with more specific build steps (c++, c#, js, etc) where it is different from the rest of your projects, and you don't want to change the tagline every time."
+	);
+}
+
 void MainWindow::openMenuWithHTML(QString name, QString html) {
 	qDebug() << "openMenuWithHTML";
 
