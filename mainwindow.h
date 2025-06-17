@@ -26,6 +26,10 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	QString getProjectSettingsPath();
+	QString getProjectDataFrom(QString file_path, QString key);
+	void setProjectData(QString path, QStringList names, QStringList values);
+	void on_actionProject_Specific_Settings_triggered();
 	void toggleDefaultTitleBar(bool show);
 	QColor getTintedColor(int r, int g, int b);
 	QString getStringOfColor(QColor clr);

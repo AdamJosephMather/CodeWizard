@@ -1,0 +1,150 @@
+^C:\USERS\ADAMJ\DOCUMENTS\QTPROJECTS\CODEWIZARD\_DEPS\CMARK-SUBBUILD\CMAKEFILES\44A6A3DA793C0028B7177DCD93B2AE69\CMARK-POPULATE-MKDIR.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -Dcfgdir=/Debug -P C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/cmark-populate-prefix/tmp/cmark-populate-mkdirs.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/cmark-populate-prefix/src/cmark-populate-stamp/Debug/cmark-populate-mkdir
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADAMJ\DOCUMENTS\QTPROJECTS\CODEWIZARD\_DEPS\CMARK-SUBBUILD\CMAKEFILES\44A6A3DA793C0028B7177DCD93B2AE69\CMARK-POPULATE-DOWNLOAD.RULE
+setlocal
+cd C:\Users\adamj\Documents\QtProjects\CodeWizard\_deps
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/cmark-populate-prefix/tmp/cmark-populate-gitclone.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/cmark-populate-prefix/src/cmark-populate-stamp/Debug/cmark-populate-download
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADAMJ\DOCUMENTS\QTPROJECTS\CODEWIZARD\_DEPS\CMARK-SUBBUILD\CMAKEFILES\44A6A3DA793C0028B7177DCD93B2AE69\CMARK-POPULATE-UPDATE.RULE
+setlocal
+cd C:\Users\adamj\Documents\QtProjects\CodeWizard\_deps\cmark-src
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -Dcan_fetch=YES -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/cmark-populate-prefix/tmp/cmark-populate-gitupdate.cmake
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADAMJ\DOCUMENTS\QTPROJECTS\CODEWIZARD\_DEPS\CMARK-SUBBUILD\CMAKEFILES\44A6A3DA793C0028B7177DCD93B2AE69\CMARK-POPULATE-PATCH.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/cmark-populate-prefix/src/cmark-populate-stamp/Debug/cmark-populate-patch
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADAMJ\DOCUMENTS\QTPROJECTS\CODEWIZARD\_DEPS\CMARK-SUBBUILD\CMAKEFILES\44A6A3DA793C0028B7177DCD93B2AE69\CMARK-POPULATE-CONFIGURE.RULE
+setlocal
+cd C:\Users\adamj\Documents\QtProjects\CodeWizard\_deps\cmark-build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/cmark-populate-prefix/src/cmark-populate-stamp/Debug/cmark-populate-configure
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADAMJ\DOCUMENTS\QTPROJECTS\CODEWIZARD\_DEPS\CMARK-SUBBUILD\CMAKEFILES\44A6A3DA793C0028B7177DCD93B2AE69\CMARK-POPULATE-BUILD.RULE
+setlocal
+cd C:\Users\adamj\Documents\QtProjects\CodeWizard\_deps\cmark-build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/cmark-populate-prefix/src/cmark-populate-stamp/Debug/cmark-populate-build
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADAMJ\DOCUMENTS\QTPROJECTS\CODEWIZARD\_DEPS\CMARK-SUBBUILD\CMAKEFILES\44A6A3DA793C0028B7177DCD93B2AE69\CMARK-POPULATE-INSTALL.RULE
+setlocal
+cd C:\Users\adamj\Documents\QtProjects\CodeWizard\_deps\cmark-build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/cmark-populate-prefix/src/cmark-populate-stamp/Debug/cmark-populate-install
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADAMJ\DOCUMENTS\QTPROJECTS\CODEWIZARD\_DEPS\CMARK-SUBBUILD\CMAKEFILES\44A6A3DA793C0028B7177DCD93B2AE69\CMARK-POPULATE-TEST.RULE
+setlocal
+cd C:\Users\adamj\Documents\QtProjects\CodeWizard\_deps\cmark-build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/cmark-populate-prefix/src/cmark-populate-stamp/Debug/cmark-populate-test
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADAMJ\DOCUMENTS\QTPROJECTS\CODEWIZARD\_DEPS\CMARK-SUBBUILD\CMAKEFILES\39FD52A535AE9530AE20E9BE03DFA611\CMARK-POPULATE-COMPLETE.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/Debug
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/Debug/cmark-populate-complete
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/cmark-populate-prefix/src/cmark-populate-stamp/Debug/cmark-populate-done
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADAMJ\DOCUMENTS\QTPROJECTS\CODEWIZARD\_DEPS\CMARK-SUBBUILD\CMAKEFILES\9D0B477876BF510265651B309F91EF60\CMARK-POPULATE.RULE
+setlocal
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADAMJ\DOCUMENTS\QTPROJECTS\CODEWIZARD\_DEPS\CMARK-SUBBUILD\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild -BC:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild --check-stamp-file C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

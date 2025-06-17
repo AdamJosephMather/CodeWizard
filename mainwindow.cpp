@@ -85,7 +85,7 @@ QString fileName = "";
 QString defWindowTitle = "New File - CodeWizard V"+versionNumber;
 QString windowName = defWindowTitle;
 MyTextEdit *textEdit;
-QTextEdit *lineEdit;
+QTextEdit *taglineEdit;
 MyTextEdit *lineNumberTextEdit;
 MyTextEdit *findTextEdit;
 MyTextEdit *replaceTextEdit;
@@ -183,6 +183,9 @@ QString defCTag = "call \"C:\\Program Files\\Microsoft Visual Studio\\[VERSION_N
 QString defCobolTag = "cobc -x \"[filename]\"";
 QString defCssTag = "\"[filenameWoutExt].html\"";
 
+QString proj_tagline = "";
+QString proj_lspline = "";
+
 QString pythonTag = defPythonTag;
 QString rustTag = defRustTag;
 QString WGSLTag = defWGSLTag;
@@ -275,6 +278,8 @@ QAction *useWebView;
 QAction *useFileTree;
 QAction *useFileTreeIfFullscreen;
 QFileSystemModel *fileModel;
+
+QString CODEWIZARD_UUID;
 
 QTextEdit *findBar;
 QTextEdit *replaceBar;
@@ -810,7 +815,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	fileTreeContextMenu = new QMenu(this);
 
-	lineEdit = ui->textEdit_5;
+	taglineEdit = ui->textEdit_5;
 
 	textEdit = ui->textEdit;
 	groq->setTextEdit(textEdit);
@@ -1171,7 +1176,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	findTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	replaceTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	lineEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	taglineEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	terminalInputLine->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	terminalInputLineHORZ->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
@@ -1193,7 +1198,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	darkmode = thm;
 	changeOnlyEditsTheme(thm);
 
-	lineEdit->setPlainText(pythonTag);
+	taglineEdit->setPlainText(pythonTag);
 
 	QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", QSettings::NativeFormat);
 	bool settingsThm = settings.value("AppsUseLightTheme").toInt() == 0;
@@ -1208,7 +1213,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 	connect(findTextEdit, &QTextEdit::textChanged, this, &MainWindow::findTextEditChanged);
 
-	connect(lineEdit, &QTextEdit::textChanged, this, &MainWindow::saveWantedTheme);
+	connect(taglineEdit, &QTextEdit::textChanged, this, &MainWindow::saveWantedTheme);
 
 	if (QOperatingSystemVersion::currentType() == QOperatingSystemVersion::Windows) {
 		#ifdef _WIN32
@@ -1989,6 +1994,117 @@ void MainWindow::indexFiles(){
 	
 	narrowDownSearchFiles();
 	fillSearchMenu();
+}
+
+QString MainWindow::getProjectSettingsPath() {
+	qDebug() << "getProjectSettingsPath";
+	
+	if (!fileModel) {
+		return "";
+	}
+	
+	QString starterpath = fileModel->rootPath();
+	QString fileName = CODEWIZARD_UUID+".cdwzrd";
+	QString joined = starterpath + QDir::separator() + fileName;
+	return joined;
+}
+
+QString MainWindow::getProjectDataFrom(QString file_path, QString key) {
+	qDebug() << "getProjectDataFrom";
+	
+	if (file_path == "") {
+		return "";
+	}
+	
+	QFile file(file_path);
+	if (file.open(QFile::ReadOnly | QFile::Text)) {
+		QTextStream in(&file);
+		QString contents = in.readAll();
+		file.close();
+		
+		QStringList data = contents.split("\n");
+		for (QString line : data) {
+			if (line.startsWith(key + ": ")) {
+				return line.split(": ")[1].replace("\\n", "\n");
+			}
+		}
+	}
+	
+	return "";
+}
+
+void MainWindow::setProjectData(QString path, QStringList names, QStringList values) {
+	qDebug() << "setProjectData";
+	
+	if (path == "") {
+		return;
+	}
+	
+	QFile file(path);
+	if (file.open(QFile::WriteOnly | QFile::Text)) {
+		QTextStream out(&file);
+		for (int i = 0; i < names.size(); i++) {
+			out << names[i] + ": " + values[i].replace("\n", "\\n") << "\n";
+		}
+		file.close();
+	} else {
+		qDebug() << "Error writing to file: " << path;
+	}
+}
+
+void MainWindow::on_actionProject_Specific_Settings_triggered() {
+	qDebug() << "actionProject_Specific_Settings_triggered";
+	
+	QString project_settings_path = getProjectSettingsPath();
+	
+	QString current_tagline_proj = getProjectDataFrom(project_settings_path, "tagline");
+	QString current_lspline_proj = getProjectDataFrom(project_settings_path, "lspline");
+	
+	QDialog diag = QDialog(this);
+	QVBoxLayout *layout = new QVBoxLayout(this);
+	
+	// tag line
+	QLabel *label = new QLabel(this);
+	label->setText("Tagline (build command - empty is default):");
+	label->setFont(textEdit->font());
+	
+	QTextEdit *tagline_textedit = new QTextEdit(this);
+	tagline_textedit->setPlaceholderText("");
+	tagline_textedit->setText(current_tagline_proj);
+	tagline_textedit->setFont(textEdit->font());
+	
+	layout->addWidget(label);
+	layout->addWidget(tagline_textedit);
+	
+	// lsp
+	QLabel *label2 = new QLabel(this);
+	label2->setText("LSP (start command - empty is default):");
+	label2->setFont(textEdit->font());
+	
+	QTextEdit *lsp_textedit = new QTextEdit(this);
+	lsp_textedit->setPlaceholderText("");
+	lsp_textedit->setText(current_lspline_proj);
+	lsp_textedit->setFont(textEdit->font());
+	
+	layout->addWidget(label2);
+	layout->addWidget(lsp_textedit);
+	
+	// Create a QPushButton
+	QPushButton *saveButton = new QPushButton("Save Project Settings", this);
+	saveButton->setFont(textEdit->font());
+	
+	connect(saveButton, &QPushButton::clicked, this, [this, tagline_textedit, lsp_textedit, project_settings_path](){
+		qDebug() << "saveButton lambda called";
+		
+		setProjectData(project_settings_path, QStringList() << "tagline" << "lspline", QStringList() << tagline_textedit->toPlainText() << lsp_textedit->toPlainText());
+	});
+	
+	wantedTheme();
+	
+	layout->addWidget(saveButton);
+	
+	diag.setLayout(layout);
+	diag.exec();
 }
 
 void MainWindow::runSearchItem(){
@@ -4136,6 +4252,12 @@ void MainWindow::setupLSP(QString oldFile)
 	}else if (currentLang.name == "Css"){
 		lspPath = cssLSP;
 	}
+	
+	QString settings_path = getProjectSettingsPath();
+	QString proj_lsp = getProjectDataFrom(settings_path, "lspline");
+	if (proj_lsp != "") {
+		lspPath = proj_lsp;
+	}
 
 	if (client && client->lspPath == lspPath){
 		client->closeDocument(oldFile);
@@ -4623,7 +4745,7 @@ void MainWindow::updateFonts()
 
 	lineNumberTextEdit->setFont(font);
 
-	lineEdit->setFont(font);
+	taglineEdit->setFont(font);
 
 	int charCount = globalDigits;
 	int width = metrics.horizontalAdvance('M') * charCount+15;
@@ -4632,7 +4754,7 @@ void MainWindow::updateFonts()
 	lineNumberTextEdit->setMaximumWidth(width);
 	lineNumberTextEdit->setFixedWidth(width);
 
-	lineEdit->setMaximumHeight(adjustedHeight*2);
+	taglineEdit->setMaximumHeight(adjustedHeight*2);
 
 	findButton->setFont(font);
 	nextButton->setFont(font);
@@ -4845,37 +4967,37 @@ void MainWindow::saveWantedTheme()
 	qDebug() << "saveWantedTheme";
 
 	if (currentLang.name == "Python"){
-		pythonTag = lineEdit->toPlainText();
+		pythonTag = taglineEdit->toPlainText();
 	}else if (currentLang.name == "Rust"){
-		rustTag = lineEdit->toPlainText();
+		rustTag = taglineEdit->toPlainText();
 	}else if (currentLang.name == "WGSL"){
-		WGSLTag = lineEdit->toPlainText();
+		WGSLTag = taglineEdit->toPlainText();
 	}else if (currentLang.name == "GLSL"){
-		WGSLTag = lineEdit->toPlainText();
+		WGSLTag = taglineEdit->toPlainText();
 	}else if (currentLang.name == "C++"){
-		CppTag = lineEdit->toPlainText();
+		CppTag = taglineEdit->toPlainText();
 	}else if (currentLang.name == "Txt"){
-		txtTag = lineEdit->toPlainText();
+		txtTag = taglineEdit->toPlainText();
 	}else if (currentLang.name == "JS"){
-		jsTag = lineEdit->toPlainText();
+		jsTag = taglineEdit->toPlainText();
 	}else if (currentLang.name == "TS"){
-		tsTag = lineEdit->toPlainText();
+		tsTag = taglineEdit->toPlainText();
 	}else if (currentLang.name == "HTML"){
-		HTMLTag = lineEdit->toPlainText();
+		HTMLTag = taglineEdit->toPlainText();
 	}else if (currentLang.name == "Go"){
-		goTag = lineEdit->toPlainText();
+		goTag = taglineEdit->toPlainText();
 	}else if (currentLang.name == "Lua"){
-		luaTag = lineEdit->toPlainText();
+		luaTag = taglineEdit->toPlainText();
 	}else if (currentLang.name == "C#"){
-		csharpTag = lineEdit->toPlainText();
+		csharpTag = taglineEdit->toPlainText();
 	}else if (currentLang.name == "Java"){
-		javaTag = lineEdit->toPlainText();
+		javaTag = taglineEdit->toPlainText();
 	}else if (currentLang.name == "C"){
-		cTag = lineEdit->toPlainText();
+		cTag = taglineEdit->toPlainText();
 	}else if (currentLang.name == "Cobol"){
-		cobolTag = lineEdit->toPlainText();
+		cobolTag = taglineEdit->toPlainText();
 	}else if (currentLang.name == "Css"){
-		cssTag = lineEdit->toPlainText();
+		cssTag = taglineEdit->toPlainText();
 	}
 
 	QSettings settings("FoundationTechnologies", "CodeWizard");
@@ -4964,6 +5086,7 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("darkModeEnabled", darkmode);
 	settings.setValue("currentFont", currentFont);
 	settings.setValue("tabWidth", tabWidth);
+	settings.setValue("UUID", CODEWIZARD_UUID);
 	settings.setValue("codewizard_version", versionNumber);
 }
 
@@ -4998,17 +5121,18 @@ int MainWindow::compareVersionNumbers(QString vnum1, QString vnum2){
 	return 0;
 }
 
-bool MainWindow::wantedTheme()
-{
+bool MainWindow::wantedTheme() {
 	qDebug() << "wantedTheme";
 
 	QSettings settings("FoundationTechnologies", "CodeWizard");
 	bool exists = settings.value("variablesSet", false).toBool();
-
+	
+	CODEWIZARD_UUID = settings.value( "UUID", QUuid::createUuid().toString() ).toString();
+	
 	if (exists){
 		QString existingVersion = settings.value("codewizard_version", "prior 6.0.0").toString();
 
-		if (compareVersionNumbers(existingVersion, "5.9.9") > 0){ // more than v599
+		if (compareVersionNumbers(existingVersion, "5.9.9") > 0){ // more than v5.9.9
 			pythonTag = settings.value("pythonTag", defPythonTag).toString();
 			rustTag = settings.value("rustTag", defRustTag).toString();
 			WGSLTag = settings.value("WGSLTag", defWGSLTag).toString();
@@ -5026,7 +5150,7 @@ bool MainWindow::wantedTheme()
 			cobolTag = settings.value("cobolTag", defCobolTag).toString();
 			cssTag = settings.value("cssTag", defCssTag).toString();
 		}
-		if (compareVersionNumbers(existingVersion, "8.6.3") < 0){ // less than v863
+		if (compareVersionNumbers(existingVersion, "8.6.3") < 0){ // less than v8.6.3
 			CppTag = defCppTag;
 			cTag = defCTag;
 		}
@@ -5047,6 +5171,11 @@ bool MainWindow::wantedTheme()
 		cLSP = settings.value("cLSP", "").toString();
 		cobolLSP = settings.value("cobolLSP", "").toString();
 		cssLSP = settings.value("cssLSP", "").toString();
+		
+		QString proj_set_path = getProjectSettingsPath();
+		proj_tagline = getProjectDataFrom(proj_set_path, "tagline");
+		proj_lspline = getProjectDataFrom(proj_set_path, "lspline");
+		
 
 		groqApiKey = settings.value("groqApiKey", "").toString();
 		groq->setApiKey(groqApiKey);
@@ -5873,10 +6002,10 @@ void MainWindow::setLangOffFilename(QString fileName, bool rehigh){
 
 	if (isOpeningFile){
 		currentLang = txtLang;
-		lineEdit->setPlainText(txtTag);
+		taglineEdit->setPlainText(txtTag);
 	}else{
 		currentLang = pythonLang;
-		lineEdit->setPlainText(pythonTag);
+		taglineEdit->setPlainText(pythonTag);
 	}
 	updateDefaultWordLists();
 }
@@ -5885,37 +6014,37 @@ void MainWindow::updateTagLine(){
 	qDebug() << "updateTagLine";
 
 	if (currentLang.name == "Python"){
-		lineEdit->setPlainText(pythonTag);
+		taglineEdit->setPlainText(pythonTag);
 	}else if (currentLang.name == "Rust"){
-		lineEdit->setPlainText(rustTag);
+		taglineEdit->setPlainText(rustTag);
 	}else if (currentLang.name == "WGSL"){
-		lineEdit->setPlainText(WGSLTag);
+		taglineEdit->setPlainText(WGSLTag);
 	}else if (currentLang.name == "GLSL"){
-		lineEdit->setPlainText(GLSLTag);
+		taglineEdit->setPlainText(GLSLTag);
 	}else if (currentLang.name == "C++"){
-		lineEdit->setPlainText(CppTag);
+		taglineEdit->setPlainText(CppTag);
 	}else if (currentLang.name == "Txt"){
-		lineEdit->setPlainText(txtTag);
+		taglineEdit->setPlainText(txtTag);
 	}else if (currentLang.name == "JS"){
-		lineEdit->setPlainText(jsTag);
+		taglineEdit->setPlainText(jsTag);
 	}else if (currentLang.name == "TS"){
-		lineEdit->setPlainText(tsTag);
+		taglineEdit->setPlainText(tsTag);
 	}else if (currentLang.name == "HTML"){
-		lineEdit->setPlainText(HTMLTag);
+		taglineEdit->setPlainText(HTMLTag);
 	}else if (currentLang.name == "Go"){
-		lineEdit->setPlainText(goTag);
+		taglineEdit->setPlainText(goTag);
 	}else if (currentLang.name == "Lua"){
-		lineEdit->setPlainText(luaTag);
+		taglineEdit->setPlainText(luaTag);
 	}else if (currentLang.name == "C#"){
-		lineEdit->setPlainText(csharpTag);
+		taglineEdit->setPlainText(csharpTag);
 	}else if (currentLang.name == "Java"){
-		lineEdit->setPlainText(javaTag);
+		taglineEdit->setPlainText(javaTag);
 	}else if (currentLang.name == "C"){
-		lineEdit->setPlainText(cTag);
+		taglineEdit->setPlainText(cTag);
 	}else if (currentLang.name == "Cobol"){
-		lineEdit->setPlainText(cobolTag);
+		taglineEdit->setPlainText(cobolTag);
 	}else if (currentLang.name == "Css"){
-		lineEdit->setPlainText(cssTag);
+		taglineEdit->setPlainText(cssTag);
 	}
 }
 
@@ -6172,6 +6301,12 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 			intermediateTag = cobolTag;
 		} else if (currentLang.name == "Css") {
 			intermediateTag = cssTag;
+		}
+		
+		QString proj_set_path = getProjectSettingsPath();
+		QString proj_tagline = getProjectDataFrom(proj_set_path, "tagline");
+		if (proj_tagline != "") {
+			intermediateTag = proj_tagline;
 		}
 
 		intermediateTag.replace("[filename]", fileNameName).replace("[filenameWoutExt]", fileNameName.split('.')[0]);
@@ -8882,9 +9017,9 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 	palette.setColor(QPalette::Base, color2);
 	findTextEdit->setPalette(palette);
 
-	palette = lineEdit->palette();
+	palette = taglineEdit->palette();
 	palette.setColor(QPalette::Base, color2);
-	lineEdit->setPalette(palette);
+	taglineEdit->setPalette(palette);
 	
 	palette = searchBar->palette();
 	palette.setColor(QPalette::Base, color2);
@@ -9444,7 +9579,7 @@ void MainWindow::on_actionPython_2_triggered(){
 	qDebug() << "on_actionPython_2_triggered";
 
 	currentLang = pythonLang;
-	lineEdit->setPlainText(pythonTag);
+	taglineEdit->setPlainText(pythonTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
@@ -9453,7 +9588,7 @@ void MainWindow::on_actionCss_triggered(){
 	qDebug() << "on_actionCss_triggered";
 
 	currentLang = cssLang;
-	lineEdit->setPlainText(cssTag);
+	taglineEdit->setPlainText(cssTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
@@ -9462,7 +9597,7 @@ void MainWindow::on_actionC_triggered(){
 	qDebug() << "on_actionC_triggered";
 
 	currentLang = cppLang;
-	lineEdit->setPlainText(CppTag);
+	taglineEdit->setPlainText(CppTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
@@ -9471,7 +9606,7 @@ void MainWindow::on_actionCobol_triggered(){
 	qDebug() << "on_actionCobol_triggered";
 
 	currentLang = cobolLang;
-	lineEdit->setPlainText(cobolTag);
+	taglineEdit->setPlainText(cobolTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
@@ -9480,7 +9615,7 @@ void MainWindow::on_actionWGSL_triggered(){
 	qDebug() << "on_actionWGSL_triggered";
 
 	currentLang = WGSLLang;
-	lineEdit->setPlainText(WGSLTag);
+	taglineEdit->setPlainText(WGSLTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
@@ -9489,7 +9624,7 @@ void MainWindow::on_actionRust_triggered(){
 	qDebug() << "on_actionRust_triggered";
 
 	currentLang = rustLang;
-	lineEdit->setPlainText(rustTag);
+	taglineEdit->setPlainText(rustTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
@@ -9498,7 +9633,7 @@ void MainWindow::on_actionHTML_triggered(){
 	qDebug() << "on_actionHTML_triggered";
 
 	currentLang = HTMLLang;
-	lineEdit->setPlainText(HTMLTag);
+	taglineEdit->setPlainText(HTMLTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
@@ -9507,7 +9642,7 @@ void MainWindow::on_actionGo_triggered(){
 	qDebug() << "on_actionGo_triggered";
 
 	currentLang = goLang;
-	lineEdit->setPlainText(goTag);
+	taglineEdit->setPlainText(goTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
@@ -9516,7 +9651,7 @@ void MainWindow::on_actionLua_triggered(){
 	qDebug() << "on_actionLua_triggered";
 
 	currentLang = luaLang;
-	lineEdit->setPlainText(luaTag);
+	taglineEdit->setPlainText(luaTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
@@ -9525,7 +9660,7 @@ void MainWindow::on_actionPlaintext_triggered(){
 	qDebug() << "on_actionPlaintext_triggered";
 
 	currentLang = txtLang;
-	lineEdit->setPlainText("");
+	taglineEdit->setPlainText("");
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
@@ -9534,7 +9669,7 @@ void MainWindow::on_actionJavaScript_triggered(){
 	qDebug() << "on_actionJavaScript_triggered";
 
 	currentLang = jsLang;
-	lineEdit->setPlainText(jsTag);
+	taglineEdit->setPlainText(jsTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
@@ -9543,7 +9678,7 @@ void MainWindow::on_actionTypeScript_triggered(){
 	qDebug() << "on_actionTypeScript_triggered";
 
 	currentLang = tsLang;
-	lineEdit->setPlainText(tsTag);
+	taglineEdit->setPlainText(tsTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
@@ -9552,7 +9687,7 @@ void MainWindow::on_actionC_2_triggered(){
 	qDebug() << "on_actionC_2_triggered";
 
 	currentLang = csharpLang;
-	lineEdit->setPlainText(csharpTag);
+	taglineEdit->setPlainText(csharpTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
@@ -9561,7 +9696,7 @@ void MainWindow::on_actionC_3_triggered(){
 	qDebug() << "on_actionC_3_triggered";
 
 	currentLang = cLang;
-	lineEdit->setPlainText(cTag);
+	taglineEdit->setPlainText(cTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
@@ -9570,7 +9705,7 @@ void MainWindow::on_actionGLSL_triggered(){
 	qDebug() << "on_actionGLSL_triggered";
 
 	currentLang = GLSLLang;
-	lineEdit->setPlainText(GLSLTag);
+	taglineEdit->setPlainText(GLSLTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
@@ -9579,7 +9714,7 @@ void MainWindow::on_actionJava_triggered(){
 	qDebug() << "on_actionJava_triggered";
 
 	currentLang = javaLang;
-	lineEdit->setPlainText(javaTag);
+	taglineEdit->setPlainText(javaTag);
 	updateDefaultWordLists();
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }

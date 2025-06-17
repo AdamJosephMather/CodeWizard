@@ -1,0 +1,10 @@
+^C:\USERS\ADAMJ\DOCUMENTS\QTPROJECTS\CODEWIZARD\_DEPS\CMARK-SUBBUILD\CMAKEFILES\9D0B477876BF510265651B309F91EF60\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild -BC:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/cmark-populate.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/cmark-populate"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/9d0b477876bf510265651b309f91ef60/cmark-populate.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/39fd52a535ae9530ae20e9be03dfa611/cmark-populate-complete.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/44a6a3da793c0028b7177dcd93b2ae69/cmark-populate-build.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/44a6a3da793c0028b7177dcd93b2ae69/cmark-populate-configure.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/44a6a3da793c0028b7177dcd93b2ae69/cmark-populate-download.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/44a6a3da793c0028b7177dcd93b2ae69/cmark-populate-install.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/44a6a3da793c0028b7177dcd93b2ae69/cmark-populate-mkdir.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/44a6a3da793c0028b7177dcd93b2ae69/cmark-populate-patch.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/44a6a3da793c0028b7177dcd93b2ae69/cmark-populate-test.rule"
+		},
+		{
+			"file" : "C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/44a6a3da793c0028b7177dcd93b2ae69/cmark-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"cmark-populate"
+		],
+		"name" : "cmark-populate"
+	}
+}

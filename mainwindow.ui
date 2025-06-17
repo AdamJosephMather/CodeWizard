@@ -58,7 +58,7 @@
            <x>0</x>
            <y>0</y>
            <width>1286</width>
-           <height>68</height>
+           <height>49</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -507,7 +507,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>0</x>
      <y>0</y>
      <width>1290</width>
-     <height>21</height>
+     <height>17</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -597,6 +597,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="actionUse_File_Tabs"/>
     <addaction name="actionUse_Web_View_Crtl_K"/>
     <addaction name="actionUse_Relative_Line_Numbers"/>
+    <addaction name="separator"/>
+    <addaction name="actionProject_Specific_Settings"/>
    </widget>
    <widget class="QMenu" name="menuFixit">
     <property name="title">
@@ -1346,6 +1348,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </property>
    <property name="text">
     <string>Use Custom Title Bar If Fullscreen</string>
+   </property>
+  </action>
+  <action name="actionProject_Specific_Settings">
+   <property name="text">
+    <string>Project Specific Settings</string>
    </property>
   </action>
  </widget>

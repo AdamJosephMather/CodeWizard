@@ -1,0 +1,3 @@
+C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/cmark-populate.dir
+C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/ALL_BUILD.dir
+C:/Users/adamj/Documents/QtProjects/CodeWizard/_deps/cmark-subbuild/CMakeFiles/ZERO_CHECK.dir
