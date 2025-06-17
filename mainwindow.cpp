@@ -438,8 +438,7 @@ bool firstStartup;
 
 QStringList previousFiles;
 
-MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
-{
+MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
 	qDebug() << "MainWindow";
 	
 	firstStartup = true;
@@ -463,6 +462,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	searchBar->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	searchBar->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	searchBar->setPlaceholderText("New File");
+	searchBar->setPlainText(searchBar->placeholderText());
+	searchBar->setAlignment(Qt::AlignCenter);
 	
 	searchMenu = new QListWidget(this);
 	searchMenu->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -478,11 +479,14 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		if (isFocused){
 			indexFiles();
 			searchMenu->show();
+			searchBar->setPlainText("");
+			searchBar->setAlignment(Qt::AlignLeft);
 		}else{
 			QWidget* focusedWidget = QApplication::focusWidget();
 			qDebug() << focusedWidget;
 			if (focusedWidget != searchMenu) {
-				searchBar->setPlainText("");
+				searchBar->setPlainText(searchBar->placeholderText());
+				searchBar->setAlignment(Qt::AlignCenter);
 				searchMenu->hide();
 			}
 		}
@@ -1443,6 +1447,12 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 void MainWindow::repositionSearchBar() {
 	qDebug() << "repositionTextEdit";
 	
+	if (searchBar->hasFocus()) {
+		searchBar->setAlignment(Qt::AlignLeft);
+	}else {
+		searchBar->setAlignment(Qt::AlignCenter);
+	}
+	
 	QMenuBar *bar = menuBar();
 	
 	QAction *lastAction = bar->actions().last();
@@ -1513,6 +1523,7 @@ void MainWindow::onSearchItemClicked(QListWidgetItem *item){
 	qDebug() << selectedSearchFile;
 	selectedSearchFile = searchMenu->row(item);
 	qDebug() << selectedSearchFile;
+	searchBar->setAlignment(Qt::AlignCenter);
 	searchMenu->hide();
 	
 	runSearchItem();
@@ -1938,6 +1949,8 @@ void MainWindow::indexFiles(){
 	
 	searchMenu->clear();
 	searchMenu->show();
+	searchBar->setPlainText("");
+	searchBar->setAlignment(Qt::AlignLeft);
 	
 	bool notDoneAdding = true;
 
@@ -3052,6 +3065,7 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 
 	fileName = "";
 	searchBar->setPlaceholderText("Comparison");
+	searchBar->setPlainText(searchBar->placeholderText());
 
 	isOpeningFile = true;
 
@@ -5834,6 +5848,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 
 	windowName = fileNameName+" - CodeWizard V"+versionNumber+" - "+fileName;
 	searchBar->setPlaceholderText(fileNameName);
+	searchBar->setPlainText(searchBar->placeholderText());
 
 	QTextStream in(&file);
 	QString fileContent = in.readAll();
@@ -8629,12 +8644,13 @@ void MainWindow::updateLineNumbers(int count) // good enough
 	
 	auto pallete = lineNumberTextEdit->palette();
 	QColor cur_line_color;
-	pallete.setColor(QPalette::Text, getTintedColor(100, 100, 100));
 	
 	if (darkmode){
+		pallete.setColor(QPalette::Text, getTintedColor(100, 100, 100));
 		cur_line_color = getTintedColor(255, 255, 255);
 	}else{
-		cur_line_color = getTintedColor(10, 10, 10);
+		cur_line_color = getTintedColor(30, 30, 30);
+	pallete.setColor(QPalette::Text, getTintedColor(150, 150, 150));
 	}
 	
 	lineNumberTextEdit->setPalette(pallete);
@@ -8903,16 +8919,16 @@ void MainWindow::changeHighlightColors(bool darkmode){
 	qDebug() << "changeHighlightColors";
 
 	QPalette lightPalette = qApp->palette();
-
+	
 	if (darkmode){
-		lightPalette.setColor(QPalette::Inactive, QPalette::Highlight, QColor("#FFFFFF"));
+		lightPalette.setColor(QPalette::Inactive, QPalette::Highlight, getTintedColor(255, 255, 255));
 		lightPalette.setColor(QPalette::Inactive, QPalette::HighlightedText, QColor("#000000"));
-		lightPalette.setColor(QPalette::Active, QPalette::Highlight, QColor("#FFFFFF"));
+		lightPalette.setColor(QPalette::Active, QPalette::Highlight, getTintedColor(255, 255, 255));
 		lightPalette.setColor(QPalette::Active, QPalette::HighlightedText, QColor("#000000"));
 	}else{
-		lightPalette.setColor(QPalette::Inactive, QPalette::Highlight, QColor("#000000"));
+		lightPalette.setColor(QPalette::Inactive, QPalette::Highlight, getTintedColor(20, 20, 20));
 		lightPalette.setColor(QPalette::Inactive, QPalette::HighlightedText, QColor("#FFFFFF"));
-		lightPalette.setColor(QPalette::Active, QPalette::Highlight, QColor("#000000"));
+		lightPalette.setColor(QPalette::Active, QPalette::Highlight, getTintedColor(20, 20, 20));
 		lightPalette.setColor(QPalette::Active, QPalette::HighlightedText, QColor("#FFFFFF"));
 	}
 
@@ -8943,7 +8959,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		globalColsHover = getStringOfColor(colHover);
 		globalColsMoreThanHover = getStringOfColor(colHoverMore);
 		globalColsPressed = getStringOfColor(colPressed);
-		globalColsText = "rgb(255, 255, 255)";
+		globalColsText = getStringOfColor(getTintedColor(255, 255, 255));
 	} else {
 		color1 = getTintedColor(230, 230, 230);
 		color2 = getTintedColor(245, 245, 245);
@@ -8956,7 +8972,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		globalColsHover = getStringOfColor(colHover);
 		globalColsMoreThanHover = getStringOfColor(colHoverMore);
 		globalColsPressed = getStringOfColor(colPressed);
-		globalColsText = "rgb(0, 0, 0)";
+		globalColsText = getStringOfColor(getTintedColor(20, 20, 20));
 	}
 	
 	globalCols1 = getStringOfColor(color1);
@@ -9067,6 +9083,7 @@ void MainWindow::changeTheme(bool darkMode) {
 	QString c200 = getStringOfColor(getTintedColor(200, 200, 200));
 	QString c245 = getStringOfColor(getTintedColor(245, 245, 245));
 	QString c251 = getStringOfColor(getTintedColor(251, 251, 251));
+	QString c255 = getStringOfColor(getTintedColor(251, 251, 251));
 	
 	if (darkmode) {
 		globalColsFullBack = c25;
@@ -9078,7 +9095,7 @@ void MainWindow::changeTheme(bool darkMode) {
 	QString contextMenuSheet = R"(
 		QMenu {
 			background-color: )"+c25+R"(;
-			color: white;
+			color: )"+c255+R"(;
 			border: 1px solid )"+c45+R"(;
 			border-radius: 8px;
 			padding: 2px;
@@ -9086,7 +9103,7 @@ void MainWindow::changeTheme(bool darkMode) {
 
 		QMenu::item {
 			background-color: transparent;
-			color: white;
+			color: )"+c255+R"(;
 			padding: 3px 3px;
 			margin: 1px 1px;
 			border-radius: 4px;
@@ -9094,12 +9111,12 @@ void MainWindow::changeTheme(bool darkMode) {
 
 		QMenu::item:selected {
 			background-color: )"+c45+R"(;
-			color: white;
+			color: )"+c255+R"(;
 		}
 
 		QMenu::separator {
 			height: 1px;
-			background-color: rgb(255, 255, 255);
+			background-color: )"+c255+R"(;
 			margin: 2px 4px;
 		}
 	)";
@@ -9108,7 +9125,7 @@ void MainWindow::changeTheme(bool darkMode) {
 	QString contextMenuLightSheet = R"(
 		QMenu {
 			background-color: )"+c245+R"(;
-			color: "+c40+";
+			color: )"+c40+R"(;
 			border: 1px solid )"+c220+R"(;
 			border-radius: 8px;
 			padding: 2px;
@@ -9124,12 +9141,12 @@ void MainWindow::changeTheme(bool darkMode) {
 
 		QMenu::item:selected {
 			background-color: )"+c230+R"(;
-			color: rgb(0, 0, 0);
+			color: )"+c20+R"(;
 		}
 
 		QMenu::separator {
 			height: 1px;
-			background-color: rgb(0, 0, 0);
+			background-color: )"+c20+R"(;
 			margin: 2px 4px;
 		}
 	)";
@@ -9138,38 +9155,33 @@ void MainWindow::changeTheme(bool darkMode) {
 	
 	if (darkMode) {
 		QPalette lightPalette = qApp->palette();
-
-		lightPalette.setColor(QPalette::Inactive, QPalette::Highlight, QColor("#FFFFFF"));
-		lightPalette.setColor(QPalette::Inactive, QPalette::HighlightedText, QColor("#000000"));
-		lightPalette.setColor(QPalette::Active, QPalette::Highlight, QColor("#FFFFFF"));
-		lightPalette.setColor(QPalette::Active, QPalette::HighlightedText, QColor("#000000"));
-
-		lightPalette.setColor(QPalette::Window, getTintedColor(25, 25, 25));
-		lightPalette.setColor(QPalette::WindowText, Qt::white);
-		lightPalette.setColor(QPalette::Base, getTintedColor(45, 45, 45));
-		lightPalette.setColor(QPalette::ButtonText, Qt::white);
-		lightPalette.setColor(QPalette::Text, Qt::white);
+		
+		lightPalette.setColor(QPalette::Window,        getTintedColor(25, 25, 25));
+		lightPalette.setColor(QPalette::WindowText,    getTintedColor(255, 255, 255));
+		lightPalette.setColor(QPalette::Base,          getTintedColor(45, 45, 45));
+		lightPalette.setColor(QPalette::ButtonText,    getTintedColor(255, 255, 255));
+		lightPalette.setColor(QPalette::Text,          getTintedColor(255, 255, 255));
 		lightPalette.setColor(QPalette::AlternateBase, getTintedColor(30, 30, 30));
-		lightPalette.setColor(QPalette::Button, getTintedColor(45, 45, 45));
-		lightPalette.setColor(QPalette::ToolTipBase, getTintedColor(201, 201, 201));
-		lightPalette.setColor(QPalette::Light, getTintedColor(255, 255, 255));
-		lightPalette.setColor(QPalette::Dark, getTintedColor(100, 100, 100));
+		lightPalette.setColor(QPalette::Button,        getTintedColor(45, 45, 45));
+		lightPalette.setColor(QPalette::ToolTipBase,   getTintedColor(201, 201, 201));
+		lightPalette.setColor(QPalette::Light,         getTintedColor(255, 255, 255));
+		lightPalette.setColor(QPalette::Dark,          getTintedColor(100, 100, 100));
 
-		QString menubarSheet = "QMenuBar {background-color: "+c25+"; color: white; }"
-							   "QMenu { background-color: "+c20+"; color: white; }"
-							   "QMenu::item:selected { background-color: "+c45+"; color: white; }"
-							   "QMenu::separator {height: 1px;background-color: rgb(255, 255, 255); margin: 2px 4px;}"
-							   "QMenuBar::item { background-color: "+c25+"; padding: 2px 4px; border-radius: 4px; margin: 3px 2px 3px 2px; }"
+		QString menubarSheet = "QMenuBar {background-color: "+c25+"; color: "+c255+"; }"
+							   "QMenu { background-color: "+c20+"; color: "+c255+"; }"
+							   "QMenu::item:selected { background-color: "+c45+"; color: "+c255+"; }"
+							   "QMenu::separator {height: 1px;background-color: "+c255+"; margin: 2px 4px;}"
+							   "QMenuBar::item { background-color: "+c25+"; padding: 2px 4px; border-radius: 4px; margin: 3px 2px 3px 2px; color: "+c255+"; }"
 							   "QMenuBar::item:hover { background-color: "+c70+"; }"
 							   "QMenuBar::item:selected { background-color: "+c70+"; }";
 
 		ui->menuBar->setStyleSheet(menubarSheet);
 
 		QString listWidgetSheet =
-		   "QListWidget{ background-color: "+c20+"; color: white; }"
-		   "QListWidget::item:selected { background-color: "+c45+"; color: white; }"
-		   "QListWidget::separator {height: 1px;background-color: rgb(255, 255, 255); margin: 2px 4px;}"
-		   "QListWidget::item { background-color: "+c30+"; padding: 2px 2px; border-radius: 4px; margin: 3px 3px 3px 3px; }"
+		   "QListWidget{ background-color: "+c20+"; color: "+c255+"; }"
+		   "QListWidget::item:selected { background-color: "+c45+"; color: "+c255+"; }"
+		   "QListWidget::separator {height: 1px;background-color: "+c255+"; margin: 2px 4px;}"
+		   "QListWidget::item { background-color: "+c30+"; padding: 2px 2px; border-radius: 4px; margin: 3px 3px 3px 3px; color: "+c255+"; }"
 		   "QListWidget::item:hover { background-color: "+c70+"; }";
 
 		fontList->setStyleSheet(listWidgetSheet);
@@ -9192,37 +9204,32 @@ void MainWindow::changeTheme(bool darkMode) {
 	}else{
 		QPalette lightPalette = qApp->palette();
 
-		lightPalette.setColor(QPalette::Inactive, QPalette::Highlight, QColor("#000000"));
-		lightPalette.setColor(QPalette::Inactive, QPalette::HighlightedText, QColor("#FFFFFF"));
-		lightPalette.setColor(QPalette::Active, QPalette::Highlight, QColor("#000000"));
-		lightPalette.setColor(QPalette::Active, QPalette::HighlightedText, QColor("#FFFFFF"));
-
-		lightPalette.setColor(QPalette::Window, getTintedColor(220, 220, 220));
-		lightPalette.setColor(QPalette::WindowText, Qt::black);
-		lightPalette.setColor(QPalette::Base, getTintedColor(251, 251, 251));
-		lightPalette.setColor(QPalette::ButtonText, Qt::black);
-		lightPalette.setColor(QPalette::Text, Qt::black);
+		lightPalette.setColor(QPalette::Window,        getTintedColor(220, 220, 220));
+		lightPalette.setColor(QPalette::WindowText,    getTintedColor(20, 20, 20));
+		lightPalette.setColor(QPalette::Base,          getTintedColor(251, 251, 251));
+		lightPalette.setColor(QPalette::ButtonText,    getTintedColor(20, 20, 20));
+		lightPalette.setColor(QPalette::Text,          getTintedColor(20, 20, 20));
 		lightPalette.setColor(QPalette::AlternateBase, getTintedColor(201, 201, 201));
-		lightPalette.setColor(QPalette::Button, getTintedColor(251, 251, 251));
-		lightPalette.setColor(QPalette::ToolTipBase, getTintedColor(201, 201, 201));
-		lightPalette.setColor(QPalette::Light, getTintedColor(255, 255, 255));
-		lightPalette.setColor(QPalette::Dark, getTintedColor(100, 100, 100));
+		lightPalette.setColor(QPalette::Button,        getTintedColor(251, 251, 251));
+		lightPalette.setColor(QPalette::ToolTipBase,   getTintedColor(201, 201, 201));
+		lightPalette.setColor(QPalette::Light,         getTintedColor(255, 255, 255));
+		lightPalette.setColor(QPalette::Dark,          getTintedColor(100, 100, 100));
 
-		QString menubarSheet = "QMenuBar {background-color: "+c251+"; color: black; }"
-								"QMenu { background-color: "+c251+"; color: black; }"
-								"QMenu::item:selected { background-color: "+c150+"; color: black; }"
-								"QMenu::separator {height: 1px; background-color: rgb(0, 0, 0); margin: 2px 4px;}"
-								"QMenuBar::item { background-color: "+c251+"; padding: 2px 4px; border-radius: 4px; margin: 3px 2px 3px 2px; }"
+		QString menubarSheet = "QMenuBar {background-color: "+c251+"; color: "+c20+"; }"
+								"QMenu { background-color: "+c251+"; color: "+c20+"; }"
+								"QMenu::item:selected { background-color: "+c150+"; color: "+c20+"; }"
+								"QMenu::separator {height: 1px; background-color: "+c20+"; margin: 2px 4px;}"
+								"QMenuBar::item { background-color: "+c251+"; padding: 2px 4px; border-radius: 4px; margin: 3px 2px 3px 2px; color: "+c20+"; }"
 								"QMenuBar::item:hover { background-color: "+c200+"; }"
 								"QMenuBar::item:selected { background-color: "+c200+"; }";
 
 		ui->menuBar->setStyleSheet(menubarSheet);
 
 		QString listWidgetSheet =
-								"QListWidget{ background-color: "+c251+"; color: black; }"
-								"QListWidget::item:selected { background-color: "+c150+"; color: black; }"
-								"QListWidget::separator {height: 1px; background-color: rgb(0, 0, 0); margin: 2px 4px;}"
-								"QListWidget::item { background-color: "+c251+"; padding: 2px 2px; border-radius: 4px; margin: 3px 3px 3px 3px; }"
+								"QListWidget{ background-color: "+c251+"; color: "+c20+"; }"
+								"QListWidget::item:selected { background-color: "+c150+"; color: "+c20+"; }"
+								"QListWidget::separator {height: 1px; background-color: "+c20+"; margin: 2px 4px;}"
+								"QListWidget::item { background-color: "+c251+"; padding: 2px 2px; border-radius: 4px; margin: 3px 3px 3px 3px; color: "+c20+"; }"
 								"QListWidget::item:hover { background-color: "+c200+"; }";
 
 		fontList->setStyleSheet(listWidgetSheet);
