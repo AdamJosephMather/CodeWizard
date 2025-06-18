@@ -547,8 +547,17 @@ li.checked::marker { content: &quot;\2612&quot;; }
      </property>
      <addaction name="actionRender_As_Markdown"/>
     </widget>
+    <widget class="QMenu" name="menuFix_It">
+     <property name="title">
+      <string>Fix It</string>
+     </property>
+     <addaction name="actionFix_It_4"/>
+     <addaction name="actionSet_Groq_API_Key"/>
+     <addaction name="actionTabs_Spaces"/>
+    </widget>
     <addaction name="actionRun_Module_F5"/>
     <addaction name="menuRender"/>
+    <addaction name="menuFix_It"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -601,14 +610,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="actionProject_Specific_Settings"/>
     <addaction name="actionSet_CodeWizard_UUID"/>
    </widget>
-   <widget class="QMenu" name="menuFixit">
-    <property name="title">
-     <string>Fix It</string>
-    </property>
-    <addaction name="actionFix_It"/>
-    <addaction name="actionChange_to_IDLE_format"/>
-    <addaction name="actionSet_Groq_AI_API_Key"/>
-   </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
      <string>View</string>
@@ -626,7 +627,14 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <addaction name="actionOcean"/>
       <addaction name="actionApricot"/>
      </widget>
+     <widget class="QMenu" name="menuLight">
+      <property name="title">
+       <string>Light </string>
+      </property>
+      <addaction name="actionDefault_Light"/>
+     </widget>
      <addaction name="menuDark"/>
+     <addaction name="menuLight"/>
     </widget>
     <addaction name="actionIncrease_Text_Size"/>
     <addaction name="actionDecrease_Text_Size"/>
@@ -729,7 +737,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
    <addaction name="menuEdit"/>
    <addaction name="menuRun"/>
    <addaction name="menuView"/>
-   <addaction name="menuFixit"/>
    <addaction name="menuLanguage"/>
    <addaction name="menuGit"/>
    <addaction name="menuHelp"/>
@@ -1401,6 +1408,26 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionApricot">
    <property name="text">
     <string>Apricot</string>
+   </property>
+  </action>
+  <action name="actionDefault_Light">
+   <property name="text">
+    <string>Default Light</string>
+   </property>
+  </action>
+  <action name="actionFix_It_4">
+   <property name="text">
+    <string>Fix It</string>
+   </property>
+  </action>
+  <action name="actionSet_Groq_API_Key">
+   <property name="text">
+    <string>Set Groq API Key</string>
+   </property>
+  </action>
+  <action name="actionTabs_Spaces">
+   <property name="text">
+    <string>Tabs -&gt; Spaces</string>
    </property>
   </action>
  </widget>

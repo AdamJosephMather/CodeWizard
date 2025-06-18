@@ -353,8 +353,7 @@ int MyTextEdit::getCharType(QString c) {
 	return 3; // punctuation
 }
 
-void MyTextEdit::keyPressEvent(QKeyEvent *event)
-{
+void MyTextEdit::keyPressEvent(QKeyEvent *event) {
 	if (useVIM) {
 		bool isACtrl = event->modifiers() & Qt::ControlModifier || event->modifiers() & Qt::AltModifier;
 		
@@ -464,8 +463,30 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event)
 				}
 				
 				QTextCursor newCursor = textCursor();
-				newCursor.setPosition(left);
-				newCursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, right-left);
+				
+				if (event->modifiers() & Qt::ShiftModifier){
+					int st1 = newCursor.anchor();
+					int st2 = newCursor.position();
+					
+					if (st1 < left) {
+						left = st1;
+					}if (st2 < left) {
+						left = st2;
+					}
+					
+					if (st1 > right) {
+						right = st1;
+					}if (st2 > right) {
+						right = st2;
+					}
+					
+					newCursor.setPosition(left);
+					newCursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, right-left);
+				}else{
+					newCursor.setPosition(left);
+					newCursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, right-left);
+				}
+				
 				setTextCursor(newCursor);
 			}else if (event->key() == Qt::Key_A){ // end of line
 				currentVimMode = "i";

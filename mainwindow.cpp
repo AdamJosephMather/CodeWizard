@@ -247,6 +247,7 @@ QMenu *menuSilly;
 QMenu *menuSubFonts;
 QMenu *menuSubPresets;
 QMenu *menuSubDark;
+QMenu *menuSubLight;
 QTreeView *fileTree;
 
 QPushButton *prevTerm1;
@@ -699,7 +700,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	menuBarItem = ui->menuBar;
 
 	menuEdit = ui->menuEdit;
-	menuFixit = ui->menuFixit;
+	menuFixit = ui->menuFix_It;
 	menuOp1 = ui->menuOp1;
 	menuRun = ui->menuRun;
 	menuView = ui->menuView;
@@ -716,6 +717,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	menuSilly = ui->menuSilly;
 	menuSubPresets = ui->menuPresets;
 	menuSubDark = ui->menuDark;
+	menuSubLight = ui->menuLight;
 
 	menuSubFonts = menuFonts->addMenu("Browse Installed Fonts");
 
@@ -2164,8 +2166,8 @@ void MainWindow::runSearchItem(){
 		if (cmd == ":Toggle Use Builtin Terminal") useBuiltinTerminal->toggle();
 		if (cmd == ":Toggle Terminal Positioning") preferHorizontalTerminal->toggle();
 		if (cmd == ":Toggle Auto Add Brackets") autoAddBrackets->toggle();
-		if (cmd == ":Fix It") on_actionFix_It_triggered();
-		if (cmd == ":Convert To Spaces") on_actionChange_to_IDLE_format_triggered();
+		if (cmd == ":Fix It") on_actionFix_It_4_triggered();
+		if (cmd == ":Convert To Spaces") on_actionTabs_Spaces_triggered();
 		if (cmd == ":Toggle Vim Mode") useVimMode->toggle();
 		if (cmd == ":Reset LSP") resetLSP();
 		if (cmd == ":Quit") on_actionExit_triggered();
@@ -3882,7 +3884,7 @@ void MainWindow::checkForFixitDialogue(){
 
 	// Execute and check the user's choice
 	if (messageBox.exec() == QMessageBox::Yes) {
-		on_actionFix_It_triggered();
+		on_actionFix_It_4_triggered();
 	}
 }
 
@@ -4818,6 +4820,7 @@ void MainWindow::updateFonts()
 	menuSilly->setFont(font);
 	menuSubPresets->setFont(font);
 	menuSubDark->setFont(font);
+	menuSubLight->setFont(font);
 
 	suggestionBox->setFont(font);
 	actionBox->setFont(font);
@@ -5444,7 +5447,7 @@ void MainWindow::on_actionSet_Font_By_Name_triggered(){
 	updateFontSelection();
 }
 
-void MainWindow::on_actionSet_Groq_AI_API_Key_triggered(){
+void MainWindow::on_actionSet_Groq_API_Key_triggered(){
 	QInputDialog dialog;
 	dialog.setFont(textEdit->font());  // Set the font to match textEdit's font
 	dialog.setWindowTitle("CodeWizard - AI");
@@ -8246,8 +8249,8 @@ void MainWindow::on_actionSave_As_triggered()
 	on_actionOpen_triggered();
 }
 
-void MainWindow::on_actionFix_It_triggered(){ // THE FIX IT BUTTON
-	qDebug() << "on_actionFix_It_triggered";
+void MainWindow::on_actionFix_It_4_triggered(){ // THE FIX IT BUTTON
+	qDebug() << "on_actionFix_It_4_triggered";
 
 	disconnect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 
@@ -8350,8 +8353,8 @@ void MainWindow::on_actionFix_It_triggered(){ // THE FIX IT BUTTON
 	connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 }
 
-void MainWindow::on_actionChange_to_IDLE_format_triggered(){
-	qDebug() << "on_actionChange_to_IDLE_format_triggered";
+void MainWindow::on_actionTabs_Spaces_triggered(){
+	qDebug() << "on_actionTabs_Spaces_triggered";
 
 	disconnect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 
@@ -8981,7 +8984,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		globalColsText = getStringOfColor(getTintedColor(255, 255, 255));
 	} else {
 		color1 = getTintedColor(230, 230, 230);
-		color2 = getTintedColor(245, 245, 245);
+		color2 = getTintedColor(235, 235, 235);
 		color3 = getTintedColor(245, 245, 245);
 		placeholdertext = getTintedColor(100, 100, 100);
 		
@@ -9469,8 +9472,10 @@ void MainWindow::on_actionThe_Fix_It_Button_triggered(){
 
 	openHelpMenu("The Fix It Button\n\n"
 				 "The Fix It button was named with grand plans for it, and they still exist. Kinda.\n\n"
+				 "The Fix It Button is under 'Run->Fix It'.\n\n"
 				 "Currently the Fix It button serves mainly to change all four space increments (the indenting) to tabs. It is also designed to remove excess whitespace on lines and remove multiple blank lines.\n\n"
-				 "The back to IDLE button changes the formating such that the tabs are replaced with four space increments again.");
+				 "The Tabs->Spaces changes the formating such that the tabs are replaced with four space increments again."
+	);
 }
 
 void MainWindow::on_actionCodeWizard_triggered(){
@@ -9825,7 +9830,7 @@ void MainWindow::on_actionDefault_Dark_triggered() {
 }
 
 void MainWindow::on_actionOcean_triggered() {
-	qDebug() << "on_actionVSCode_triggered";
+	qDebug() << "on_actionOcean_triggered";
 	
 	tintColor = "111,171,209";
 	darkmode = true;
@@ -9839,11 +9844,25 @@ void MainWindow::on_actionOcean_triggered() {
 }
 
 void MainWindow::on_actionApricot_triggered() {
-	qDebug() << "on_actionDefault_Dark_triggered";
+	qDebug() << "on_actionApricot_triggered";
 	
 	tintColor = "255,199,167";
 	darkmode = true;
 	defaultSyntaxNumbers = "255,155,100|145,120,100|255,225,190|255,135,85|255,170,120|245,120,80|230,210,190|255,180,110";
+	
+	setFormatsFromMyList(defaultSyntaxNumbers);
+	treeParserSyntaxHighlighter.setFormats(coloredFormats);
+	rehighlightFullDoc();
+	changeTheme(darkmode);
+	saveWantedTheme();
+}
+
+void MainWindow::on_actionDefault_Light_triggered() {
+	qDebug() << "on_actionDefault_Light_triggered";
+	
+	tintColor = "255,255,255";
+	darkmode = false;
+	defaultSyntaxNumbers = "36,104,160|128,128,128|82,82,82|45,94,150|79,158,154|196,53,53|70,70,70|255,140,30";
 	
 	setFormatsFromMyList(defaultSyntaxNumbers);
 	treeParserSyntaxHighlighter.setFormats(coloredFormats);

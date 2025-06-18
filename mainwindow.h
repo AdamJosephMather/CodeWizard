@@ -26,6 +26,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void on_actionDefault_Light_triggered();
 	void on_actionOcean_triggered();
 	void on_actionApricot_triggered();
 	void on_actionVSCode_triggered();
@@ -98,7 +99,7 @@ private slots:
 	void on_actionOpen_Find_Menu_triggered();
 	QString changeToTabs(QString text);
 	void on_actionCompare_2_Files_triggered();
-	void on_actionSet_Groq_AI_API_Key_triggered();
+	void on_actionSet_Groq_API_Key_triggered();
 	void saveSyntaxColorsToFile();
 	void loadSyntaxColorsFromFile();
 	void setFormatsFromMyList(QString str);
@@ -164,14 +165,14 @@ private slots:
 	void on_actionRun_Module_F5_triggered();
 	void on_actionIncrement_Ctrl_triggered();
 	void on_actionDe_Increment_Ctrl_triggered();
-	void on_actionFix_It_triggered();
+	void on_actionFix_It_4_triggered();
 	void on_actionComment_Ctrl_Alt_triggered();
 	void on_actionUn_Comment_Alt_5_triggered();
 	void on_actionIncrease_Text_Size_triggered();
 	void on_actionDecrease_Text_Size_triggered();
 	void on_actionSet_Text_Size_triggered();
 	void on_actionReset_Text_Size_triggered();
-	void on_actionChange_to_IDLE_format_triggered();
+	void on_actionTabs_Spaces_triggered();
 	void on_actionTab_Width_triggered();
 	void on_actionSettings_triggered();
 	void on_actionExtras_triggered();
