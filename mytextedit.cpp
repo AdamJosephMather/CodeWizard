@@ -28,7 +28,7 @@ MyTextEdit::MyTextEdit(QWidget *parent) : QTextEdit(parent) {
 	cursorBlinkTimer.start();
 }
 
-void MyTextEdit::focusInEvent(QFocusEvent *event){
+void MyTextEdit::focusInEvent(QFocusEvent *event) {
 	QTextEdit::focusInEvent(event);
 	emit focusChange(true);
 	updateViewport(); // focus bar
@@ -49,7 +49,7 @@ void MyTextEdit::setContextMenuStyle(const QString& stylesheet) {
 	menuStyle = stylesheet;
 }
 
-QString MyTextEdit::changeToTabs(QString text){
+QString MyTextEdit::changeToTabs(QString text) {
 	QStringList lines = text.split("\n");
 	QStringList newLines;
 	
@@ -141,8 +141,7 @@ void MyTextEdit::wheelEvent(QWheelEvent *event) {
 	}
 }
 
-void MyTextEdit::drawSelection(QPainter &painter, QTextCursor cursor, bool onEnd)
-{
+void MyTextEdit::drawSelection(QPainter &painter, QTextCursor cursor, bool onEnd) {
 	if (!cursor.hasSelection())
 		return;
 	
@@ -180,8 +179,7 @@ void MyTextEdit::drawSelection(QPainter &painter, QTextCursor cursor, bool onEnd
 	painter.drawRect(selectionRect);
 }
 
-void MyTextEdit::drawCursor(QPainter &painter, const QTextCursor &cursor, const QColor &color)
-{
+void MyTextEdit::drawCursor(QPainter &painter, const QTextCursor &cursor, const QColor &color) {
 	QTextBlock block = cursor.block();
 	if (!block.isValid()) {
 		return;
@@ -218,7 +216,16 @@ void MyTextEdit::drawCursor(QPainter &painter, const QTextCursor &cursor, const 
 	
 	qreal x = line.cursorToX(cursorPosition);
 	QPointF blockPos = layout->blockBoundingRect(block).topLeft();
-	int width = cursorWidth();
+	
+	int width;
+	
+	if (currentVimMode == "i"){
+		width = cursorWidth();
+	}else{
+		auto m = fontMetrics();
+		width = m.horizontalAdvance('M');
+	}
+	
 	qreal height = line.height();
 	qreal top = blockPos.y() + line.y();
 	QPoint offset = -QPoint(horizontalScrollBar()->value(), verticalScrollBar()->value());
@@ -293,7 +300,6 @@ void MyTextEdit::paintEvent(QPaintEvent *event) {
 
 void MyTextEdit::setCurrentVim(QString vmMd){
 	currentVimMode = vmMd;
-	additionalCursors.clear();
 	vimRepeater = 0;
 	
 	if (vmMd == "i"){
@@ -309,7 +315,6 @@ void MyTextEdit::setCurrentVim(QString vmMd){
 
 void MyTextEdit::setVIM(bool uV){
 	useVIM = uV;
-	additionalCursors.clear();
 	currentVimMode = "i";
 	setCursorWidth(1);
 	vimRepeater = 0;
@@ -353,7 +358,7 @@ int MyTextEdit::getCharType(QString c) {
 	return 3; // punctuation
 }
 
-void MyTextEdit::keyPressEvent(QKeyEvent *event) {
+bool MyTextEdit::runForCursor(QKeyEvent *event) {
 	if (useVIM) {
 		bool isACtrl = event->modifiers() & Qt::ControlModifier || event->modifiers() & Qt::AltModifier;
 		
@@ -365,11 +370,7 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event) {
 			}
 			
 			if (event->key() == Qt::Key_I){
-				currentVimMode = "i";
-				setCursorWidth(1);
-				additionalCursors.clear();
-				updateViewport();
-				vimRepeater = 0;
+				return true;
 			}else if (event->key() == Qt::Key_J || event->key() == Qt::Key_Down){
 				executeNormalAct(QTextCursor::Down, event);
 			}else if (event->key() == Qt::Key_K || event->key() == Qt::Key_Up){
@@ -383,7 +384,7 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event) {
 			}else if (event->key() == Qt::Key_W){
 				executeNormalAct(QTextCursor::WordLeft, event);
 			}else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Space || event->key() == Qt::Key_Tab || event->key() == Qt::Key_Return || event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Home || event->key() == Qt::Key_End || event->key() == Qt::Key_PageUp || event->key() == Qt::Key_PageDown || event->key() == Qt::Key_F5){
-				return QTextEdit::keyPressEvent(event); // I am electing not to handle these in any special way - also CodeWizard for the win
+				return false; // I am electing not to handle these in any special way - also CodeWizard for the win
 			}else if (event->key() == Qt::Key_C){
 				QKeyEvent *copyEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_C, Qt::ControlModifier);
 				QCoreApplication::postEvent(this, copyEvent);
@@ -415,11 +416,6 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event) {
 				setTextCursor(cursor);
 				vimRepeater = 0;
 			}else if (event->key() == Qt::Key_O){
-				currentVimMode = "i";
-				setCursorWidth(1);
-				additionalCursors.clear();
-				updateViewport();
-				vimRepeater = 0;
 				executeNormalAct(QTextCursor::EndOfLine, event);
 				QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier, "");
 				QCoreApplication::postEvent(this, event);
@@ -489,11 +485,6 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event) {
 				
 				setTextCursor(newCursor);
 			}else if (event->key() == Qt::Key_A){ // end of line
-				currentVimMode = "i";
-				setCursorWidth(1);
-				additionalCursors.clear();
-				updateViewport();
-				vimRepeater = 0;
 				executeNormalAct(QTextCursor::EndOfLine, event);
 			}else if (event->key() == Qt::Key_Dollar || event->key() == Qt::Key_4 && event->modifiers() & Qt::ShiftModifier){
 				vimRepeater = 0;
@@ -503,18 +494,43 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event) {
 				executeNormalAct(QTextCursor::StartOfLine, new QKeyEvent(QEvent::KeyPress, Qt::Key_unknown, Qt::NoModifier));
 			}
 
-			return; // always handle inputs in normal mode - normal is a strange term for this but whatever - it'll work.
-		}else if (currentVimMode == "i"){
-			if (event->key() == Qt::Key_Escape){
-				currentVimMode = "n";
-				additionalCursors.clear();
-				QFontMetrics metrics(font());
-				int charWidth = metrics.horizontalAdvance("M");
-				setCursorWidth(charWidth);
-				vimRepeater = 0;
-				updateViewport();
-				return;
-			}
+			return true; // always handle inputs in normal mode - normal is a strange term for this but whatever - it'll work.
+		}
+	}
+	
+	return false;
+}
+
+void MyTextEdit::keyPressEvent(QKeyEvent *event) {
+	bool ourPurpCtrl = event->modifiers() & Qt::ControlModifier || currentVimMode == "n";
+	
+	if (currentVimMode == "i" && useVIM){
+		if (event->key() == Qt::Key_Escape){
+			currentVimMode = "n";
+			QFontMetrics metrics(font());
+			int charWidth = metrics.horizontalAdvance("M");
+			setCursorWidth(charWidth);
+			vimRepeater = 0;
+			updateViewport();
+			return;
+		}
+	}
+	
+	if (!additionalCursors.isEmpty() && useMultiCursors) {
+		if (currentVimMode == "n" && event->key() == Qt::Key_Escape) {
+			additionalCursors.clear();
+		}
+		
+		if (ourPurpCtrl && event->key() == Qt::Key_V){
+			pasteText();
+			return;
+		} else if (ourPurpCtrl && event->key() == Qt::Key_C){
+			getCopyText();
+			return;
+		} else if (ourPurpCtrl && event->key() == Qt::Key_X){
+			getCopyText();
+			insertTextAtAllCursors("");
+			return;
 		}
 	}
 	
@@ -522,56 +538,39 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event) {
 		if (event->modifiers() & Qt::ControlModifier && (event->key() == Qt::Key_C || event->key() == Qt::Key_X)){
 			coppies.clear();
 		}
-		
-		QTextEdit::keyPressEvent(event);
-		return;
 	}
 	
-	// Store the original cursor before we start manipulating
-	m_originalCursor = textCursor();
+	QTextCursor maincurs = textCursor();
+	bool diddoit = runForCursor(event);
+	if (!diddoit) {
+		QTextEdit::keyPressEvent(event);
+	}
+	maincurs = textCursor();
 	
-	// Handle different key types
-	switch (event->key()) {
-		// Navigation keys
-		case Qt::Key_Left:
-		case Qt::Key_Right:
-		case Qt::Key_Up:
-		case Qt::Key_Down:
-		case Qt::Key_Home:
-		case Qt::Key_End:
-			handleNavigationKey(event);
-			break;
-			
-		// Deletion keys
-		case Qt::Key_Backspace:
-		case Qt::Key_Delete:
-			handleDeletionKey(event);
-			break;
-		
-		case Qt::Key_Tab:
-			insertTextAtAllCursors("\t");
-			break;
+	for (int i = 0; i < additionalCursors.length(); i++) {
+		QTextCursor c = additionalCursors[i];
+		setTextCursor(c);
+		bool diddoit = runForCursor(event);
+		if (!diddoit) {
+			QTextEdit::keyPressEvent(event);
+		}
+		QTextCursor c1 = textCursor();
+		additionalCursors[i] = c1;
+	}
 	
-		case Qt::Key_Return:
-		case Qt::Key_Enter:
-			insertTextAtAllCursors("\n");
-			break;
-			
-		default:
-			if (event->modifiers() & Qt::ControlModifier && event->key() == Qt::Key_V){
-				pasteText();
-			} else if (event->modifiers() & Qt::ControlModifier && event->key() == Qt::Key_C){
-				getCopyText();
-			} else if (event->modifiers() & Qt::ControlModifier && event->key() == Qt::Key_X){
-				getCopyText();
-				insertTextAtAllCursors("");
-			} else if (!event->text().isEmpty() && event->text()[0].isPrint() && !(event->modifiers() & Qt::ControlModifier)) {
-				insertTextAtAllCursors(event->text());
-			} else {
-				// For special keys we haven't specifically handled, use default behavior
-				QTextEdit::keyPressEvent(event);
+	setTextCursor(maincurs);
+	
+	handleDuplicateCursors();
+	
+	if (useVIM) {
+		if (currentVimMode == "n") {
+			if (event->key() == Qt::Key_O || event->key() == Qt::Key_A || event->key() == Qt::Key_I) {
+				currentVimMode = "i";
+				setCursorWidth(1);
+				updateViewport();
+				vimRepeater = 0;
 			}
-			break;
+		}
 	}
 	
 	// Ensure viewport is updated to reflect cursor changes
@@ -579,7 +578,7 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event) {
 	viewport()->update();
 }
 
-void MyTextEdit::pasteText(){
+void MyTextEdit::pasteText() {
 	if (coppies.length() != additionalCursors.length()+1){
 		QClipboard *clipboard = QGuiApplication::clipboard();
 		QString textToPaste = changeToTabs(clipboard->text());
@@ -599,7 +598,7 @@ void MyTextEdit::pasteText(){
 	}
 }
 
-void MyTextEdit::getCopyText(){
+void MyTextEdit::getCopyText() {
 	coppies.clear();
 	coppies.push_back(textCursor().selectedText());
 	
@@ -608,8 +607,7 @@ void MyTextEdit::getCopyText(){
 	}
 }
 
-void MyTextEdit::applyToAllCursors(const std::function<void(QTextCursor&)>& operation)
-{
+void MyTextEdit::applyToAllCursors(const std::function<void(QTextCursor&)>& operation) {
 	// Create a document modification group to make this a single undo operation
 	QTextCursor mainCursor = textCursor();
 	mainCursor.beginEditBlock();
@@ -628,16 +626,14 @@ void MyTextEdit::applyToAllCursors(const std::function<void(QTextCursor&)>& oper
 	mainCursor.endEditBlock();
 }
 
-void MyTextEdit::insertTextAtAllCursors(const QString &text)
-{
+void MyTextEdit::insertTextAtAllCursors(const QString &text) {
 	applyToAllCursors([&](QTextCursor &cursor) {
 		cursor.insertText(text);
 	});
 	handleDuplicateCursors();
 }
 
-void MyTextEdit::handleNavigationKey(QKeyEvent *event)
-{
+void MyTextEdit::handleNavigationKey(QKeyEvent *event) {
 	// Define the cursor move operation based on the key and modifiers
 	QTextCursor::MoveOperation moveOp;
 	QTextCursor::MoveMode moveMode = event->modifiers() & Qt::ShiftModifier ? 
@@ -690,8 +686,7 @@ void MyTextEdit::handleNavigationKey(QKeyEvent *event)
 	handleDuplicateCursors();
 }
 
-void MyTextEdit::handleDeletionKey(QKeyEvent *event)
-{
+void MyTextEdit::handleDeletionKey(QKeyEvent *event) {
 	if (event->key() == Qt::Key_Backspace) {
 		applyToAllCursors([&](QTextCursor &cursor) {
 			cursor.deletePreviousChar();

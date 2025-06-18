@@ -144,6 +144,7 @@ private:
 	
 	void executeNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event);
 	int getCharType(QString c);
+	bool runForCursor(QKeyEvent *event);
 
 signals:
 	void wheelSignal(QWheelEvent* event);

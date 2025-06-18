@@ -4148,8 +4148,6 @@ void MainWindow::on_actionLSP_triggered() {
 
 	lspPath = dialog.textValue();
 
-	//QString lspPath = QFileDialog::getOpenFileName(this, tr("Open File"), fileName, tr("All Files (*)"));
-
 	if (currentLang.name == "Python") {
 		pythonLSP = lspPath;
 	}else if (currentLang.name == "Rust") {
@@ -6987,7 +6985,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 			}
 		}
 
-		if (key_event->key() == Qt::Key_Down && key_event->modifiers() & Qt::AltModifier && textEdit->currentVimMode == "i") {
+		if (key_event->modifiers() & Qt::AltModifier && (key_event->key() == Qt::Key_Down  || (textEdit->currentVimMode == "n" && key_event->key() == Qt::Key_J)) ) {
 			QTextCursor c = textEdit->textCursor();
 			int highest = c.blockNumber();
 			for (QTextCursor curs : textEdit->additionalCursors) {
@@ -7004,7 +7002,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 			suggestionBox->hide();
 			actionBox->hide();
 			return true;
-		}else if (key_event->key() == Qt::Key_Up && key_event->modifiers() & Qt::AltModifier && textEdit->currentVimMode == "i") {
+		}else if (key_event->modifiers() & Qt::AltModifier && (key_event->key() == Qt::Key_Up  || (textEdit->currentVimMode == "n" && key_event->key() == Qt::Key_K)) ) {
 			QTextCursor c = textEdit->textCursor();
 			int lowest = c.blockNumber();
 			for (QTextCursor curs : textEdit->additionalCursors) {
@@ -7191,8 +7189,10 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 
 		if(!suggestionBox->isVisible() && !actionBox->isVisible() && key_event->key() == Qt::Key_Escape) {
 			if (!textEdit->additionalCursors.isEmpty()) {
-				textEdit->additionalCursors.clear();
-				textEdit->updateViewport();
+				if ((textEdit->useVIM && textEdit->currentVimMode == "n") || !textEdit->useVIM) {
+					textEdit->additionalCursors.clear();
+					textEdit->updateViewport();
+				}
 			}else {
 				changeFindSectionVisibility(false);
 			}
