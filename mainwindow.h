@@ -26,6 +26,10 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void on_actionOcean_triggered();
+	void on_actionApricot_triggered();
+	void on_actionVSCode_triggered();
+	void on_actionDefault_Dark_triggered();
 	void on_actionProject_Settings_triggered();
 	void on_actionSet_CodeWizard_UUID_triggered();
 	QString getProjectSettingsPath();

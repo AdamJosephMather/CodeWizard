@@ -57,7 +57,7 @@ extern "C" {
 	TSLanguage* tree_sitter_css(void);
 }
 
-QString versionNumber = "9.5.4";
+QString versionNumber = "9.6.0";
 
 QList<QLineEdit*> hexColorsList;
 
@@ -245,6 +245,8 @@ QMenu *menuWarnings;
 QMenu *menuAutocomplete;
 QMenu *menuSilly;
 QMenu *menuSubFonts;
+QMenu *menuSubPresets;
+QMenu *menuSubDark;
 QTreeView *fileTree;
 
 QPushButton *prevTerm1;
@@ -712,6 +714,8 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	menuWarnings = ui->menuWarnings;
 	menuAutocomplete = ui->menuAutocomplete;
 	menuSilly = ui->menuSilly;
+	menuSubPresets = ui->menuPresets;
+	menuSubDark = ui->menuDark;
 
 	menuSubFonts = menuFonts->addMenu("Browse Installed Fonts");
 
@@ -3528,12 +3532,11 @@ void MainWindow::syntaxColorsOffImage(){
 }
 
 void MainWindow::setFormatsFromMyList(QString str){
-	qDebug() << "setFormatsFromMyList";
+	qDebug() << "setFormatsFromMyList -" << str;
 
 	coloredFormats = {};
 	coloredFormats.append(QTextCharFormat());
-	QStringList defaultNums = defaultSyntaxNumbers.split("|");
-
+	
 	int i = 0;
 	for(const QString color : str.split("|")){
 		QStringList nums = color.split(",");
@@ -3594,10 +3597,12 @@ void MainWindow::validateAndConvert(){
 		QTextCharFormat form;
 		form.setForeground(QColor(hex));
 		coloredFormats.append(form);
-		treeParserSyntaxHighlighter.setFormats(coloredFormats);
-		saveWantedTheme();
+		
+		qDebug() << QColor(hex).red()<<','<<QColor(hex).green()<<','<<QColor(hex).blue();
 	}
-
+	
+	treeParserSyntaxHighlighter.setFormats(coloredFormats);
+	saveWantedTheme();
 	rehighlightFullDoc();
 
 	if (useSpeakerAction->isChecked()){
@@ -4811,6 +4816,8 @@ void MainWindow::updateFonts()
 	menuWarnings->setFont(font);
 	menuAutocomplete->setFont(font);
 	menuSilly->setFont(font);
+	menuSubPresets->setFont(font);
+	menuSubDark->setFont(font);
 
 	suggestionBox->setFont(font);
 	actionBox->setFont(font);
@@ -9787,4 +9794,60 @@ void MainWindow::openRecentFile(QString newFile){
 
 	globalArgFileName = newFile;
 	on_actionOpen_triggered();
+}
+
+void MainWindow::on_actionVSCode_triggered() {
+	qDebug() << "on_actionVSCode_triggered";
+	
+	tintColor = "255,255,255"; // grey
+	darkmode = true;
+	defaultSyntaxNumbers = "206,145,120|106,153,85|156,220,254|78,201,176|220,220,170|86,156,214|212,212,212|181,206,168";
+	
+	setFormatsFromMyList(defaultSyntaxNumbers);
+	treeParserSyntaxHighlighter.setFormats(coloredFormats);
+	rehighlightFullDoc();
+	changeTheme(darkmode);
+	saveWantedTheme();
+}
+
+void MainWindow::on_actionDefault_Dark_triggered() {
+	qDebug() << "on_actionDefault_Dark_triggered";
+	
+	tintColor = "111,171,209"; // blue nice
+	darkmode = true;
+	defaultSyntaxNumbers = "127,173,94|127,132,142|245,91,102|85,169,237|199,157,78|176,95,199|127,132,142|194,127,64";
+	
+	setFormatsFromMyList(defaultSyntaxNumbers);
+	treeParserSyntaxHighlighter.setFormats(coloredFormats);
+	rehighlightFullDoc();
+	changeTheme(darkmode);
+	saveWantedTheme();
+}
+
+void MainWindow::on_actionOcean_triggered() {
+	qDebug() << "on_actionVSCode_triggered";
+	
+	tintColor = "111,171,209";
+	darkmode = true;
+	defaultSyntaxNumbers = "100,190,255|90,115,140|205,235,255|90,170,255|130,200,255|50,145,255|190,200,220|70,210,255";
+	
+	setFormatsFromMyList(defaultSyntaxNumbers);
+	treeParserSyntaxHighlighter.setFormats(coloredFormats);
+	rehighlightFullDoc();
+	changeTheme(darkmode);
+	saveWantedTheme();
+}
+
+void MainWindow::on_actionApricot_triggered() {
+	qDebug() << "on_actionDefault_Dark_triggered";
+	
+	tintColor = "255,199,167";
+	darkmode = true;
+	defaultSyntaxNumbers = "255,155,100|145,120,100|255,225,190|255,135,85|255,170,120|245,120,80|230,210,190|255,180,110";
+	
+	setFormatsFromMyList(defaultSyntaxNumbers);
+	treeParserSyntaxHighlighter.setFormats(coloredFormats);
+	rehighlightFullDoc();
+	changeTheme(darkmode);
+	saveWantedTheme();
 }

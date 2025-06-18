@@ -613,6 +613,21 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <property name="title">
      <string>View</string>
     </property>
+    <widget class="QMenu" name="menuPresets">
+     <property name="title">
+      <string>Presets</string>
+     </property>
+     <widget class="QMenu" name="menuDark">
+      <property name="title">
+       <string>Dark </string>
+      </property>
+      <addaction name="actionDefault_Dark"/>
+      <addaction name="actionVSCode"/>
+      <addaction name="actionOcean"/>
+      <addaction name="actionApricot"/>
+     </widget>
+     <addaction name="menuDark"/>
+    </widget>
     <addaction name="actionIncrease_Text_Size"/>
     <addaction name="actionDecrease_Text_Size"/>
     <addaction name="actionSet_Text_Size"/>
@@ -624,6 +639,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="separator"/>
     <addaction name="actionSet_Syntax_Colors"/>
     <addaction name="actionSet_Tint_Color"/>
+    <addaction name="menuPresets"/>
     <addaction name="separator"/>
     <addaction name="actionOpen_Find_Menu"/>
     <addaction name="separator"/>
@@ -1365,6 +1381,26 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionProject_Settings">
    <property name="text">
     <string>Project Settings</string>
+   </property>
+  </action>
+  <action name="actionDefault_Dark">
+   <property name="text">
+    <string>Default Dark</string>
+   </property>
+  </action>
+  <action name="actionVSCode">
+   <property name="text">
+    <string>VSCode</string>
+   </property>
+  </action>
+  <action name="actionOcean">
+   <property name="text">
+    <string>Ocean</string>
+   </property>
+  </action>
+  <action name="actionApricot">
+   <property name="text">
+    <string>Apricot</string>
    </property>
   </action>
  </widget>
