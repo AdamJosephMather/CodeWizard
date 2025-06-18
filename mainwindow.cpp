@@ -3699,7 +3699,7 @@ void MainWindow::mouseClicked() {
 	qDebug() << "mouseClicked";
 
 	holdingAnEvent = false;
-	if (!(QGuiApplication::keyboardModifiers() & Qt::AltModifier) || (textEdit->currentVimMode != "i" || recordingMacro)) {
+	if (!(QGuiApplication::keyboardModifiers() & Qt::AltModifier) || recordingMacro) {
 		textEdit->additionalCursors.clear();
 		textEdit->updateViewport();
 	}
