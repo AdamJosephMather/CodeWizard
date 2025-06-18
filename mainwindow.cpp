@@ -485,7 +485,6 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 			searchBar->setAlignment(Qt::AlignLeft);
 		}else {
 			QWidget* focusedWidget = QApplication::focusWidget();
-			qDebug() << focusedWidget;
 			if (focusedWidget != searchMenu) {
 				searchBar->setPlainText(searchBar->placeholderText());
 				searchBar->setAlignment(Qt::AlignCenter);
@@ -1511,8 +1510,6 @@ void MainWindow::repositionSearchBar() {
 		searchStart = prefferedStart;
 	}
 	
-	qDebug() << startPos << endPos << center << searchStart;
-	
 	searchBar->move(searchStart, menuBarHeight / 2 - searchBar->height() / 2);
 	
 	QFontMetrics metrics(textEdit->font());
@@ -1525,9 +1522,7 @@ void MainWindow::onSearchItemClicked(QListWidgetItem *item) {
 	qDebug() << "onSearchItemClicked";
 	
 	searchMenu->show();
-	qDebug() << selectedSearchFile;
 	selectedSearchFile = searchMenu->row(item);
-	qDebug() << selectedSearchFile;
 	searchBar->setAlignment(Qt::AlignCenter);
 	searchMenu->hide();
 	
@@ -1936,8 +1931,6 @@ void MainWindow::indexFiles() {
 	allIndexedFiles.clear();
 	allDisplayPaths.clear();
 	allIndexedFilesPath.clear();
-	
-	qDebug() << fileModel->rootPath();
 	
 	QStringList files;
 	QQueue<QString> queue;
@@ -2451,9 +2444,6 @@ void MainWindow::tabClicked(int id) {
 	QString filename = tab->extraText;
 	globalArgFileName = filename;
 	on_actionOpen_triggered();
-
-	qDebug() << loc << loc2 << tabs[loc2]->lineNum;
-//	textEdit->verticalScrollBar()->setValue(tab->lineNum);
 }
 
 void MainWindow::updateSplitsWidths() {
@@ -3130,7 +3120,6 @@ void MainWindow::on_actionCompare_2_Files_triggered() {
 
 	highlightDiagnostics(true);
 	
-	qDebug() << "SETTING THE TEXTEDIT IN NEEDS HIGHLIGHTING ##################################### " << fileName;
 	textEdit->setPlainText(fileContent);
 	toCompareTo = fileContent;
 	textEdit->additionalCursors.clear();
@@ -3598,8 +3587,6 @@ void MainWindow::validateAndConvert() {
 		QTextCharFormat form;
 		form.setForeground(QColor(hex));
 		coloredFormats.append(form);
-		
-		qDebug() << QColor(hex).red()<<','<<QColor(hex).green()<<','<<QColor(hex).blue();
 	}
 	
 	treeParserSyntaxHighlighter.setFormats(coloredFormats);
@@ -3694,8 +3681,7 @@ void MainWindow::onContentsChange(int position, int charsRemoved, int charsAdded
 void MainWindow::printTree(TSNode node, int depth) {
 	// Indent based on depth
 	QString indent = QString(depth * 2, ' ');
-	qDebug() << indent << ts_node_type(node); // DON'T REMOVE THIS ADAM (from your friendly neighborhood adam)
-
+	
 	// Get the node type and text range
 	const char* nodeType = ts_node_type(node);
 	uint32_t startByte = ts_node_start_byte(node);
@@ -5820,7 +5806,6 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 
 	for (int i = 0; i < tabs.length(); i++) {
 		TabWidget *tab = tabs[i];
-		qDebug() << tab->extraText << absoluteTempPath;
 		
 		if (tab->extraText.startsWith(absoluteTempPath, Qt::CaseInsensitive)) {
 			QFile existingFile(tab->extraText);
@@ -6274,8 +6259,6 @@ void MainWindow::on_actionRun_Module_F5_triggered() {
 		// Define the shell script path for Linux
 		QString batFilePath = tmpDirPath + "/run_script.sh";
 	#endif
-
-	qDebug() << batFilePath;
 
 	QString finalRun;
 	QString intermediateTag;
