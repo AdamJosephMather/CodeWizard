@@ -143,6 +143,7 @@ private:
 	QTimer cursorBlinkTimer;
 	
 	void executeNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event);
+	int getCharType(QString c);
 
 signals:
 	void wheelSignal(QWheelEvent* event);

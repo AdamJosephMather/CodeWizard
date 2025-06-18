@@ -337,6 +337,22 @@ bool MyTextEdit::eventFilter(QObject *watched, QEvent *event){
 	return false;
 }
 
+int MyTextEdit::getCharType(QString c) {
+	QString alphanum = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
+	QString whitespace = " 	\n";
+	QString digits = "0123456789";
+	
+	if (alphanum.contains(c)){
+		return 0;
+	}else if (whitespace.contains(c)){
+		return 1;
+	}else if (digits.contains(c)) {
+		return 2;
+	}
+	
+	return 3; // punctuation
+}
+
 void MyTextEdit::keyPressEvent(QKeyEvent *event)
 {
 	if (useVIM) {
@@ -408,7 +424,50 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event)
 				executeNormalAct(QTextCursor::EndOfLine, event);
 				QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier, "");
 				QCoreApplication::postEvent(this, event);
-			}else if (event->key() == Qt::Key_A){
+			}else if (event->key() == Qt::Key_S){ // surround
+				QTextCursor cursor = textCursor();
+				QString text = toPlainText();
+				
+				int pos = cursor.position();
+				
+				QString chr = text[pos];
+				int chrtyp = getCharType(chr);
+				
+				int left = pos;
+				while (true) {
+					left --;
+					if (left < 0) {
+						left ++;
+						break;
+					}
+					
+					QString chr = text[left];
+					int chrtyp_here = getCharType(chr);
+					if (chrtyp != chrtyp_here) {
+						left ++;
+						break;
+					}
+				}
+				
+				int right = pos;
+				while (true) {
+					right ++;
+					if (right >= text.length()) {
+						break;
+					}
+					
+					QString chr = text[right];
+					int chrtyp_here = getCharType(chr);
+					if (chrtyp != chrtyp_here) {
+						break;
+					}
+				}
+				
+				QTextCursor newCursor = textCursor();
+				newCursor.setPosition(left);
+				newCursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, right-left);
+				setTextCursor(newCursor);
+			}else if (event->key() == Qt::Key_A){ // end of line
 				currentVimMode = "i";
 				setCursorWidth(1);
 				additionalCursors.clear();

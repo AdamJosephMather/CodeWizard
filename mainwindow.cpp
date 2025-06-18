@@ -457,8 +457,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	windowWinButton->setText("🗗");
 	windowWinButton->hide();
 	
-	searchBar = new MyTextEdit(this);
-	//the size will be set by another process
+	searchBar = new MyTextEdit(this); //the size will be set by another process
 	searchBar->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	searchBar->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	searchBar->setPlaceholderText("New File");
@@ -1994,7 +1993,7 @@ void MainWindow::indexFiles(){
 		}
 	}
 	
-	QStringList commands = {"Dark Mode", "Light Mode", "Increase Text Size", "Decrease Text Size", "Reset Text Size", "Set Syntax Colors", "Set Tint Colors", "Toggle Use File Tabs", "Toggle Use Vim Mode", "Toggle Use Builtin Terminal", "Toggle Terminal Positioning", "Toggle Auto Add Brackets", "Fix It", "Convert To Spaces", "Toggle Vim Mode", "Reset LSP", "Quit", "Toggle No Autocomplete", "Toggle Only CodeWizard Autocomplete", "Toggle LSP Show Errors", "Toggle LSP Show Other", "Toggle LSP Show Warnings", "Lang: Python", "Lang: C", "Lang: C#", "Lang: C++", "Lang: JS", "Lang: TS", "Lang: CSS", "Lang: HTML", "Lang: Go", "Lang: Rust", "Lang: Lua", "Lang: Plaintext", "Lang: Cobol", "Lang: GLSL", "Lang: WGSL", "Lang: Java", "Git Push", "Git Pull", "Git Force Pull", "Toggle Use Relative Line Numbers"};
+	QStringList commands = {"Dark Mode", "Light Mode", "Increase Text Size", "Decrease Text Size", "Reset Text Size", "Set Syntax Colors", "Set Tint Colors", "Toggle Use File Tabs", "Toggle Use Vim Mode", "Toggle Use Builtin Terminal", "Toggle Terminal Positioning", "Toggle Auto Add Brackets", "Fix It", "Convert To Spaces", "Toggle Vim Mode", "Reset LSP", "Quit", "Toggle No Autocomplete", "Toggle Only CodeWizard Autocomplete", "Toggle LSP Show Errors", "Toggle LSP Show Other", "Toggle LSP Show Warnings", "Lang: Python", "Lang: C", "Lang: C#", "Lang: C++", "Lang: JS", "Lang: TS", "Lang: CSS", "Lang: HTML", "Lang: Go", "Lang: Rust", "Lang: Lua", "Lang: Plaintext", "Lang: Cobol", "Lang: GLSL", "Lang: WGSL", "Lang: Java", "Git Push", "Git Pull", "Git Force Pull", "Toggle Use Relative Line Numbers", "Set Project Specific Settings", "Set CodeWizard UUID"};
 	
 	for (QString cmd : commands){
 		allIndexedFilesPath << ":"+cmd;
@@ -2190,7 +2189,9 @@ void MainWindow::runSearchItem(){
 		if (cmd == ":Git Push") on_actionPush_triggered();
 		if (cmd == ":Git Pull") on_actionRegular_triggered();
 		if (cmd == ":Git Force Pull") on_actionDiscard_Local_Changes_triggered();
-		if (cmd == ":Toggle Use Relative Line Numbers") ui->actionUse_Relative_Line_Numbers->toggle();
+		if (cmd == ":Set Project Specific Settings") on_actionProject_Specific_Settings_triggered();
+		if (cmd == ":Set CodeWizard UUID") on_actionSet_CodeWizard_UUID_triggered();
+		
 	}else{
 		globalArgFileName = cmd;
 		textEdit->setFocus();
@@ -6483,9 +6484,6 @@ void MainWindow::openFind()
 		findTextEdit->setPlainText(selectedText);
 	}
 
-	//QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_A, Qt::ControlModifier);
-	//QApplication::postEvent(findTextEdit, event);
-
 	findTextEdit->setFocus();
 	findTextEdit->setCurrentVim("i");
 
@@ -6695,7 +6693,7 @@ int MainWindow::findMatchingBracket(int direction){
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
-//	qDebug() << "eventFilter"; - we don't do it for certain functions
+//	qDebug() << "eventFilter"; - we don't do it for certain functions (like this one)
 
 	if (event->type()==QEvent::WindowStateChange){
 		onWindowStateChanged();
@@ -9456,7 +9454,7 @@ void MainWindow::on_actionRunning_Files_triggered(){
 void MainWindow::on_actionVim_Modes_triggered(){
 	qDebug() << "on_actionVim_Modes_triggered";
 
-	openHelpMenu("Vim Modes\n\nAs of CodeWizard V8.8.9 we now support a modified set of the vim actions. Namely, when enabled, CodeWizard has a 'Normal' mode and an 'Insert' mode.\nIn normal mode there are a set of commands which work - which will be listed below. In insert mode, all keys are the same as regular (unless you press escape under the right circumstances to enter normal mode.)\n\nHere is the list of shortcuts which work in normal mode:\n    1. H - Moves left\n    2. J - Moves Down\n    3. K - Moves Up\n    4. L - Moves Right\n    5. W - Equivalent to Ctrl+Left\n    6. E - Equivalent to Ctrl+Right\n    7. All commands containing 'Ctrl' - Normal\n    8. All commands containing 'Alt' - Normal\n    9. Return/Enter/Backspace - Normal\n    10. PageDown, PageUp, Home, End - Normal\n    11. Comma/Less Than (<) - Jumps to corresponding previous bracket to the left\n    12. Period/Greater Than (>) - Jumps to corresponding bracket to the right\n    13. $ - Jumps to end of line\n    14. A - Jumps to end of line and enters insert mode\n    15. O - Inserts line below current line and enters insert mode\n    16. : - Brings focus to the command palette\n    17. G - Move to specified line number. (usage: '<linenumber>g')\n    18. G - Goto Definition, (works when you have not typed a line number beforehand)\n    19. P - Requests hover menu for current cursor position (LSP feature)");
+	openHelpMenu("Vim Modes\n\nAs of CodeWizard V8.8.9 we now support a modified set of the vim actions. Namely, when enabled, CodeWizard has a 'Normal' mode and an 'Insert' mode.\nIn normal mode there are a set of commands which work - which will be listed below. In insert mode, all keys are the same as regular (unless you press escape under the right circumstances to enter normal mode.)\n\nHere is the list of shortcuts which work in normal mode:\n    1. H - Moves left\n    2. J - Moves Down\n    3. K - Moves Up\n    4. L - Moves Right\n    5. W - Equivalent to Ctrl+Left\n    6. E - Equivalent to Ctrl+Right\n    7. All commands containing 'Ctrl' - Normal\n    8. All commands containing 'Alt' - Normal\n    9. Return/Enter/Backspace - Normal\n    10. PageDown, PageUp, Home, End - Normal\n    11. Comma/Less Than (<) - Jumps to corresponding previous bracket to the left\n    12. Period/Greater Than (>) - Jumps to corresponding bracket to the right\n    13. $ - Jumps to end of line\n    14. A - Jumps to end of line and enters insert mode\n    15. O - Inserts line below current line and enters insert mode\n    16. : - Brings focus to the command palette\n    17. G - Move to specified line number. (usage: '<linenumber>g')\n    18. G - Goto Definition, (works when you have not typed a line number beforehand)\n    19. P - Requests hover menu for current cursor position (LSP feature)\n    20. S - Highlights the current word under the cursor (left and right sides)");
 }
 
 void MainWindow::on_actionThe_Fix_It_Button_triggered(){
