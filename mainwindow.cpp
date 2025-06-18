@@ -471,19 +471,19 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	searchMenu->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	searchMenu->hide();
 	
-	connect(searchBar, &QTextEdit::textChanged, this, [this](){
+	connect(searchBar, &QTextEdit::textChanged, this, [this]() {
 		narrowDownSearchFiles();
 		fillSearchMenu();
 	});
 	
 	connect(searchBar, &MyTextEdit::focusChange, this, [this](bool isFocused) {
 		qDebug() << "searchBar focus: " << isFocused;
-		if (isFocused){
+		if (isFocused) {
 			indexFiles();
 			searchMenu->show();
 			searchBar->setPlainText("");
 			searchBar->setAlignment(Qt::AlignLeft);
-		}else{
+		}else {
 			QWidget* focusedWidget = QApplication::focusWidget();
 			qDebug() << focusedWidget;
 			if (focusedWidget != searchMenu) {
@@ -520,7 +520,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	splitter->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 	splitter->setContentsMargins(0, 0, 0, 0);
 
-	while (!oldLayout->isEmpty()){
+	while (!oldLayout->isEmpty()) {
 		QLayoutItem *item = oldLayout->takeAt(0);
 
 		if (!item) continue;
@@ -528,7 +528,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		if (QWidget *widget = item->widget()) {
 			oldLayout->removeWidget(widget);
 			splitter->addWidget(widget);
-			if (widget->layout()){
+			if (widget->layout()) {
 				widget->layout()->setSpacing(0);
 				widget->layout()->setContentsMargins(0, 0, 0, 0);
 			}
@@ -538,13 +538,13 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 			if (QVBoxLayout *vLayout = qobject_cast<QVBoxLayout *>(nestedLayout)) {
 				containerLayout = new QVBoxLayout(container);
-			} else if (QHBoxLayout *hLayout = qobject_cast<QHBoxLayout *>(nestedLayout)) {
+			}else if (QHBoxLayout *hLayout = qobject_cast<QHBoxLayout *>(nestedLayout)) {
 				containerLayout = new QHBoxLayout(container);
-			} else if (QFormLayout *fLayout = qobject_cast<QFormLayout *>(nestedLayout)) {
+			}else if (QFormLayout *fLayout = qobject_cast<QFormLayout *>(nestedLayout)) {
 				containerLayout = new QFormLayout(container);
 			} // Add more layout types as needed
 
-			if (!containerLayout){
+			if (!containerLayout) {
 				continue;
 			}
 
@@ -577,7 +577,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	splitter2->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 	splitter2->setContentsMargins(0, 0, 0, 0);
 
-	while (!oldLayout->isEmpty()){
+	while (!oldLayout->isEmpty()) {
 		QLayoutItem *item = oldLayout->takeAt(0);
 
 		if (!item) continue;
@@ -585,23 +585,23 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		if (QWidget *widget = item->widget()) {
 			oldLayout->removeWidget(widget);
 			splitter2->addWidget(widget);
-			if (widget->layout()){
+			if (widget->layout()) {
 				widget->layout()->setSpacing(0);
 				widget->layout()->setContentsMargins(0, 0, 0, 0);
 			}
-		} else if (QLayout *nestedLayout = item->layout()) {
+		}else if (QLayout *nestedLayout = item->layout()) {
 			QWidget *container = new QWidget(splitter2);
 			QLayout *containerLayout = nullptr;
 
 			if (QVBoxLayout *vLayout = qobject_cast<QVBoxLayout *>(nestedLayout)) {
 				containerLayout = new QVBoxLayout(container);
-			} else if (QHBoxLayout *hLayout = qobject_cast<QHBoxLayout *>(nestedLayout)) {
+			}else if (QHBoxLayout *hLayout = qobject_cast<QHBoxLayout *>(nestedLayout)) {
 				containerLayout = new QHBoxLayout(container);
-			} else if (QFormLayout *fLayout = qobject_cast<QFormLayout *>(nestedLayout)) {
+			}else if (QFormLayout *fLayout = qobject_cast<QFormLayout *>(nestedLayout)) {
 				containerLayout = new QFormLayout(container);
 			} // Add more layout types as needed
 
-			if (!containerLayout){
+			if (!containerLayout) {
 				continue;
 			}
 
@@ -1159,7 +1159,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	supportedLangs = {pythonLang, rustLang, WGSLLang, cppLang, txtLang, jsLang, HTMLLang, goLang, luaLang, csharpLang, GLSLLang, javaLang, tsLang, cLang, cobolLang, cssLang};
 
-	for (int i = 0; i < supportedLangs.count(); i ++){
+	for (int i = 0; i < supportedLangs.count(); i ++) {
 		supportedLangs[i].index = i;
 	}
 
@@ -1228,7 +1228,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		#ifdef _WIN32
 			if (QOperatingSystemVersion::current() >= QOperatingSystemVersion::Windows11) {
 				windowsVersion = 11;
-			}else{
+			}else {
 				windowsVersion = 10;
 			}
 		#endif
@@ -1261,7 +1261,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(actionBox, &QListWidget::itemClicked, this, &MainWindow::onActionsItemClicked);
 	connect(searchMenu, &QListWidget::itemClicked, this, &MainWindow::onSearchItemClicked);
 	
-	connect(lineNumberTextEdit, &MyTextEdit::handleSizeChange, this, [this](bool force){
+	connect(lineNumberTextEdit, &MyTextEdit::handleSizeChange, this, [this](bool force) {
 		updateLineNumbers(globalLineCount);
 	});
 	
@@ -1343,7 +1343,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(qApp, &QApplication::aboutToQuit, [this]() {
 		qDebug() << "Application is quitting.";
 		
-		for (int indx = 0; indx < activeTerminals.length(); indx++){
+		for (int indx = 0; indx < activeTerminals.length(); indx++) {
 			currentTerminalIndex = indx;
 			Ctrl_C();
 		}
@@ -1352,14 +1352,14 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		settings.setValue("wasFullScreened", (isFullScreen() || isMaximized()));
 	
 		lspMutex.lock();
-		if (client){
+		if (client) {
 			client->shutdown();
 			delete client;
 			client = nullptr;
 		}
 		lspMutex.unlock();
 	
-		if (unsaved && fileName != ""){
+		if (unsaved && fileName != "") {
 			pullUpSaveDialogue();
 		}
 	});
@@ -1378,14 +1378,14 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	fileTree->header()->hide(); // Remove the 'Name' bar at top
 
-	if (useFileTree->isChecked() && mostRecentPath != ""){
+	if (useFileTree->isChecked() && mostRecentPath != "") {
 		fileTree->show();
-	}else{
+	}else {
 		fileTree->hide();
 	}
 
-	if (foundationSettings.value("wasFullScreened", false).toBool()){
-		if (!actionUseCustomBar->isChecked()){
+	if (foundationSettings.value("wasFullScreened", false).toBool()) {
+		if (!actionUseCustomBar->isChecked()) {
 			setWindowState(Qt::WindowMaximized);
 		}
 	}
@@ -1411,10 +1411,10 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	textEdit->setFocus();
 
-	if (!argFileName.isEmpty()){
+	if (!argFileName.isEmpty()) {
 		globalArgFileName = argFileName;
 		on_actionOpen_triggered();
-	}else{
+	}else {
 		on_actionNew_triggered();
 	}
 
@@ -1429,7 +1429,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	webView->setUrl(QUrl("https://www.github.com/AdamJosephMather/CodeWizard"));
 	urlBar->setText("https://www.github.com/AdamJosephMather/CodeWizard");
 
-	if (!useWebView->isChecked()){
+	if (!useWebView->isChecked()) {
 		webView->hide();
 		reloadButton->hide();
 		nextWebButton->hide();
@@ -1469,7 +1469,7 @@ void MainWindow::repositionSearchBar() {
 	int startPos = lastMenuRect.right();  // Right edge of last menu
 	
 	int correctWidth = correctSearchBarWidth;
-	if (endPos-startPos < correctWidth){
+	if (endPos-startPos < correctWidth) {
 		correctWidth = endPos-startPos;
 	}
 	
@@ -1492,7 +1492,7 @@ void MainWindow::repositionSearchBar() {
 		minWinButton->setFixedSize(singleButtonWidth, menuBarHeight);
 		minWinButton->move(endPos-singleButtonWidth*3, 0);
 		minWinButton->show();
-	}else{
+	}else {
 		closeWinButton->hide();
 		windowWinButton->hide();
 		minWinButton->hide();
@@ -1507,7 +1507,7 @@ void MainWindow::repositionSearchBar() {
 	int searchStart = startPos+leftPad;//center-correctWidth/2;
 	
 	int prefferedStart = bar->width()/2-correctWidth/2;
-	if (prefferedStart >= searchStart){
+	if (prefferedStart >= searchStart) {
 		searchStart = prefferedStart;
 	}
 	
@@ -1521,7 +1521,7 @@ void MainWindow::repositionSearchBar() {
 	searchMenu->move(searchStart, menuBarHeight / 2 + searchBar->height() / 2);
 }
 
-void MainWindow::onSearchItemClicked(QListWidgetItem *item){
+void MainWindow::onSearchItemClicked(QListWidgetItem *item) {
 	qDebug() << "onSearchItemClicked";
 	
 	searchMenu->show();
@@ -1534,44 +1534,44 @@ void MainWindow::onSearchItemClicked(QListWidgetItem *item){
 	runSearchItem();
 }
 
-void MainWindow::fillSearchMenu(){
+void MainWindow::fillSearchMenu() {
 	qDebug() << "fillSearchMenu";
 	
 	searchMenu->clear();
 		
-	for (int i = 0; i < indexedFiles.length(); i++){
+	for (int i = 0; i < indexedFiles.length(); i++) {
 		searchMenu->addItem(displayPaths[i]);
 	}
 	
-	if (selectedSearchFile >= indexedFiles.length() || selectedSearchFile >= 0){
+	if (selectedSearchFile >= indexedFiles.length() || selectedSearchFile >= 0) {
 		selectedSearchFile = 0;
 	}
-	if (!indexedFiles.isEmpty()){
+	if (!indexedFiles.isEmpty()) {
 		searchMenu->setCurrentRow(selectedSearchFile);
 	}
 	searchMenu->update();
 }
 
-QStringList MainWindow::extractStringWords(QString word){
+QStringList MainWindow::extractStringWords(QString word) {
 	qDebug() << "extractStringWords";
 	
 	QStringList wordsRaw = {""};
 	
 	QString keepers = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0987654321.";
 	
-	for (QChar c : word){
-		if (!keepers.contains(c)){
+	for (QChar c : word) {
+		if (!keepers.contains(c)) {
 			wordsRaw.push_back(c);
 			wordsRaw.push_back("");
-		}else{
+		}else {
 			wordsRaw[wordsRaw.length()-1] += c;
 		}
 	}
 	
 	QStringList words;
 	
-	for (QString word : wordsRaw){
-		if (!word.isEmpty() && word != " "){
+	for (QString word : wordsRaw) {
+		if (!word.isEmpty() && word != " ") {
 			words.push_back(word);
 		}
 	}
@@ -1579,7 +1579,7 @@ QStringList MainWindow::extractStringWords(QString word){
 	return words;
 }
 
-std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we are going to recurse on brackets...
+std::pair<bool, double> MainWindow::calcExpression(QString expression) { // we are going to recurse on brackets...
 	if (expression == "") return {false, 0.0};
 	
 	expression.replace(" ", "");
@@ -1596,16 +1596,16 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 	for (QChar c : expression) {
 		if (!allowed.contains(c)) return {false, 0.0};
 		
-		if (c == '('){
+		if (c == '(') {
 			openedBrackets += 1;
-			if (openedBrackets == 1){
+			if (openedBrackets == 1) {
 				subExpression = "";
 			}
-		}else if (c == ')'){
+		}else if (c == ')') {
 			openedBrackets -= 1;
-			if (openedBrackets < 0){
+			if (openedBrackets < 0) {
 				return {false, 0.0};
-			}else if (openedBrackets == 0){
+			}else if (openedBrackets == 0) {
 				auto [isValid, result] = calcExpression(subExpression);
 				if (!isValid) return {false, 0.0};
 				
@@ -1613,7 +1613,7 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 			}
 		}else if (openedBrackets != 0) {
 			subExpression += c;
-		}else{
+		}else {
 			newExpression += c;
 		}
 	}
@@ -1632,7 +1632,7 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 	
 	QString partsOfDigit = "0987654321.";
 	
-	while (newExpression.contains("^")){
+	while (newExpression.contains("^")) {
 		QStringList parts = newExpression.split("^");
 		QString p1 = parts[0];
 		QString p2 = parts[1];
@@ -1641,9 +1641,9 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 		QString trueDig2 = "";
 		
 		bool seenDot = false;
-		for (int i = p1.length()-1; i >= 0; i--){
+		for (int i = p1.length()-1; i >= 0; i--) {
 			QChar c = p1.at(i);
-			if (c == '.'){
+			if (c == '.') {
 				if (seenDot) return {false, 0.0};
 				seenDot = true;
 			}else if (c == '-') {
@@ -1656,16 +1656,16 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 		
 		seenDot = false;
 		bool added = false;
-		for (int i = 0; i < p2.length(); i++){
+		for (int i = 0; i < p2.length(); i++) {
 			QChar c = p2.at(i);
-			if (c == '.'){
+			if (c == '.') {
 				if (seenDot) return {false, 0.0};
 				seenDot = true;
 			}else if (c == '-' && !added) {
 			}else if (!c.isDigit()) break;
 			
 			trueDig2 += c;
-			if (c != '-'){
+			if (c != '-') {
 				added = true;
 			}
 		}
@@ -1686,7 +1686,7 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 		}
 	}
 	
-	while (newExpression.contains("*")){
+	while (newExpression.contains("*")) {
 		QStringList parts = newExpression.split("*");
 		QString p1 = parts[0];
 		QString p2 = parts[1];
@@ -1695,9 +1695,9 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 		QString trueDig2 = "";
 		
 		bool seenDot = false;
-		for (int i = p1.length()-1; i >= 0; i--){
+		for (int i = p1.length()-1; i >= 0; i--) {
 			QChar c = p1.at(i);
-			if (c == '.'){
+			if (c == '.') {
 				if (seenDot) return {false, 0.0};
 				seenDot = true;
 			}else if (!c.isDigit()) break;
@@ -1707,16 +1707,16 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 		
 		seenDot = false;
 		bool added = false;
-		for (int i = 0; i < p2.length(); i++){
+		for (int i = 0; i < p2.length(); i++) {
 			QChar c = p2.at(i);
-			if (c == '.'){
+			if (c == '.') {
 				if (seenDot) return {false, 0.0};
 				seenDot = true;
 			}else if (c == '-' && !added) {
 			}else if (!c.isDigit()) break;
 			
 			trueDig2 += c;
-			if (c != '-'){
+			if (c != '-') {
 				added = true;
 			}
 		}
@@ -1737,7 +1737,7 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 		}
 	}
 	
-	while (newExpression.contains("/")){
+	while (newExpression.contains("/")) {
 		QStringList parts = newExpression.split("/");
 		QString p1 = parts[0];
 		QString p2 = parts[1];
@@ -1746,9 +1746,9 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 		QString trueDig2 = "";
 		
 		bool seenDot = false;
-		for (int i = p1.length()-1; i >= 0; i--){
+		for (int i = p1.length()-1; i >= 0; i--) {
 			QChar c = p1.at(i);
-			if (c == '.'){
+			if (c == '.') {
 				if (seenDot) return {false, 0.0};
 				seenDot = true;
 			}else if (!c.isDigit()) break;
@@ -1758,16 +1758,16 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 		
 		seenDot = false;
 		bool added = false;
-		for (int i = 0; i < p2.length(); i++){
+		for (int i = 0; i < p2.length(); i++) {
 			QChar c = p2.at(i);
-			if (c == '.'){
+			if (c == '.') {
 				if (seenDot) return {false, 0.0};
 				seenDot = true;
 			}else if (c == '-' && !added) {
 			}else if (!c.isDigit()) break;
 			
 			trueDig2 += c;
-			if (c != '-'){
+			if (c != '-') {
 				added = true;
 			}
 		}
@@ -1790,7 +1790,7 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 		}
 	}
 	
-	while (newExpression.contains("%")){
+	while (newExpression.contains("%")) {
 		QStringList parts = newExpression.split("%");
 		QString p1 = parts[0];
 		QString p2 = parts[1];
@@ -1799,9 +1799,9 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 		QString trueDig2 = "";
 		
 		bool seenDot = false;
-		for (int i = p1.length()-1; i >= 0; i--){
+		for (int i = p1.length()-1; i >= 0; i--) {
 			QChar c = p1.at(i);
-			if (c == '.'){
+			if (c == '.') {
 				if (seenDot) return {false, 0.0};
 				seenDot = true;
 			}else if (!c.isDigit()) break;
@@ -1811,16 +1811,16 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 		
 		seenDot = false;
 		bool added = false;
-		for (int i = 0; i < p2.length(); i++){
+		for (int i = 0; i < p2.length(); i++) {
 			QChar c = p2.at(i);
-			if (c == '.'){
+			if (c == '.') {
 				if (seenDot) return {false, 0.0};
 				seenDot = true;
 			}else if (c == '-' && !added) {
 			}else if (!c.isDigit()) break;
 			
 			trueDig2 += c;
-			if (c != '-'){
+			if (c != '-') {
 				added = true;
 			}
 		}
@@ -1843,7 +1843,7 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 		}
 	}
 	
-	while (newExpression.contains("--") || newExpression.contains("++") || newExpression.contains("+-")){
+	while (newExpression.contains("--") || newExpression.contains("++") || newExpression.contains("+-")) {
 		if (newExpression.contains("--")) newExpression.replace("--", "+");
 		if (newExpression.contains("++")) newExpression.replace("++", "+");
 		if (newExpression.contains("+-")) newExpression.replace("+-", "-");
@@ -1853,26 +1853,26 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 	QString next;
 	QString op;
 	
-	for (int i = 0; i < newExpression.length(); i++){
+	for (int i = 0; i < newExpression.length(); i++) {
 		QChar c = newExpression[i];
 		
-		if (c.isDigit() || c == '.'){
+		if (c.isDigit() || c == '.') {
 			next += c;
 		}
-		if (c == '+' || c == '-' || i == newExpression.length()-1){
+		if (c == '+' || c == '-' || i == newExpression.length()-1) {
 			bool ok;
 			double nextDub = next.toDouble(&ok);
-			if (next == ""){
+			if (next == "") {
 				nextDub = 0;
 			}else if (!ok) return {false, 0.0};
 			
-			if (op == ""){
+			if (op == "") {
 				runningTotal = nextDub;
 				next = "";
-			}else{
-				if (op == '+'){
+			}else {
+				if (op == '+') {
 					runningTotal += nextDub;
-				}else{
+				}else {
 					runningTotal -= nextDub;
 				}
 				
@@ -1886,7 +1886,7 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression){ // we ar
 	return {true, runningTotal};
 }
 
-void MainWindow::narrowDownSearchFiles(){
+void MainWindow::narrowDownSearchFiles() {
 	indexedFiles.clear();
 	indexedFilesPath.clear();
 	displayPaths.clear();
@@ -1901,7 +1901,7 @@ void MainWindow::narrowDownSearchFiles(){
 	QString cpy = starterText;
 	cpy.replace(" ", "");
 	
-	if (isValid && QString::number(result, 'f', 2) != cpy){
+	if (isValid && QString::number(result, 'f', 2) != cpy) {
 		indexedFilesPath.push_back("/.CodeWiz./MoveResultToTop");
 		displayPaths.push_back(cpy + " = " + QString::number(result));
 		indexedFiles.push_back(QString::number(result));
@@ -1909,28 +1909,28 @@ void MainWindow::narrowDownSearchFiles(){
 	
 	QStringList words = extractStringWords(starterText);
 	
-	for (int i = 0; i < allIndexedFiles.length(); i++){
+	for (int i = 0; i < allIndexedFiles.length(); i++) {
 		bool works = true;
 		QString lowered = allIndexedFiles[i].toLower();
-		for (QString word : words){
-			if (!lowered.contains(word)){
+		for (QString word : words) {
+			if (!lowered.contains(word)) {
 				works = false;
 				break;
 			}
 		}
-		if (works){
+		if (works) {
 			indexedFiles.push_back(allIndexedFiles[i]);
 			displayPaths.push_back(allDisplayPaths[i]);
 			indexedFilesPath.push_back(allIndexedFilesPath[i]);
 			currentCount ++;
-			if (currentCount > maxCount){
+			if (currentCount > maxCount) {
 				break;
 			}
 		}
 	}
 }
 
-void MainWindow::indexFiles(){
+void MainWindow::indexFiles() {
 	qDebug() << "indexFiles";
 	
 	allIndexedFiles.clear();
@@ -1967,13 +1967,13 @@ void MainWindow::indexFiles(){
 		for (const QFileInfo &entry : entries) {
 			if (entry.isDir()) {
 				queue.enqueue(entry.absoluteFilePath());
-			} else {
+			}else {
 				allIndexedFilesPath.append(entry.absoluteFilePath());
 				
 				QString relativePath = entry.absoluteFilePath().mid(starterPathLen).trimmed();
-				if (relativePath.length() > maxLen){
+				if (relativePath.length() > maxLen) {
 					relativePath = relativePath.mid(relativePath.length()-maxLen);
-					if (relativePath.contains("/")){
+					if (relativePath.contains("/")) {
 						int indx = relativePath.indexOf("/");
 						relativePath = relativePath.mid(indx);
 					}
@@ -1981,9 +1981,9 @@ void MainWindow::indexFiles(){
 				
 				allDisplayPaths.append(relativePath);
 				
-				if (seen < 30){
+				if (seen < 30) {
 					searchMenu->addItem(relativePath); // this here is a way to fill the menu really fast, for large file systems. Makes it feel instantanous.
-				}else if (notDoneAdding){
+				}else if (notDoneAdding) {
 					searchMenu->setCurrentRow(0);
 					QApplication::processEvents();
 					notDoneAdding = false;
@@ -1994,14 +1994,14 @@ void MainWindow::indexFiles(){
 			}
 		}
 		
-		if (seen >= maxFiles){
+		if (seen >= maxFiles) {
 			break;
 		}
 	}
 	
 	QStringList commands = {"Dark Mode", "Light Mode", "Increase Text Size", "Decrease Text Size", "Reset Text Size", "Set Syntax Colors", "Set Tint Colors", "Toggle Use File Tabs", "Toggle Use Vim Mode", "Toggle Use Builtin Terminal", "Toggle Terminal Positioning", "Toggle Auto Add Brackets", "Fix It", "Convert To Spaces", "Toggle Vim Mode", "Reset LSP", "Quit", "Toggle No Autocomplete", "Toggle Only CodeWizard Autocomplete", "Toggle LSP Show Errors", "Toggle LSP Show Other", "Toggle LSP Show Warnings", "Lang: Python", "Lang: C", "Lang: C#", "Lang: C++", "Lang: JS", "Lang: TS", "Lang: CSS", "Lang: HTML", "Lang: Go", "Lang: Rust", "Lang: Lua", "Lang: Plaintext", "Lang: Cobol", "Lang: GLSL", "Lang: WGSL", "Lang: Java", "Git Push", "Git Pull", "Git Force Pull", "Toggle Use Relative Line Numbers", "Set Project Specific Settings", "Set CodeWizard UUID"};
 	
-	for (QString cmd : commands){
+	for (QString cmd : commands) {
 		allIndexedFilesPath << ":"+cmd;
 		allIndexedFiles << ":"+cmd;
 		allDisplayPaths << ":"+cmd;
@@ -2079,7 +2079,7 @@ void MainWindow::setProjectData(QString path, QStringList names, QStringList val
 			out << names[i] + ": " + values[i].replace("\n", "\\n") << "\n";
 		}
 		file.close();
-	} else {
+	}else {
 		qDebug() << "Error writing to file: " << path;
 	}
 }
@@ -2125,7 +2125,7 @@ void MainWindow::on_actionProject_Specific_Settings_triggered() {
 	QPushButton *saveButton = new QPushButton("Save Project Settings", this);
 	saveButton->setFont(textEdit->font());
 	
-	connect(saveButton, &QPushButton::clicked, this, [this, tagline_textedit, lsp_textedit, project_settings_path](){
+	connect(saveButton, &QPushButton::clicked, this, [this, tagline_textedit, lsp_textedit, project_settings_path]() {
 		qDebug() << "saveButton lambda called";
 		
 		setProjectData(project_settings_path, QStringList() << "tagline" << "lspline", QStringList() << tagline_textedit->toPlainText() << lsp_textedit->toPlainText());
@@ -2139,13 +2139,13 @@ void MainWindow::on_actionProject_Specific_Settings_triggered() {
 	diag.exec();
 }
 
-void MainWindow::runSearchItem(){
+void MainWindow::runSearchItem() {
 	qDebug() << "runSearchItem";
 	QString cmd = indexedFilesPath[selectedSearchFile];
 	
-	if (cmd == ""){
+	if (cmd == "") {
 		return;
-	}else if(cmd == "/.CodeWiz./MoveResultToTop"){
+	}else if(cmd == "/.CodeWiz./MoveResultToTop") {
 		QTextCursor cursor = searchBar->textCursor();
 		cursor.select(QTextCursor::Document);
 		cursor.insertText(indexedFiles[selectedSearchFile]);
@@ -2153,7 +2153,7 @@ void MainWindow::runSearchItem(){
 		return;
 	}
 	
-	if (cmd.startsWith(":")){
+	if (cmd.startsWith(":")) {
 		if (cmd == ":Dark Mode") on_actionDark_Mode_triggered();
 		if (cmd == ":Light Mode") on_actionLight_Mode_triggered();
 		if (cmd == ":Increase Text Size") on_actionIncrease_Text_Size_triggered();
@@ -2198,7 +2198,7 @@ void MainWindow::runSearchItem(){
 		if (cmd == ":Set Project Specific Settings") on_actionProject_Specific_Settings_triggered();
 		if (cmd == ":Set CodeWizard UUID") on_actionSet_CodeWizard_UUID_triggered();
 		
-	}else{
+	}else {
 		globalArgFileName = cmd;
 		textEdit->setFocus();
 		searchBar->setPlainText("");
@@ -2211,7 +2211,7 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 	repositionSearchBar();
 }
 
-void MainWindow::lineDragEvent(QPoint start, QPoint end, bool startODrag, bool endODrag){
+void MainWindow::lineDragEvent(QPoint start, QPoint end, bool startODrag, bool endODrag) {
 	qDebug() << "lineDragEvent";
 	
 	QTextCursor sCur = lineNumberTextEdit->cursorForPosition(start);
@@ -2224,7 +2224,7 @@ void MainWindow::lineDragEvent(QPoint start, QPoint end, bool startODrag, bool e
 	int textEditScrolledTo = textEdit->verticalScrollBar()->value();
 	int topLine = floor(textEditScrolledTo/lineHeight); // 0 based
 	
-	if (startODrag){
+	if (startODrag) {
 		startLineDrag = sCur.blockNumber()+topLine;
 	}
 	
@@ -2234,16 +2234,16 @@ void MainWindow::lineDragEvent(QPoint start, QPoint end, bool startODrag, bool e
 	QTextBlock b1 = textDocument->findBlockByLineNumber(sLine);
 	QTextBlock b2 = textDocument->findBlockByLineNumber(eLine);
 
-	if (!b1.isValid() || !b2.isValid()){
+	if (!b1.isValid() || !b2.isValid()) {
 		return;
 	}
 
 	QTextCursor c1(b1);
 	QTextCursor c2(b2);
 
-	if (c1.position() <= c2.position()){
+	if (c1.position() <= c2.position()) {
 		c2.movePosition(QTextCursor::EndOfLine);
-	}else{
+	}else {
 		c1.movePosition(QTextCursor::EndOfLine);
 	}
 
@@ -2251,42 +2251,42 @@ void MainWindow::lineDragEvent(QPoint start, QPoint end, bool startODrag, bool e
 
 	textEdit->setTextCursor(c1);
 
-	if (endODrag){
+	if (endODrag) {
 		textEdit->setFocus();
 	}
 }
 
-void MainWindow::urlChanged(const QUrl &url){
+void MainWindow::urlChanged(const QUrl &url) {
 	qDebug() << "urlChanged";
 	urlBar->setText(url.toString());
 	urlBar->setCursorPosition(0);
 }
 
-void MainWindow::reloadWebView(){
+void MainWindow::reloadWebView() {
 	qDebug() << "reloadWebView";
 	webView->reload();
 }
 
-void MainWindow::backWebView(){
+void MainWindow::backWebView() {
 	qDebug() << "backWebView";
 	webView->back();
 }
 
-void MainWindow::nextWebView(){
+void MainWindow::nextWebView() {
 	qDebug() << "nextWebView";
 	webView->forward();
 }
 
-void MainWindow::useWebViewToggled(){
+void MainWindow::useWebViewToggled() {
 	qDebug() << "useWebViewToggled";
 
-	if (useWebView->isChecked()){
+	if (useWebView->isChecked()) {
 		webView->show();
 		urlBar->show();
 		reloadButton->show();
 		nextWebButton->show();
 		prevWebButton->show();
-	}else{
+	}else {
 		webView->hide();
 		urlBar->hide();
 		reloadButton->hide();
@@ -2297,7 +2297,7 @@ void MainWindow::useWebViewToggled(){
 	saveWantedTheme();
 }
 
-void MainWindow::on_actionRender_As_Markdown_triggered(){
+void MainWindow::on_actionRender_As_Markdown_triggered() {
 	qDebug() << "actionRender_As_Markdown_triggered";
 
 	QByteArray markdownBytes = textEdit->toPlainText().toUtf8();
@@ -2309,14 +2309,14 @@ void MainWindow::on_actionRender_As_Markdown_triggered(){
 	openMenuWithHTML("Markdown", html);
 }
 
-void MainWindow::useRelativeLineNumbersTriggered(){
+void MainWindow::useRelativeLineNumbersTriggered() {
 	qDebug() << "useRelativeLineNumbersTriggered";
 	updateLineNumbers(globalLineCount);
 	saveWantedTheme();
 }
 
-QColor MainWindow::getTintedColor(int r, int g, int b){
-	if (tintColor == "255,255,255"){
+QColor MainWindow::getTintedColor(int r, int g, int b) {
+	if (tintColor == "255,255,255") {
 		return QColor(r,g,b);
 	}
 	
@@ -2338,42 +2338,42 @@ QColor MainWindow::getTintedColor(int r, int g, int b){
 	return QColor(newR, newG, newB);
 }
 
-void MainWindow::useTabsToggled(){
+void MainWindow::useTabsToggled() {
 	qDebug() << "useTabsToggled";
 
-	if (useTabs->isChecked() && tabs.length() > 0){
+	if (useTabs->isChecked() && tabs.length() > 0) {
 		fileTabBar->show();
 
 		QColor color3;
-		if (darkmode){
+		if (darkmode) {
 			color3 = QColor(25, 25, 25);
-		} else {
+		}else {
 			color3 = QColor(245, 245, 245);
 		}
 		auto palette = fileTabBar->palette();
 		palette.setColor(QPalette::Base, color3);
 		fileTabBar->setPalette(palette);
 		fileTabBar->setStyleSheet("QScrollArea { border: none; }");
-	} else {
+	}else {
 		fileTabBar->hide();
 	}
 
 	saveWantedTheme();
 }
 
-void MainWindow::closeTab(int id){
+void MainWindow::closeTab(int id) {
 	qDebug() << "closeTab - " << id;
 
 	int loc = -1;
-	for (int i = 0; i < tabs.length(); i++){
+	for (int i = 0; i < tabs.length(); i++) {
 		TabWidget *tabHere = tabs[i];
-		if (tabHere->m_index == id){
+		if (tabHere->m_index == id) {
 			loc = i;
 			break;
 		}
 	}
 
-	if (loc == -1){
+	if (loc == -1) {
 		return;
 	}
 
@@ -2384,14 +2384,14 @@ void MainWindow::closeTab(int id){
 	tabs.remove(loc);
 	delete tab;
 
-	if (tabs.length() == 0){
+	if (tabs.length() == 0) {
 		fileTabBar->hide();
 	}
 }
 
-void MainWindow::addTab(QString name, QString file){
-	for (TabWidget *tab : tabs){
-		if (tab->extraText == file){
+void MainWindow::addTab(QString name, QString file) {
+	for (TabWidget *tab : tabs) {
+		if (tab->extraText == file) {
 			editingTab = tab->m_index;
 			return;
 		}
@@ -2407,13 +2407,13 @@ void MainWindow::addTab(QString name, QString file){
 	tab->extraText = file;
 	tabLayout->insertWidget(tabLayout->count()-1, tab);
 
-	if (useTabs->isChecked()){
+	if (useTabs->isChecked()) {
 		fileTabBar->show();
 
 		QColor color3;
-		if (darkmode){
+		if (darkmode) {
 			color3 = QColor(25, 25, 25);
-		} else {
+		}else {
 			color3 = QColor(245, 245, 245);
 		}
 		auto palette = fileTabBar->palette();
@@ -2423,26 +2423,26 @@ void MainWindow::addTab(QString name, QString file){
 	}
 }
 
-void MainWindow::tabClicked(int id){
+void MainWindow::tabClicked(int id) {
 	qDebug() << "tabClicked - " << id;
 
 	int loc = -1;
 	int loc2 = -1;
-	for (int i = 0; i < tabs.length(); i++){
+	for (int i = 0; i < tabs.length(); i++) {
 		TabWidget *tabHere = tabs[i];
-		if (tabHere->m_index == id){
+		if (tabHere->m_index == id) {
 			loc = i;
 		}
-		if (tabHere->extraText == fileName){
+		if (tabHere->extraText == fileName) {
 			loc2 = i;
 		}
 	}
 
-	if (loc2 != -1){
+	if (loc2 != -1) {
 		tabs[loc2]->lineNum = textEdit->verticalScrollBar()->value();
 	}
 
-	if (loc == -1){
+	if (loc == -1) {
 		return;
 	}
 
@@ -2456,13 +2456,13 @@ void MainWindow::tabClicked(int id){
 //	textEdit->verticalScrollBar()->setValue(tab->lineNum);
 }
 
-void MainWindow::updateSplitsWidths(){
+void MainWindow::updateSplitsWidths() {
 	qDebug() << "updateSplitsWidths";
 
 	int totalWidth = splitter->width();
 	int totalHeight = splitter2->height();
 
-	if (totalWidth == 0 || totalHeight == 0){
+	if (totalWidth == 0 || totalHeight == 0) {
 		QTimer::singleShot(50, this, &MainWindow::updateSplitsWidths); //reschedule it just in case
 		return;
 	}
@@ -2478,14 +2478,14 @@ void MainWindow::updateSplitsWidths(){
 	sizes.push_back(ftW);
 	sizes.push_back(teW);
 
-	if (!(useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized()))){
+	if (!(useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized()))) {
 		teW += ftW;
 		sizes[1] += ftW;
 	}
 
-	if (useBuiltinTerminal->isChecked() && !preferHorizontalTerminal->isChecked()){
+	if (useBuiltinTerminal->isChecked() && !preferHorizontalTerminal->isChecked()) {
 		sizes.push_back(btW);
-	}else{
+	}else {
 		teW += btW;
 		sizes[1] += btW;
 	}
@@ -2494,29 +2494,29 @@ void MainWindow::updateSplitsWidths(){
 	sizes.clear();
 	sizes.push_back(teH);
 
-	if (useBuiltinTerminal->isChecked() && preferHorizontalTerminal->isChecked()){
+	if (useBuiltinTerminal->isChecked() && preferHorizontalTerminal->isChecked()) {
 		sizes.push_back(btH);
 		splitter2->setSizes(sizes);
 	}
 }
 
-void MainWindow::storeResizeOfSplitters(){
+void MainWindow::storeResizeOfSplitters() {
 	qDebug() << "storeResizeOfSplitters";
 
 	auto s1 = splitter->sizes();
 	auto s2 = splitter2->sizes();
 
 	int totalWidth = 0;
-	for (int i = 0; i < s1.length(); i++){
+	for (int i = 0; i < s1.length(); i++) {
 		totalWidth += s1[i];
 	}
 
 	int totalHeight = 0;
-	for (int i = 0; i < s2.length(); i++){
+	for (int i = 0; i < s2.length(); i++) {
 		totalHeight += s2[i];
 	}
 
-	if (totalWidth == 0 || totalHeight == 0){return;}
+	if (totalWidth == 0 || totalHeight == 0) {return;}
 
 	splitWidths[0] = (float)fileTree->width()/(float)totalWidth;
 	splitWidths[1] = (float)builtinTerminalTextEdit->width()/(float)totalWidth;
@@ -2538,7 +2538,7 @@ void MainWindow::moveWidgetsToSplitter(QLayout *layout, QWidget *toWidget) {
 			layout->removeWidget(widget);
 			toWidget->layout()->addWidget(widget);
 
-			if (widget->layout()){
+			if (widget->layout()) {
 				widget->layout()->setSpacing(0);
 				widget->layout()->setContentsMargins(0, 0, 0, 0);
 			}
@@ -2549,13 +2549,13 @@ void MainWindow::moveWidgetsToSplitter(QLayout *layout, QWidget *toWidget) {
 
 			if (QVBoxLayout *vLayout = qobject_cast<QVBoxLayout *>(nestedLayout)) {
 				containerLayout = new QVBoxLayout(container);
-			} else if (QHBoxLayout *hLayout = qobject_cast<QHBoxLayout *>(nestedLayout)) {
+			}else if (QHBoxLayout *hLayout = qobject_cast<QHBoxLayout *>(nestedLayout)) {
 				containerLayout = new QHBoxLayout(container);
-			} else if (QFormLayout *fLayout = qobject_cast<QFormLayout *>(nestedLayout)) {
+			}else if (QFormLayout *fLayout = qobject_cast<QFormLayout *>(nestedLayout)) {
 				containerLayout = new QFormLayout(container);
 			} // Add more layout types as needed
 
-			if (!containerLayout){
+			if (!containerLayout) {
 				continue;
 			}
 
@@ -2579,13 +2579,13 @@ void MainWindow::changeEvent(QEvent *event) {
 		if (this->isActiveWindow()) {
 			qDebug() << "returnedToCodeWizard";
 
-			if (handlingReopen){
+			if (handlingReopen) {
 				return;
 			}
 
 			handlingReopen = true;
 
-			if (fileName.isEmpty()){
+			if (fileName.isEmpty()) {
 				handlingReopen = false;
 				return;
 			}
@@ -2600,8 +2600,8 @@ void MainWindow::changeEvent(QEvent *event) {
 			QTextStream in(&file);
 			QString fileContent = in.readAll();
 
-			if (fileContent != toCompareTo && toCompareTo != "NOCOMPARISONYET_CODEWIZARD_WARNING - <THEENDISNIGH>"){
-				if (useSpeakerAction->isChecked()){
+			if (fileContent != toCompareTo && toCompareTo != "NOCOMPARISONYET_CODEWIZARD_WARNING - <THEENDISNIGH>") {
+				if (useSpeakerAction->isChecked()) {
 					#ifdef _WIN32
 						speech->say("Detected change in file, reload?");
 					#endif
@@ -2610,9 +2610,9 @@ void MainWindow::changeEvent(QEvent *event) {
 			}
 
 			handlingReopen = false;
-		}else{
+		}else {
 			qDebug() << "leftCodeWizard";
-			if (fileName.isEmpty()){
+			if (fileName.isEmpty()) {
 				handlingReopen = false;
 				return;
 			}
@@ -2640,7 +2640,7 @@ void MainWindow::changeEvent(QEvent *event) {
 			repositionSearchBar();
 		}
 		
-		if (actionUseCustomBar->isChecked()){
+		if (actionUseCustomBar->isChecked()) {
 			bool becomingFullScreen =  (newState & (Qt::WindowFullScreen | Qt::WindowMaximized)) && !(oldState & (Qt::WindowFullScreen | Qt::WindowMaximized));
 			
 			if (!currentlyCustom && becomingFullScreen) {
@@ -2654,8 +2654,7 @@ void MainWindow::changeEvent(QEvent *event) {
 	QMainWindow::changeEvent(event);
 }
 
-void MainWindow::toggleDefaultTitleBar(bool show)
-{
+void MainWindow::toggleDefaultTitleBar(bool show) {
 	qDebug() << "toggleTitleBar " << show << currentlyCustom;
 	
 	Qt::WindowFlags currentFlags = windowFlags();
@@ -2664,7 +2663,7 @@ void MainWindow::toggleDefaultTitleBar(bool show)
 		// Remove the frameless hint to show the title bar
 		currentlyCustom = false;
 		setWindowFlags(currentFlags & ~Qt::FramelessWindowHint);
-	} else {
+	}else {
 		// Add the frameless hint to hide the title bar
 		currentlyCustom = true;
 		setWindowFlags(currentFlags | Qt::FramelessWindowHint);
@@ -2674,7 +2673,7 @@ void MainWindow::toggleDefaultTitleBar(bool show)
 void MainWindow::useCustomBarTriggered() {
 	qDebug() << "useCustomBarTriggered";
 	
-	if (!actionUseCustomBar->isChecked()){
+	if (!actionUseCustomBar->isChecked()) {
 		if (currentlyCustom) {
 			toggleDefaultTitleBar(true);
 			showMaximized();
@@ -2689,7 +2688,7 @@ void MainWindow::useCustomBarTriggered() {
 	saveWantedTheme();
 }
 
-void MainWindow::pullUpReloadDialogue(QString message, QString content){
+void MainWindow::pullUpReloadDialogue(QString message, QString content) {
 	qDebug() << "pullUpReloadDialogue";
 
 	QMessageBox dialog;
@@ -2713,7 +2712,7 @@ void MainWindow::pullUpReloadDialogue(QString message, QString content){
 	}
 }
 
-void MainWindow::addTerminal(){
+void MainWindow::addTerminal() {
 	qDebug() << "addTerminal";
 
 	currentTerminalIndex = activeTerminals.length();
@@ -2746,14 +2745,14 @@ void MainWindow::addTerminal(){
 	#endif
 }
 
-void MainWindow::prevTerminal(){
+void MainWindow::prevTerminal() {
 	qDebug() << "prevTerminal";
 
-	if (activeTerminals.length() == 1){return;}
+	if (activeTerminals.length() == 1) {return;}
 
 	currentTerminalIndex --;
 	currentTerminalIndex = currentTerminalIndex%activeTerminals.length();
-	if (currentTerminalIndex < 0){currentTerminalIndex = activeTerminals.length()-1;}
+	if (currentTerminalIndex < 0) {currentTerminalIndex = activeTerminals.length()-1;}
 
 	builtinTerminalTextEdit->setPlainText(terminalStdOuts[currentTerminalIndex]);
 	builtinTerminalTextEditHORZ->setPlainText(terminalStdOuts[currentTerminalIndex]);
@@ -2762,10 +2761,10 @@ void MainWindow::prevTerminal(){
 	termCnt2->setText(QString::number(currentTerminalIndex+1)+"/"+QString::number(activeTerminals.length())+" ");
 }
 
-void MainWindow::nextTerminal(){
+void MainWindow::nextTerminal() {
 	qDebug() << "nextTerminal";
 
-	if (activeTerminals.length() == 1){return;}
+	if (activeTerminals.length() == 1) {return;}
 
 	currentTerminalIndex ++;
 	currentTerminalIndex = currentTerminalIndex%activeTerminals.length();
@@ -2780,14 +2779,14 @@ void MainWindow::nextTerminal(){
 	termCnt2->setText(QString::number(currentTerminalIndex+1)+"/"+QString::number(activeTerminals.length())+" ");
 }
 
-void MainWindow::handleTerminalStdout(int index){
+void MainWindow::handleTerminalStdout(int index) {
 	qDebug() << "handleTerminalStdout" << index;
 	QByteArray output = activeTerminals[index]->readAll();
 
 	QString text = QString::fromLocal8Bit(output);
 	terminalStdOuts[index] += text;
 
-	if (index == currentTerminalIndex){
+	if (index == currentTerminalIndex) {
 		builtinTerminalTextEdit->moveCursor(QTextCursor::End);
 		builtinTerminalTextEdit->insertPlainText(text);
 		builtinTerminalTextEdit->verticalScrollBar()->setValue(builtinTerminalTextEdit->verticalScrollBar()->maximum());
@@ -2798,7 +2797,7 @@ void MainWindow::handleTerminalStdout(int index){
 	}
 }
 
-void MainWindow::useVimModesTriggered(){
+void MainWindow::useVimModesTriggered() {
 	qDebug() << "useVimModesTriggered";
 	
 	textEdit->setVIM(useVimMode->isChecked());
@@ -2808,44 +2807,44 @@ void MainWindow::useVimModesTriggered(){
 	terminalInputLine->setVIM(useVimMode->isChecked());
 	terminalInputLineHORZ->setVIM(useVimMode->isChecked());
 
-	if (!useVimMode->isChecked()){
+	if (!useVimMode->isChecked()) {
 		textEdit->setCurrentVim("i");
-	}else{
+	}else {
 		textEdit->setCurrentVim("n");
 	}
 
 	saveWantedTheme();
 }
 
-void MainWindow::searchNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event, int vimRepeater){
-	if (move == QTextCursor::Up){
-		if (indexedFiles.isEmpty()){
+void MainWindow::searchNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event, int vimRepeater) {
+	if (move == QTextCursor::Up) {
+		if (indexedFiles.isEmpty()) {
 			return;
 		}
 		selectedSearchFile = (selectedSearchFile-1 + indexedFiles.length())%indexedFiles.length();
-		if (selectedSearchFile < indexedFiles.length()){
+		if (selectedSearchFile < indexedFiles.length()) {
 			searchMenu->setCurrentRow(selectedSearchFile);
 		}
-	}else if (move == QTextCursor::Down){
-		if (indexedFiles.isEmpty()){
+	}else if (move == QTextCursor::Down) {
+		if (indexedFiles.isEmpty()) {
 			return;
 		}
 		selectedSearchFile = (selectedSearchFile+1)%indexedFiles.length();
-		if (selectedSearchFile < indexedFiles.length()){
+		if (selectedSearchFile < indexedFiles.length()) {
 			searchMenu->setCurrentRow(selectedSearchFile);
 		}
 	}
 }
 
-void MainWindow::switchTerminalType(){
+void MainWindow::switchTerminalType() {
 	qDebug() << "switchTerminalType";
 	useBuiltinTerminalTriggered(); // does the same thing.
 }
 
-void MainWindow::updateTermimalViews(){
+void MainWindow::updateTermimalViews() {
 	qDebug() << "updateTermimalViews";
-	if (useBuiltinTerminal->isChecked()){
-		if (preferHorizontalTerminal->isChecked()){
+	if (useBuiltinTerminal->isChecked()) {
+		if (preferHorizontalTerminal->isChecked()) {
 			builtinTerminalTextEditHORZ->show();
 			terminalInputLineHORZ->show();
 			builtinTerminalTextEdit->hide();
@@ -2855,7 +2854,7 @@ void MainWindow::updateTermimalViews(){
 			builtinTerminalTextEditHORZ->parentWidget()->setParent(nullptr);
 
 			splitter2->addWidget(builtinTerminalTextEditHORZ->parentWidget());
-		}else{
+		}else {
 			builtinTerminalTextEditHORZ->hide();
 			terminalInputLineHORZ->hide();
 			builtinTerminalTextEdit->show();
@@ -2866,7 +2865,7 @@ void MainWindow::updateTermimalViews(){
 
 			splitter->addWidget(builtinTerminalTextEdit->parentWidget());
 		}
-	}else{
+	}else {
 		builtinTerminalTextEdit->hide();
 		builtinTerminalTextEditHORZ->hide();
 		terminalInputLine->hide();
@@ -2888,18 +2887,18 @@ void MainWindow::updateTermimalViews(){
 	}
 }
 
-void MainWindow::useBuiltinTerminalTriggered(){
+void MainWindow::useBuiltinTerminalTriggered() {
 	qDebug() << "useBuiltinTerminalTriggered";
 
 	updateTermimalViews();
 	saveWantedTheme();
 }
 
-void MainWindow::on_actionDiscard_Local_Changes_triggered(){
+void MainWindow::on_actionDiscard_Local_Changes_triggered() {
 	qDebug() << "on_actionDiscard_Local_Changes_triggered";
 
 	QModelIndex index = fileTree->rootIndex();
-	if (!index.isValid()){
+	if (!index.isValid()) {
 		openHelpMenu("Base folder not set.");
 		return;
 	}
@@ -2942,11 +2941,11 @@ void MainWindow::on_actionDiscard_Local_Changes_triggered(){
 	#endif
 }
 
-void MainWindow::on_actionRegular_triggered(){
+void MainWindow::on_actionRegular_triggered() {
 	qDebug() << "on_actionRegular_triggered";
 
 	QModelIndex index = fileTree->rootIndex();
-	if (!index.isValid()){
+	if (!index.isValid()) {
 		openHelpMenu("Base folder not set.");
 		return;
 	}
@@ -2990,11 +2989,11 @@ void MainWindow::on_actionRegular_triggered(){
 	#endif
 }
 
-void MainWindow::on_actionPush_triggered(){
+void MainWindow::on_actionPush_triggered() {
 	qDebug() << "on_actionPush_triggered";
 
 	QModelIndex index = fileTree->rootIndex();
-	if (!index.isValid()){
+	if (!index.isValid()) {
 		openHelpMenu("Base folder not set.");
 		return;
 	}
@@ -3012,7 +3011,7 @@ void MainWindow::on_actionPush_triggered(){
 
 	if (dialog.result() == QDialog::Accepted) {
 		commitmessage = dialog.textValue();
-	} else {
+	}else {
 		return;
 	}
 
@@ -3053,19 +3052,19 @@ void MainWindow::on_actionPush_triggered(){
 	#endif
 }
 
-void MainWindow::on_actionCompare_2_Files_triggered(){
+void MainWindow::on_actionCompare_2_Files_triggered() {
 	qDebug() << "on_actionCompare_2_Files_triggered";
-	if (isSettingUpLSP){
+	if (isSettingUpLSP) {
 		showWeDontFuckWithTheLSP();
 		return;
 	}
 
-	if (isOpeningFile){
+	if (isOpeningFile) {
 		showHoldYourHorses();
 		return;
 	}
 
-	if (unsaved && fileName != ""){
+	if (unsaved && fileName != "") {
 		pullUpSaveDialogue();
 	}
 
@@ -3117,7 +3116,7 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 
 	QStringList fileContentLst;
 
-	for (int i = 0; i < differences.length(); i++){
+	for (int i = 0; i < differences.length(); i++) {
 		fileContentLst << differences[i][1];
 	}
 
@@ -3161,19 +3160,19 @@ void MainWindow::on_actionCompare_2_Files_triggered(){
 	isOpeningFile = false;
 }
 
-QString MainWindow::changeToTabs(QString text){
+QString MainWindow::changeToTabs(QString text) {
 	QStringList lines = text.split("\n");
 	QStringList newLines;
 
-	for (QString line : lines){
+	for (QString line : lines) {
 		int seen = 0;
 		QString rest = "";
 		bool doneSeen = false;
 
-		for (QChar c : line){
-			if (c == ' ' && !doneSeen){
+		for (QChar c : line) {
+			if (c == ' ' && !doneSeen) {
 				seen ++;
-			}else{
+			}else {
 				doneSeen = true;
 				rest += c;
 			}
@@ -3184,11 +3183,11 @@ QString MainWindow::changeToTabs(QString text){
 
 		QString outLine = "";
 
-		for (int i = 0; i < tabs; i++){
+		for (int i = 0; i < tabs; i++) {
 			outLine += "	";
 		}
 
-		for (int i = 0; i < spaces; i++){
+		for (int i = 0; i < spaces; i++) {
 			outLine += " ";
 		}
 
@@ -3210,11 +3209,11 @@ void MainWindow::updateMargins(bool force) {
 	QFontMetrics metrics(textEdit->font());
 
 	marginBottomSize = textEdit->height()-metrics.height()*2;
-	if (marginBottomSize < 0){
+	if (marginBottomSize < 0) {
 		marginBottomSize = 0;
 	}
 
-	if (textDocument->blockCount() < 200 || force){ // I do this for performance issues with opening and closing the find menu/resizing menu. It resets the ENTIRE html
+	if (textDocument->blockCount() < 200 || force) { // I do this for performance issues with opening and closing the find menu/resizing menu. It resets the ENTIRE html
 		auto format = textDocument->rootFrame()->frameFormat();
 		format.setBottomMargin(marginBottomSize);
 		textDocument->rootFrame()->setFrameFormat(format);
@@ -3239,12 +3238,12 @@ void MainWindow::on_actionSet_Tint_Color_triggered() {
 	QString newcolor = dialog.textValue();
 	newcolor = newcolor.replace(" ", "");
 	
-	if (newcolor == ""){
+	if (newcolor == "") {
 		newcolor = "255,255,255";
 	}
 	
 	QStringList lst = newcolor.split(',');
-	if (lst.count() != 3){
+	if (lst.count() != 3) {
 		openHelpMenu("Did not find 3 values");
 		return;
 	}
@@ -3252,7 +3251,7 @@ void MainWindow::on_actionSet_Tint_Color_triggered() {
 	for (QString j : lst) {
 		try {
 			int num = j.toInt();
-			if (num < 0 || num > 255){
+			if (num < 0 || num > 255) {
 				openHelpMenu("Color: "+j+" Not allowed");
 				return;
 			}
@@ -3288,7 +3287,7 @@ void MainWindow::on_actionSet_Syntax_Colors_triggered() {
 		lineEdit->setPlaceholderText("Enter hex code (e.g., #RRGGBB)");
 		lineEdit->setFont(textEdit->font());
 
-		if (coloredFormats.length() > i+1){
+		if (coloredFormats.length() > i+1) {
 			lineEdit->setText(coloredFormats[i+1].foreground().color().name());
 		}
 
@@ -3329,21 +3328,21 @@ void MainWindow::on_actionSet_Syntax_Colors_triggered() {
 	diag.exec();
 }
 
-void MainWindow::saveSyntaxColorsToFile(){
+void MainWindow::saveSyntaxColorsToFile() {
 	QString saveFile = QFileDialog::getSaveFileName(this, tr("Save File"), "syntaxColors.cdwzrd", tr("All Files (*)"));
 
-	if (saveFile.isEmpty()){
+	if (saveFile.isEmpty()) {
 		return;
 	}
 
-	if (!saveFile.endsWith(".cdwzrd")){
+	if (!saveFile.endsWith(".cdwzrd")) {
 		saveFile += ".cdwzrd";
 	}
 
 	QFile file(saveFile);
 	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		openHelpMenu("Failed to open file to save syntax colors.");
-		if (useSpeakerAction->isChecked()){
+		if (useSpeakerAction->isChecked()) {
 			#ifdef _WIN32
 				speech->say("Failed to open file to save syntax colors.");
 			#endif
@@ -3353,7 +3352,7 @@ void MainWindow::saveSyntaxColorsToFile(){
 
 	QStringList listOData;
 
-	for (int i = 0; i < hexColorsList.length(); i++){
+	for (int i = 0; i < hexColorsList.length(); i++) {
 		listOData.push_back(hexColorsList[i]->text());
 	}
 
@@ -3366,7 +3365,7 @@ void MainWindow::saveSyntaxColorsToFile(){
 	openHelpMenu("Completed.");
 }
 
-void MainWindow::loadSyntaxColorsFromFile(){
+void MainWindow::loadSyntaxColorsFromFile() {
 	QString filePath = QFileDialog::getOpenFileName(this, "Open CodeWizard File", "", "CodeWizard Files (*.cdwzrd)");
 
 	if (filePath.isEmpty()) {
@@ -3378,7 +3377,7 @@ void MainWindow::loadSyntaxColorsFromFile(){
 	// Attempt to open the file in read-only mode
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		openHelpMenu("Failed to open file.");
-		if (useSpeakerAction->isChecked()){
+		if (useSpeakerAction->isChecked()) {
 			#ifdef _WIN32
 				speech->say("Failed to open file.");
 			#endif
@@ -3393,9 +3392,9 @@ void MainWindow::loadSyntaxColorsFromFile(){
 
 	QString expectedHeader = "CodeWizard - SyntaxColors\n\n";
 
-	if (!fileContents.startsWith(expectedHeader)){
+	if (!fileContents.startsWith(expectedHeader)) {
 		openHelpMenu("File does not match specification.");
-		if (useSpeakerAction->isChecked()){
+		if (useSpeakerAction->isChecked()) {
 			#ifdef _WIN32
 				speech->say("File does not match specification.");
 			#endif
@@ -3407,9 +3406,9 @@ void MainWindow::loadSyntaxColorsFromFile(){
 
 	QStringList hex = content.split(",");
 
-	if (hex.length() != 8){
+	if (hex.length() != 8) {
 		openHelpMenu("File does not match specification.");
-		if (useSpeakerAction->isChecked()){
+		if (useSpeakerAction->isChecked()) {
 			#ifdef _WIN32
 				speech->say("File does not match specification.");
 			#endif
@@ -3417,20 +3416,20 @@ void MainWindow::loadSyntaxColorsFromFile(){
 		return;
 	}
 
-	for (int i = 0; i < hex.length(); i++){
+	for (int i = 0; i < hex.length(); i++) {
 		hexColorsList[i]->setText(hex[i]);
 	}
 
 	validateAndConvert();
 }
 
-int MainWindow::colorDifference(QColor c1, QColor c2){
+int MainWindow::colorDifference(QColor c1, QColor c2) {
 	qDebug() << "colorDifference";
 
 	return qSqrt(qPow(c1.red()-c2.red(), 2) + qPow(c1.green()-c2.green(), 2) + qPow(c1.blue()-c2.blue(), 2));
 }
 
-void MainWindow::syntaxColorsOffImage(){
+void MainWindow::syntaxColorsOffImage() {
 	qDebug() << "syntaxColorsOffImage";
 
 	QString filePath = QFileDialog::getOpenFileName(nullptr, "Open Image File", "", "Images (*.png *.jpg *.bmp *.jpeg);;All Files (*)");
@@ -3452,15 +3451,15 @@ void MainWindow::syntaxColorsOffImage(){
 
 	int leiniency = 11;
 
-	for (int z = 0; z < 8; z++){
+	for (int z = 0; z < 8; z++) {
 		chosen = {};
 		bool worked = true;
 
-		for (int i = 0; i < 8; i++){
+		for (int i = 0; i < 8; i++) {
 			bool first = true;
 			QColor workingon;
 
-			for (int j = 0; j < 200; j++){
+			for (int j = 0; j < 200; j++) {
 				int x = std::rand() % width;
 				int y = std::rand() % height;
 
@@ -3469,35 +3468,35 @@ void MainWindow::syntaxColorsOffImage(){
 
 				int brightness = .212*(float)color.red()+.7152*(float)color.green()+.0722*(float)color.blue();
 
-				if (darkmode && brightness < 163-z*leiniency){
+				if (darkmode && brightness < 163-z*leiniency) {
 					continue;
-				}else if(!darkmode && brightness > 133+z*leiniency){
+				}else if(!darkmode && brightness > 133+z*leiniency) {
 					continue;
 				}
 
-				if (first){
+				if (first) {
 					bool keep = true;
 
-					for (int k = 0; k < chosen.length(); k++){
-						if (colorDifference(chosen[k], color) < 50){
+					for (int k = 0; k < chosen.length(); k++) {
+						if (colorDifference(chosen[k], color) < 50) {
 							keep = false;
 							break;
 						}
 					}
 
-					if (keep){
+					if (keep) {
 						workingon = color;
 						first = false;
 					}
-				}else{
-					if (colorDifference(workingon, color) < 30){
+				}else {
+					if (colorDifference(workingon, color) < 30) {
 						workingon = QColor((workingon.red()+color.red())/2, (workingon.green()+color.green())/2, (workingon.blue()+color.blue())/2);
 					}
 				}
 			}
 
-			if (first && z == 7){ // max number of retries
-				if (useSpeakerAction->isChecked()){
+			if (first && z == 7) { // max number of retries
+				if (useSpeakerAction->isChecked()) {
 					#ifdef _WIN32
 						speech->say("This image did not play nicely with this feature.");
 					#endif
@@ -3505,7 +3504,7 @@ void MainWindow::syntaxColorsOffImage(){
 
 				openHelpMenu("This image did not play nicely with this feature. Try again (unlikely to work - we tried 8 times for you) or pick another image.");
 				return;
-			}else if (first){
+			}else if (first) {
 				worked = false;
 				break;
 			}
@@ -3513,14 +3512,14 @@ void MainWindow::syntaxColorsOffImage(){
 			chosen.push_back(workingon);
 		}
 
-		if (worked){
+		if (worked) {
 			break;
 		}
 	}
 
 	coloredFormats = {};
 	coloredFormats.append(QTextCharFormat());
-	for (const QColor color : chosen){
+	for (const QColor color : chosen) {
 		QTextCharFormat form = QTextCharFormat();
 		form.setForeground(color);
 		coloredFormats.append(form);
@@ -3533,14 +3532,14 @@ void MainWindow::syntaxColorsOffImage(){
 	validateAndConvert();
 }
 
-void MainWindow::setFormatsFromMyList(QString str){
+void MainWindow::setFormatsFromMyList(QString str) {
 	qDebug() << "setFormatsFromMyList -" << str;
 
 	coloredFormats = {};
 	coloredFormats.append(QTextCharFormat());
 	
 	int i = 0;
-	for(const QString color : str.split("|")){
+	for(const QString color : str.split("|")) {
 		QStringList nums = color.split(",");
 		QTextCharFormat form = QTextCharFormat();
 		QColor col(nums[0].toInt(), nums[1].toInt(), nums[2].toInt());
@@ -3550,7 +3549,7 @@ void MainWindow::setFormatsFromMyList(QString str){
 	}
 }
 
-void MainWindow::resetSyntaxColors(){
+void MainWindow::resetSyntaxColors() {
 	qDebug() << "resetSyntaxColors";
 
 	setFormatsFromMyList(defaultSyntaxNumbers);
@@ -3562,7 +3561,7 @@ void MainWindow::resetSyntaxColors(){
 	validateAndConvert();
 }
 
-void MainWindow::validateAndConvert(){
+void MainWindow::validateAndConvert() {
 	qDebug() << "validateAndConvert";
 
 	QDialog diag = QDialog(this);
@@ -3572,14 +3571,14 @@ void MainWindow::validateAndConvert(){
 
 	QList<QString> hexEdits;
 
-	for (const QLineEdit* LE : hexColorsList){
+	for (const QLineEdit* LE : hexColorsList) {
 		QRegularExpression regex("^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$");
 		QRegularExpressionMatch match = regex.match(LE->text());
 
 		if (match.hasMatch()) {
 			hexEdits.append(LE->text());
-		} else {
-			if (useSpeakerAction->isChecked()){
+		}else {
+			if (useSpeakerAction->isChecked()) {
 				#ifdef _WIN32
 					speech->say("Hex code invalid.");
 				#endif
@@ -3595,7 +3594,7 @@ void MainWindow::validateAndConvert(){
 	coloredFormats = {};
 	coloredFormats.append(QTextCharFormat());
 
-	for (const QString hex : hexEdits){
+	for (const QString hex : hexEdits) {
 		QTextCharFormat form;
 		form.setForeground(QColor(hex));
 		coloredFormats.append(form);
@@ -3607,7 +3606,7 @@ void MainWindow::validateAndConvert(){
 	saveWantedTheme();
 	rehighlightFullDoc();
 
-	if (useSpeakerAction->isChecked()){
+	if (useSpeakerAction->isChecked()) {
 		#ifdef _WIN32
 			speech->say("Succeeded!");
 		#endif
@@ -3634,12 +3633,12 @@ void MainWindow::applyEditToTree(int startByte, int oldEndByte, int newEndByte, 
 	ts_tree_edit(tree, &edit);
 }
 
-void MainWindow::rehighlightFullDoc(){
+void MainWindow::rehighlightFullDoc() {
 	qDebug() << "rehighlightFullDoc";
 
 	treeParserSyntaxHighlighter.setLanguage(currentLang.name);
 
-	if (!tree){
+	if (!tree) {
 		return;
 	}
 
@@ -3649,7 +3648,7 @@ void MainWindow::rehighlightFullDoc(){
 void MainWindow::onContentsChange(int position, int charsRemoved, int charsAdded) {
 	qDebug() << "onContentsChange";
 
-	if (!tree){
+	if (!tree) {
 		return;
 	}
 	// Get the block containing the change
@@ -3676,7 +3675,7 @@ void MainWindow::onContentsChange(int position, int charsRemoved, int charsAdded
 	// Parse incrementally
 	QByteArray documentText = textDocument->toPlainText().toLatin1().constData();
 
-	if (currentLang.name == "Cobol"){
+	if (currentLang.name == "Cobol") {
 		documentText = documentText.replace("*", "#"); // we use the python tree-sitter parser, so we replace the * with # to create comments... I love this
 	}
 
@@ -3710,17 +3709,17 @@ void MainWindow::printTree(TSNode node, int depth) {
 	}
 }
 
-void MainWindow::mouseClicked(){
+void MainWindow::mouseClicked() {
 	qDebug() << "mouseClicked";
 
 	holdingAnEvent = false;
-	if (!(QGuiApplication::keyboardModifiers() & Qt::AltModifier) || (textEdit->currentVimMode != "i" || recordingMacro)){
+	if (!(QGuiApplication::keyboardModifiers() & Qt::AltModifier) || (textEdit->currentVimMode != "i" || recordingMacro)) {
 		textEdit->additionalCursors.clear();
 		textEdit->updateViewport();
 	}
 }
 
-void MainWindow::mouseReleased(){
+void MainWindow::mouseReleased() {
 	qDebug() << "mouseClicked";
 
 	if (QGuiApplication::queryKeyboardModifiers() & Qt::ControlModifier) {
@@ -3728,8 +3727,7 @@ void MainWindow::mouseReleased(){
 	}
 }
 
-void MainWindow::onOpenOutside()
-{
+void MainWindow::onOpenOutside() {
 	qDebug() << "onOpenOutside";
 
 	QModelIndex index = fileTree->currentIndex();
@@ -3750,8 +3748,7 @@ void MainWindow::onOpenOutside()
 	#endif
 }
 
-void MainWindow::onOpenInExplorer()
-{
+void MainWindow::onOpenInExplorer() {
 	qDebug() << "onOpenInExplorer";
 
 	QModelIndex index = fileTree->currentIndex();
@@ -3763,8 +3760,7 @@ void MainWindow::onOpenInExplorer()
 	QDesktopServices::openUrl(QUrl::fromLocalFile(fileInfo.dir().absolutePath()));
 }
 
-void MainWindow::onCopyPath()
-{
+void MainWindow::onCopyPath() {
 	qDebug() << "onCopyPath";
 
 	QModelIndex index = fileTree->currentIndex();
@@ -3776,8 +3772,7 @@ void MainWindow::onCopyPath()
 	clipboard->setText(filePath);
 }
 
-void MainWindow::openFileTreeContextMenu(const QPoint &pos)
-{
+void MainWindow::openFileTreeContextMenu(const QPoint &pos) {
 	qDebug() << "openFileTreeContextMenu";
 
 	// Get the index at the cursor position
@@ -3793,17 +3788,17 @@ void MainWindow::openFileTreeContextMenu(const QPoint &pos)
 	fileTreeContextMenu->popup(fileTree->viewport()->mapToGlobal(pos));
 }
 
-void MainWindow::onWindowStateChanged(){
+void MainWindow::onWindowStateChanged() {
 	qDebug() << "onWindowStateChanged";
 	
-	if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())){
+	if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())) {
 		fileTree->show();
-	}else{
+	}else {
 		fileTree->hide();
 	}
 }
 
-void MainWindow::on_actionOpen_Folder_triggered(){
+void MainWindow::on_actionOpen_Folder_triggered() {
 	qDebug() << "on_actionOpen_Folder_triggered";
 
 	QString folderPath = QFileDialog::getExistingDirectory(this,
@@ -3819,18 +3814,18 @@ void MainWindow::on_actionOpen_Folder_triggered(){
 
 		fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
 
-		if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())){ // BACK TO HERE YO
+		if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())) { // BACK TO HERE YO
 			fileTree->show();
-		}else{
+		}else {
 			fileTree->hide();
 		}
 	}
 }
 
-void MainWindow::showWeDontFuckWithTheLSP(){
+void MainWindow::showWeDontFuckWithTheLSP() {
 	qDebug() << "showWeDontFuckWithTheLSP";
 
-	if (useSpeakerAction->isChecked()){
+	if (useSpeakerAction->isChecked()) {
 		#ifdef _WIN32
 			speech->say("Action not supported while LSP is initializing.");
 		#endif
@@ -3844,10 +3839,10 @@ void MainWindow::showWeDontFuckWithTheLSP(){
 	messageBox.exec();
 }
 
-void MainWindow::showHoldYourHorses(){
+void MainWindow::showHoldYourHorses() {
 	qDebug() << "showHoldYourHorses";
 
-	if (useSpeakerAction->isChecked()){
+	if (useSpeakerAction->isChecked()) {
 		#ifdef _WIN32
 			speech->say("Action not supported while opening file.");
 		#endif
@@ -3861,14 +3856,14 @@ void MainWindow::showHoldYourHorses(){
 	messageBox.exec();
 }
 
-void MainWindow::checkForFixitDialogue(){
+void MainWindow::checkForFixitDialogue() {
 	qDebug() << "checkForFixitDialogue";
 
-	if (!textEdit->toPlainText().contains("\n    ")){
+	if (!textEdit->toPlainText().contains("\n    ")) {
 		return;
 	}
 
-	if (useSpeakerAction->isChecked()){
+	if (useSpeakerAction->isChecked()) {
 		#ifdef _WIN32
 			speech->say("Detected space based indenting in file. Fix-it recommended.");
 		#endif
@@ -3888,7 +3883,7 @@ void MainWindow::checkForFixitDialogue(){
 	}
 }
 
-void MainWindow::fileTreeOpened(const QModelIndex &index){
+void MainWindow::fileTreeOpened(const QModelIndex &index) {
 	qDebug() << "fileTreeOpened";
 
 	if (!index.model()->hasChildren(index)) {
@@ -3898,12 +3893,12 @@ void MainWindow::fileTreeOpened(const QModelIndex &index){
 	}
 }
 
-bool MainWindow::checkForLargeFile(QFile *file){
+bool MainWindow::checkForLargeFile(QFile *file) {
 	qint64 fileSize = file->size(); // bytes
 	qint64 kb = fileSize/1024; // 1000 of these per mb
 
-	if (kb > 1000){ // 1mb I think
-		if (useSpeakerAction->isChecked()){
+	if (kb > 1000) { // 1mb I think
+		if (useSpeakerAction->isChecked()) {
 			#ifdef _WIN32
 				speech->say("That's a large file ("+QString::number(kb/1000)+" mb). Open anyways?");
 			#endif
@@ -3925,40 +3920,40 @@ bool MainWindow::checkForLargeFile(QFile *file){
 	return true;
 }
 
-void MainWindow::fileTreeToggled(){
+void MainWindow::fileTreeToggled() {
 	qDebug() << "fileTreeToggled";
 
 	saveWantedTheme();
-	if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())){
+	if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())) {
 		fileTree->show();
-	}else{
+	}else {
 		fileTree->hide();
 	}
 }
 
-void MainWindow::autoSave(){
+void MainWindow::autoSave() {
 //	qDebug() << "autoSave";
 
-	if (isSettingUpLSP){ // we don't show message here because it's automated
+	if (isSettingUpLSP) { // we don't show message here because it's automated
 		return;
 	}
 
-	if (unsaved && fileName != "" && autoSaveAct->isChecked()){
+	if (unsaved && fileName != "" && autoSaveAct->isChecked()) {
 		doTrueSaveAction();
 		setWindowTitle(windowName);
 		unsaved = false;
 	}
 }
 
-void MainWindow::gotoDefinitionActionTriggered(){
+void MainWindow::gotoDefinitionActionTriggered() {
 	qDebug() << "gotoDefinitionActionTriggered";
 
-	if (isSettingUpLSP || isOpeningFile){
+	if (isSettingUpLSP || isOpeningFile) {
 		return;
 	}
 
 	lspMutex.lock();
-	if (client){
+	if (client) {
 		QTextCursor cursor = textEdit->textCursor();
 		int line = cursor.blockNumber();
 		int column = cursor.columnNumber();
@@ -3967,10 +3962,10 @@ void MainWindow::gotoDefinitionActionTriggered(){
 	lspMutex.unlock();
 }
 
-void MainWindow::renameActionTriggered(){
+void MainWindow::renameActionTriggered() {
 	qDebug() << "renameActionTriggered";
 
-	if (isSettingUpLSP || isOpeningFile){
+	if (isSettingUpLSP || isOpeningFile) {
 		return;
 	}
 
@@ -3989,7 +3984,7 @@ void MainWindow::renameActionTriggered(){
 	QString newname = dialog.textValue();
 
 	lspMutex.lock();
-	if (client){
+	if (client) {
 		QTextCursor cursor = textEdit->textCursor();
 		int line = cursor.blockNumber();
 		int column = cursor.columnNumber();
@@ -3998,8 +3993,7 @@ void MainWindow::renameActionTriggered(){
 	lspMutex.unlock();
 }
 
-void MainWindow::handleMouseMoved(QPoint pos)
-{
+void MainWindow::handleMouseMoved(QPoint pos) {
 //	qDebug() << "handleMouseMoved"; - we don't do it for certain functions
 
 	QPoint difference = pos - mousePos;
@@ -4009,7 +4003,7 @@ void MainWindow::handleMouseMoved(QPoint pos)
 	QPoint cursorPos = cursorRect.topLeft();
 	suggestedPosition = cursorRect.bottomLeft();
 
-	if (qAbs(difference.x()) < 20 && qAbs(difference.y()) < 20){
+	if (qAbs(difference.x()) < 20 && qAbs(difference.y()) < 20) {
 		return;
 	}
 
@@ -4018,15 +4012,15 @@ void MainWindow::handleMouseMoved(QPoint pos)
 	mousePos = pos;
 	hoverBox->hide();
 
-	if (isSettingUpLSP || isOpeningFile){
+	if (isSettingUpLSP || isOpeningFile) {
 		return;
 	}
 
-	if (!client){
+	if (!client) {
 		return;
 	}
 
-	if (qAbs(cursorPos.x() - pos.x()) > 15 || qAbs(cursorPos.y() - pos.y()) > 15){
+	if (qAbs(cursorPos.x() - pos.x()) > 15 || qAbs(cursorPos.y() - pos.y()) > 15) {
 		return;
 	}
 
@@ -4037,50 +4031,50 @@ void MainWindow::handleMouseMoved(QPoint pos)
 	int bestIndx = -1;
 
 	QList<int> allowedSeverities;
-	if (showErrors->isChecked()){
+	if (showErrors->isChecked()) {
 		allowedSeverities.append(1);
 	}
-	if (showWarnings->isChecked()){
+	if (showWarnings->isChecked()) {
 		allowedSeverities.append(2);
 	}
-	if (showOther->isChecked()){
+	if (showOther->isChecked()) {
 		allowedSeverities.append(3);
 		allowedSeverities.append(4);
 	}
 
-	if (!allowedSeverities.empty()){
-		for (int i = 0; i < errMessages.length(); i++){ // sorted least to most important by severity
+	if (!allowedSeverities.empty()) {
+		for (int i = 0; i < errMessages.length(); i++) { // sorted least to most important by severity
 			int sL = errStartL[i];
 			int eL = errEndL[i];
 			int sC = errStartC[i];
 			int eC = errEndC[i];
 			int eS = errSeverity[i];
 
-			if (line >= sL && line <= eL && column >= sC-1 && column <= eC+1){
-				if (allowedSeverities.contains(eS)){
+			if (line >= sL && line <= eL && column >= sC-1 && column <= eC+1) {
+				if (allowedSeverities.contains(eS)) {
 					bestIndx = i;
 				}
 			}
 		}
 	}
 
-	if (bestIndx != -1){
+	if (bestIndx != -1) {
 		showingError = true; // we are making it so the the errors take priority over the hover recieved (there are cases in which the hover will show up on top of the errors)
 		moveHoverBox(suggestedPosition, errMessages[bestIndx], "plaintext");
 		return;
 	}
 
-	if (hoverAction->isChecked()){
+	if (hoverAction->isChecked()) {
 		cursor.select(QTextCursor::WordUnderCursor); // Select the word under the cursor
 		QString word = cursor.selectedText();
 
-		if (!word.isEmpty()){
+		if (!word.isEmpty()) {
 			int line = cursor.blockNumber(); // 0 based
 			int column = cursor.columnNumber();
 			QTimer::singleShot(600, [=]() { // call after x milliseconds
 				QPoint difference = pos - mousePos;
 
-				if (qAbs(difference.x()) > 30 || qAbs(difference.y()) > 30){
+				if (qAbs(difference.x()) > 30 || qAbs(difference.y()) > 30) {
 					return;
 				}
 
@@ -4092,7 +4086,7 @@ void MainWindow::handleMouseMoved(QPoint pos)
 	}
 }
 
-void MainWindow::onSuggestionItemClicked(QListWidgetItem* item){
+void MainWindow::onSuggestionItemClicked(QListWidgetItem* item) {
 	qDebug() << "onSuggestionItemClicked";
 	
 	currentSelection = suggestionBox->row(item);
@@ -4101,7 +4095,7 @@ void MainWindow::onSuggestionItemClicked(QListWidgetItem* item){
 	fillSuggestions();
 }
 
-void MainWindow::onActionsItemClicked(QListWidgetItem* item){
+void MainWindow::onActionsItemClicked(QListWidgetItem* item) {
 	qDebug() << "onActionsItemClicked";
 	
 	currentSelectionAction = actionBox->row(item);
@@ -4109,49 +4103,48 @@ void MainWindow::onActionsItemClicked(QListWidgetItem* item){
 	activateCodeAction();
 }
 
-void MainWindow::on_actionLSP_triggered()
-{
+void MainWindow::on_actionLSP_triggered() {
 	qDebug() << "on_actionLSP_triggered";
 
 	QString lspPath = "";
 	QString languageId = currentLang.name.toLower(); // need to reasign for langs where my chosen name is not the language id
 
-	if (currentLang.name == "Python"){
+	if (currentLang.name == "Python") {
 		lspPath = pythonLSP;
-	}else if (currentLang.name == "Rust"){
+	}else if (currentLang.name == "Rust") {
 		lspPath = rustLSP;
-	}else if (currentLang.name == "WGSL"){
+	}else if (currentLang.name == "WGSL") {
 		lspPath = WGSLLSP;
-	}else if (currentLang.name == "GLSL"){
+	}else if (currentLang.name == "GLSL") {
 		lspPath = WGSLLSP;
-	}else if (currentLang.name == "C++"){
+	}else if (currentLang.name == "C++") {
 		lspPath = CppLSP;
 		languageId = "cpp";
-	}else if (currentLang.name == "Txt"){
+	}else if (currentLang.name == "Txt") {
 		lspPath = txtLSP;
 		languageId = "plaintext";
-	}else if (currentLang.name == "JS"){
+	}else if (currentLang.name == "JS") {
 		lspPath = jsLSP;
 		languageId = "javascript";
-	}else if (currentLang.name == "TS"){
+	}else if (currentLang.name == "TS") {
 		lspPath = tsLSP;
 		languageId = "typescript";
-	}else if (currentLang.name == "HTML"){
+	}else if (currentLang.name == "HTML") {
 		lspPath = HTMLLSP;
-	}else if (currentLang.name == "Go"){
+	}else if (currentLang.name == "Go") {
 		lspPath = goLSP;
-	}else if (currentLang.name == "Lua"){
+	}else if (currentLang.name == "Lua") {
 		lspPath = luaLSP;
-	}else if (currentLang.name == "C#"){
+	}else if (currentLang.name == "C#") {
 		lspPath = csharpLSP;
 		languageId = "csharp";
-	}else if (currentLang.name == "Java"){
+	}else if (currentLang.name == "Java") {
 		lspPath = javaLSP;
-	}else if (currentLang.name == "C"){
+	}else if (currentLang.name == "C") {
 		lspPath = cLSP;
-	}else if (currentLang.name == "Cobol"){
+	}else if (currentLang.name == "Cobol") {
 		lspPath = cobolLSP;
-	}else if (currentLang.name == "Css"){
+	}else if (currentLang.name == "Css") {
 		lspPath = cssLSP;
 	}
 
@@ -4171,37 +4164,37 @@ void MainWindow::on_actionLSP_triggered()
 
 	//QString lspPath = QFileDialog::getOpenFileName(this, tr("Open File"), fileName, tr("All Files (*)"));
 
-	if (currentLang.name == "Python"){
+	if (currentLang.name == "Python") {
 		pythonLSP = lspPath;
-	}else if (currentLang.name == "Rust"){
+	}else if (currentLang.name == "Rust") {
 		rustLSP = lspPath;
-	}else if (currentLang.name == "WGSL"){
+	}else if (currentLang.name == "WGSL") {
 		WGSLLSP = lspPath;
-	}else if (currentLang.name == "GLSL"){
+	}else if (currentLang.name == "GLSL") {
 		WGSLLSP = lspPath;
-	}else if (currentLang.name == "C++"){
+	}else if (currentLang.name == "C++") {
 		CppLSP = lspPath;
-	}else if (currentLang.name == "Txt"){
+	}else if (currentLang.name == "Txt") {
 		txtLSP = lspPath;
-	}else if (currentLang.name == "JS"){
+	}else if (currentLang.name == "JS") {
 		jsLSP = lspPath;
-	}else if (currentLang.name == "TS"){
+	}else if (currentLang.name == "TS") {
 		tsLSP = lspPath;
-	}else if (currentLang.name == "HTML"){
+	}else if (currentLang.name == "HTML") {
 		HTMLLSP = lspPath;
-	}else if (currentLang.name == "Go"){
+	}else if (currentLang.name == "Go") {
 		goLSP = lspPath;
-	}else if (currentLang.name == "Lua"){
+	}else if (currentLang.name == "Lua") {
 		luaLSP = lspPath;
-	}else if (currentLang.name == "C#"){
+	}else if (currentLang.name == "C#") {
 		csharpLSP = lspPath;
-	}else if (currentLang.name == "Java"){
+	}else if (currentLang.name == "Java") {
 		javaLSP = lspPath;
-	}else if (currentLang.name == "C"){
+	}else if (currentLang.name == "C") {
 		cLSP = lspPath;
-	}else if (currentLang.name == "Cobol"){
+	}else if (currentLang.name == "Cobol") {
 		cobolLSP = lspPath;
-	}else if (currentLang.name == "Css"){
+	}else if (currentLang.name == "Css") {
 		cssLSP = lspPath;
 	}
 
@@ -4211,13 +4204,13 @@ void MainWindow::on_actionLSP_triggered()
 void MainWindow::gotoDefinitionReceived(int line1, int character1, int line, int character, QString uri) {
 	qDebug() << "gotoDefinitionReceived";
 
-	if (uri != QUrl::fromLocalFile(fileName).toString()){
+	if (uri != QUrl::fromLocalFile(fileName).toString()) {
 		globalArgFileName = QUrl(uri).toLocalFile();
 		QMetaObject::invokeMethod(this, [this, line, character, uri]() {
 			on_actionOpen_triggered(true);
 		}, Qt::QueuedConnection);
 		QMetaObject::invokeMethod(this, [this, line1, character1, line, character, uri]() {
-			if (uri == QUrl::fromLocalFile(fileName).toString()){
+			if (uri == QUrl::fromLocalFile(fileName).toString()) {
 				gotoDefinitionReceived(line1, character1, line, character, uri);
 			}
 		}, Qt::QueuedConnection);
@@ -4232,8 +4225,8 @@ void MainWindow::gotoDefinitionReceived(int line1, int character1, int line, int
 	textEdit->ensureCursorVisible();
 }
 
-void MainWindow::resetLSP(){
-	if (client){
+void MainWindow::resetLSP() {
+	if (client) {
 		client->shutdown();
 		delete client;
 		client = nullptr;
@@ -4241,8 +4234,7 @@ void MainWindow::resetLSP(){
 	setupLSP("");
 }
 
-void MainWindow::setupLSP(QString oldFile)
-{
+void MainWindow::setupLSP(QString oldFile) {
 	qDebug() << "setupLSP";
 
 	isSettingUpLSP = true;
@@ -4250,42 +4242,42 @@ void MainWindow::setupLSP(QString oldFile)
 	QString lspPath = "";
 	QString languageId = currentLang.name.toLower(); // need to reasign for langs where my chosen name is not the language id
 
-	if (currentLang.name == "Python"){
+	if (currentLang.name == "Python") {
 		lspPath = pythonLSP;
-	}else if (currentLang.name == "Rust"){
+	}else if (currentLang.name == "Rust") {
 		lspPath = rustLSP;
-	}else if (currentLang.name == "WGSL"){
+	}else if (currentLang.name == "WGSL") {
 		lspPath = WGSLLSP;
-	}else if (currentLang.name == "GLSL"){
+	}else if (currentLang.name == "GLSL") {
 		lspPath = WGSLLSP;
-	}else if (currentLang.name == "C++"){
+	}else if (currentLang.name == "C++") {
 		lspPath = CppLSP;
 		languageId = "cpp";
-	}else if (currentLang.name == "Txt"){
+	}else if (currentLang.name == "Txt") {
 		lspPath = txtLSP;
 		languageId = "plaintext";
-	}else if (currentLang.name == "JS"){
+	}else if (currentLang.name == "JS") {
 		lspPath = jsLSP;
 		languageId = "javascript";
-	}else if (currentLang.name == "TS"){
+	}else if (currentLang.name == "TS") {
 		lspPath = tsLSP;
 		languageId = "typescript";
-	}else if (currentLang.name == "HTML"){
+	}else if (currentLang.name == "HTML") {
 		lspPath = HTMLLSP;
-	}else if (currentLang.name == "Go"){
+	}else if (currentLang.name == "Go") {
 		lspPath = goLSP;
-	}else if (currentLang.name == "Lua"){
+	}else if (currentLang.name == "Lua") {
 		lspPath = luaLSP;
-	}else if (currentLang.name == "C#"){
+	}else if (currentLang.name == "C#") {
 		lspPath = csharpLSP;
 		languageId = "csharp";
-	}else if (currentLang.name == "Java"){
+	}else if (currentLang.name == "Java") {
 		lspPath = javaLSP;
-	}else if (currentLang.name == "C"){
+	}else if (currentLang.name == "C") {
 		lspPath = cLSP;
-	}else if (currentLang.name == "Cobol"){
+	}else if (currentLang.name == "Cobol") {
 		lspPath = cobolLSP;
-	}else if (currentLang.name == "Css"){
+	}else if (currentLang.name == "Css") {
 		lspPath = cssLSP;
 	}
 	
@@ -4295,7 +4287,7 @@ void MainWindow::setupLSP(QString oldFile)
 		lspPath = proj_lsp;
 	}
 
-	if (client && client->lspPath == lspPath){
+	if (client && client->lspPath == lspPath) {
 		client->closeDocument(oldFile);
 		client->openDocument(fileName, languageId, textEdit->toPlainText());
 		isSettingUpLSP = false;
@@ -4304,18 +4296,18 @@ void MainWindow::setupLSP(QString oldFile)
 
 	//The client is not setup with the correct LSP
 
-	if (client){
+	if (client) {
 		client->shutdown();
 		delete client;
 		client = nullptr;
 	}
 
-	if (lspPath.isEmpty() || fileName.isEmpty()){
+	if (lspPath.isEmpty() || fileName.isEmpty()) {
 		isSettingUpLSP = false;
 		return;
 	}
 
-	if (useSpeakerAction->isChecked()){
+	if (useSpeakerAction->isChecked()) {
 		#ifdef _WIN32
 			speech->say("Initializing LSP");
 		#endif
@@ -4325,15 +4317,15 @@ void MainWindow::setupLSP(QString oldFile)
 
 	// Connect to receive completions
 	connect(client, &LanguageServerClient::completionReceived, [this](const QStringList &completions, int id) {
-		if (id != expectedCompletionId){
+		if (id != expectedCompletionId) {
 			return;
 		}
 
 		ShowSuggestionsWithSuperSet(completions);
 	});
 
-	connect(client, &LanguageServerClient::receivedDiagnostics, [this](const QStringList &messages, const QList<int> &startC, const QList<int> &startL, const QList<int> &endC, const QList<int> &endL, const QList<int> &severity){
-		if (isErrorHighlighted){
+	connect(client, &LanguageServerClient::receivedDiagnostics, [this](const QStringList &messages, const QList<int> &startC, const QList<int> &startL, const QList<int> &endC, const QList<int> &endL, const QList<int> &severity) {
+		if (isErrorHighlighted) {
 			highlightDiagnostics(true);
 		}
 		errMessages = messages;
@@ -4354,19 +4346,19 @@ void MainWindow::setupLSP(QString oldFile)
 		QList<int> seenLineNums;
 		
 		QList<int> allowedSeverities;
-		if (showErrors->isChecked()){
+		if (showErrors->isChecked()) {
 			allowedSeverities.append(1);
 		}
-		if (showWarnings->isChecked()){
+		if (showWarnings->isChecked()) {
 			allowedSeverities.append(2);
 		}
-		if (showOther->isChecked()){
+		if (showOther->isChecked()) {
 			allowedSeverities.append(3);
 			allowedSeverities.append(4);
 		}
 		
 		for (int i = messages.length()-1; i >= 0; i--) { // we go backwards so that the errors are hit first, we sorted them in the languageserverclient.
-			if (seenLineNums.contains(errStartL[i]) || !allowedSeverities.contains(errSeverity[i])){
+			if (seenLineNums.contains(errStartL[i]) || !allowedSeverities.contains(errSeverity[i])) {
 				continue;
 			}
 			
@@ -4382,8 +4374,8 @@ void MainWindow::setupLSP(QString oldFile)
 	});
 
 	connect(client, &LanguageServerClient::hoverInformationReceived, [this](QString info, QString type, int id) {
-		if (id == expectedHoverInfoId){
-			if (!showingError || hoverBox->isHidden()){
+		if (id == expectedHoverInfoId) {
+			if (!showingError || hoverBox->isHidden()) {
 				showingError = false;
 				moveHoverBox(suggestedPosition, info, type);
 			}
@@ -4395,29 +4387,29 @@ void MainWindow::setupLSP(QString oldFile)
 	connect(client, &LanguageServerClient::renameReceived, this, &MainWindow::renameReference, Qt::AutoConnection);
 
 	connect(client, &LanguageServerClient::codeActionsReceived, [this](const QJsonArray& suggestedActions) {
-		if (!textEdit->additionalCursors.isEmpty()){
+		if (!textEdit->additionalCursors.isEmpty()) {
 			return;
 		}
 
 		codeActions = suggestedActions;
 
-		if (suggestedActions.count() == 0){
+		if (suggestedActions.count() == 0) {
 			return;
 		}
 
 		currentSelectionAction = 0;
 
 		QStringList actions = {};
-		for (int i = 0; i < suggestedActions.count(); i++){
+		for (int i = 0; i < suggestedActions.count(); i++) {
 			actions.append(suggestedActions[i].toObject()["title"].toString());
 		}
 
 		QFontMetrics metrics(textEdit->font());
 		int height;
 
-		if (7 < actions.length()){
+		if (7 < actions.length()) {
 			height = metrics.height() * 7;
-		}else{
+		}else {
 			height = metrics.height() * (actions.length()+1);
 		}
 
@@ -4452,7 +4444,7 @@ void MainWindow::setupLSP(QString oldFile)
 
 	client->openDocument(fileName, languageId, textEdit->toPlainText());
 
-	if (useSpeakerAction->isChecked()){
+	if (useSpeakerAction->isChecked()) {
 		#ifdef _WIN32
 			speech->say("Initialized LSP");
 		#endif
@@ -4461,10 +4453,10 @@ void MainWindow::setupLSP(QString oldFile)
 	isSettingUpLSP = false;
 }
 
-void MainWindow::ShowSuggestionsWithSuperSet(QStringList completions){
+void MainWindow::ShowSuggestionsWithSuperSet(QStringList completions) {
 	qDebug() << "ShowSuggestionsWithSuperSet";
 
-	if (!textEdit->additionalCursors.isEmpty()){
+	if (!textEdit->additionalCursors.isEmpty()) {
 		return;
 	}
 
@@ -4480,13 +4472,13 @@ void MainWindow::ShowSuggestionsWithSuperSet(QStringList completions){
 
 	fillSuggestions();
 
-	if (suggestion.length() > 0){
+	if (suggestion.length() > 0) {
 		QFontMetrics metrics(textEdit->font());
 		int height;
 
-		if (10 < suggestion.length()){
+		if (10 < suggestion.length()) {
 			height = metrics.height() * 10;
-		}else{
+		}else {
 			height = metrics.height() * (suggestion.length()+1);
 		}
 
@@ -4512,29 +4504,29 @@ void MainWindow::ShowSuggestionsWithSuperSet(QStringList completions){
 		suggestionBox->resize(boxWidth, height);
 		suggestionBox->show();
 		currentCompletion = suggestion[0];
-	}else{
+	}else {
 		suggestionBox->hide();
 		currentCompletion = "";
 	}
 }
 
-void MainWindow::fillActionsBox(){
+void MainWindow::fillActionsBox() {
 	qDebug() << "fillActionsBox";
 
 	actionBox->clear();
-	for (int i = 0; i < codeActions.count(); i++){
+	for (int i = 0; i < codeActions.count(); i++) {
 		QString copiedString = codeActions[i].toObject()["title"].toString();
 		actionBox->addItem(copiedString);
 	}
 	
-	if (currentSelectionAction >= codeActions.count() || currentSelectionAction >= 0){
+	if (currentSelectionAction >= codeActions.count() || currentSelectionAction >= 0) {
 		currentSelectionAction = 0;
 	}
 	actionBox->setCurrentRow(currentSelectionAction);
 	actionBox->update();
 }
 
-void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
+void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type) {
 	qDebug() << "moveHoverBox - type " << type;
 
 	QString finalString = info.trimmed();
@@ -4542,9 +4534,9 @@ void MainWindow::moveHoverBox(QPoint givenPos, QString info, QString type){
 	QStringList lines;
 	int lineCount = 0;
 
-	if (type == "markdown"){
+	if (type == "markdown") {
 		finalString = markdownToHtml(info);
-	}else{
+	}else {
 		finalString = plaintextToHtml(info);
 	}
 
@@ -4599,7 +4591,7 @@ QString MainWindow::plaintextToHtml(QString plaintext) {
 	html.replace("\n<hr>", "</p><hr><p>");
 	html.replace("<hr>\n", "</p><hr><p>");
 
-	while (html.contains("\n\n")){
+	while (html.contains("\n\n")) {
 		html.replace("\n\n", "\n");
 	}
 
@@ -4615,7 +4607,7 @@ QString MainWindow::markdownToHtml(QString markdown) { // we implement our own j
 
 	QString html = markdown;
 
-	while (html.contains("\n\n\n")){
+	while (html.contains("\n\n\n")) {
 		html.replace("\n\n\n", "\n\n");
 	}
 
@@ -4629,15 +4621,15 @@ QString MainWindow::markdownToHtml(QString markdown) { // we implement our own j
 	html.replace("\n<hr>", "<hr>");
 	html.replace("<hr>\n", "<hr>");
 
-	while (html.contains("```")){
+	while (html.contains("```")) {
 		html.replace("```", "`");
 	}
 
 	QSet<QChar> alphanumerical = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_'};
 
 	int lastIndx = 0;
-	for (int i = 0; i < html.length(); i++){
-		if (alphanumerical.contains(html[i])){
+	for (int i = 0; i < html.length(); i++) {
+		if (alphanumerical.contains(html[i])) {
 			lastIndx = i;
 		}
 	}
@@ -4677,8 +4669,7 @@ QString MainWindow::markdownToHtml(QString markdown) { // we implement our own j
 	return "<div style=\"white-space: pre;\">"+html+"</div>";
 }
 
-void MainWindow::on_actionIncrease_Text_Size_triggered()
-{
+void MainWindow::on_actionIncrease_Text_Size_triggered() {
 	qDebug() << "on_actionIncrease_Text_Size_triggered";
 
 	fontSize += 1.0;
@@ -4686,8 +4677,7 @@ void MainWindow::on_actionIncrease_Text_Size_triggered()
 	saveWantedTheme();
 }
 
-void MainWindow::on_actionReset_Text_Size_triggered()
-{
+void MainWindow::on_actionReset_Text_Size_triggered() {
 	qDebug() << "on_actionReset_Text_Size_triggered";
 
 	fontSize = 11.0;
@@ -4695,19 +4685,17 @@ void MainWindow::on_actionReset_Text_Size_triggered()
 	saveWantedTheme();
 }
 
-void MainWindow::on_actionDecrease_Text_Size_triggered()
-{
+void MainWindow::on_actionDecrease_Text_Size_triggered() {
 	qDebug() << "on_actionDecrease_Text_Size_triggered";
 
-	if (fontSize > 1.0){
+	if (fontSize > 1.0) {
 		fontSize -= 1.0;
 	}
 	updateFonts();
 	saveWantedTheme();
 }
 
-void MainWindow::on_actionSet_Text_Size_triggered()
-{
+void MainWindow::on_actionSet_Text_Size_triggered() {
 	qDebug() << "on_actionSet_Text_Size_triggered";
 
 	bool ok;
@@ -4729,8 +4717,7 @@ void MainWindow::on_actionSet_Text_Size_triggered()
 	}
 }
 
-void MainWindow::updateFonts()
-{
+void MainWindow::updateFonts() {
 	qDebug() << "updateFonts";
 
 	QFont font = textEdit->font();
@@ -4851,7 +4838,7 @@ void MainWindow::updateFonts()
 
 	errMenu.reposition();
 
-	for (TabWidget *tab : tabs){
+	for (TabWidget *tab : tabs) {
 		tab->stFnt(font);
 	}
 	
@@ -4904,19 +4891,19 @@ void MainWindow::setupCompleter() {
 		//This is the only unpoluted textchanged event - lol
 		QString plaintext = textEdit->toPlainText();
 
-		if (!unsaved){
-			if (plaintext != savedText){ // this function also get's called for non text changed events (think highlighting or IDK)
+		if (!unsaved) {
+			if (plaintext != savedText) { // this function also get's called for non text changed events (think highlighting or IDK)
 				setWindowTitle("*"+windowName);
 				unsaved = true;
 			}
 		}
 		//Here we are going to handle the completer (what this function was supposed to be)
 
-		if (isSettingUpLSP || isOpeningFile){
+		if (isSettingUpLSP || isOpeningFile) {
 			return;
 		}
 
-		if (isErrorHighlighted){
+		if (isErrorHighlighted) {
 			highlightDiagnostics(true);
 		}
 
@@ -4931,7 +4918,7 @@ void MainWindow::setupCompleter() {
 			currentSelection = 0;
 			QTextCursor cursor = textEdit->textCursor();
 
-			if ((!client || onlyCodeWizardBuiltIn->isChecked()) && !noAutocomplete->isChecked()){ // ala CodeWizard
+			if ((!client || onlyCodeWizardBuiltIn->isChecked()) && !noAutocomplete->isChecked()) { // ala CodeWizard
 				suggestion = {};
 
 				for (int i = 0; i < extraWordList.length(); i++) {
@@ -4948,14 +4935,14 @@ void MainWindow::setupCompleter() {
 
 				ShowSuggestionsWithSuperSet(suggestion);
 			}
-		} else {
+		}else {
 			currentCompletion = "";
 			suggestionBox->hide();
 		}
 	});
 }
 
-void MainWindow::updateDefaultWordLists(){
+void MainWindow::updateDefaultWordLists() {
 	qDebug() << "updateDefaultWordLists";
 
 	wrdLstDefQStringy = currentLang.defWordList;
@@ -4966,17 +4953,17 @@ void MainWindow::updateDefaultWordLists(){
 	}
 }
 
-void MainWindow::fillSuggestions(){
+void MainWindow::fillSuggestions() {
 	qDebug() << "fillSuggestions";
 
 	suggestionBox->clear();
-	for (int i = 0; i < suggestion.length(); i++){
+	for (int i = 0; i < suggestion.length(); i++) {
 		QString copiedString = suggestion[i];
 		copiedString.replace("\n", " ");
 		suggestionBox->addItem(copiedString);
 	}
 	
-	if (currentSelection < suggestion.length() && currentSelection >= 0){
+	if (currentSelection < suggestion.length() && currentSelection >= 0) {
 		currentSelection = 0;
 	}
 	
@@ -5001,41 +4988,40 @@ QString MainWindow::getCurrentWord() {
 	return word;
 }
 
-void MainWindow::saveWantedTheme()
-{
+void MainWindow::saveWantedTheme() {
 	qDebug() << "saveWantedTheme";
 
-	if (currentLang.name == "Python"){
+	if (currentLang.name == "Python") {
 		pythonTag = taglineEdit->toPlainText();
-	}else if (currentLang.name == "Rust"){
+	}else if (currentLang.name == "Rust") {
 		rustTag = taglineEdit->toPlainText();
-	}else if (currentLang.name == "WGSL"){
+	}else if (currentLang.name == "WGSL") {
 		WGSLTag = taglineEdit->toPlainText();
-	}else if (currentLang.name == "GLSL"){
+	}else if (currentLang.name == "GLSL") {
 		WGSLTag = taglineEdit->toPlainText();
-	}else if (currentLang.name == "C++"){
+	}else if (currentLang.name == "C++") {
 		CppTag = taglineEdit->toPlainText();
-	}else if (currentLang.name == "Txt"){
+	}else if (currentLang.name == "Txt") {
 		txtTag = taglineEdit->toPlainText();
-	}else if (currentLang.name == "JS"){
+	}else if (currentLang.name == "JS") {
 		jsTag = taglineEdit->toPlainText();
-	}else if (currentLang.name == "TS"){
+	}else if (currentLang.name == "TS") {
 		tsTag = taglineEdit->toPlainText();
-	}else if (currentLang.name == "HTML"){
+	}else if (currentLang.name == "HTML") {
 		HTMLTag = taglineEdit->toPlainText();
-	}else if (currentLang.name == "Go"){
+	}else if (currentLang.name == "Go") {
 		goTag = taglineEdit->toPlainText();
-	}else if (currentLang.name == "Lua"){
+	}else if (currentLang.name == "Lua") {
 		luaTag = taglineEdit->toPlainText();
-	}else if (currentLang.name == "C#"){
+	}else if (currentLang.name == "C#") {
 		csharpTag = taglineEdit->toPlainText();
-	}else if (currentLang.name == "Java"){
+	}else if (currentLang.name == "Java") {
 		javaTag = taglineEdit->toPlainText();
-	}else if (currentLang.name == "C"){
+	}else if (currentLang.name == "C") {
 		cTag = taglineEdit->toPlainText();
-	}else if (currentLang.name == "Cobol"){
+	}else if (currentLang.name == "Cobol") {
 		cobolTag = taglineEdit->toPlainText();
-	}else if (currentLang.name == "Css"){
+	}else if (currentLang.name == "Css") {
 		cssTag = taglineEdit->toPlainText();
 	}
 
@@ -5103,8 +5089,8 @@ void MainWindow::saveWantedTheme()
 	QStringList strLst = QStringList();
 
 	bool firstLine = true;
-	for (const QTextCharFormat form : coloredFormats){
-		if (firstLine){
+	for (const QTextCharFormat form : coloredFormats) {
+		if (firstLine) {
 			firstLine = false;
 			continue;
 		}
@@ -5115,7 +5101,7 @@ void MainWindow::saveWantedTheme()
 
 	QString str = strLst.join("|");
 
-	if (coloredFormats.length() == 9){
+	if (coloredFormats.length() == 9) {
 		settings.setValue("syntaxColors", str);
 	}
 	
@@ -5129,30 +5115,30 @@ void MainWindow::saveWantedTheme()
 	settings.setValue("codewizard_version", versionNumber);
 }
 
-int MainWindow::compareVersionNumbers(QString vnum1, QString vnum2){
-	if (vnum1 == ""){vnum1 = versionNumber;}
-	if (vnum2 == ""){vnum2 = versionNumber;}
+int MainWindow::compareVersionNumbers(QString vnum1, QString vnum2) {
+	if (vnum1 == "") {vnum1 = versionNumber;}
+	if (vnum2 == "") {vnum2 = versionNumber;}
 
-	if (vnum1 == "prior 6.0.0"){vnum1 = "5.9.9";}
-	if (vnum2 == "prior 6.0.0"){vnum1 = "5.9.9";}
+	if (vnum1 == "prior 6.0.0") {vnum1 = "5.9.9";}
+	if (vnum2 == "prior 6.0.0") {vnum1 = "5.9.9";}
 
 	QStringList nums1 = vnum1.split(".");
 	QStringList nums2 = vnum2.split(".");
 
-	if (nums1.length() != nums2.length()){
-		if (nums1.length() > nums2.length()){ // we assume that if one version number has more identifiers, that it is greater than the other.
+	if (nums1.length() != nums2.length()) {
+		if (nums1.length() > nums2.length()) { // we assume that if one version number has more identifiers, that it is greater than the other.
 			return 1;
 		}
 		return -1; // otherwise the other must be longer - therfore the equality is less than
 	}
 
-	for (int i = 0; i < nums1.length(); i++){
+	for (int i = 0; i < nums1.length(); i++) {
 		int n1 = nums1[i].toInt();
 		int n2 = nums2[i].toInt();
 
-		if (n1 > n2){
+		if (n1 > n2) {
 			return 1;
-		}else if (n1 < n2){
+		}else if (n1 < n2) {
 			return -1;
 		}
 	}
@@ -5168,10 +5154,10 @@ bool MainWindow::wantedTheme() {
 	
 	CODEWIZARD_UUID = settings.value( "UUID", QUuid::createUuid().toString() ).toString();
 	
-	if (exists){
+	if (exists) {
 		QString existingVersion = settings.value("codewizard_version", "prior 6.0.0").toString();
 
-		if (compareVersionNumbers(existingVersion, "5.9.9") > 0){ // more than v5.9.9
+		if (compareVersionNumbers(existingVersion, "5.9.9") > 0) { // more than v5.9.9
 			pythonTag = settings.value("pythonTag", defPythonTag).toString();
 			rustTag = settings.value("rustTag", defRustTag).toString();
 			WGSLTag = settings.value("WGSLTag", defWGSLTag).toString();
@@ -5189,7 +5175,7 @@ bool MainWindow::wantedTheme() {
 			cobolTag = settings.value("cobolTag", defCobolTag).toString();
 			cssTag = settings.value("cssTag", defCssTag).toString();
 		}
-		if (compareVersionNumbers(existingVersion, "8.6.3") < 0){ // less than v8.6.3
+		if (compareVersionNumbers(existingVersion, "8.6.3") < 0) { // less than v8.6.3
 			CppTag = defCppTag;
 			cTag = defCTag;
 		}
@@ -5221,9 +5207,9 @@ bool MainWindow::wantedTheme() {
 
 		QString numbers = settings.value("syntaxColors", defaultSyntaxNumbers).toString();
 
-		if (numbers == "38,175,199|38,143,199|50,168,160|222,123,2|41,171,47|217,159,0|160,160,160|245,120,66"){
+		if (numbers == "38,175,199|38,143,199|50,168,160|222,123,2|41,171,47|217,159,0|160,160,160|245,120,66") {
 			numbers = defaultSyntaxNumbers;
-		}else if (numbers.count("|") != 7){
+		}else if (numbers.count("|") != 7) {
 			numbers = defaultSyntaxNumbers;
 		}
 
@@ -5251,11 +5237,11 @@ bool MainWindow::wantedTheme() {
 
 		bool defaultRandomSelect = false;
 		QString name = qgetenv("USER"); // this env is LINUX - might as well right?
-		if (name.isEmpty()){
+		if (name.isEmpty()) {
 			name = qgetenv("USERNAME"); // this env is WINDOWS
 		}
 
-		if (name.toLower() == "kaihe"){ // just for you kai
+		if (name.toLower() == "kaihe") { // just for you kai
 			defaultRandomSelect = true;
 		}
 
@@ -5271,13 +5257,13 @@ bool MainWindow::wantedTheme() {
 		updateRecentList(recentFiles);
 
 		fontSize = settings.value("fontSize", 11.0).toFloat();
-		if (fontSize <= 0){
+		if (fontSize <= 0) {
 			fontSize = 11.0;
 		}
 		currentFont = settings.value("currentFont", "Source Code Pro").toString();
 		tabWidth = settings.value("tabWidth", 4).toInt();
 		return settings.value("darkModeEnabled", false).toBool(); // Default to false if not found
-	}else{
+	}else {
 		#ifdef _WIN32
 			QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", QSettings::NativeFormat);
 			return settings.value("AppsUseLightTheme").toInt() == 0;
@@ -5291,7 +5277,7 @@ bool MainWindow::wantedTheme() {
 	}
 }
 
-void MainWindow::on_actionSave_All_Settings_triggered(){
+void MainWindow::on_actionSave_All_Settings_triggered() {
 	qDebug() << "on_actionSave_All_Settings_triggered";
 
 	QString outText = "CodeWizard - AllSettings\n\n";
@@ -5301,7 +5287,7 @@ void MainWindow::on_actionSave_All_Settings_triggered(){
 
 	QStringList settingsAsALst;
 
-	for (QString settingName : keys){
+	for (QString settingName : keys) {
 		QVariant originalValue = settings.value(settingName);
 		QString storedString = QString("%1/.CodeWiz./%2")
 		.arg(settingName)
@@ -5313,18 +5299,18 @@ void MainWindow::on_actionSave_All_Settings_triggered(){
 
 	QString saveFile = QFileDialog::getSaveFileName(this, tr("Save File"), "allSettings.cdwzrd", tr("All Files (*)"));
 
-	if (saveFile.isEmpty()){
+	if (saveFile.isEmpty()) {
 		return;
 	}
 
-	if (!saveFile.endsWith(".cdwzrd")){
+	if (!saveFile.endsWith(".cdwzrd")) {
 		saveFile += ".cdwzrd";
 	}
 
 	QFile file(saveFile);
 	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		openHelpMenu("Failed to open file to save syntax colors.");
-		if (useSpeakerAction->isChecked()){
+		if (useSpeakerAction->isChecked()) {
 			#ifdef _WIN32
 				speech->say("Failed to open file to save syntax colors.");
 			#endif
@@ -5339,7 +5325,7 @@ void MainWindow::on_actionSave_All_Settings_triggered(){
 	openHelpMenu("Completed.");
 }
 
-void MainWindow::on_actionLoad_All_Settings_triggered(){
+void MainWindow::on_actionLoad_All_Settings_triggered() {
 	qDebug() << "on_actionLoad_All_Settings_triggered";
 
 	QString filePath = QFileDialog::getOpenFileName(this, "Open CodeWizard File", "", "CodeWizard Files (*.cdwzrd)");
@@ -5353,7 +5339,7 @@ void MainWindow::on_actionLoad_All_Settings_triggered(){
 	// Attempt to open the file in read-only mode
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		openHelpMenu("Failed to open file.");
-		if (useSpeakerAction->isChecked()){
+		if (useSpeakerAction->isChecked()) {
 			#ifdef _WIN32
 				speech->say("Failed to open file.");
 			#endif
@@ -5368,9 +5354,9 @@ void MainWindow::on_actionLoad_All_Settings_triggered(){
 
 	QString expectedHeader = "CodeWizard - AllSettings\n\n";
 
-	if (!fileContents.startsWith(expectedHeader)){
+	if (!fileContents.startsWith(expectedHeader)) {
 		openHelpMenu("File does not match specification.");
-		if (useSpeakerAction->isChecked()){
+		if (useSpeakerAction->isChecked()) {
 			#ifdef _WIN32
 				speech->say("File does not match specification.");
 			#endif
@@ -5391,9 +5377,9 @@ void MainWindow::on_actionLoad_All_Settings_triggered(){
 	QStringList values;
 
 	QStringList lines = content.split("\n");
-	for (QString line : lines){
-		if (line.contains(splitter)){
-			if (currentSetting != ""){
+	for (QString line : lines) {
+		if (line.contains(splitter)) {
+			if (currentSetting != "") {
 				names.push_back(currentSetting);
 				values.push_back(currentValue);
 			}
@@ -5403,19 +5389,19 @@ void MainWindow::on_actionLoad_All_Settings_triggered(){
 
 			currentSetting = line.left(index);
 			currentValue = line.mid(index+splitter.length());
-		}else{
+		}else {
 			currentValue += "\n" + line;
 		}
 	}
 
-	if (currentSetting != ""){
+	if (currentSetting != "") {
 		names.push_back(currentSetting);
 		values.push_back(currentValue);
 	}
 
 	QSettings settings("FoundationTechnologies", "CodeWizard");
 
-	for (int i = 0; i < names.length(); i++){
+	for (int i = 0; i < names.length(); i++) {
 		settings.setValue(names[i], values[i]);
 	}
 
@@ -5428,7 +5414,7 @@ void MainWindow::on_actionLoad_All_Settings_triggered(){
 	QCoreApplication::quit();
 }
 
-void MainWindow::on_actionSet_Font_By_Name_triggered(){
+void MainWindow::on_actionSet_Font_By_Name_triggered() {
 	// Cascadia Code
 
 	QInputDialog dialog;
@@ -5447,7 +5433,7 @@ void MainWindow::on_actionSet_Font_By_Name_triggered(){
 	updateFontSelection();
 }
 
-void MainWindow::on_actionSet_Groq_API_Key_triggered(){
+void MainWindow::on_actionSet_Groq_API_Key_triggered() {
 	QInputDialog dialog;
 	dialog.setFont(textEdit->font());  // Set the font to match textEdit's font
 	dialog.setWindowTitle("CodeWizard - AI");
@@ -5465,7 +5451,7 @@ void MainWindow::on_actionSet_Groq_API_Key_triggered(){
 	saveWantedTheme();
 }
 
-void MainWindow::Ctrl_C(){
+void MainWindow::Ctrl_C() {
 	#ifdef _WIN32
 		qDebug() << "Kill ctrl+c";
 		QProcess::startDetached("taskkill", {"/F", "/T", "/PID", QString::number(activeTerminals[currentTerminalIndex]->processId())});
@@ -5516,7 +5502,7 @@ void MainWindow::findTriggered() {
 	QTextCursor cursor = textEdit->textCursor();
 	QString find = findTextEdit->toPlainText();
 
-	if (find == ""){
+	if (find == "") {
 		return;
 	}
 
@@ -5529,8 +5515,7 @@ void MainWindow::findTriggered() {
 	}
 }
 
-void MainWindow::findTextEditChanged()
-{
+void MainWindow::findTextEditChanged() {
 	qDebug() << "findTextEditChanged";
 
 	disconnect(findTextEdit, &QTextEdit::textChanged, this, &MainWindow::findTextEditChanged);
@@ -5549,8 +5534,7 @@ void MainWindow::findTextEditChanged()
 	connect(findTextEdit, &QTextEdit::textChanged, this, &MainWindow::findTextEditChanged);
 }
 
-void MainWindow::previousTriggered()
-{
+void MainWindow::previousTriggered() {
 	qDebug() << "previousTriggered";
 
 	QString text = textEdit->toPlainText();
@@ -5579,15 +5563,14 @@ void MainWindow::previousTriggered()
 	}
 }
 
-void MainWindow::nextTriggered(bool dontRecurse)
-{
+void MainWindow::nextTriggered(bool dontRecurse) {
 	qDebug() << "nextTriggered";
 
 	QString text = textEdit->toPlainText();
 	QTextCursor cursor = textEdit->textCursor();
 	QString find = findTextEdit->toPlainText();
 
-	if (find == ""){
+	if (find == "") {
 		return;
 	}
 
@@ -5613,7 +5596,7 @@ void MainWindow::nextTriggered(bool dontRecurse)
 	}
 }
 
-void MainWindow::replaceTriggered(){
+void MainWindow::replaceTriggered() {
 	qDebug() << "replaceTriggered";
 
 	QTextCursor cursor = textEdit->textCursor();
@@ -5621,7 +5604,7 @@ void MainWindow::replaceTriggered(){
 	QString find = findTextEdit->toPlainText();
 	QString replace = replaceTextEdit->toPlainText();
 
-	if (find == "" || selectedText == ""){
+	if (find == "" || selectedText == "") {
 		return;
 	}
 
@@ -5633,7 +5616,7 @@ void MainWindow::replaceTriggered(){
 	}
 }
 
-void MainWindow::replaceAllTriggered(){
+void MainWindow::replaceAllTriggered() {
 	qDebug() << "replaceAllTriggered";
 
 	QString find = findTextEdit->toPlainText();
@@ -5656,7 +5639,7 @@ void MainWindow::replaceAllTriggered(){
 	while (!docCursor.isNull() && !docCursor.atEnd()) {
 		auto c = textDocument->find(re, docCursor);
 
-		if (c.isNull()){
+		if (c.isNull()) {
 			break;
 		}
 
@@ -5669,19 +5652,19 @@ void MainWindow::replaceAllTriggered(){
 	docCursor.endEditBlock();
 }
 
-void MainWindow::on_actionExit_triggered(){
+void MainWindow::on_actionExit_triggered() {
 	qDebug() << "on_actionExit_triggered";
 	QApplication::quit();
 }
 
-void MainWindow::clearTSSyntaxHighlighting(){
+void MainWindow::clearTSSyntaxHighlighting() {
 	qDebug() << "clearTSSyntaxHighlighting";
 
 	QTextBlock block = textEdit->document()->firstBlock();
 	QTextCharFormat form = QTextCharFormat();
 	form.setForeground(normalColor);
 
-	while (block.isValid()){
+	while (block.isValid()) {
 		QTextLayout* layout = block.layout();
 
 		if (!layout) {
@@ -5704,45 +5687,44 @@ void MainWindow::clearTSSyntaxHighlighting(){
 	textDocument->markContentsDirty(0, textDocument->characterCount());
 }
 
-void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
-{
+void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight) {
 	qDebug() << "setupSyntaxTreeOnOpen";
 
 	treeParserSyntaxHighlighter.colormap = currentLang.colorMapTS;
 
-	if (currentLang.name == "Python"){
+	if (currentLang.name == "Python") {
 		ts_parser_set_language(parser, tree_sitter_python());
-	}else if (currentLang.name == "Rust"){
+	}else if (currentLang.name == "Rust") {
 		ts_parser_set_language(parser, tree_sitter_rust());
-	}else if (currentLang.name == "WGSL"){
+	}else if (currentLang.name == "WGSL") {
 		ts_parser_set_language(parser, tree_sitter_wgsl());
-	}else if (currentLang.name == "GLSL"){
+	}else if (currentLang.name == "GLSL") {
 		ts_parser_set_language(parser, tree_sitter_glsl());
-	}else if (currentLang.name == "C++"){
+	}else if (currentLang.name == "C++") {
 		ts_parser_set_language(parser, tree_sitter_cpp());
-	}else if (currentLang.name == "Txt"){
+	}else if (currentLang.name == "Txt") {
 		tree = nullptr;
 		clearTSSyntaxHighlighting();
 		return;
-	}else if (currentLang.name == "JS"){
+	}else if (currentLang.name == "JS") {
 		ts_parser_set_language(parser, tree_sitter_javascript());
-	}else if (currentLang.name == "TS"){
+	}else if (currentLang.name == "TS") {
 		ts_parser_set_language(parser, tree_sitter_typescript());
-	}else if (currentLang.name == "HTML"){
+	}else if (currentLang.name == "HTML") {
 		ts_parser_set_language(parser, tree_sitter_html());
-	}else if (currentLang.name == "Go"){
+	}else if (currentLang.name == "Go") {
 		ts_parser_set_language(parser, tree_sitter_go());
-	}else if (currentLang.name == "Lua"){
+	}else if (currentLang.name == "Lua") {
 		ts_parser_set_language(parser, tree_sitter_lua());
-	}else if (currentLang.name == "C#"){
+	}else if (currentLang.name == "C#") {
 		ts_parser_set_language(parser, tree_sitter_c_sharp());
-	}else if (currentLang.name == "Java"){
+	}else if (currentLang.name == "Java") {
 		ts_parser_set_language(parser, tree_sitter_java());
-	}else if (currentLang.name == "C"){
+	}else if (currentLang.name == "C") {
 		ts_parser_set_language(parser, tree_sitter_c());
-	}else if (currentLang.name == "Cobol"){
+	}else if (currentLang.name == "Cobol") {
 		ts_parser_set_language(parser, tree_sitter_python());
-	}else if (currentLang.name == "Css"){
+	}else if (currentLang.name == "Css") {
 		ts_parser_set_language(parser, tree_sitter_css());
 	}
 
@@ -5760,7 +5742,7 @@ void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
 
 //	printTree(ts_tree_root_node(tree), 0);
 
-	if (doHighlight){
+	if (doHighlight) {
 		rehighlightFullDoc();
 	}
 
@@ -5775,18 +5757,17 @@ void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight)
 	isErrorHighlighted = false;
 }
 
-void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
-{
+void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 	qDebug() << "on_actionOpen_triggered";
 	
 	storedTextEdits[fileName] = textEdit;
 	
-	if (isSettingUpLSP){
+	if (isSettingUpLSP) {
 		showWeDontFuckWithTheLSP();
 		return;
 	}
 
-	if (isOpeningFile){
+	if (isOpeningFile) {
 		showHoldYourHorses();
 		return;
 	}
@@ -5799,26 +5780,26 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	QString absoluteTempPath = tempDir.absolutePath();
 	QString curAbsPath = QFileInfo(fileName).absoluteFilePath();
 	
-	if (unsaved && curAbsPath.startsWith(absoluteTempPath, Qt::CaseInsensitive)){
+	if (unsaved && curAbsPath.startsWith(absoluteTempPath, Qt::CaseInsensitive)) {
 		saveToFile(textEdit->toPlainText());
-	}else if (unsaved && fileName != ""){
+	}else if (unsaved && fileName != "") {
 		pullUpSaveDialogue();
 	}
 
 	QString newFile = "";
-	if (!globalArgFileName.isEmpty()){
+	if (!globalArgFileName.isEmpty()) {
 		newFile = globalArgFileName;
 		globalArgFileName = "";
-	}else{
+	}else {
 		newFile = QFileDialog::getOpenFileName(this, tr("Open File"), fileName, tr("All Files (*)"));
 	}
 
-	if (newFile.isEmpty()){
+	if (newFile.isEmpty()) {
 		isOpeningFile = false;
 		return;
 	}
 
-	if (useSpeakerAction->isChecked()){
+	if (useSpeakerAction->isChecked()) {
 		#ifdef _WIN32
 			speech->say("Opening File");
 		#endif
@@ -5837,11 +5818,11 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 		return;
 	}
 
-	for (int i = 0; i < tabs.length(); i++){
+	for (int i = 0; i < tabs.length(); i++) {
 		TabWidget *tab = tabs[i];
 		qDebug() << tab->extraText << absoluteTempPath;
 		
-		if (tab->extraText.startsWith(absoluteTempPath, Qt::CaseInsensitive)){
+		if (tab->extraText.startsWith(absoluteTempPath, Qt::CaseInsensitive)) {
 			QFile existingFile(tab->extraText);
 			
 			bool del = false;
@@ -5852,7 +5833,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 				existingFile.close();
 			}
 			
-			if (del){
+			if (del) {
 				closeTab(tab->m_index);
 			}
 		}
@@ -5860,7 +5841,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 
 	bool ret = checkForLargeFile(&file);
 
-	if (!ret){
+	if (!ret) {
 		isOpeningFile = false;
 		return;
 	}
@@ -5908,7 +5889,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 		newTextEdit = it0->second;
 		needsHighlighting = false;
 		isNewTextEdit = false;
-	}else{
+	}else {
 		newTextEdit = new MyTextEdit();
 		needsHighlighting = true;
 		isNewTextEdit = true;
@@ -5936,7 +5917,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	connect(textEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, &MainWindow::updateScrollBarValue);
 	connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 	
-	if (isNewTextEdit){
+	if (isNewTextEdit) {
 		connect(textEdit, &QTextEdit::cursorPositionChanged, [=]() {
 			qDebug() << "lamda textEdit cursorPositionChanged1.1";
 			updateLineNumbers(globalLineCount);
@@ -5963,7 +5944,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	
 	textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	
-	if (needsHighlighting){
+	if (needsHighlighting) {
 		qDebug() << "SETTING THE TEXTEDIT IN NEEDS HIGHLIGHTING ##################################### " << fileName;
 		textEdit->setPlainText(fileContent);
 		toCompareTo = fileContent;
@@ -5987,8 +5968,8 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 
 	QString absoluteFilePath = fileInfo.absoluteFilePath();
 
-	if (!dontUpdateFileTree && !absoluteFilePath.startsWith(absoluteTempPath, Qt::CaseInsensitive)){
-		if (!fileInfo.absolutePath().startsWith(fileModel->rootPath())){
+	if (!dontUpdateFileTree && !absoluteFilePath.startsWith(absoluteTempPath, Qt::CaseInsensitive)) {
+		if (!fileInfo.absolutePath().startsWith(fileModel->rootPath())) {
 			fileModel->setRootPath(fileInfo.absolutePath());
 			QSettings settings("FoundationTechnologies", "CodeWizard");
 			settings.setValue("mostRecentFolder", fileInfo.absolutePath());
@@ -5997,9 +5978,9 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 		}
 	}
 
-	if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())){
+	if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())) {
 		fileTree->show();
-	}else{
+	}else {
 		fileTree->hide();
 	}
 
@@ -6009,7 +5990,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 
 	updateMargins(true); // called on open - every time
 
-	if (useSpeakerAction->isChecked()){
+	if (useSpeakerAction->isChecked()) {
 		#ifdef _WIN32
 			speech->say("File Opened");
 		#endif
@@ -6020,18 +6001,18 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree)
 	checkForFixitDialogue();
 	textEdit->setFocus();
 	
-	if (previousFiles.contains(fileName)){
+	if (previousFiles.contains(fileName)) {
 		previousFiles.removeOne(fileName);
 	}
 	previousFiles.push_back(fileName);
 }
 
-void MainWindow::setLangOffFilename(QString fileName, bool rehigh){
+void MainWindow::setLangOffFilename(QString fileName, bool rehigh) {
 	qDebug() << "setLangOffFilename";
 
-	for (int i = 0; i < supportedLangs.size(); i++){
-		for (int j = 0; j < supportedLangs[i].fileExtensions.size(); j++){
-			if (fileName.endsWith(supportedLangs[i].fileExtensions[j], Qt::CaseInsensitive)){
+	for (int i = 0; i < supportedLangs.size(); i++) {
+		for (int j = 0; j < supportedLangs[i].fileExtensions.size(); j++) {
+			if (fileName.endsWith(supportedLangs[i].fileExtensions[j], Qt::CaseInsensitive)) {
 				currentLang = supportedLangs[i];
 				updateTagLine();
 				updateDefaultWordLists();
@@ -6040,55 +6021,55 @@ void MainWindow::setLangOffFilename(QString fileName, bool rehigh){
 		}
 	}
 
-	if (isOpeningFile){
+	if (isOpeningFile) {
 		currentLang = txtLang;
 		taglineEdit->setPlainText(txtTag);
-	}else{
+	}else {
 		currentLang = pythonLang;
 		taglineEdit->setPlainText(pythonTag);
 	}
 	updateDefaultWordLists();
 }
 
-void MainWindow::updateTagLine(){
+void MainWindow::updateTagLine() {
 	qDebug() << "updateTagLine";
 
-	if (currentLang.name == "Python"){
+	if (currentLang.name == "Python") {
 		taglineEdit->setPlainText(pythonTag);
-	}else if (currentLang.name == "Rust"){
+	}else if (currentLang.name == "Rust") {
 		taglineEdit->setPlainText(rustTag);
-	}else if (currentLang.name == "WGSL"){
+	}else if (currentLang.name == "WGSL") {
 		taglineEdit->setPlainText(WGSLTag);
-	}else if (currentLang.name == "GLSL"){
+	}else if (currentLang.name == "GLSL") {
 		taglineEdit->setPlainText(GLSLTag);
-	}else if (currentLang.name == "C++"){
+	}else if (currentLang.name == "C++") {
 		taglineEdit->setPlainText(CppTag);
-	}else if (currentLang.name == "Txt"){
+	}else if (currentLang.name == "Txt") {
 		taglineEdit->setPlainText(txtTag);
-	}else if (currentLang.name == "JS"){
+	}else if (currentLang.name == "JS") {
 		taglineEdit->setPlainText(jsTag);
-	}else if (currentLang.name == "TS"){
+	}else if (currentLang.name == "TS") {
 		taglineEdit->setPlainText(tsTag);
-	}else if (currentLang.name == "HTML"){
+	}else if (currentLang.name == "HTML") {
 		taglineEdit->setPlainText(HTMLTag);
-	}else if (currentLang.name == "Go"){
+	}else if (currentLang.name == "Go") {
 		taglineEdit->setPlainText(goTag);
-	}else if (currentLang.name == "Lua"){
+	}else if (currentLang.name == "Lua") {
 		taglineEdit->setPlainText(luaTag);
-	}else if (currentLang.name == "C#"){
+	}else if (currentLang.name == "C#") {
 		taglineEdit->setPlainText(csharpTag);
-	}else if (currentLang.name == "Java"){
+	}else if (currentLang.name == "Java") {
 		taglineEdit->setPlainText(javaTag);
-	}else if (currentLang.name == "C"){
+	}else if (currentLang.name == "C") {
 		taglineEdit->setPlainText(cTag);
-	}else if (currentLang.name == "Cobol"){
+	}else if (currentLang.name == "Cobol") {
 		taglineEdit->setPlainText(cobolTag);
-	}else if (currentLang.name == "Css"){
+	}else if (currentLang.name == "Css") {
 		taglineEdit->setPlainText(cssTag);
 	}
 }
 
-void MainWindow::updateExtraWordsList(){
+void MainWindow::updateExtraWordsList() {
 	qDebug() << "updateExtraWordsList";
 
 	extraWordList.clear();
@@ -6103,7 +6084,7 @@ void MainWindow::updateExtraWordsList(){
 		QChar c = text.at(i);
 		if (alphanumerical.contains(c.toLower())) {
 			word += c;
-		} else if (!word.isEmpty()) {
+		}else if (!word.isEmpty()) {
 			if (word.length() > 2 && !wrdLstDefQSetted.contains(word)) {
 				uniqueExtraWords.insert(word);
 			}
@@ -6118,18 +6099,17 @@ void MainWindow::updateExtraWordsList(){
 	extraWordList = QStringList(uniqueExtraWords.begin(), uniqueExtraWords.end()); // Convert set to list
 }
 
-void MainWindow::pullUpSaveDialogue()
-{
+void MainWindow::pullUpSaveDialogue() {
 	qDebug() << "pullUpSaveDialogue";
 
-	if (handlingReopen){return;}
+	if (handlingReopen) {return;}
 
-	if (autoSaveAct->isChecked()){
+	if (autoSaveAct->isChecked()) {
 		doTrueSaveAction();
 		return;
 	}
 
-	if (useSpeakerAction->isChecked()){
+	if (useSpeakerAction->isChecked()) {
 		#ifdef _WIN32
 			speech->say("Save File?");
 		#endif
@@ -6148,15 +6128,14 @@ void MainWindow::pullUpSaveDialogue()
 	}
 }
 
-void MainWindow::on_actionNew_triggered()
-{
+void MainWindow::on_actionNew_triggered() {
 	qDebug() << "on_actionNew_triggered";
 
 	QString tempDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
 	QDir tempDir(tempDirPath);
 	
 	QString curPath = QFileInfo(fileName).absoluteFilePath();
-	if (unsaved && curPath.startsWith(tempDirPath)){
+	if (unsaved && curPath.startsWith(tempDirPath)) {
 		saveToFile(textEdit->toPlainText());
 	}
 
@@ -6181,7 +6160,7 @@ void MainWindow::on_actionNew_triggered()
 			existingFile.close();
 		}
 		
-		if (use){
+		if (use) {
 			break;
 		}
 	
@@ -6194,7 +6173,7 @@ void MainWindow::on_actionNew_triggered()
 	QFile file(fullPath);
 	if (file.open(QIODevice::WriteOnly)) {
 		file.close();
-	}else{
+	}else {
 		openHelpMenu("Failed to create the new file in a temporary directory!");
 	}
 	
@@ -6202,8 +6181,7 @@ void MainWindow::on_actionNew_triggered()
 	on_actionOpen_triggered();
 }
 
-void MainWindow::saveToFile(QString text)
-{
+void MainWindow::saveToFile(QString text) {
 	qDebug() << "saveToFile";
 
 	if (fileName.isEmpty()) {
@@ -6226,11 +6204,10 @@ void MainWindow::saveToFile(QString text)
 	unsaved = false;
 }
 
-void MainWindow::on_actionRun_Module_F5_triggered()
-{
+void MainWindow::on_actionRun_Module_F5_triggered() {
 	qDebug() << "on_actionRun_Module_F5_triggered";
 
-	if (unsaved){
+	if (unsaved) {
 		doTrueSaveAction();
 	}
 	
@@ -6249,7 +6226,7 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 
 	QProcess *process;
 
-	if (!useBuiltinTerminal->isChecked()){
+	if (!useBuiltinTerminal->isChecked()) {
 		process = new QProcess(this);
 
 		QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
@@ -6270,10 +6247,10 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 			qDebug() << "Error:" << error;
 		});
 
-	} else {
-		if (preferHorizontalTerminal->isChecked()){
+	}else {
+		if (preferHorizontalTerminal->isChecked()) {
 			terminalInputLineHORZ->setFocus();
-		} else {
+		}else {
 			terminalInputLine->setFocus();
 		}
 	}
@@ -6311,35 +6288,35 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 		// Write the necessary command based on the selected language
 		if (currentLang.name == "Python") {
 			intermediateTag = pythonTag;
-		} else if (currentLang.name == "Rust") {
+		}else if (currentLang.name == "Rust") {
 			intermediateTag = rustTag;
-		} else if (currentLang.name == "WGSL") {
+		}else if (currentLang.name == "WGSL") {
 			intermediateTag = WGSLTag;
-		} else if (currentLang.name == "GLSL") {
+		}else if (currentLang.name == "GLSL") {
 			intermediateTag = GLSLTag;
-		} else if (currentLang.name == "C++") {
+		}else if (currentLang.name == "C++") {
 			intermediateTag = CppTag;
-		} else if (currentLang.name == "JS") {
+		}else if (currentLang.name == "JS") {
 			intermediateTag = jsTag;
-		} else if (currentLang.name == "TS") {
+		}else if (currentLang.name == "TS") {
 			intermediateTag = tsTag;
-		} else if (currentLang.name == "HTML") {
+		}else if (currentLang.name == "HTML") {
 			intermediateTag = HTMLTag;
-		} else if (currentLang.name == "Go") {
+		}else if (currentLang.name == "Go") {
 			intermediateTag = goTag;
-		} else if (currentLang.name == "Txt") {
+		}else if (currentLang.name == "Txt") {
 			intermediateTag = txtTag;
-		} else if (currentLang.name == "Lua") {
+		}else if (currentLang.name == "Lua") {
 			intermediateTag = luaTag;
-		} else if (currentLang.name == "C#") {
+		}else if (currentLang.name == "C#") {
 			intermediateTag = csharpTag;
-		} else if (currentLang.name == "Java") {
+		}else if (currentLang.name == "Java") {
 			intermediateTag = javaTag;
-		} else if (currentLang.name == "C") {
+		}else if (currentLang.name == "C") {
 			intermediateTag = cTag;
-		} else if (currentLang.name == "Cobol") {
+		}else if (currentLang.name == "Cobol") {
 			intermediateTag = cobolTag;
-		} else if (currentLang.name == "Css") {
+		}else if (currentLang.name == "Css") {
 			intermediateTag = cssTag;
 		}
 		
@@ -6371,7 +6348,7 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 		#endif
 	}
 
-	if (!useBuiltinTerminal->isChecked()){
+	if (!useBuiltinTerminal->isChecked()) {
 		#ifdef _WIN32
 			QStringList arguments;
 			arguments << "/c" << "start" << "cmd" << "/k" << batFilePath;
@@ -6381,7 +6358,7 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 			qDebug() << "running command:" << command;
 			process->startDetached("gnome-terminal", QStringList() << "--" << "bash" << "-c" << (batFilePath + "; exec bash"));
 		#endif
-	} else {
+	}else {
 		#ifdef _WIN32
 			activeTerminals[currentTerminalIndex]->start("cmd.exe");
 			QString moveD = "cd /d " + fileDir + "\n" + finalRun + "\n";
@@ -6394,8 +6371,7 @@ void MainWindow::on_actionRun_Module_F5_triggered()
 	}
 }
 
-void MainWindow::keyPressEvent(QKeyEvent *event)
-{
+void MainWindow::keyPressEvent(QKeyEvent *event) {
 	qDebug() << "keyPressEvent";
 
 	if(event->key() == Qt::Key_F5)
@@ -6405,7 +6381,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 	if(event->modifiers() & Qt::ControlModifier)
 	{
-		if (event->key() == Qt::Key_S){
+		if (event->key() == Qt::Key_S) {
 			QString tempDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
 			QDir tempDir(tempDirPath);
 			QString absoluteTempPath = tempDir.absolutePath();
@@ -6413,65 +6389,65 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 			
 			if (event->modifiers() & Qt::ShiftModifier || curAbsPath.startsWith(absoluteTempPath, Qt::CaseInsensitive)) {
 				on_actionSave_As_triggered();
-			} else {
+			}else {
 				doTrueSaveAction();
 			}
-		}else if (event->key() == Qt::Key_O && event->modifiers() & Qt::ShiftModifier){
+		}else if (event->key() == Qt::Key_O && event->modifiers() & Qt::ShiftModifier) {
 			on_actionOpen_Folder_triggered();
-		}else if (event->key() == Qt::Key_O){
+		}else if (event->key() == Qt::Key_O) {
 			on_actionOpen_triggered();
-		}else if (event->key() == Qt::Key_B){
-			if (isFullScreen() || isMaximized()){
-				if (useFileTree->isChecked()){
+		}else if (event->key() == Qt::Key_B) {
+			if (isFullScreen() || isMaximized()) {
+				if (useFileTree->isChecked()) {
 					useFileTree->setChecked(false);
 					useFileTreeIfFullscreen->setChecked(false);
-				}else if (useFileTreeIfFullscreen->isChecked()){
+				}else if (useFileTreeIfFullscreen->isChecked()) {
 					useFileTreeIfFullscreen->setChecked(false);
 					return;
-				}else{
+				}else {
 					useFileTreeIfFullscreen->setChecked(true);
 				}
-			}else{
+			}else {
 				useFileTree->toggle();
 			}
-		}else if(event->key() == Qt::Key_T){
+		}else if(event->key() == Qt::Key_T) {
 			useBuiltinTerminal->toggle();
-		}else if(event->key() == Qt::Key_K){
+		}else if(event->key() == Qt::Key_K) {
 			useWebView->toggle();
-		}else if (event->key() == Qt::Key_N){
+		}else if (event->key() == Qt::Key_N) {
 			on_actionNew_triggered();
-		}else if (event->key() == Qt::Key_BracketLeft){
+		}else if (event->key() == Qt::Key_BracketLeft) {
 			on_actionDe_Increment_Ctrl_triggered();
-		}else if (event->key() == Qt::Key_BracketRight){
+		}else if (event->key() == Qt::Key_BracketRight) {
 			on_actionIncrement_Ctrl_triggered();
-		}else if (event->key() == Qt::Key_Slash){
+		}else if (event->key() == Qt::Key_Slash) {
 			on_actionToggleComments_triggered();
-		}else if (event->key() == Qt::Key_F || event->key() == Qt::Key_H){
+		}else if (event->key() == Qt::Key_F || event->key() == Qt::Key_H) {
 			changeFindSectionVisibility(true);
 			openFind();
-		}else if (event->key() == Qt::Key_P && event->modifiers() & Qt::ShiftModifier){
+		}else if (event->key() == Qt::Key_P && event->modifiers() & Qt::ShiftModifier) {
 			searchBar->setPlainText("");
 			searchBar->setCurrentVim("i");
 			searchBar->setFocus();
-		}else if (event->key() == Qt::Key_P){
+		}else if (event->key() == Qt::Key_P) {
 			on_actionReplay_Macro_triggered();
-		}else if (event->key() == Qt::Key_Plus || event->key() == Qt::Key_Equal){
+		}else if (event->key() == Qt::Key_Plus || event->key() == Qt::Key_Equal) {
 			on_actionIncrease_Text_Size_triggered();
-		}else if (event->key() == Qt::Key_Minus || event->key() == Qt::Key_Underscore){
+		}else if (event->key() == Qt::Key_Minus || event->key() == Qt::Key_Underscore) {
 			on_actionDecrease_Text_Size_triggered();
-		}else if (event->key() == Qt::Key_Q){ // I had to choose a key. Q was doing diddly squat.
-			if (isSettingUpLSP){
+		}else if (event->key() == Qt::Key_Q) { // I had to choose a key. Q was doing diddly squat.
+			if (isSettingUpLSP) {
 				showWeDontFuckWithTheLSP();
 				return;
 			}
-			if (isOpeningFile){
+			if (isOpeningFile) {
 				showHoldYourHorses();
 				return;
 			}
 			
 			qDebug() << "Backpedal";
 			
-			if (previousFiles.length() < 2){ // current file and prev file.
+			if (previousFiles.length() < 2) { // current file and prev file.
 				 return;
 			}
 			previousFiles.pop_back();
@@ -6482,8 +6458,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 	}
 }
 
-void MainWindow::openFind()
-{
+void MainWindow::openFind() {
 	qDebug() << "openFind";
 
 	disconnect(findTextEdit, &QTextEdit::textChanged, this, &MainWindow::findTextEditChanged);
@@ -6511,8 +6486,7 @@ void MainWindow::openFind()
 	connect(findTextEdit, &QTextEdit::textChanged, this, &MainWindow::findTextEditChanged);
 }
 
-void removeOneTabAndAddChar(QString characterToAdd)
-{
+void removeOneTabAndAddChar(QString characterToAdd) {
 	qDebug() << "removeOneTabAndAddChar";
 
 	QTextCursor cursor = textEdit->textCursor();
@@ -6521,7 +6495,7 @@ void removeOneTabAndAddChar(QString characterToAdd)
 
 	if (cursor.selectedText() == "\t") {
 		cursor.removeSelectedText();
-	} else {
+	}else {
 		cursor.movePosition(QTextCursor::Right);
 	}
 
@@ -6539,7 +6513,7 @@ void MainWindow::on_actionStart_Macro_Recording_triggered() {
 	recordMacroButton->setEnabled(false);
 	endRecordMacroButton->setEnabled(true);
 	replayMacroButton->setEnabled(false);
-	if (useSpeakerAction->isChecked()){
+	if (useSpeakerAction->isChecked()) {
 		#ifdef _WIN32
 			speech->say("Started Macro Recording");
 		#endif
@@ -6557,7 +6531,7 @@ void MainWindow::on_actionEnd_Macro_Recording_triggered() {
 	recordMacroButton->setEnabled(true);
 	endRecordMacroButton->setEnabled(false);
 	replayMacroButton->setEnabled(true);
-	if (useSpeakerAction->isChecked()){
+	if (useSpeakerAction->isChecked()) {
 		#ifdef _WIN32
 			speech->say("Ended Macro Recording");
 		#endif
@@ -6569,11 +6543,11 @@ void MainWindow::on_actionEnd_Macro_Recording_triggered() {
 void MainWindow::on_actionReplay_Macro_triggered() {
 	qDebug() << "on_actionReplay_Macro_triggered";
 
-	if (recordingMacro){
+	if (recordingMacro) {
 		return;
 	}
 
-	if (playingMacro){
+	if (playingMacro) {
 		playingMacro = false;
 		return;
 	}
@@ -6601,15 +6575,15 @@ void MainWindow::on_actionReplay_Macro_triggered() {
 		repeatTimes = dialog.intValue();
 	}
 
-	if (repeatTimes == 0){
+	if (repeatTimes == 0) {
 		runUntilEOF = true;
 	}
 
 	textEdit->setFocus();
 
 	int i = 0;
-	while (true){
-		if (!runUntilEOF && i >= repeatTimes || !playingMacro){
+	while (true) {
+		if (!runUntilEOF && i >= repeatTimes || !playingMacro) {
 			break;
 		}
 
@@ -6629,12 +6603,12 @@ void MainWindow::on_actionReplay_Macro_triggered() {
 		}
 		i++;
 
-		if(runUntilEOF){
+		if(runUntilEOF) {
 			QCoreApplication::processEvents(QEventLoop::AllEvents, 1000);
 			QTextCursor cursor = textEdit->textCursor(); // Get the current cursor
 			int currentLine = cursor.blockNumber();      // Get the current block number (0-based)
 			int totalLines = textDocument->blockCount(); // Get total number of blocks
-			if (currentLine == totalLines - 1){
+			if (currentLine == totalLines - 1) {
 				break;
 			}
 		}
@@ -6647,7 +6621,7 @@ void MainWindow::on_actionReplay_Macro_triggered() {
 	replayMacroButton->setEnabled(true);
 }
 
-int MainWindow::findMatchingBracket(int direction){
+int MainWindow::findMatchingBracket(int direction) {
 	qDebug() << "findMatchingBracket";
 
 	int seen = 0;
@@ -6658,7 +6632,7 @@ int MainWindow::findMatchingBracket(int direction){
 	QString opening = "{[(<";
 	QString closing = "}])>";
 
-	if (direction < 0){
+	if (direction < 0) {
 		opening = "}])>";
 		closing = "{[(<";
 	}
@@ -6667,10 +6641,10 @@ int MainWindow::findMatchingBracket(int direction){
 
 	int textLen = text.length();
 
-	if (opening.contains(text.at(initPos-1))){
+	if (opening.contains(text.at(initPos-1))) {
 		initPos = initPos-1;
-	}else{
-		if (!opening.contains(text.at(initPos))){
+	}else {
+		if (!opening.contains(text.at(initPos))) {
 			return initPos;
 		}
 	}
@@ -6681,16 +6655,16 @@ int MainWindow::findMatchingBracket(int direction){
 	int curPos = initPos + direction;
 
 	while (true) {
-		if (curPos < 0 || curPos >= textLen){
+		if (curPos < 0 || curPos >= textLen) {
 			break;
 		}
 
-		if (had == text.at(curPos)){
+		if (had == text.at(curPos)) {
 			seen += 1;
-		}else if (lookingFor == text.at(curPos)){
-			if (seen == 0){
+		}else if (lookingFor == text.at(curPos)) {
+			if (seen == 0) {
 				return curPos;
-			}else{
+			}else {
 				seen -= 1;
 			}
 		}
@@ -6701,15 +6675,14 @@ int MainWindow::findMatchingBracket(int direction){
 	return copyInitPos;
 }
 
-bool MainWindow::eventFilter(QObject *watched, QEvent *event)
-{
+bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 //	qDebug() << "eventFilter"; - we don't do it for certain functions (like this one)
 
-	if (event->type()==QEvent::WindowStateChange){
+	if (event->type()==QEvent::WindowStateChange) {
 		onWindowStateChanged();
 	}
 	
-	if (watched == lineNumberTextEdit && event->type() == QEvent::Wheel){
+	if (watched == lineNumberTextEdit && event->type() == QEvent::Wheel) {
 		QWheelEvent* wheelEvent = static_cast<QWheelEvent*>(event);
 		int delta = wheelEvent->angleDelta().y();
 		QScrollBar* targetScrollBar = textEdit->verticalScrollBar();
@@ -6718,46 +6691,46 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 	}
 
 	if (watched == terminalInputLine || watched == terminalInputLineHORZ) {
-		if (event->type() == QEvent::KeyPress){
+		if (event->type() == QEvent::KeyPress) {
 			QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 			QKeySequence key_sequence{static_cast<int>(keyEvent->modifiers()) + keyEvent->key()};
 
 			QTextCursor cursor;
 
-			if (watched == terminalInputLine){
+			if (watched == terminalInputLine) {
 				cursor = terminalInputLine->textCursor();
-			}else{
+			}else {
 				cursor = terminalInputLineHORZ->textCursor();
 			}
 
 			QString selectedText = cursor.selectedText();
 
-			if (key_sequence == QKeySequence("Ctrl+C") && selectedText.isEmpty()){
+			if (key_sequence == QKeySequence("Ctrl+C") && selectedText.isEmpty()) {
 				Ctrl_C();
 			}
 
-			if (keyEvent->key() == Qt::Key_Escape){
-				if (useVimMode->isChecked()){
+			if (keyEvent->key() == Qt::Key_Escape) {
+				if (useVimMode->isChecked()) {
 					QString curVimMode = "i";
-					if (watched == terminalInputLine){
+					if (watched == terminalInputLine) {
 						curVimMode = terminalInputLine->currentVimMode;
-					}else{
+					}else {
 						curVimMode = terminalInputLineHORZ->currentVimMode;
 					}
-					if (curVimMode == "n"){
+					if (curVimMode == "n") {
 						textEdit->setFocus(); // if we use vim, require double tap on esc key.
 					}
-				}else{
+				}else {
 					textEdit->setFocus();
 				}
-			}if (keyEvent->key() == Qt::Key_Up){
+			}if (keyEvent->key() == Qt::Key_Up) {
 				indexInSentCommands += 1;
 				QString toset;
 
-				if (indexInSentCommands >= sentCommands.length()){
+				if (indexInSentCommands >= sentCommands.length()) {
 					indexInSentCommands = -1;
 					toset = "";
-				}else{
+				}else {
 					toset = sentCommands[indexInSentCommands];
 				}
 
@@ -6772,17 +6745,17 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 				terminalInputLine->setTextCursor(cursor);
 				terminalInputLineHORZ->setTextCursor(cursor2);
-			}if (keyEvent->key() == Qt::Key_Down){
+			}if (keyEvent->key() == Qt::Key_Down) {
 				indexInSentCommands -= 1;
 				QString toset;
 
-				if (indexInSentCommands < -1){
+				if (indexInSentCommands < -1) {
 					indexInSentCommands = sentCommands.length()-1;
 				}
 
-				if (indexInSentCommands == -1){
+				if (indexInSentCommands == -1) {
 					toset = "";
-				}else{
+				}else {
 					toset = sentCommands[indexInSentCommands];
 				}
 
@@ -6799,17 +6772,17 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				terminalInputLineHORZ->setTextCursor(cursor2);
 			}
 
-			if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter){
+			if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {
 				QString lineToSend;
 
-				if (watched == terminalInputLine){
+				if (watched == terminalInputLine) {
 					lineToSend = terminalInputLine->toPlainText() + "\n";
-					if (sentCommands.length() == 0 || sentCommands.at(0) != terminalInputLine->toPlainText()){
+					if (sentCommands.length() == 0 || sentCommands.at(0) != terminalInputLine->toPlainText()) {
 						sentCommands.push_front(terminalInputLine->toPlainText());
 					}
-				}else{
+				}else {
 					lineToSend = terminalInputLineHORZ->toPlainText() + "\n";
-					if (sentCommands.length() == 0 || sentCommands.at(0) != terminalInputLineHORZ->toPlainText()){
+					if (sentCommands.length() == 0 || sentCommands.at(0) != terminalInputLineHORZ->toPlainText()) {
 						sentCommands.push_front(terminalInputLineHORZ->toPlainText());
 					}
 				}
@@ -6839,18 +6812,18 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 		bool saved = false;
 
-		if ((key_sequence == QKeySequence("Alt+Alt") || key_sequence == QKeySequence("Alt")) && event->type() == QEvent::KeyRelease && holdingAnEvent){
+		if ((key_sequence == QKeySequence("Alt+Alt") || key_sequence == QKeySequence("Alt")) && event->type() == QEvent::KeyRelease && holdingAnEvent) {
 			recordedEvents.removeLast();
 			recordedWidgets.removeLast();
 			on_actionEnd_Macro_Recording_triggered();
 			textEdit->setFocus();
 			holdingAnEvent = false;
 			return true;
-		}else if ((key_sequence == QKeySequence("Alt+Alt") || key_sequence == QKeySequence("Alt")) && event->type() == QEvent::KeyPress){
+		}else if ((key_sequence == QKeySequence("Alt+Alt") || key_sequence == QKeySequence("Alt")) && event->type() == QEvent::KeyPress) {
 			holdingAnEvent = true;
 		}
 
-		if ((key_sequence != QKeySequence("Alt") && key_sequence != QKeySequence("Alt+Alt"))){
+		if ((key_sequence != QKeySequence("Alt") && key_sequence != QKeySequence("Alt+Alt"))) {
 			holdingAnEvent = false;
 		}
 
@@ -6858,79 +6831,79 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		recordedWidgets.append(watched);
 	}
 
-	if ((event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease && !recordingMacro)){
+	if ((event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease && !recordingMacro)) {
 		QKeyEvent *key_event = dynamic_cast<QKeyEvent*>(event);
 		QKeySequence key_sequence{static_cast<int>(key_event->modifiers()) + key_event->key()};
 
-		if (event->type() == QEvent::KeyRelease && holdingAnEvent && (key_sequence == QKeySequence("Alt+Alt") || key_sequence == QKeySequence("Alt"))){
+		if (event->type() == QEvent::KeyRelease && holdingAnEvent && (key_sequence == QKeySequence("Alt+Alt") || key_sequence == QKeySequence("Alt"))) {
 			on_actionStart_Macro_Recording_triggered();
 			textEdit->setFocus();
 			holdingAnEvent = false;
-		}else if (event->type() == QEvent::KeyPress && !holdingAnEvent && (key_sequence == QKeySequence("Alt+Alt") || key_sequence == QKeySequence("Alt"))){
+		}else if (event->type() == QEvent::KeyPress && !holdingAnEvent && (key_sequence == QKeySequence("Alt+Alt") || key_sequence == QKeySequence("Alt"))) {
 			holdingAnEvent = true;
 		}
 
-		if (key_sequence != QKeySequence("Alt+Alt") && key_sequence != QKeySequence("Alt")){
+		if (key_sequence != QKeySequence("Alt+Alt") && key_sequence != QKeySequence("Alt")) {
 			holdingAnEvent = false;
 		}
 	}
 
-	if(event->type() != QEvent::KeyPress){
+	if(event->type() != QEvent::KeyPress) {
 		return false;
 	}
 
 	QKeyEvent *key_event = dynamic_cast<QKeyEvent*>(event);
 	QKeySequence key_sequence{static_cast<int>(key_event->modifiers()) + key_event->key()};
 	
-	if (watched == searchBar){
-		if (key_event->key() == Qt::Key_Escape){
-			if (useVimMode->isChecked()){
-				if (searchBar->currentVimMode == "n"){ // double tap
+	if (watched == searchBar) {
+		if (key_event->key() == Qt::Key_Escape) {
+			if (useVimMode->isChecked()) {
+				if (searchBar->currentVimMode == "n") { // double tap
 					textEdit->setFocus();
 					return true;
 				}
-			}else{
+			}else {
 				textEdit->setFocus();
 				return true;
 			}
 		}
-		if (searchBar->currentVimMode == "i" || !searchBar->useVIM){
-			if (key_event->key() == Qt::Key_Up){
-				if (indexedFiles.isEmpty()){
+		if (searchBar->currentVimMode == "i" || !searchBar->useVIM) {
+			if (key_event->key() == Qt::Key_Up) {
+				if (indexedFiles.isEmpty()) {
 					return true;
 				}
 				selectedSearchFile = (selectedSearchFile-1 + indexedFiles.length())%indexedFiles.length();
-				if (selectedSearchFile < indexedFiles.length()){
+				if (selectedSearchFile < indexedFiles.length()) {
 					searchMenu->setCurrentRow(selectedSearchFile);
 				}
 				return true;
-			}else if (key_event->key() == Qt::Key_Down){
-				if (indexedFiles.isEmpty()){
+			}else if (key_event->key() == Qt::Key_Down) {
+				if (indexedFiles.isEmpty()) {
 					return true;
 				}
 				selectedSearchFile = (selectedSearchFile+1)%indexedFiles.length();
-				if (selectedSearchFile < indexedFiles.length()){
+				if (selectedSearchFile < indexedFiles.length()) {
 					searchMenu->setCurrentRow(selectedSearchFile);
 				}
 				return true;
 			}
 		}
-		if (key_event->key() == Qt::Key_Enter || key_event->key() == Qt::Key_Return || key_event->key() == Qt::Key_Tab){
-			if (indexedFiles.isEmpty()){
+		if (key_event->key() == Qt::Key_Enter || key_event->key() == Qt::Key_Return || key_event->key() == Qt::Key_Tab) {
+			if (indexedFiles.isEmpty()) {
 				return true;
 			}
 			runSearchItem();
 			return true;
 		}
-	}if (watched == textEdit){
-		if (isSettingUpLSP || isOpeningFile){
+	}if (watched == textEdit) {
+		if (isSettingUpLSP || isOpeningFile) {
 			return false;
 		}
 
 		bool isACtrl = key_event->modifiers() & Qt::ControlModifier || key_event->modifiers() & Qt::AltModifier;
 		
-		if (!isACtrl && textEdit->currentVimMode == "n"){
-			if (key_event->key() == Qt::Key_G && textEdit->vimRepeater == 0){
+		if (!isACtrl && textEdit->currentVimMode == "n") {
+			if (key_event->key() == Qt::Key_G && textEdit->vimRepeater == 0) {
 				QTextCursor cursor = textEdit->textCursor();
 				int line = cursor.blockNumber();
 				int column = cursor.columnNumber();
@@ -6944,63 +6917,63 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				lspMutex.unlock();
 				return true;
 			}else if (key_event->key() == Qt::Key_J) { // down
-				if (suggestionBox->isVisible()){
+				if (suggestionBox->isVisible()) {
 					currentSelection = (currentSelection + 1) % suggestion.length();
 					suggestionBox->setCurrentRow(currentSelection);
 					return true; // Mark as handled
 				}
-				if (actionBox->isVisible()){
+				if (actionBox->isVisible()) {
 					currentSelectionAction = (currentSelectionAction + 1) % codeActions.count();
 					actionBox->setCurrentRow(currentSelectionAction);
 					return true; // Mark as handled
 				}
 			}else if (key_event->key() == Qt::Key_K) { // up
-				if (suggestionBox->isVisible()){
+				if (suggestionBox->isVisible()) {
 					currentSelection = (currentSelection - 1 + suggestion.length()) % suggestion.length();
 					suggestionBox->setCurrentRow(currentSelection);
 					return true;
 				}
-				if (actionBox->isVisible()){
+				if (actionBox->isVisible()) {
 					currentSelectionAction = (currentSelectionAction - 1 + codeActions.count()) % codeActions.count();
 					actionBox->setCurrentRow(currentSelectionAction);
 					return true;
 				}
 			}else if (key_event->key() == Qt::Key_Escape) {
-				if (suggestionBox->isVisible()){
+				if (suggestionBox->isVisible()) {
 					suggestionBox->setVisible(false);
 					return true;
 				}
-				if (actionBox->isVisible()){
+				if (actionBox->isVisible()) {
 					actionBox->setVisible(false);
 					return false;
 				}
-			}else if (key_event->key() == Qt::Key_Less || key_event->key() == Qt::Key_Comma){
+			}else if (key_event->key() == Qt::Key_Less || key_event->key() == Qt::Key_Comma) {
 				QTextCursor cursor = textEdit->textCursor();
 				int initLoc = cursor.position();
 				int loc = findMatchingBracket(-1);
-				if (initLoc != loc){
-					if (key_event->modifiers() & Qt::ShiftModifier){
+				if (initLoc != loc) {
+					if (key_event->modifiers() & Qt::ShiftModifier) {
 						cursor.setPosition(loc+1, QTextCursor::KeepAnchor);
-					}else{
+					}else {
 						cursor.setPosition(loc+1);
 					}
 					
 					textEdit->setTextCursor(cursor);
 				}
 				return true;
-			}else if (key_event->key() == Qt::Key_Greater || key_event->key() == Qt::Key_Period){
+			}else if (key_event->key() == Qt::Key_Greater || key_event->key() == Qt::Key_Period) {
 				int loc = findMatchingBracket(1);
 				QTextCursor cursor = textEdit->textCursor();
 				
-				if (key_event->modifiers() & Qt::ShiftModifier){
+				if (key_event->modifiers() & Qt::ShiftModifier) {
 					cursor.setPosition(loc, QTextCursor::KeepAnchor);
-				}else{
+				}else {
 					cursor.setPosition(loc);
 				}
 				
 				textEdit->setTextCursor(cursor);
 				return true;
-			}else if (key_event->key() == Qt::Key_Colon || key_event->key() == Qt::Key_Semicolon){
+			}else if (key_event->key() == Qt::Key_Colon || key_event->key() == Qt::Key_Semicolon) {
 				searchBar->setCurrentVim("i");
 				searchBar->setFocus();
 				return true;
@@ -7009,21 +6982,21 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				handleBracketsOnEnter();
 			}
 			
-			if ((key_event->key() != Qt::Key_Tab || !suggestionBox->isVisible()) && (key_event->key() != Qt::Key_Enter && key_event->key() != Qt::Key_Return || !actionBox->isVisible())){
+			if ((key_event->key() != Qt::Key_Tab || !suggestionBox->isVisible()) && (key_event->key() != Qt::Key_Enter && key_event->key() != Qt::Key_Return || !actionBox->isVisible())) {
 				return false;
 			}
 		}
 
 		if (isACtrl) {
-			if (key_event->key() == Qt::Key_Less || key_event->key() == Qt::Key_Comma){
+			if (key_event->key() == Qt::Key_Less || key_event->key() == Qt::Key_Comma) {
 				QTextCursor cursor = textEdit->textCursor();
 				int initLoc = cursor.position();
 				int loc = findMatchingBracket(-1);
-				if (initLoc != loc){
+				if (initLoc != loc) {
 					cursor.setPosition(loc+1);
 					textEdit->setTextCursor(cursor);
 				}
-			}else if (key_event->key() == Qt::Key_Greater || key_event->key() == Qt::Key_Period){
+			}else if (key_event->key() == Qt::Key_Greater || key_event->key() == Qt::Key_Period) {
 				int loc = findMatchingBracket(1);
 				QTextCursor cursor = textEdit->textCursor();
 				cursor.setPosition(loc);
@@ -7031,11 +7004,11 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			}
 		}
 
-		if (key_event->key() == Qt::Key_Down && key_event->modifiers() & Qt::AltModifier && textEdit->currentVimMode == "i"){
+		if (key_event->key() == Qt::Key_Down && key_event->modifiers() & Qt::AltModifier && textEdit->currentVimMode == "i") {
 			QTextCursor c = textEdit->textCursor();
 			int highest = c.blockNumber();
-			for (QTextCursor curs : textEdit->additionalCursors){
-				if (curs.blockNumber() > highest){
+			for (QTextCursor curs : textEdit->additionalCursors) {
+				if (curs.blockNumber() > highest) {
 					highest = curs.blockNumber();
 				}
 			}
@@ -7048,11 +7021,11 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			suggestionBox->hide();
 			actionBox->hide();
 			return true;
-		}else if (key_event->key() == Qt::Key_Up && key_event->modifiers() & Qt::AltModifier && textEdit->currentVimMode == "i"){
+		}else if (key_event->key() == Qt::Key_Up && key_event->modifiers() & Qt::AltModifier && textEdit->currentVimMode == "i") {
 			QTextCursor c = textEdit->textCursor();
 			int lowest = c.blockNumber();
-			for (QTextCursor curs : textEdit->additionalCursors){
-				if (curs.blockNumber() < lowest){
+			for (QTextCursor curs : textEdit->additionalCursors) {
+				if (curs.blockNumber() < lowest) {
 					lowest = curs.blockNumber();
 				}
 			}
@@ -7067,15 +7040,15 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			return true;
 		}
 
-		if (key_sequence == QKeySequence(".")){
+		if (key_sequence == QKeySequence(".")) {
 			updateExtraWordsList();
-		}else if (key_sequence == QKeySequence("(")){
+		}else if (key_sequence == QKeySequence("(")) {
 			updateExtraWordsList();
-		}else if (key_sequence == QKeySequence(";")){
+		}else if (key_sequence == QKeySequence(";")) {
 			updateExtraWordsList();
-		}else if (key_sequence == QKeySequence(" ")){
+		}else if (key_sequence == QKeySequence(" ")) {
 			updateExtraWordsList();
-		}else if (key_sequence == QKeySequence("\t")){
+		}else if (key_sequence == QKeySequence("\t")) {
 			updateExtraWordsList();
 		}
 
@@ -7104,17 +7077,17 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			on_actionUn_Comment_Alt_5_triggered();
 			return true; // Mark as handled
 		}else if (QString("{[(").contains(key_event->text()) && !isACtrl && (key_event->key() == Qt::Key_ParenLeft || key_event->key() == Qt::Key_BracketLeft || key_event->key() == Qt::Key_BraceLeft)) {
-			if (autoAddBrackets->isChecked() && textEdit->additionalCursors.empty()){
+			if (autoAddBrackets->isChecked() && textEdit->additionalCursors.empty()) {
 				updateSyntaxPosition = textEdit->textCursor().position()+1;
 				QString addon = QString("}])").at(QString("{[(").indexOf(key_event->text()));
 				textEdit->textCursor().insertText(key_event->text()+addon);
 				return true;
 			}
-		}else if (key_event->key() == Qt::Key_BraceRight && currentLang.closeIndents.contains("}") && textEdit->additionalCursors.empty()){
+		}else if (key_event->key() == Qt::Key_BraceRight && currentLang.closeIndents.contains("}") && textEdit->additionalCursors.empty()) {
 			removeOneTabAndAddChar("}");
 			return true; // Mark as handled
 		}else if (key_sequence == QKeySequence("Alt+Return")) {
-			if (client){
+			if (client) {
 				QTextCursor cursor = textEdit->textCursor();
 				int line = cursor.blockNumber();
 				int column = cursor.columnNumber();
@@ -7130,7 +7103,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 					startColumn = column;
 					endLine = anchorLine;
 					endColumn = anchorColumn;
-				} else {
+				}else {
 					startLine = anchorLine;
 					startColumn = anchorColumn;
 					endLine = line;
@@ -7167,12 +7140,12 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				currentSelection = (currentSelection + 1) % suggestion.length();
 				suggestionBox->setCurrentRow(currentSelection);
 				return true; // Mark as handled
-			} else if (key_event->key() == Qt::Key_Up) {
+			}else if (key_event->key() == Qt::Key_Up) {
 				currentSelection = (currentSelection - 1 + suggestion.length()) % suggestion.length();
 				suggestionBox->setCurrentRow(currentSelection);
 				return true; // Mark as handled
-			} else if (key_event->key() == Qt::Key_Escape) {
-				if (textEdit->currentVimMode == "n" || !textEdit->useVIM){
+			}else if (key_event->key() == Qt::Key_Escape) {
+				if (textEdit->currentVimMode == "n" || !textEdit->useVIM) {
 					suggestionBox->setVisible(false);
 					return true; // Mark as handled
 				}
@@ -7184,47 +7157,47 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 				currentSelectionAction = (currentSelectionAction + 1) % codeActions.count();
 				actionBox->setCurrentRow(currentSelectionAction);
 				return true; // Mark as handled
-			} else if (key_event->key() == Qt::Key_Up) {
+			}else if (key_event->key() == Qt::Key_Up) {
 				currentSelectionAction = (currentSelectionAction - 1 + codeActions.count()) % codeActions.count();
 				actionBox->setCurrentRow(currentSelectionAction);
 				return true; // Mark as handled
-			} else if (key_event->key() == Qt::Key_Escape) {
+			}else if (key_event->key() == Qt::Key_Escape) {
 				actionBox->setVisible(false);
 				return true; // Mark as handled
 			}else if (key_event->key() == Qt::Key_Tab || key_event->key() == Qt::Key_Return) {
 				return activateCodeAction();
 			}
-		}else{
+		}else {
 			if (key_event->key() == Qt::Key_Down) {
 				QTextCursor cursor = textEdit->textCursor();
 				int initialPosition = cursor.position();
 				if (key_event->modifiers() & Qt::ShiftModifier) {
 					cursor.movePosition(QTextCursor::Down, QTextCursor::KeepAnchor);
-				} else {
+				}else {
 					cursor.movePosition(QTextCursor::Down);
 				}
 				if (cursor.position() == initialPosition) {
 					if (key_event->modifiers() & Qt::ShiftModifier) {
 						cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
-					}else{
+					}else {
 						cursor.movePosition(QTextCursor::EndOfLine);
 					}
 					textEdit->setTextCursor(cursor);
 					return true;
 				}
 
-			} else if (key_event->key() == Qt::Key_Up) {
+			}else if (key_event->key() == Qt::Key_Up) {
 				QTextCursor cursor = textEdit->textCursor();
 				int initialPosition = cursor.position();
 				if (key_event->modifiers() & Qt::ShiftModifier) {
 					cursor.movePosition(QTextCursor::Up, QTextCursor::KeepAnchor);
-				} else {
+				}else {
 					cursor.movePosition(QTextCursor::Up);
 				}
 				if (cursor.position() == initialPosition) {
 					if (key_event->modifiers() & Qt::ShiftModifier) {
 						cursor.movePosition(QTextCursor::StartOfLine, QTextCursor::KeepAnchor);
-					}else{
+					}else {
 						cursor.movePosition(QTextCursor::StartOfLine);
 					}
 					textEdit->setTextCursor(cursor);
@@ -7233,11 +7206,11 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 			}
 		}
 
-		if(!suggestionBox->isVisible() && !actionBox->isVisible() && key_event->key() == Qt::Key_Escape){
-			if (!textEdit->additionalCursors.isEmpty()){
+		if(!suggestionBox->isVisible() && !actionBox->isVisible() && key_event->key() == Qt::Key_Escape) {
+			if (!textEdit->additionalCursors.isEmpty()) {
 				textEdit->additionalCursors.clear();
 				textEdit->updateViewport();
-			}else{
+			}else {
 				changeFindSectionVisibility(false);
 			}
 		}
@@ -7248,46 +7221,46 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 		}
 	}else if (watched == findTextEdit || watched == replaceTextEdit) {
 		if (key_event->key() == Qt::Key_Escape) {
-			if (useVimMode->isChecked()){
+			if (useVimMode->isChecked()) {
 				QString curVimMode = "i";
-				if (watched == findTextEdit){
+				if (watched == findTextEdit) {
 					curVimMode = findTextEdit->currentVimMode;
-				}else{
+				}else {
 					curVimMode = replaceTextEdit->currentVimMode;
 				}
-				if (curVimMode == "n"){
+				if (curVimMode == "n") {
 					textEdit->setFocus(); // if we use vim, require double tap on esc key.
 					changeFindSectionVisibility(false);
 					return true;
 				}
-			}else{
+			}else {
 				textEdit->setFocus();
 				changeFindSectionVisibility(false);
 				return true;
 			}
-		}else if (key_sequence == QKeySequence("Shift+Return")){
-			if (watched == findTextEdit){
+		}else if (key_sequence == QKeySequence("Shift+Return")) {
+			if (watched == findTextEdit) {
 				previousTriggered();
-			}else{
+			}else {
 				nextTriggered();
 			}
 			return true;
 		}else if (key_event->key() == Qt::Key_Return) {
-			if (watched == findTextEdit){
+			if (watched == findTextEdit) {
 				nextTriggered();
-			}else{
+			}else {
 				replaceTriggered();
 			}
 			return true;
-		}else if (key_event->key() == Qt::Key_Tab && key_event->modifiers() & Qt::ControlModifier){
-			if (findTextEdit == watched){
+		}else if (key_event->key() == Qt::Key_Tab && key_event->modifiers() & Qt::ControlModifier) {
+			if (findTextEdit == watched) {
 				replaceTextEdit->setFocus();
-			}else{
+			}else {
 				findTextEdit->setFocus();
 			}
 		}
-	}else if (watched == urlBar){
-		if (key_sequence == QKeySequence("Shift+Return") || key_event->key() == Qt::Key_Return){
+	}else if (watched == urlBar) {
+		if (key_sequence == QKeySequence("Shift+Return") || key_event->key() == Qt::Key_Return) {
 			QString userInput = urlBar->text().trimmed(); // Remove leading/trailing whitespace
 			if (userInput.isEmpty()) {
 				webView->setUrl(QUrl("about:blank")); // Or a default homepage
@@ -7315,20 +7288,20 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 	return false;
 }
 
-void MainWindow::on_actionOpen_Find_Menu_triggered(){
+void MainWindow::on_actionOpen_Find_Menu_triggered() {
 	changeFindSectionVisibility(true);
 	openFind();
 }
 
-void MainWindow::changeFindSectionVisibility(bool visible){
+void MainWindow::changeFindSectionVisibility(bool visible) {
 	for (int i = 0; i < findLayout->count(); ++i) {
 		QWidget* widget = findLayout->itemAt(i)->widget();
 		auto* layoutItm = findLayout->itemAt(i)->layout();
 
 		if (widget) {
-			if (visible){
+			if (visible) {
 				widget->show();
-			}else{
+			}else {
 				widget->hide();
 			}
 		}
@@ -7338,9 +7311,9 @@ void MainWindow::changeFindSectionVisibility(bool visible){
 				QWidget* widget2 = layoutItm->itemAt(j)->widget();
 
 				if (widget2) {
-					if (visible){
+					if (visible) {
 						widget2->show();
-					}else{
+					}else {
 						widget2->hide();
 					}
 				}
@@ -7386,8 +7359,7 @@ QString MainWindow::convertLeadingSpacesToTabs(const QString& input) {
 	return lines.join('\n');
 }
 
-bool MainWindow::activateCodeAction()
-{
+bool MainWindow::activateCodeAction() {
 	qDebug() << "activateCodeAction";
 
 	QFileInfo filePathInfo(fileName);
@@ -7408,7 +7380,7 @@ bool MainWindow::activateCodeAction()
 			QString uriLocalPath;
 			if (url.isLocalFile()) {
 				uriLocalPath = url.toLocalFile();
-			} else {
+			}else {
 				uriLocalPath = file;
 			}
 			QFileInfo uriPathInfo(uriLocalPath);
@@ -7428,9 +7400,9 @@ bool MainWindow::activateCodeAction()
 				changesList.append(qMakePair(pos, change));
 			}
 
-			if (filePathInfo.canonicalFilePath() == uriPathInfo.canonicalFilePath()){
+			if (filePathInfo.canonicalFilePath() == uriPathInfo.canonicalFilePath()) {
 				execChanges(changesList);
-			}else{
+			}else {
 				execChangesInOtherFile(changesList, file);
 			}
 		}
@@ -7442,10 +7414,10 @@ bool MainWindow::activateCodeAction()
 
 	bool changed = false;
 
-	for (int i = 0; i < docChanges.count(); i++){
+	for (int i = 0; i < docChanges.count(); i++) {
 		QJsonArray changes = docChanges[i].toObject()["edits"].toArray();
 
-		if (changes.empty()){
+		if (changes.empty()) {
 			continue;
 		}
 		QList<QPair<double, QJsonObject>> changesList;
@@ -7455,7 +7427,7 @@ bool MainWindow::activateCodeAction()
 		QString uriLocalPath;
 		if (url.isLocalFile()) {
 			uriLocalPath = url.toLocalFile();
-		} else {
+		}else {
 			uriLocalPath = file;
 		}
 		QFileInfo uriPathInfo(uriLocalPath);
@@ -7472,9 +7444,9 @@ bool MainWindow::activateCodeAction()
 			changesList.append(qMakePair(pos, change));
 		}
 
-		if (filePathInfo.canonicalFilePath() == uriPathInfo.canonicalFilePath()){
+		if (filePathInfo.canonicalFilePath() == uriPathInfo.canonicalFilePath()) {
 			execChanges(changesList);
-		}else{
+		}else {
 			execChangesInOtherFile(changesList, file);
 		}
 
@@ -7484,7 +7456,7 @@ bool MainWindow::activateCodeAction()
 	return changed;
 }
 
-void MainWindow::execChanges(QList<QPair<double, QJsonObject>> changesList){
+void MainWindow::execChanges(QList<QPair<double, QJsonObject>> changesList) {
 	qDebug() << "execChanges";
 
 	std::sort(changesList.begin(), changesList.end(), [](const QPair<double, QJsonObject>& a, const QPair<double, QJsonObject>& b) {
@@ -7578,18 +7550,17 @@ void MainWindow::execChangesInOtherFile(QList<QPair<double, QJsonObject>> change
 	}
 }
 
-void MainWindow::renameReference(QJsonObject instructions)
-{
+void MainWindow::renameReference(QJsonObject instructions) {
 	qDebug() << "renameReference";
 
 	QFileInfo filePathInfo(fileName);
 
 	QString thisFile = QUrl::fromLocalFile(fileName).toString(); // we have to be in a file to use lsp... Might be something I change later. If so good luck finding this bug
 
-	if (instructions.contains("documentChanges")){ // type 1
+	if (instructions.contains("documentChanges")) { // type 1
 		QJsonArray changes = instructions["documentChanges"].toArray();
 
-		for (int i = 0; i < changes.count(); i++){
+		for (int i = 0; i < changes.count(); i++) {
 			QJsonObject change = changes[i].toObject();
 			QString file = change["textDocument"].toObject()["uri"].toString(); //probably smart to do something with this...
 
@@ -7597,7 +7568,7 @@ void MainWindow::renameReference(QJsonObject instructions)
 			QString uriLocalPath;
 			if (url.isLocalFile()) {
 				uriLocalPath = url.toLocalFile();
-			} else {
+			}else {
 				uriLocalPath = file;
 			}
 			QFileInfo uriPathInfo(uriLocalPath);
@@ -7606,7 +7577,7 @@ void MainWindow::renameReference(QJsonObject instructions)
 
 			QList<QPair<double, QJsonObject>> changesList;
 
-			for (int j = 0; j < edits.count(); j++){
+			for (int j = 0; j < edits.count(); j++) {
 				QJsonObject edit = edits[j].toObject();
 				QJsonObject range = edit["range"].toObject();
 				QJsonObject end = range["end"].toObject();
@@ -7615,9 +7586,9 @@ void MainWindow::renameReference(QJsonObject instructions)
 				changesList.append(qMakePair(pos, edit));
 			}
 
-			if (filePathInfo.canonicalFilePath() == uriPathInfo.canonicalFilePath()){
+			if (filePathInfo.canonicalFilePath() == uriPathInfo.canonicalFilePath()) {
 				execChanges(changesList);
-			}else{
+			}else {
 				execChangesInOtherFile(changesList, file);
 			}
 		}
@@ -7629,7 +7600,7 @@ void MainWindow::renameReference(QJsonObject instructions)
 			QString uriLocalPath;
 			if (url.isLocalFile()) {
 				uriLocalPath = url.toLocalFile();
-			} else {
+			}else {
 				uriLocalPath = file;
 			}
 			QFileInfo uriPathInfo(uriLocalPath);
@@ -7647,20 +7618,19 @@ void MainWindow::renameReference(QJsonObject instructions)
 				changesList.append(qMakePair(pos, edit));
 			}
 
-			if (filePathInfo.canonicalFilePath() == uriPathInfo.canonicalFilePath()){
+			if (filePathInfo.canonicalFilePath() == uriPathInfo.canonicalFilePath()) {
 				execChanges(changesList);
-			}else{
+			}else {
 				execChangesInOtherFile(changesList, file);
 			}
 		}
 	}
 }
 
-bool MainWindow::insertCompletion()
-{
+bool MainWindow::insertCompletion() {
 	qDebug() << "insertCompletion";
 
-	if (isSettingUpLSP || isOpeningFile){
+	if (isSettingUpLSP || isOpeningFile) {
 		return false;
 	}
 
@@ -7690,7 +7660,7 @@ bool MainWindow::insertCompletion()
 				}
 			}
 
-			if (replacedCompletion.contains("$1") && !replacedCompletion.contains("$0")){
+			if (replacedCompletion.contains("$1") && !replacedCompletion.contains("$0")) {
 				replacedCompletion.replace("$1", "$0");
 			}
 
@@ -7701,7 +7671,7 @@ bool MainWindow::insertCompletion()
 
 		completion = completion.remove(0, curWord.length());
 
-		if (completion.contains("\n")){
+		if (completion.contains("\n")) {
 			QTextCursor cursor = textEdit->textCursor(); // Get the current cursor position
 			cursor.movePosition(QTextCursor::EndOfLine);
 			cursor.movePosition(QTextCursor::StartOfLine, QTextCursor::KeepAnchor);
@@ -7714,19 +7684,19 @@ bool MainWindow::insertCompletion()
 			QStringList lines = completion.split("\n");
 			std::tie(tabs, lastRealWord, lastRealChar, lastPosWords) = getTabDetails(lineText+lines[0]);
 
-			if (currentLang.openIndents.contains(lastRealChar)){
+			if (currentLang.openIndents.contains(lastRealChar)) {
 				tabs += "\t";
-			}else if (currentLang.closeIndents.contains(lastRealChar)){
+			}else if (currentLang.closeIndents.contains(lastRealChar)) {
 				tabs.remove(0, 1);
 			}
 
 			lines[1] = tabs+lines[1];
 
-			for (int i = 2; i < lines.length(); i++){
+			for (int i = 2; i < lines.length(); i++) {
 				std::tie(tabs, lastRealWord, lastRealChar, lastPosWords) = getTabDetails(lines[i-1]);
-				if (currentLang.openIndents.contains(lastRealChar)){
+				if (currentLang.openIndents.contains(lastRealChar)) {
 					tabs += "\t";
-				}else if (currentLang.closeIndents.contains(lastRealChar)){
+				}else if (currentLang.closeIndents.contains(lastRealChar)) {
 					tabs.remove(0, 1);
 				}
 
@@ -7734,7 +7704,7 @@ bool MainWindow::insertCompletion()
 			}
 
 			std::tie(tabs, lastRealWord, lastRealChar, lastPosWords) = getTabDetails(lines[lines.length()-1]);
-			if (currentLang.closeIndents.contains(lastRealChar)){
+			if (currentLang.closeIndents.contains(lastRealChar)) {
 				lines[lines.length()-1].remove(0, 1);
 			}
 
@@ -7775,9 +7745,9 @@ void MainWindow::on_actionSave_triggered() {
 	QString absoluteTempPath = tempDir.absolutePath();
 	QString curAbsPath = QFileInfo(fileName).absoluteFilePath();
 	
-	if (curAbsPath.startsWith(absoluteTempPath)){
+	if (curAbsPath.startsWith(absoluteTempPath)) {
 		on_actionSave_As_triggered();
-	}else{	
+	}else {	
 		doTrueSaveAction();
 	}
 }
@@ -7785,18 +7755,18 @@ void MainWindow::on_actionSave_triggered() {
 void MainWindow::doTrueSaveAction() {
 	qDebug() << "doTrueSaveAction";
 
-	if (isSettingUpLSP){
+	if (isSettingUpLSP) {
 		showWeDontFuckWithTheLSP();
 		return;
 	}
 
 	lspMutex.lock();
-	if (!client){
+	if (!client) {
 		setupLSP("");
 	}
 	lspMutex.unlock();
 	
-	if (fileName.isEmpty()){
+	if (fileName.isEmpty()) {
 		on_actionSave_As_triggered();
 		return;
 	}
@@ -7806,7 +7776,7 @@ void MainWindow::doTrueSaveAction() {
 	setWindowTitle(windowName);
 
 	lspMutex.lock();
-	if (client){
+	if (client) {
 		client->documentSaved(textEdit->toPlainText());
 	}
 	lspMutex.unlock();
@@ -7835,8 +7805,7 @@ void MainWindow::centerCursor() {
 	verticalScrollBar->setValue(verticalScrollBar->value() + yOffset);
 }
 
-void MainWindow::on_actionIncrement_Ctrl_triggered()
-{
+void MainWindow::on_actionIncrement_Ctrl_triggered() {
 	qDebug() << "on_actionIncrement_Ctrl_triggered";
 
 	textEdit->blockSignals(true);
@@ -7851,7 +7820,7 @@ void MainWindow::on_actionIncrement_Ctrl_triggered()
 
 		start = qMin(rawstart, rawend);
 		end = qMax(rawstart, rawend);
-	}else{
+	}else {
 		rawstart = cursor.position();
 		rawend = cursor.position();
 
@@ -7871,13 +7840,13 @@ void MainWindow::on_actionIncrement_Ctrl_triggered()
 
 	int numOfLines = 1;
 
-	if (startLineLoc == endLineLoc){
+	if (startLineLoc == endLineLoc) {
 		numOfLines = 1;
-	}else{
+	}else {
 		while (true) {
 			cursor.movePosition(QTextCursor::Down);
 			numOfLines += 1;
-			if (cursor.position() == endLineLoc){
+			if (cursor.position() == endLineLoc) {
 				break;
 			}
 		}
@@ -7896,8 +7865,7 @@ void MainWindow::on_actionIncrement_Ctrl_triggered()
 	textEdit->blockSignals(false);
 }
 
-void MainWindow::on_actionDe_Increment_Ctrl_triggered()
-{
+void MainWindow::on_actionDe_Increment_Ctrl_triggered() {
 	qDebug() << "on_actionDe_Increment_Ctrl_triggered";
 
 	textEdit->blockSignals(true);
@@ -7912,7 +7880,7 @@ void MainWindow::on_actionDe_Increment_Ctrl_triggered()
 
 		start = qMin(rawstart, rawend);
 		end = qMax(rawstart, rawend);
-	}else{
+	}else {
 		rawstart = cursor.position();
 		rawend = cursor.position();
 
@@ -7932,13 +7900,13 @@ void MainWindow::on_actionDe_Increment_Ctrl_triggered()
 
 	int numOfLines = 1;
 
-	if (startLineLoc == endLineLoc){
+	if (startLineLoc == endLineLoc) {
 		numOfLines = 1;
-	}else{
+	}else {
 		while (true) {
 			cursor.movePosition(QTextCursor::Down);
 			numOfLines += 1;
-			if (cursor.position() == endLineLoc){
+			if (cursor.position() == endLineLoc) {
 				break;
 			}
 		}
@@ -7950,7 +7918,7 @@ void MainWindow::on_actionDe_Increment_Ctrl_triggered()
 		cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
 		if (cursor.selectedText() == "\t") {
 			cursor.removeSelectedText();
-		}else{
+		}else {
 			cursor.movePosition(QTextCursor::PreviousCharacter);
 		}
 
@@ -7962,11 +7930,10 @@ void MainWindow::on_actionDe_Increment_Ctrl_triggered()
 	textEdit->blockSignals(false);
 }
 
-void MainWindow::on_actionComment_Ctrl_Alt_triggered()
-{
+void MainWindow::on_actionComment_Ctrl_Alt_triggered() {
 	qDebug() << "on_actionComment_Ctrl_Alt_triggered";
 
-	if (currentLang.comments.length() == 0){
+	if (currentLang.comments.length() == 0) {
 		return;
 	}
 
@@ -7984,7 +7951,7 @@ void MainWindow::on_actionComment_Ctrl_Alt_triggered()
 
 		start = qMin(rawstart, rawend);
 		end = qMax(rawstart, rawend);
-	}else{
+	}else {
 		rawstart = cursor.position();
 		rawend = cursor.position();
 
@@ -8001,7 +7968,7 @@ void MainWindow::on_actionComment_Ctrl_Alt_triggered()
 	cursor.movePosition(QTextCursor::StartOfLine);
 
 	while (true) {
-		if (cursor.position() == startlineloc){
+		if (cursor.position() == startlineloc) {
 			cursor.insertText(currentLang.comments[0]);
 			break;
 		}
@@ -8017,10 +7984,10 @@ void MainWindow::on_actionComment_Ctrl_Alt_triggered()
 	connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 }
 
-void MainWindow::on_actionToggleComments_triggered(){
+void MainWindow::on_actionToggleComments_triggered() {
 	qDebug() << "on_actionToggleComments_triggered";
 
-	if (currentLang.comments.length() == 0){
+	if (currentLang.comments.length() == 0) {
 		return;
 	}
 
@@ -8035,7 +8002,7 @@ void MainWindow::on_actionToggleComments_triggered(){
 
 		start = qMin(rawstart, rawend);
 		end = qMax(rawstart, rawend);
-	}else{
+	}else {
 		rawstart = cursor.position();
 		rawend = cursor.position();
 
@@ -8046,32 +8013,31 @@ void MainWindow::on_actionToggleComments_triggered(){
 	cursor.setPosition(start);
 	cursor.movePosition(QTextCursor::StartOfLine);
 
-	while (true){
+	while (true) {
 		cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
-		if (cursor.selectedText() != " " && cursor.selectedText() != "\t"){
+		if (cursor.selectedText() != " " && cursor.selectedText() != "\t") {
 			cursor.movePosition(QTextCursor::PreviousCharacter);
 			break;
 		}
 		cursor.clearSelection();
 	}
 
-	for (int i = 0; i < currentLang.comments[0].length(); i++){
+	for (int i = 0; i < currentLang.comments[0].length(); i++) {
 		cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
 	}
 
 	if (cursor.selectedText() == currentLang.comments[0]) {
 		on_actionUn_Comment_Alt_5_triggered();
-	}else{
+	}else {
 		on_actionComment_Ctrl_Alt_triggered();
 	}
 
 }
 
-void MainWindow::on_actionUn_Comment_Alt_5_triggered()
-{
+void MainWindow::on_actionUn_Comment_Alt_5_triggered() {
 	qDebug() << "on_actionUn_Comment_Alt_5_triggered";
 
-	if (currentLang.comments.length() == 0){
+	if (currentLang.comments.length() == 0) {
 		return;
 	}
 
@@ -8089,7 +8055,7 @@ void MainWindow::on_actionUn_Comment_Alt_5_triggered()
 
 		start = qMin(rawstart, rawend);
 		end = qMax(rawstart, rawend);
-	}else{
+	}else {
 		rawstart = cursor.position();
 		rawend = cursor.position();
 
@@ -8106,18 +8072,18 @@ void MainWindow::on_actionUn_Comment_Alt_5_triggered()
 	cursor.movePosition(QTextCursor::StartOfLine);
 
 	while (true) {
-		if (cursor.position() == startlineloc){
+		if (cursor.position() == startlineloc) {
 
-			while (true){
+			while (true) {
 				cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
-				if (cursor.selectedText() != " " && cursor.selectedText() != "\t"){
+				if (cursor.selectedText() != " " && cursor.selectedText() != "\t") {
 					cursor.movePosition(QTextCursor::PreviousCharacter);
 					break;
 				}
 				cursor.clearSelection();
 			}
 
-			for (int i = 0; i < currentLang.comments[0].length(); i++){
+			for (int i = 0; i < currentLang.comments[0].length(); i++) {
 				cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
 			}
 
@@ -8125,23 +8091,23 @@ void MainWindow::on_actionUn_Comment_Alt_5_triggered()
 				cursor.removeSelectedText();
 				cursor.clearSelection();
 				cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
-				if (cursor.selectedText() == " "){
+				if (cursor.selectedText() == " ") {
 					cursor.removeSelectedText();
 				}
 			}
 			break;
 		}
 
-		while (true){
+		while (true) {
 			cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
-			if (cursor.selectedText() != " " && cursor.selectedText() != "\t"){
+			if (cursor.selectedText() != " " && cursor.selectedText() != "\t") {
 				cursor.movePosition(QTextCursor::PreviousCharacter);
 				break;
 			}
 			cursor.clearSelection();
 		}
 
-		for (int i = 0; i < currentLang.comments[0].length(); i++){
+		for (int i = 0; i < currentLang.comments[0].length(); i++) {
 			cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
 		}
 
@@ -8149,11 +8115,11 @@ void MainWindow::on_actionUn_Comment_Alt_5_triggered()
 			cursor.removeSelectedText();
 			cursor.clearSelection();
 			cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
-			if (cursor.selectedText() == " "){
+			if (cursor.selectedText() == " ") {
 				cursor.removeSelectedText();
 			}
-		}else{
-			for (int i = 0; i < currentLang.comments[0].length(); i++){
+		}else {
+			for (int i = 0; i < currentLang.comments[0].length(); i++) {
 				cursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
 			}
 		}
@@ -8166,8 +8132,7 @@ void MainWindow::on_actionUn_Comment_Alt_5_triggered()
 	connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 }
 
-void MainWindow::on_actionDark_Mode_triggered()
-{
+void MainWindow::on_actionDark_Mode_triggered() {
 	qDebug() << "on_actionDark_Mode_triggered";
 
 	darkmode = true;
@@ -8175,8 +8140,7 @@ void MainWindow::on_actionDark_Mode_triggered()
 	saveWantedTheme();
 }
 
-void MainWindow::on_actionLight_Mode_triggered()
-{
+void MainWindow::on_actionLight_Mode_triggered() {
 	qDebug() << "on_actionLight_Mode_triggered";
 
 	darkmode = false;
@@ -8184,8 +8148,7 @@ void MainWindow::on_actionLight_Mode_triggered()
 	saveWantedTheme();
 }
 
-void MainWindow::on_actionTab_Width_triggered()
-{
+void MainWindow::on_actionTab_Width_triggered() {
 	qDebug() << "on_actionTab_Width_triggered";
 
 	QInputDialog dialog;
@@ -8205,11 +8168,10 @@ void MainWindow::on_actionTab_Width_triggered()
 	}
 }
 
-void MainWindow::on_actionSave_As_triggered()
-{
+void MainWindow::on_actionSave_As_triggered() {
 	qDebug() << "on_actionSave_As_triggered";
 
-	if (isSettingUpLSP){
+	if (isSettingUpLSP) {
 		showWeDontFuckWithTheLSP();
 		return;
 	}
@@ -8217,26 +8179,26 @@ void MainWindow::on_actionSave_As_triggered()
 	QString oldFile = fileName;
 
 	QString newFile = QFileDialog::getSaveFileName(this, tr("Save File"), fileName, tr("All Files (*)"));
-	if (newFile != ""){
+	if (newFile != "") {
 		fileName = newFile;
-	}else{
+	}else {
 		return;
 	}
 
 	QFileInfo fileInfo(fileName);
 	QString fileNameName = fileInfo.fileName();
 
-	if (!fileNameName.contains('.')){
-		if (randomSelectFileTypeAct->isChecked()){ // This is the silly thing which randomly selects c++ - nobody will ever use it but it's relatively easy to implement
+	if (!fileNameName.contains('.')) {
+		if (randomSelectFileTypeAct->isChecked()) { // This is the silly thing which randomly selects c++ - nobody will ever use it but it's relatively easy to implement
 			double value = QRandomGenerator::global()->generateDouble();
-			if (value > 0.5){
+			if (value > 0.5) {
 				fileName += ".py";
 				fileNameName += ".py";
-			}else{
+			}else {
 				fileName += ".cpp";
 				fileNameName += ".cpp";
 			}
-		}else{
+		}else {
 			fileName += ".py";
 			fileNameName += ".py";
 		}
@@ -8249,7 +8211,7 @@ void MainWindow::on_actionSave_As_triggered()
 	on_actionOpen_triggered();
 }
 
-void MainWindow::on_actionFix_It_4_triggered(){ // THE FIX IT BUTTON
+void MainWindow::on_actionFix_It_4_triggered() { // THE FIX IT BUTTON
 	qDebug() << "on_actionFix_It_4_triggered";
 
 	disconnect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
@@ -8273,7 +8235,7 @@ void MainWindow::on_actionFix_It_4_triggered(){ // THE FIX IT BUTTON
 
 	if (dialog.result() == QDialog::Accepted) {
 		numOfIdentifiedSpaces = dialog.intValue();
-	} else {
+	}else {
 		connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 		return;
 	}
@@ -8287,12 +8249,12 @@ void MainWindow::on_actionFix_It_4_triggered(){ // THE FIX IT BUTTON
 		QString strChanged = parts[i];
 		strChanged = strChanged.replace(" ", "").replace("\t", "");
 
-		if (strChanged == ""){
-			if (justSpaceDone){
+		if (strChanged == "") {
+			if (justSpaceDone) {
 				continue;
 			}
 			justSpaceDone = true;
-		}else{
+		}else {
 			justSpaceDone = false;
 		}
 
@@ -8300,8 +8262,8 @@ void MainWindow::on_actionFix_It_4_triggered(){ // THE FIX IT BUTTON
 		QString fixedPrt = "";
 		bool doneExtra = false;
 
-		for (int cIndex = 0; cIndex < inPrt.length(); cIndex++){
-			if (doneExtra || inPrt[inPrt.length()-cIndex-1] != ' ' && inPrt[inPrt.length()-cIndex-1] != '\t'){
+		for (int cIndex = 0; cIndex < inPrt.length(); cIndex++) {
+			if (doneExtra || inPrt[inPrt.length()-cIndex-1] != ' ' && inPrt[inPrt.length()-cIndex-1] != '\t') {
 				fixedPrt = inPrt[inPrt.length()-cIndex-1] + fixedPrt;
 				doneExtra = true;
 			}
@@ -8311,24 +8273,24 @@ void MainWindow::on_actionFix_It_4_triggered(){ // THE FIX IT BUTTON
 		bool doneIndentation = false;
 		int numOfSpaces = 0;
 
-		for (int cIndex = 0; cIndex < fixedPrt.length(); cIndex++){
+		for (int cIndex = 0; cIndex < fixedPrt.length(); cIndex++) {
 			if (doneIndentation)
 			{
 				fixedPrt2 += fixedPrt[cIndex];
-			}else{
-				if (fixedPrt[cIndex] == ' '){
+			}else {
+				if (fixedPrt[cIndex] == ' ') {
 					numOfSpaces += 1;
-				}else if(fixedPrt[cIndex] == '\t'){
+				}else if(fixedPrt[cIndex] == '\t') {
 					numOfSpaces = 0;
 					fixedPrt2 += '\t';
-				}else{
+				}else {
 					doneIndentation = true;
-					for (int spcIndx = 0; spcIndx < numOfSpaces; spcIndx ++){
+					for (int spcIndx = 0; spcIndx < numOfSpaces; spcIndx ++) {
 						fixedPrt2 += ' ';
 					}
 					fixedPrt2 += fixedPrt[cIndex];
 				}
-				if (numOfSpaces == numOfIdentifiedSpaces){
+				if (numOfSpaces == numOfIdentifiedSpaces) {
 					numOfSpaces = 0;
 					fixedPrt2 += '\t';
 				}
@@ -8353,7 +8315,7 @@ void MainWindow::on_actionFix_It_4_triggered(){ // THE FIX IT BUTTON
 	connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 }
 
-void MainWindow::on_actionTabs_Spaces_triggered(){
+void MainWindow::on_actionTabs_Spaces_triggered() {
 	qDebug() << "on_actionTabs_Spaces_triggered";
 
 	disconnect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
@@ -8377,14 +8339,14 @@ void MainWindow::on_actionTabs_Spaces_triggered(){
 
 	if (dialog.result() == QDialog::Accepted) {
 		numOfIdentifiedSpaces = dialog.intValue();
-	} else {
+	}else {
 		connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 		return;
 	}
 
 	QString spaceIndnt = "";
 
-	for (int i = 0; i < numOfIdentifiedSpaces; i++){
+	for (int i = 0; i < numOfIdentifiedSpaces; i++) {
 		spaceIndnt += " ";
 	}
 
@@ -8399,11 +8361,11 @@ void MainWindow::on_actionTabs_Spaces_triggered(){
 		QString fixedPrt = "";
 		bool doneTabs = false;
 
-		for (int cIndex = 0; cIndex < inPrt.length(); cIndex++){
-			if (inPrt[cIndex] == '\t' && !doneTabs){
+		for (int cIndex = 0; cIndex < inPrt.length(); cIndex++) {
+			if (inPrt[cIndex] == '\t' && !doneTabs) {
 
 				fixedPrt += spaceIndnt;
-			}else{
+			}else {
 				doneTabs = true;
 				fixedPrt += inPrt[cIndex];
 			}
@@ -8426,8 +8388,7 @@ void MainWindow::on_actionTabs_Spaces_triggered(){
 	updateSyntax();
 }
 
-void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to get right - don't touch a single line of this shit
-{
+void MainWindow::highlightDiagnostics(bool reverseTheProcess) {// this hurt to get right - don't touch a single line of this shit
 	qDebug() << "highlightDiagnostics - reverse: " << reverseTheProcess;
 
 	textEdit->blockSignals(true);
@@ -8436,7 +8397,7 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 
 	int pos = blckcursor.position();
 
-	if (reverseTheProcess){
+	if (reverseTheProcess) {
 		isErrorHighlighted = false;
 		
 		textEdit->errLineNums.clear();
@@ -8447,7 +8408,7 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 		QTextBlock block = textDocument->begin();
 
 		for (QTextBlock block : errHighlightedBlocks) {
-			if (!block.isValid()){
+			if (!block.isValid()) {
 				continue;
 			}
 
@@ -8470,20 +8431,20 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 		}
 
 		errHighlightedBlocks.clear();
-	}else{
+	}else {
 		QList<int> allowedSeverities;
-		if (showErrors->isChecked()){
+		if (showErrors->isChecked()) {
 			allowedSeverities.append(1);
 		}
-		if (showWarnings->isChecked()){
+		if (showWarnings->isChecked()) {
 			allowedSeverities.append(2);
 		}
-		if (showOther->isChecked()){
+		if (showOther->isChecked()) {
 			allowedSeverities.append(3);
 			allowedSeverities.append(4);
 		}
 
-		if (allowedSeverities.isEmpty()){
+		if (allowedSeverities.isEmpty()) {
 			textEdit->blockSignals(false);
 			return;
 		}
@@ -8491,7 +8452,7 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 		int maxErrors = 40;
 
 		for (int i = 0; i < errStartL.size(); ++i) {
-			if (i >= maxErrors){
+			if (i >= maxErrors) {
 				break;
 			}
 
@@ -8501,13 +8462,13 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 			int endC = errEndC[i];
 			int severity = errSeverity[i];
 
-			if (!allowedSeverities.contains(severity)){
+			if (!allowedSeverities.contains(severity)) {
 				continue;
 			}
 
-			if (startLine == endLine && startC == endC){
+			if (startLine == endLine && startC == endC) {
 				startC -= 1;
-				if (startC < 0){
+				if (startC < 0) {
 					startC = 0;
 					endC += 1;
 				}
@@ -8538,14 +8499,14 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 					range.start = startC;
 					if (currentLine == endLine) {
 						range.length = endC-startC;
-					}else{
+					}else {
 						range.length = blockLen-startC;
 					}
-				}else{
+				}else {
 					range.start = 0;
 					if (currentLine == endLine) {
 						range.length = endC;
-					}else{
+					}else {
 						range.length = blockLen;
 					}
 				}
@@ -8555,7 +8516,7 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 				layout->setFormats(formats);
 				textDocument->markContentsDirty(blockPos, blockLen);
 
-				if (currentLine != endLine){
+				if (currentLine != endLine) {
 					block = block.next();
 				}
 			}
@@ -8567,13 +8528,12 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) // this hurt to ge
 	textEdit->blockSignals(false);
 }
 
-void MainWindow::updateLineNumbers(int count) // good enough
-{
+void MainWindow::updateLineNumbers(int count) { // good enough
 	qDebug() << "updateLineNumbers";
 	
 	int countDigits = std::to_string(count).length();
 	
-	if (!differences.isEmpty()){
+	if (!differences.isEmpty()) {
 		countDigits += 2;
 	}
 	
@@ -8584,7 +8544,7 @@ void MainWindow::updateLineNumbers(int count) // good enough
 		updateFonts();
 	}
 	
-	if (!differences.isEmpty()){
+	if (!differences.isEmpty()) {
 		countDigits -= 2; // we do this so that the spaces don't take up the space for the +-=
 	}
 	
@@ -8596,7 +8556,7 @@ void MainWindow::updateLineNumbers(int count) // good enough
 	int lineHeight = fm.lineSpacing();
 	int numberOfLinesNeeded = floor(lineNumberTextEdit->height()/lineHeight)+2;
 	
-	if (firstStartup){
+	if (firstStartup) {
 		numberOfLinesNeeded = 600; // the initial size of the element is not set properly on startup, so we'll just draw 600 lines to ensure we cover the screen.
 	}
 	
@@ -8612,18 +8572,18 @@ void MainWindow::updateLineNumbers(int count) // good enough
 	QTextCursor cursor = textEdit->textCursor();
 	int lineNum = cursor.blockNumber()+1;
 	
-	if (!useRelativeLineNumbers->isChecked()){
+	if (!useRelativeLineNumbers->isChecked()) {
 		
-		for (int i = 0; i < numberOfLinesNeeded; i++){
+		for (int i = 0; i < numberOfLinesNeeded; i++) {
 			int number = topLine+i;
-			if (number > count){
+			if (number > count) {
 				lineNumbers << ""; // we can't break here glhf trying to find out why
-			}else{
+			}else {
 				QString nm = QString::number(number);
 				int spaces = countDigits-nm.length();
 				
 				QString addon = "";
-				if (numDiffs >= number){
+				if (numDiffs >= number) {
 					addon = " "+differences[number-1][0];
 				}
 				
@@ -8634,20 +8594,20 @@ void MainWindow::updateLineNumbers(int count) // good enough
 				lineNumbers << QString(spaces, ' ')+nm+addon;
 			}
 		}
-	}else{
-		for (int i = 0; i < numberOfLinesNeeded; i++){
+	}else {
+		for (int i = 0; i < numberOfLinesNeeded; i++) {
 			int number = topLine+i;
 			
-			if (number > count){
+			if (number > count) {
 				lineNumbers << ""; // we can't break here glhf trying to find out why
-			}else{
+			}else {
 				QString addon = "";
-				if (numDiffs >= number){
+				if (numDiffs >= number) {
 					addon = " "+differences[number-1][0];
 				}
 				
 				int value = lineNum-number;
-				if (value == 0){ // have we found the cursor? Then store it. and also the spaces don't go or whatever
+				if (value == 0) { // have we found the cursor? Then store it. and also the spaces don't go or whatever
 					lineNumbers << QString::number(lineNum)+addon; // we don't put spaces so it's clearer
 					lnNum = i;
 					continue;
@@ -8667,10 +8627,10 @@ void MainWindow::updateLineNumbers(int count) // good enough
 	auto pallete = lineNumberTextEdit->palette();
 	QColor cur_line_color;
 	
-	if (darkmode){
+	if (darkmode) {
 		pallete.setColor(QPalette::Text, getTintedColor(100, 100, 100));
 		cur_line_color = getTintedColor(255, 255, 255);
-	}else{
+	}else {
 		cur_line_color = getTintedColor(30, 30, 30);
 	pallete.setColor(QPalette::Text, getTintedColor(150, 150, 150));
 	}
@@ -8690,7 +8650,7 @@ void MainWindow::updateLineNumbers(int count) // good enough
 		}
 	}
 	
-	if (!differences.isEmpty()){
+	if (!differences.isEmpty()) {
 		QTextCursor cursor(lineNumberTextEdit->document());
 		cursor.movePosition(QTextCursor::Start);
 		
@@ -8705,9 +8665,9 @@ void MainWindow::updateLineNumbers(int count) // good enough
 			
 			if (block.text().contains("-")) {
 				format.setForeground(Qt::red);
-			} else if (block.text().contains("+")) {
+			}else if (block.text().contains("+")) {
 				format.setForeground(Qt::green);
-			} else if (block.text().contains("=")) {
+			}else if (block.text().contains("=")) {
 				format.setForeground(Qt::blue);
 			}
 			
@@ -8724,8 +8684,7 @@ void MainWindow::updateLineNumbers(int count) // good enough
 	lineNumberTextEdit->blockSignals(false);
 }
 
-std::tuple<QString, QString, QString, QStringList> MainWindow::getTabDetails(QString lineText)
-{
+std::tuple<QString, QString, QString, QStringList> MainWindow::getTabDetails(QString lineText) {
 	qDebug() << "getTabDetails";
 
 	bool doneIndentSection = false;
@@ -8738,32 +8697,32 @@ std::tuple<QString, QString, QString, QStringList> MainWindow::getTabDetails(QSt
 	int skip = 0;
 
 	for (int cIndx = 0; cIndx < lineText.length(); cIndx++) {
-		if (skip != 0){
+		if (skip != 0) {
 			skip -= 1;
 			continue;
 		}
 
 		QString nextChar = lineText[cIndx];
 
-		for (QString commentStart : currentLang.comments){
+		for (QString commentStart : currentLang.comments) {
 			QString substring = lineText.mid(cIndx, commentStart.length());
 
-			if (substring == commentStart){
+			if (substring == commentStart) {
 				inComment = true;
 				skip = commentStart.length();
 				break;
 			}
 		}
-		if (skip != 0){
+		if (skip != 0) {
 			skip -= 1;
 			continue;
 		}
 
-		if (!doneIndentSection && nextChar == "\t"){
+		if (!doneIndentSection && nextChar == "\t") {
 			tabs += "\t";
-		}else{
+		}else {
 			doneIndentSection = true;
-			if (inComment){
+			if (inComment) {
 				break;
 			}
 		}
@@ -8771,26 +8730,25 @@ std::tuple<QString, QString, QString, QStringList> MainWindow::getTabDetails(QSt
 		if (nextChar != "\t" && nextChar != " ")
 		{
 			lastRealChar = nextChar;
-			if (clearNext){
+			if (clearNext) {
 				clearNext = false;
 				lastRealWord = "";
 			}
 			lastRealWord += nextChar;
-		}else{
+		}else {
 			lastPosWords << lastRealWord;
 			clearNext = true;
 		}
 	}
 
-	if (!lastRealWord.isEmpty()){
+	if (!lastRealWord.isEmpty()) {
 		lastPosWords << lastRealWord;
 	}
 
 	return std::make_tuple(tabs, lastRealWord, lastRealChar, lastPosWords);
 }
 
-void MainWindow::handleTabs()
-{
+void MainWindow::handleTabs() {
 	qDebug() << "handleTabs";
 
 	QString text = textEdit->toPlainText();
@@ -8809,22 +8767,22 @@ void MainWindow::handleTabs()
 	QStringList lastPosWords;
 	std::tie(tabs, lastRealWord, lastRealChar, lastPosWords) = getTabDetails(lineText);
 
-	if (currentLang.openIndents.contains(lastRealChar)){
+	if (currentLang.openIndents.contains(lastRealChar)) {
 		tabs += "\t";
-	}else if (currentLang.name == "HTML"){
+	}else if (currentLang.name == "HTML") {
 		bool htmlIndent = false;
-		if (lastRealWord.length() >= 2){
+		if (lastRealWord.length() >= 2) {
 			QString endBit = lastRealWord.mid(lastRealWord.length() - 2, 2);
-			if (endBit == "->" or endBit == "/>"){
+			if (endBit == "->" or endBit == "/>") {
 				htmlIndent = false;
-			}else if (lastRealChar == ">" && !lastRealWord.contains("</")){
+			}else if (lastRealChar == ">" && !lastRealWord.contains("</")) {
 				htmlIndent = true;
 			}
-		}else if (lastRealChar == ">"){
+		}else if (lastRealChar == ">") {
 			htmlIndent = true;
 		}
 
-		if (lastRealChar == "{" || htmlIndent){
+		if (lastRealChar == "{" || htmlIndent) {
 			tabs += "\t";
 		}
 	}
@@ -8833,13 +8791,13 @@ void MainWindow::handleTabs()
 
 	QString realRealLastWord = "";
 
-	for (QString word : lastPosWords){
+	for (QString word : lastPosWords) {
 		realRealLastWord = "";
 
 		std::reverse(word.begin(), word.end());
 
-		for (QChar i : word){
-			if (!alphanumericals.contains(i)){
+		for (QChar i : word) {
+			if (!alphanumericals.contains(i)) {
 				break;
 			}
 			realRealLastWord += i;
@@ -8847,29 +8805,29 @@ void MainWindow::handleTabs()
 
 		std::reverse(realRealLastWord.begin(), realRealLastWord.end());
 
-		if (currentLang.closeIndentsWords.contains(realRealLastWord)){
-			if (tabs.length() > 0){
+		if (currentLang.closeIndentsWords.contains(realRealLastWord)) {
+			if (tabs.length() > 0) {
 				tabs.chop(1);
 				break;
 			}
 		}
 	}
 
-	if (tabs != ""){
+	if (tabs != "") {
 		updateSyntaxAdd = tabs;
 	}
 }
 
-void MainWindow::handleBracketsOnEnter(){
+void MainWindow::handleBracketsOnEnter() {
 	QTextCursor cursor = textEdit->textCursor();
 	cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
 	cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, 2);
 	QString selectedText = cursor.selectedText();
-	if (selectedText == "{}" || selectedText == "()" || selectedText == "[]" || selectedText == "<>"){
+	if (selectedText == "{}" || selectedText == "()" || selectedText == "[]" || selectedText == "<>") {
 		QString nextLine = updateSyntaxAdd;
-		if (!nextLine.isEmpty() && currentLang.openIndents.contains(selectedText.at(0))){
+		if (!nextLine.isEmpty() && currentLang.openIndents.contains(selectedText.at(0))) {
 			nextLine.remove(0, 1);
-		}else{
+		}else {
 			updateSyntaxAdd += "\t";
 		}
 		updateSyntaxPosition = cursor.position()+updateSyntaxAdd.length();
@@ -8877,11 +8835,10 @@ void MainWindow::handleBracketsOnEnter(){
 	}
 }
 
-void MainWindow::updateSyntax()
-{
+void MainWindow::updateSyntax() {
 	qDebug() << "updateSyntax";
 
-	if (isSettingUpLSP || isOpeningFile){
+	if (isSettingUpLSP || isOpeningFile) {
 		return;
 	}
 
@@ -8893,10 +8850,10 @@ void MainWindow::updateSyntax()
 	QTextCursor cursor = textEdit->textCursor();
 
 	lspMutex.lock();
-	if (client){
+	if (client) {
 		QString text = textEdit->toPlainText();
 		client->updateDocument(text);
-		if (callCompleteOponUpdate){
+		if (callCompleteOponUpdate) {
 			callCompleteOponUpdate = false;
 			int line = cursor.blockNumber();
 			int column = cursor.columnNumber();
@@ -8907,7 +8864,7 @@ void MainWindow::updateSyntax()
 	lspMutex.unlock();
 
 	if (updateSyntaxAdd != "") {
-		if (textEdit->additionalCursors.isEmpty()){
+		if (textEdit->additionalCursors.isEmpty()) {
 			cursor.beginEditBlock();
 			cursor.insertText(updateSyntaxAdd);
 			cursor.endEditBlock();
@@ -8915,7 +8872,7 @@ void MainWindow::updateSyntax()
 		updateSyntaxAdd = "";
 	}
 
-	if (updateSyntaxPosition != -1){
+	if (updateSyntaxPosition != -1) {
 		qDebug() << "Setting CURSOR at " << updateSyntaxPosition << " ####################################";
 		cursor.setPosition(updateSyntaxPosition);
 		updateSyntaxPosition = -1;
@@ -8924,7 +8881,7 @@ void MainWindow::updateSyntax()
 
 	int lineCount = textDocument->blockCount();
 
-	if (lineCount != previousLineCount){
+	if (lineCount != previousLineCount) {
 		updateLineNumbers(lineCount);
 		updateExtraWordsList();
 	}
@@ -8937,17 +8894,17 @@ void MainWindow::updateSyntax()
 	connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 }
 
-void MainWindow::changeHighlightColors(bool darkmode){
+void MainWindow::changeHighlightColors(bool darkmode) {
 	qDebug() << "changeHighlightColors";
 
 	QPalette lightPalette = qApp->palette();
 	
-	if (darkmode){
+	if (darkmode) {
 		lightPalette.setColor(QPalette::Inactive, QPalette::Highlight, getTintedColor(255, 255, 255));
 		lightPalette.setColor(QPalette::Inactive, QPalette::HighlightedText, QColor("#000000"));
 		lightPalette.setColor(QPalette::Active, QPalette::Highlight, getTintedColor(255, 255, 255));
 		lightPalette.setColor(QPalette::Active, QPalette::HighlightedText, QColor("#000000"));
-	}else{
+	}else {
 		lightPalette.setColor(QPalette::Inactive, QPalette::Highlight, getTintedColor(20, 20, 20));
 		lightPalette.setColor(QPalette::Inactive, QPalette::HighlightedText, QColor("#FFFFFF"));
 		lightPalette.setColor(QPalette::Active, QPalette::Highlight, getTintedColor(20, 20, 20));
@@ -8957,11 +8914,11 @@ void MainWindow::changeHighlightColors(bool darkmode){
 	qApp->setPalette(lightPalette);
 }
 
-QString MainWindow::getStringOfColor(QColor col){
+QString MainWindow::getStringOfColor(QColor col) {
 	return "rgb("+QString::number(col.red())+","+QString::number(col.green())+","+QString::number(col.blue())+")";
 }
 
-void MainWindow::changeOnlyEditsTheme(bool darkmode){
+void MainWindow::changeOnlyEditsTheme(bool darkmode) {
 	qDebug() << "changeOnlyEditsTheme";
 
 	QColor color1;
@@ -8969,7 +8926,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 	QColor color3;
 	QColor placeholdertext;
 
-	if (darkmode){
+	if (darkmode) {
 		color1 = getTintedColor(15, 15, 15);
 		color2 = getTintedColor(42, 42, 42);
 		color3 = getTintedColor(25, 25, 25);
@@ -8982,7 +8939,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 		globalColsMoreThanHover = getStringOfColor(colHoverMore);
 		globalColsPressed = getStringOfColor(colPressed);
 		globalColsText = getStringOfColor(getTintedColor(255, 255, 255));
-	} else {
+	}else {
 		color1 = getTintedColor(230, 230, 230);
 		color2 = getTintedColor(235, 235, 235);
 		color3 = getTintedColor(245, 245, 245);
@@ -9089,7 +9046,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode){
 void MainWindow::changeTheme(bool darkMode) {
 	qDebug() << "changeTheme";
 
-	for (TabWidget *tab : tabs){
+	for (TabWidget *tab : tabs) {
 		tab->updateStyles(darkmode);
 	}
 	
@@ -9109,7 +9066,7 @@ void MainWindow::changeTheme(bool darkMode) {
 	
 	if (darkmode) {
 		globalColsFullBack = c25;
-	}else{
+	}else {
 		globalColsFullBack = c245;
 	}
 	
@@ -9223,7 +9180,7 @@ void MainWindow::changeTheme(bool darkMode) {
 
 		qApp->setPalette(lightPalette);
 		normalColor = QColor(255, 255, 255);
-	}else{
+	}else {
 		QPalette lightPalette = qApp->palette();
 
 		lightPalette.setColor(QPalette::Window,        getTintedColor(220, 220, 220));
@@ -9319,7 +9276,7 @@ void MainWindow::applyScrollBarStyles(QWidget *widget) {
 	}
 	
 	if (auto *button = qobject_cast<QPushButton *>(widget)) {
-		if (widget != closeWinButton && widget != minWinButton && widget != windowWinButton){
+		if (widget != closeWinButton && widget != minWinButton && widget != windowWinButton) {
 			button->setStyleSheet(R"(
 				QPushButton {
 					background-color: )"+globalCols2+R"(;
@@ -9337,7 +9294,7 @@ void MainWindow::applyScrollBarStyles(QWidget *widget) {
 					border: 1px solid )"+globalColsHover+R"(;
 				}
 			)");
-		}else{
+		}else {
 			button->setStyleSheet(R"(
 				QPushButton {
 					background-color: )"+globalColsFullBack+R"(;
@@ -9371,64 +9328,56 @@ void MainWindow::applyStylesToAllScrollBars() {
 	}
 }
 
-void MainWindow::on_actionCourier_New_2_triggered()
-{
+void MainWindow::on_actionCourier_New_2_triggered() {
 	qDebug() << "on_actionCourier_New_2_triggered";
 
 	currentFont = "Courier New";
 	updateFontSelection();
 }
 
-void MainWindow::on_actionCourier_Prime_2_triggered()
-{
+void MainWindow::on_actionCourier_Prime_2_triggered() {
 	qDebug() << "on_actionCourier_Prime_2_triggered";
 
 	currentFont = "Courier Prime";
 	updateFontSelection();
 }
 
-void MainWindow::on_actionSourceCodePro_2_triggered()
-{
+void MainWindow::on_actionSourceCodePro_2_triggered() {
 	qDebug() << "on_actionSourceCodePro_2_triggered";
 
 	currentFont = "Source Code Pro";
 	updateFontSelection();
 }
 
-void MainWindow::on_actionUbuntuMono_2_triggered()
-{
+void MainWindow::on_actionUbuntuMono_2_triggered() {
 	qDebug() << "on_actionUbuntuMono_2_triggered";
 
 	currentFont = "Ubuntu Mono";
 	updateFontSelection();
 }
 
-void MainWindow::on_actionDroidSansMono_2_triggered()
-{
+void MainWindow::on_actionDroidSansMono_2_triggered() {
 	qDebug() << "on_actionDroidSansMono_2_triggered";
 
 	currentFont = "Droid Sans Mono";
 	updateFontSelection();
 }
 
-void MainWindow::on_actionMonaco_2_triggered()
-{
+void MainWindow::on_actionMonaco_2_triggered() {
 	qDebug() << "on_actionMonaco_2_triggered";
 
 	currentFont = "Monaco";
 	updateFontSelection();
 }
 
-void MainWindow::on_actionMonospace_2_triggered()
-{
+void MainWindow::on_actionMonospace_2_triggered() {
 	qDebug() << "on_actionMonospace_2_triggered";
 
 	currentFont = "Monospace";
 	updateFontSelection();
 }
 
-void MainWindow::updateFontSelection()
-{
+void MainWindow::updateFontSelection() {
 	qDebug() << "updateFontSelection";
 
 	QFont font = textEdit->font();
@@ -9442,7 +9391,7 @@ void MainWindow::updateFontSelection()
 	saveWantedTheme();
 }
 
-void MainWindow::on_actionRunning_Files_triggered(){
+void MainWindow::on_actionRunning_Files_triggered() {
 	qDebug() << "on_actionRunning_Files_triggered";
 
 	openHelpMenu("Running Files:\n"
@@ -9461,13 +9410,13 @@ void MainWindow::on_actionRunning_Files_triggered(){
 				 "	a. If CodeWizard fails to run your program it is likely due to it being blocked by an antivirus or windows defender. The solution is to run it as administrator.");
 }
 
-void MainWindow::on_actionVim_Modes_triggered(){
+void MainWindow::on_actionVim_Modes_triggered() {
 	qDebug() << "on_actionVim_Modes_triggered";
 
 	openHelpMenu("Vim Modes\n\nAs of CodeWizard V8.8.9 we now support a modified set of the vim actions. Namely, when enabled, CodeWizard has a 'Normal' mode and an 'Insert' mode.\nIn normal mode there are a set of commands which work - which will be listed below. In insert mode, all keys are the same as regular (unless you press escape under the right circumstances to enter normal mode.)\n\nHere is the list of shortcuts which work in normal mode:\n    1. H - Moves left\n    2. J - Moves Down\n    3. K - Moves Up\n    4. L - Moves Right\n    5. W - Equivalent to Ctrl+Left\n    6. E - Equivalent to Ctrl+Right\n    7. All commands containing 'Ctrl' - Normal\n    8. All commands containing 'Alt' - Normal\n    9. Return/Enter/Backspace - Normal\n    10. PageDown, PageUp, Home, End - Normal\n    11. Comma/Less Than (<) - Jumps to corresponding previous bracket to the left\n    12. Period/Greater Than (>) - Jumps to corresponding bracket to the right\n    13. $ - Jumps to end of line\n    14. A - Jumps to end of line and enters insert mode\n    15. O - Inserts line below current line and enters insert mode\n    16. : - Brings focus to the command palette\n    17. G - Move to specified line number. (usage: '<linenumber>g')\n    18. G - Goto Definition, (works when you have not typed a line number beforehand)\n    19. P - Requests hover menu for current cursor position (LSP feature)\n    20. S - Highlights the current word under the cursor (left and right sides)");
 }
 
-void MainWindow::on_actionThe_Fix_It_Button_triggered(){
+void MainWindow::on_actionThe_Fix_It_Button_triggered() {
 	qDebug() << "on_actionThe_Fix_It_Button_triggered";
 
 	openHelpMenu("The Fix It Button\n\n"
@@ -9478,55 +9427,55 @@ void MainWindow::on_actionThe_Fix_It_Button_triggered(){
 	);
 }
 
-void MainWindow::on_actionCodeWizard_triggered(){
+void MainWindow::on_actionCodeWizard_triggered() {
 	qDebug() << "on_actionCodeWizard_triggered";
 
 	openHelpMenu("Designed by Adam Mather.\n\nVersion "+versionNumber);
 }
 
-void MainWindow::on_actionCommand_Palette_triggered(){
+void MainWindow::on_actionCommand_Palette_triggered() {
 	qDebug() << "on_actionCommand_Palette_triggered";
 
 	openHelpMenu("Command Palette:\n\nThe command palette is the bar at the top of the window. It is most useful for hopping between files, executing commands in CodeWizard, or doing math.\n\nTo quickly access it, use Ctrl+Shift+P.\n\nBy the way, I put a lot of work into the math calculator. And it's not perfect, large numbers make it overflow, it mostly follows bedmas, and it's super cool.");
 }
 
-void MainWindow::on_actionSettings_triggered(){
+void MainWindow::on_actionSettings_triggered() {
 	qDebug() << "on_actionSettings_triggered";
 
 	openHelpMenu("The settings for CodeWizard are mostly under the edit tab. Notable settings include:\n\nEdit->Fonts\nEdit->Tab Width\nEdit->Dark Mode\nEdit->Light Mode\nEdit->Auto Save\nEdit->Use File Tabs\nEdit->Use Web View\nView->Use File Tree\nView->Use File Tree If Fullscreen\nLanguage->LSP Settings\n\nNotable Shortcuts:\n\nAlt+Enter->Code Actions (LSP helpers)\nRight Click->Goto Definition (Requires LSP)");
 }
 
-void MainWindow::on_actionExtras_triggered(){
+void MainWindow::on_actionExtras_triggered() {
 	qDebug() << "on_actionExtras_triggered";
 
 	openHelpMenu("Notable Extras:\n\nAuto Save - Runs every 10 seconds, can be disabled with Edit->Auto Save\nBuiltin Terminal - CodeWizard has a limited builtin terminal. I would not advise you use it. View->Use Builtin Terminal");
 }
 
-void MainWindow::on_actionMacros_triggered(){
+void MainWindow::on_actionMacros_triggered() {
 	qDebug() << "on_actionMacros_triggered";
 
 	openHelpMenu("Macros:\nIn CodeWizard, a macro is a recorded set of keyboard actions. Once a macro is recorded with 'Edit->Start Macro Recording' and 'Edit->End Macro Recording' said macro can then be played back with Ctrl+P or 'Edit->Replay Macro'. If you run a macro '0' times it will run until the end of the file. No, it will not fix your dumb mistakes. Yes, it is a great way to waste time. (I promise) It is worthwhile to note that to stop a macro run amuck you can use Ctrl+P again to stop the macro execution.");
 }
 
-void MainWindow::on_actionLSP_2_triggered(){
+void MainWindow::on_actionLSP_2_triggered() {
 	qDebug() << "on_actionLSP_2_triggered";
 
 	openHelpMenu("Language Server Protocol:\n\nFrom CodeWizard V8.0.0 onwards we now support users setting their own Language Server. First set the language you want to set the LSP for, then press Language->Set LSP for language. To specify the LSP to use, type the command needed to run said language server. For example:\n\n   Python - \"jedi-language-server.exe\"\n      Install with \"pip install jedi-language-server\" and ensure \"C:\\Users\\USERNAME\\AppData\\Roaming\\Python\\PythonXX\\Scripts\" is in your path\n\n   C/C++ - \"clangd.exe\"\n      Download from official site\n\n   Rust - \"rust-analyzer.exe\"\n      Download from official site\n\n   TypeScript/JavaScript - \"typescript-language-server --stdio\"\n      Installed with \"npm install -g typescript-language-server typescript\"\n\n   Go - \"gopls\"\n      Installed with \"go install golang.org/x/tools/gopls@latest\"\n\n   HTML - \"vscode-html-language-server --stdio\"\n      Installed with \"npm i -g vscode-langservers-extracted\" (also provides vscode-css-language-server, vscode-json-language-server, vscode-eslint-language-server)\n\n\nLanguage Servers Provide the following features to CodeWizard:\n\n   1. Autocompletion\n   2. Hover for info\n   3. Goto definition\n   4. Errors/Warnings\n   5. Code Actions (error correction, formatting, etc)\n\nAll of these can be enabled/disabled under Languages->LSP Settings. There is also the option to disable LSP autocomplete but keep CodeWizard autocomplete, should you prefer it.\n\nExtra Notes:\n   1. When first setting the LSP for a language it may crash, just try again. It usually works the second time.");
 }
 
-void MainWindow::on_actionGit_Integration_triggered(){
+void MainWindow::on_actionGit_Integration_triggered() {
 	qDebug() << "on_actionGit_Integration_triggered";
 
 	openHelpMenu("CodeWizard has builtin git support. When you press Git->Push, it will request a commit message, and then trigger the commands 'git add --all', 'git commit -m \"message\"' and 'git push'. Similarly for Git->Pull->Regular it runs 'git pull' and for Git->Pull->Discard Local Changes it runs 'git reset --hard && git pull'");
 }
 
-void MainWindow::on_actionMultiple_Cursors_triggered(){
+void MainWindow::on_actionMultiple_Cursors_triggered() {
 	qDebug() << "on_actionMultiple_Cursors_triggered";
 
 	openHelpMenu("CodeWizard now has multiple cursor functionality.\n\nUse Alt+Clicking or Alt+(Up/Down) Arrow to instantiate new cursors. When you're done with them just press escape.");
 }
 
-void MainWindow::on_actionKeybindings_triggered(){
+void MainWindow::on_actionKeybindings_triggered() {
 	qDebug() << "on_actionKeybindings_triggered";
 
 	openHelpMenu("Keybindings:\n\
@@ -9610,14 +9559,14 @@ void MainWindow::openHelpMenu(QString text) {
 
 	helpDialog->setLayout(layout);
 
-	if (text.count("\n") > 20){ // fix for the lsp menu apearing above the top of the screen.
+	if (text.count("\n") > 20) { // fix for the lsp menu apearing above the top of the screen.
 		helpDialog->move(QPoint(50, 50));
 	}
 
 	helpDialog->exec();
 }
 
-void MainWindow::on_actionPython_2_triggered(){
+void MainWindow::on_actionPython_2_triggered() {
 	qDebug() << "on_actionPython_2_triggered";
 
 	currentLang = pythonLang;
@@ -9626,7 +9575,7 @@ void MainWindow::on_actionPython_2_triggered(){
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
 
-void MainWindow::on_actionCss_triggered(){
+void MainWindow::on_actionCss_triggered() {
 	qDebug() << "on_actionCss_triggered";
 
 	currentLang = cssLang;
@@ -9635,7 +9584,7 @@ void MainWindow::on_actionCss_triggered(){
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
 
-void MainWindow::on_actionC_triggered(){
+void MainWindow::on_actionC_triggered() {
 	qDebug() << "on_actionC_triggered";
 
 	currentLang = cppLang;
@@ -9644,7 +9593,7 @@ void MainWindow::on_actionC_triggered(){
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
 
-void MainWindow::on_actionCobol_triggered(){
+void MainWindow::on_actionCobol_triggered() {
 	qDebug() << "on_actionCobol_triggered";
 
 	currentLang = cobolLang;
@@ -9653,7 +9602,7 @@ void MainWindow::on_actionCobol_triggered(){
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
 
-void MainWindow::on_actionWGSL_triggered(){
+void MainWindow::on_actionWGSL_triggered() {
 	qDebug() << "on_actionWGSL_triggered";
 
 	currentLang = WGSLLang;
@@ -9662,7 +9611,7 @@ void MainWindow::on_actionWGSL_triggered(){
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
 
-void MainWindow::on_actionRust_triggered(){
+void MainWindow::on_actionRust_triggered() {
 	qDebug() << "on_actionRust_triggered";
 
 	currentLang = rustLang;
@@ -9671,7 +9620,7 @@ void MainWindow::on_actionRust_triggered(){
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
 
-void MainWindow::on_actionHTML_triggered(){
+void MainWindow::on_actionHTML_triggered() {
 	qDebug() << "on_actionHTML_triggered";
 
 	currentLang = HTMLLang;
@@ -9680,7 +9629,7 @@ void MainWindow::on_actionHTML_triggered(){
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
 
-void MainWindow::on_actionGo_triggered(){
+void MainWindow::on_actionGo_triggered() {
 	qDebug() << "on_actionGo_triggered";
 
 	currentLang = goLang;
@@ -9689,7 +9638,7 @@ void MainWindow::on_actionGo_triggered(){
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
 
-void MainWindow::on_actionLua_triggered(){
+void MainWindow::on_actionLua_triggered() {
 	qDebug() << "on_actionLua_triggered";
 
 	currentLang = luaLang;
@@ -9698,7 +9647,7 @@ void MainWindow::on_actionLua_triggered(){
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
 
-void MainWindow::on_actionPlaintext_triggered(){
+void MainWindow::on_actionPlaintext_triggered() {
 	qDebug() << "on_actionPlaintext_triggered";
 
 	currentLang = txtLang;
@@ -9707,7 +9656,7 @@ void MainWindow::on_actionPlaintext_triggered(){
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
 
-void MainWindow::on_actionJavaScript_triggered(){
+void MainWindow::on_actionJavaScript_triggered() {
 	qDebug() << "on_actionJavaScript_triggered";
 
 	currentLang = jsLang;
@@ -9716,7 +9665,7 @@ void MainWindow::on_actionJavaScript_triggered(){
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
 
-void MainWindow::on_actionTypeScript_triggered(){
+void MainWindow::on_actionTypeScript_triggered() {
 	qDebug() << "on_actionTypeScript_triggered";
 
 	currentLang = tsLang;
@@ -9725,7 +9674,7 @@ void MainWindow::on_actionTypeScript_triggered(){
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
 
-void MainWindow::on_actionC_2_triggered(){
+void MainWindow::on_actionC_2_triggered() {
 	qDebug() << "on_actionC_2_triggered";
 
 	currentLang = csharpLang;
@@ -9734,7 +9683,7 @@ void MainWindow::on_actionC_2_triggered(){
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
 
-void MainWindow::on_actionC_3_triggered(){
+void MainWindow::on_actionC_3_triggered() {
 	qDebug() << "on_actionC_3_triggered";
 
 	currentLang = cLang;
@@ -9743,7 +9692,7 @@ void MainWindow::on_actionC_3_triggered(){
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
 
-void MainWindow::on_actionGLSL_triggered(){
+void MainWindow::on_actionGLSL_triggered() {
 	qDebug() << "on_actionGLSL_triggered";
 
 	currentLang = GLSLLang;
@@ -9752,7 +9701,7 @@ void MainWindow::on_actionGLSL_triggered(){
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
 
-void MainWindow::on_actionJava_triggered(){
+void MainWindow::on_actionJava_triggered() {
 	qDebug() << "on_actionJava_triggered";
 
 	currentLang = javaLang;
@@ -9761,28 +9710,28 @@ void MainWindow::on_actionJava_triggered(){
 	setupSyntaxTreeOnOpen(textEdit->toPlainText(), true);
 }
 
-void MainWindow::addFileToRecentList(QString file){
+void MainWindow::addFileToRecentList(QString file) {
 	qDebug() << "addFileToRecentList";
 
-	if (recentFiles.contains(file)){
+	if (recentFiles.contains(file)) {
 		recentFiles.removeAll(file);
 	}
 
 	recentFiles.push_front(file);
 
-	if (recentFiles.length() > 20){ // too long
+	if (recentFiles.length() > 20) { // too long
 		recentFiles = recentFiles.mid(0, 20);
 	}
 
 	updateRecentList(recentFiles);
 }
 
-void MainWindow::updateRecentList(QStringList files){
+void MainWindow::updateRecentList(QStringList files) {
 	qDebug() << "updateRecentList";
 
 	menuOpen_Recent->clear();
 
-	for (QString file : files){
+	for (QString file : files) {
 		QAction* action = menuOpen_Recent->addAction(file);
 		action->setData(file);
 		connect(action, &QAction::triggered, this, [this, action]() {
@@ -9794,7 +9743,7 @@ void MainWindow::updateRecentList(QStringList files){
 	settings.setValue("recentFiles", recentFiles);
 }
 
-void MainWindow::openRecentFile(QString newFile){
+void MainWindow::openRecentFile(QString newFile) {
 	qDebug() << "openRecentFile";
 
 	globalArgFileName = newFile;
