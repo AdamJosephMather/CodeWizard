@@ -26,6 +26,8 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	bool isBinaryFile(const QString& path);
+	QMap<QPair<QString, QString>, QList<QPair<int, QString>>> searchAcrossFiles(QString searchterm);
 	void hide_search_menu(bool resetpos = true);
 	void on_actionDefault_Light_triggered();
 	void on_actionOcean_triggered();

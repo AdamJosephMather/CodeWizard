@@ -708,7 +708,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      </widget>
      <widget class="QMenu" name="menuAutocomplete">
       <property name="title">
-       <string>Autocomplete</string>
+       <string>Autocomplete </string>
       </property>
       <addaction name="actionOnly_Use_CodeWizard_Built_In"/>
       <addaction name="actionNo_Autocomplete"/>

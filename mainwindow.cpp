@@ -657,9 +657,9 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	nextButton = ui->pushButton_3;
 	replaceButton = ui->pushButton_2;
 	replaceAllButton = ui->pushButton;
-	
+
 	caseSensitive = ui->checkBox;
-	
+
 	findTextEdit = ui->textEdit_2;
 	replaceTextEdit = ui->textEdit_3;
 	builtinTerminalTextEdit = ui->textEdit_6;
@@ -1533,7 +1533,7 @@ void MainWindow::onSearchItemClicked(QListWidgetItem *item) {
 	searchMenu->show();
 	selectedSearchFile = searchMenu->row(item);
 	searchBar->setAlignment(Qt::AlignCenter);
-	
+
 	runSearchItem();
 }
 
@@ -1931,40 +1931,40 @@ void MainWindow::narrowDownSearchFiles() {
 			}
 		}
 	}
-	
+
 	if (starterText.startsWith("*") && starterText.length() != 1) {
 		QString text = textEdit->toPlainText();
 		QTextCursor cursor = textEdit->textCursor();
 		QString find = starterText.mid(1);
-		
+
 		if (startedPosSearchBar == -1) {
 			startedPosSearchBar = cursor.position();
 			startedAnchSearchBar = cursor.anchor();
 		}
-		
+
 		int startPosition = cursor.anchor();
 		int position = text.indexOf(find, startPosition, Qt::CaseInsensitive);
-		
+
 		if (position == -1) {
 			position = text.indexOf(find, 0, Qt::CaseInsensitive);
 		}
-	
+
 		if (position != -1) {
 			textEdit->setUpdatesEnabled(false);
 			textEdit->horizontalScrollBar()->setValue(0);
-			
+
 			cursor.setPosition(position);
 			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, find.length());
-			
+
 			textEdit->setTextCursor(cursor);
 			textEdit->setUpdatesEnabled(true);
-			
+
 			indexedFilesPath.push_back("/.CodeWiz./DropCursor");
 			displayPaths.push_back(starterText);
 			indexedFiles.push_back(starterText);
 		}else { // couldn't find new place to put the cursor so let's put it where it started.
 			auto curs = textEdit->textCursor();
-			
+
 			if (curs.position() != startedPosSearchBar || curs.anchor() != startedAnchSearchBar){
 				curs.setPosition(startedAnchSearchBar);
 				curs.setPosition(startedPosSearchBar, QTextCursor::KeepAnchor);
@@ -1973,13 +1973,104 @@ void MainWindow::narrowDownSearchFiles() {
 		}
 	}else if (startedPosSearchBar != -1) {
 		auto curs = textEdit->textCursor();
-		
+
 		if (curs.position() != startedPosSearchBar || curs.anchor() != startedAnchSearchBar){
 			curs.setPosition(startedAnchSearchBar);
 			curs.setPosition(startedPosSearchBar, QTextCursor::KeepAnchor);
 			textEdit->setTextCursor(curs);
 		}
 	}
+
+	if (starterText.startsWith("&") && starterText.length() > 1) {
+		auto allinstances = searchAcrossFiles(starterText.mid(1));
+
+		for (auto it = allinstances.begin(); it != allinstances.end(); ++it) {
+			auto pathdispl = it.key();
+
+			indexedFilesPath.push_back(pathdispl.first);
+			displayPaths.push_back(pathdispl.second);
+			indexedFiles.push_back(pathdispl.second);
+
+			for (auto instance : it.value()) {
+				indexedFilesPath.push_back(pathdispl.first+"/.CodeWiz./"+QString::number(instance.first));
+				displayPaths.push_back(instance.second);
+				indexedFiles.push_back(instance.second);
+			}
+		}
+	}
+}
+
+bool MainWindow::isBinaryFile(const QString& path) {
+	QFile file(path);
+	if (!file.open(QIODevice::ReadOnly))
+		return true; // could not open file - ignore it either way
+
+	QByteArray buffer = file.read(1024); // Read first 1KB
+	for (char c : buffer) {
+		if ((c == 0) || (c < 7 || c > 13) && (c < 32 || c > 126)) {
+			return true; // Non-text byte found
+		}
+	}
+	return false;
+}
+
+QMap<QPair<QString, QString>, QList<QPair<int, QString>>> MainWindow::searchAcrossFiles(QString searchterm) {
+	qDebug() << "searchAcrossFiles";
+//	allDisplayPaths; // displayname
+//	allIndexedFilesPath; // fullpath
+//	allIndexedFiles; // name
+	
+	int totalmatches = 0;
+
+	QMap<QPair<QString, QString>, QList<QPair<int, QString>>> out;
+	
+	qDebug() << allIndexedFilesPath.length();
+	
+	int maxlen = 300;
+	if (allIndexedFilesPath.length() < maxlen) {
+		maxlen = allIndexedFilesPath.length();
+	}
+	
+	for (int indx = 0; indx < maxlen; indx++) {
+		QString fPath = allIndexedFilesPath[indx];
+
+		bool isbinary = isBinaryFile(fPath);
+		if (isbinary) {
+			continue;
+		}
+
+		QList<QPair<int, QString>> matches;
+		QFile file(fPath);
+
+		if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+			continue;
+		}
+
+		QTextStream in(&file);
+
+		int lnnum = 1;
+
+		while (!in.atEnd()) {
+			QString line = in.readLine();
+			if (line.contains(searchterm, Qt::CaseInsensitive)) {
+				matches << QPair<int, QString>(lnnum, "    "+line.trimmed());
+				totalmatches ++;
+			}
+			lnnum++;
+		}
+
+		if (matches.length() == 0) {
+			continue;
+		}
+
+		out[QPair<QString, QString>(fPath, allIndexedFiles[indx])] = matches;
+		
+		if (totalmatches > 100){
+			break;
+		}
+	}
+
+	return out;
 }
 
 void MainWindow::indexFiles() {
@@ -2205,8 +2296,21 @@ void MainWindow::runSearchItem() {
 	}else if (cmd == "/.CodeWiz./DropCursor"){
 		hide_search_menu(false);
 		return;
+	}else if (cmd.contains("/.CodeWiz./")) {
+		QStringList pathAndLnnum = cmd.split("/.CodeWiz./");
+		QString scnd = pathAndLnnum[1];
+		
+		bool ok;
+		int num = scnd.toInt(&ok);
+		
+		if (pathAndLnnum.length() == 2 && ok && num != 0) {
+			QString path = pathAndLnnum[0];
+			
+			gotoDefinitionReceived(num-1, 0, num-1, 0, QUrl::fromLocalFile(path).toString());
+			return;
+		}
 	}
-	
+
 	if (cmd.startsWith(":")) {
 		if (cmd == ":Dark Mode") on_actionDark_Mode_triggered();
 		if (cmd == ":Light Mode") on_actionLight_Mode_triggered();
@@ -2949,15 +3053,15 @@ void MainWindow::useBuiltinTerminalTriggered() {
 
 void MainWindow::hide_search_menu(bool resetpos) {
 	qDebug() << "hide_search_menu " << resetpos;
-	
+
 	searchMenu->hide();
-	
+
 	if(!textEdit){
 		startedAnchSearchBar = -1;
 		startedPosSearchBar = -1;
 		return;
 	}
-	
+
 	if (resetpos && startedPosSearchBar != -1 && startedAnchSearchBar != -1) {
 		qDebug() << "resetting pos";
 		auto curs = textEdit->textCursor();
@@ -2965,10 +3069,10 @@ void MainWindow::hide_search_menu(bool resetpos) {
 		curs.setPosition(startedPosSearchBar, QTextCursor::KeepAnchor);
 		textEdit->setTextCursor(curs);
 	}
-	
+
 	startedAnchSearchBar = -1;
 	startedPosSearchBar = -1;
-	
+
 	textEdit->setFocus();
 }
 
@@ -4946,9 +5050,9 @@ void MainWindow::updateFonts() {
 	searchBar->setFont(font);
 	QApplication::processEvents(); //Lets the menubar resize
 	repositionSearchBar();
-	
+
 	QString sz = QString::number(findTextEdit->height());
-	
+
 	caseSensitive->setStyleSheet(R"(
 			QCheckBox::indicator {
 				width: )"+sz+R"(px;
@@ -5585,7 +5689,7 @@ void MainWindow::findTriggered() {
 	if (find == "") {
 		return;
 	}
-	
+
 	auto casesensitivite = Qt::CaseInsensitive;
 	if (caseSensitive->isChecked()) {
 		casesensitivite = Qt::CaseSensitive;
@@ -5628,7 +5732,7 @@ void MainWindow::previousTriggered() {
 	if (find.isEmpty()) {
 		return;
 	}
-	
+
 	auto casesensitivite = Qt::CaseInsensitive;
 	if (caseSensitive->isChecked()) {
 		casesensitivite = Qt::CaseSensitive;
@@ -5662,7 +5766,7 @@ void MainWindow::nextTriggered(bool dontRecurse) {
 	if (find == "") {
 		return;
 	}
-	
+
 	auto casesensitivite = Qt::CaseInsensitive;
 	if (caseSensitive->isChecked()) {
 		casesensitivite = Qt::CaseSensitive;
@@ -5701,7 +5805,7 @@ void MainWindow::replaceTriggered() {
 	if (find == "" || selectedText == "") {
 		return;
 	}
-	
+
 	auto casesensitivite = Qt::CaseInsensitive;
 	if (caseSensitive->isChecked()) {
 		casesensitivite = Qt::CaseSensitive;
@@ -5714,7 +5818,6 @@ void MainWindow::replaceTriggered() {
 	}
 }
 
-
 void MainWindow::replaceAllTriggered() {
 	qDebug() << "replaceAllTriggered";
 
@@ -5724,8 +5827,7 @@ void MainWindow::replaceAllTriggered() {
 	if (find.isEmpty()) {
 		return;
 	}
-	
-	
+
 	auto flag = QTextDocument::FindFlags();
 	if (caseSensitive->isChecked()) {
 		flag = QTextDocument::FindCaseSensitively;
@@ -5755,7 +5857,6 @@ void MainWindow::replaceAllTriggered() {
 
 	docCursor.endEditBlock();
 }
-
 
 void MainWindow::on_actionExit_triggered() {
 	qDebug() << "on_actionExit_triggered";
@@ -5942,17 +6043,17 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 			}
 		}
 	}
-	
+
 	QString suffix = fileInfo.suffix().toLower();
 	QList<QByteArray> formats = QImageReader::supportedImageFormats();
-	
+
 	bool isSupportedImage = std::any_of(formats.begin(), formats.end(), [&](const QByteArray& format) {
 		return format == suffix.toLatin1();
 	});
-	
+
 	if (!isSupportedImage) {
 		bool ret = checkForLargeFile(&file);
-		
+
 		if (!ret) {
 			isOpeningFile = false;
 			return;
@@ -6552,6 +6653,12 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 		}else if (event->key() == Qt::Key_F || event->key() == Qt::Key_H) {
 			changeFindSectionVisibility(true);
 			openFind();
+		}else if (event->key() == Qt::Key_U && event->modifiers() & Qt::ShiftModifier) {
+			searchBar->setCurrentVim("i");
+			searchBar->setFocus();
+			auto curs = searchBar->textCursor();
+			curs.insertText("&");
+			searchBar->setTextCursor(curs);
 		}else if (event->key() == Qt::Key_P && event->modifiers() & Qt::ShiftModifier) {
 			searchBar->setPlainText("");
 			searchBar->setCurrentVim("i");
@@ -7024,6 +7131,13 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 				searchBar->setCurrentVim("i");
 				searchBar->setFocus();
 				return true;
+			}else if (key_event->key() == Qt::Key_U) {
+				searchBar->setCurrentVim("i");
+				searchBar->setFocus();
+				auto curs = searchBar->textCursor();
+				curs.insertText("&");
+				searchBar->setTextCursor(curs);
+				return true;
 			}else if (key_event->key() == Qt::Key_Y) {
 				searchBar->setCurrentVim("i");
 				searchBar->setFocus();
@@ -7355,13 +7469,13 @@ void MainWindow::changeFindSectionVisibility(bool visible) {
 						widget2->hide();
 					}
 				}
-				
+
 				auto* layoutItm2 = layoutItm->itemAt(j)->layout();
-				
+
 				if (layoutItm2) {
 					for (int x = 0; x < layoutItm2->count(); ++x) {
 						QWidget* widget3 = layoutItm2->itemAt(x)->widget();
-		
+
 						if (widget3) {
 							if (visible) {
 								widget3->show();
@@ -7793,11 +7907,11 @@ bool MainWindow::insertCompletion() {
 
 void MainWindow::on_actionSave_triggered() {
 	qDebug() << "on_actionSave_triggered";
-	
+
 	if (textEdit->isimage) {
 		return;
 	}
-	
+
 	QString tempDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
 	QDir tempDir(tempDirPath);
 	QString absoluteTempPath = tempDir.absolutePath();
@@ -7815,7 +7929,7 @@ void MainWindow::doTrueSaveAction() {
 	if (textEdit->isimage) {
 		return;
 	}
-	
+
 	if (isSettingUpLSP) {
 		showWeDontFuckWithTheLSP();
 		return;
@@ -8231,11 +8345,11 @@ void MainWindow::on_actionTab_Width_triggered() {
 
 void MainWindow::on_actionSave_As_triggered() {
 	qDebug() << "on_actionSave_As_triggered";
-	
+
 	if (textEdit->isimage) {
 		return;
 	}
-	
+
 	if (isSettingUpLSP) {
 		showWeDontFuckWithTheLSP();
 		return;
@@ -9291,7 +9405,7 @@ void MainWindow::changeTheme(bool darkMode) {
 
 		textEdit->setContextMenuStyle(contextMenuLightSheet);
 		fileTreeContextMenu->setStyleSheet(contextMenuLightSheet);
-		
+
 		qApp->setPalette(lightPalette);
 		normalColor = QColor(0, 0, 0);
 	}
@@ -9505,7 +9619,7 @@ void MainWindow::on_actionCodeWizard_triggered() {
 void MainWindow::on_actionCommand_Palette_triggered() {
 	qDebug() << "on_actionCommand_Palette_triggered";
 
-	openHelpMenu("Command Palette:\n\nThe command palette is the bar at the top of the window. It is most useful for hopping between files, executing commands in CodeWizard, or doing math.\n\nTo quickly access it, use Ctrl+Shift+P.\n\nBy the way, I put a lot of work into the math calculator. And it's not perfect, large numbers make it overflow, it mostly follows bedmas, and it's super cool.");
+	openHelpMenu("Command Palette:\n\nThe command palette is the bar at the top of the window. It is most useful for hopping between files, executing commands in CodeWizard, or doing math.\n\nTo quickly access it, use Ctrl+Shift+P.\n\nBy the way, I put a lot of work into the math calculator (you will like it or else...).");
 }
 
 void MainWindow::on_actionSettings_triggered() {
@@ -9557,6 +9671,7 @@ void MainWindow::on_actionKeybindings_triggered() {
   Ctrl+Shift+O ---- Open folder\n\
   Ctrl+Q ---------- Back to previous file\n\
   Ctrl+Shift+P ---- Focus on search bar\n\
+  Ctrl+Shift+U ---- Start folder wide text search\n\
   Ctrl+N ---------- New file\n\
   Ctrl+'+' -------- Increase text size\n\
   Ctrl+'-' -------- Decrease text size\n\
