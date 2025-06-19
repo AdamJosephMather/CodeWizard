@@ -142,12 +142,9 @@ void MyTextEdit::wheelEvent(QWheelEvent *event) {
 }
 
 void MyTextEdit::drawSelection(QPainter &painter, QTextCursor cursor, bool onEnd) {
-	if (!cursor.hasSelection())
-		return;
-	
-	qreal extra;
+	qreal extra = 0;
 	if (onEnd){
-		extra = fontMetrics().horizontalAdvance("M")/2;
+		extra = 4;
 	}
 	
 	// Get the rectangle for the selection
