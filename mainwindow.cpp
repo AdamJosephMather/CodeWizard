@@ -713,10 +713,15 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	menuLSP_Settings = ui->menuLSP_Settings;
 	menuWarnings = ui->menuWarnings;
 	menuAutocomplete = ui->menuAutocomplete;
+
 	menuSilly = ui->menuSilly;
+
 	menuSubPresets = ui->menuPresets;
+
 	menuSubDark = ui->menuDark;
+
 	menuSubLight = ui->menuLight;
+
 
 	menuSubFonts = menuFonts->addMenu("Browse Installed Fonts");
 
@@ -1938,7 +1943,7 @@ void MainWindow::indexFiles() {
 	int starterPathLen = rootPath.length()+1;
 	queue.enqueue(rootPath);
 	
-	int maxFiles = 10000; // rough max number of files to see, prevents C:/ from breaking it
+	int maxFiles = 3000; // rough max number of files to see, prevents C:/ from breaking it
 	int seen = 0;
 	
 	QFontMetrics metrics(textEdit->font());
@@ -1952,7 +1957,7 @@ void MainWindow::indexFiles() {
 	
 	bool notDoneAdding = true;
 
-	while (!queue.isEmpty()) {
+	while (!queue.isEmpty()) { // very nice - bfs
 		QString currentDirPath = queue.dequeue();
 		QDir currentDir(currentDirPath);
 		QFileInfoList entries = currentDir.entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
@@ -6602,60 +6607,6 @@ void MainWindow::on_actionReplay_Macro_triggered() {
 	replayMacroButton->setEnabled(true);
 }
 
-int MainWindow::findMatchingBracket(int direction) {
-	qDebug() << "findMatchingBracket";
-
-	int seen = 0;
-	QTextCursor cursor = textEdit->textCursor();
-	int initPos = cursor.position();
-	int copyInitPos = cursor.position();
-
-	QString opening = "{[(<";
-	QString closing = "}])>";
-
-	if (direction < 0) {
-		opening = "}])>";
-		closing = "{[(<";
-	}
-
-	QString text = textEdit->toPlainText();
-
-	int textLen = text.length();
-
-	if (opening.contains(text.at(initPos-1))) {
-		initPos = initPos-1;
-	}else {
-		if (!opening.contains(text.at(initPos))) {
-			return initPos;
-		}
-	}
-
-	QChar lookingFor = closing.at(opening.indexOf(text.at(initPos)));
-	QChar had = text.at(initPos);
-
-	int curPos = initPos + direction;
-
-	while (true) {
-		if (curPos < 0 || curPos >= textLen) {
-			break;
-		}
-
-		if (had == text.at(curPos)) {
-			seen += 1;
-		}else if (lookingFor == text.at(curPos)) {
-			if (seen == 0) {
-				return curPos;
-			}else {
-				seen -= 1;
-			}
-		}
-
-		curPos += direction;
-	}
-
-	return copyInitPos;
-}
-
 bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 //	qDebug() << "eventFilter"; - we don't do it for certain functions (like this one)
 
@@ -6928,36 +6879,10 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 					actionBox->setVisible(false);
 					return false;
 				}
-			}else if (key_event->key() == Qt::Key_Less || key_event->key() == Qt::Key_Comma) {
-				QTextCursor cursor = textEdit->textCursor();
-				int initLoc = cursor.position();
-				int loc = findMatchingBracket(-1);
-				if (initLoc != loc) {
-					if (key_event->modifiers() & Qt::ShiftModifier) {
-						cursor.setPosition(loc+1, QTextCursor::KeepAnchor);
-					}else {
-						cursor.setPosition(loc+1);
-					}
-					
-					textEdit->setTextCursor(cursor);
-				}
-				return true;
-			}else if (key_event->key() == Qt::Key_Greater || key_event->key() == Qt::Key_Period) {
-				int loc = findMatchingBracket(1);
-				QTextCursor cursor = textEdit->textCursor();
-				
-				if (key_event->modifiers() & Qt::ShiftModifier) {
-					cursor.setPosition(loc, QTextCursor::KeepAnchor);
-				}else {
-					cursor.setPosition(loc);
-				}
-				
-				textEdit->setTextCursor(cursor);
-				return true;
 			}else if (key_event->key() == Qt::Key_Colon || key_event->key() == Qt::Key_Semicolon) {
 				searchBar->setCurrentVim("i");
 				searchBar->setFocus();
-				return true;
+                return true;
 			}else if (!actionBox->isVisible() && (key_event->key() == Qt::Key_Return || key_event->key() == Qt::Key_Enter)) {
 				handleTabs();
 				handleBracketsOnEnter();
@@ -6965,23 +6890,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 			
 			if ((key_event->key() != Qt::Key_Tab || !suggestionBox->isVisible()) && (key_event->key() != Qt::Key_Enter && key_event->key() != Qt::Key_Return || !actionBox->isVisible())) {
 				return false;
-			}
-		}
-
-		if (isACtrl) {
-			if (key_event->key() == Qt::Key_Less || key_event->key() == Qt::Key_Comma) {
-				QTextCursor cursor = textEdit->textCursor();
-				int initLoc = cursor.position();
-				int loc = findMatchingBracket(-1);
-				if (initLoc != loc) {
-					cursor.setPosition(loc+1);
-					textEdit->setTextCursor(cursor);
-				}
-			}else if (key_event->key() == Qt::Key_Greater || key_event->key() == Qt::Key_Period) {
-				int loc = findMatchingBracket(1);
-				QTextCursor cursor = textEdit->textCursor();
-				cursor.setPosition(loc);
-				textEdit->setTextCursor(cursor);
 			}
 		}
 

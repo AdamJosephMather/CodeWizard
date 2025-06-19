@@ -84,7 +84,6 @@ private slots:
 	void on_actionToggleComments_triggered();
 	void pullUpReloadDialogue(QString message, QString content);
 	void switchTerminalType();
-	int findMatchingBracket(int direction);
 	void handleBracketsOnEnter();
 	void handleTerminalStdout(int index);
 	void useBuiltinTerminalTriggered();

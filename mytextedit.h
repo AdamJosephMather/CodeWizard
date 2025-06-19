@@ -37,6 +37,7 @@ public:
 	QList<int> errLineNums; 
 	QStringList errMessages;
 	QList<int> errTypes;
+	int findMatchingBracket(int direction);
 
 protected:
 	QString changeToTabs(QString text);

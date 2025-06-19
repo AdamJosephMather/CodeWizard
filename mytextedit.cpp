@@ -358,16 +358,97 @@ int MyTextEdit::getCharType(QString c) {
 	return 3; // punctuation
 }
 
+int MyTextEdit::findMatchingBracket(int direction) {
+	qDebug() << "findMatchingBracket";
+
+	int seen = 0;
+	QTextCursor cursor = textCursor();
+	int initPos = cursor.position();
+	int copyInitPos = cursor.position();
+
+	QString opening = "{[(<";
+	QString closing = "}])>";
+
+	if (direction < 0) {
+		opening = "}])>";
+		closing = "{[(<";
+	}
+
+	QString text = toPlainText();
+
+	int textLen = text.length();
+
+	if (opening.contains(text.at(initPos-1))) {
+		initPos = initPos-1;
+	}else {
+		if (!opening.contains(text.at(initPos))) {
+			return initPos;
+		}
+	}
+
+	QChar lookingFor = closing.at(opening.indexOf(text.at(initPos)));
+	QChar had = text.at(initPos);
+
+	int curPos = initPos + direction;
+
+	while (true) {
+		if (curPos < 0 || curPos >= textLen) {
+			break;
+		}
+
+		if (had == text.at(curPos)) {
+			seen += 1;
+		}else if (lookingFor == text.at(curPos)) {
+			if (seen == 0) {
+				return curPos;
+			}else {
+				seen -= 1;
+			}
+		}
+
+		curPos += direction;
+	}
+
+	return copyInitPos;
+}
+
 bool MyTextEdit::runForCursor(QKeyEvent *event) {
+	
+	if (event->modifiers() & Qt::ControlModifier || currentVimMode == "n") {
+			if (event->key() == Qt::Key_Less || event->key() == Qt::Key_Comma) {
+				QTextCursor cursor = textCursor();
+				
+				int loc = findMatchingBracket(-1);
+				if (cursor.position() == loc) {
+					loc --; // because we add one later.
+				}
+				
+				if (event->modifiers() && Qt::ShiftModifier) {
+					cursor.setPosition(loc+1, QTextCursor::KeepAnchor);
+				}else{
+					cursor.setPosition(loc+1);
+				}
+				
+				setTextCursor(cursor);
+			}else if (event->key() == Qt::Key_Greater || event->key() == Qt::Key_Period) {
+				int loc = findMatchingBracket(1);
+				QTextCursor cursor = textCursor();
+				
+				if (event->modifiers() && Qt::ShiftModifier) {
+					cursor.setPosition(loc, QTextCursor::KeepAnchor);
+				}else{
+					cursor.setPosition(loc);
+				}
+				
+				setTextCursor(cursor);
+			}
+		}
+	
 	if (useVIM) {
 		bool isACtrl = event->modifiers() & Qt::ControlModifier || event->modifiers() & Qt::AltModifier;
 		
 		if (!isACtrl && currentVimMode == "n"){
 			QString keyText = event->text();
-
-			if (keyText.length() == 1 && keyText[0].isDigit()){
-				vimRepeater = vimRepeater*10 + keyText[0].digitValue();
-			}
 			
 			if (event->key() == Qt::Key_I){
 				return true;
@@ -415,11 +496,9 @@ bool MyTextEdit::runForCursor(QKeyEvent *event) {
 				
 				setTextCursor(cursor);
 				vimRepeater = 0;
-			}else if (event->key() == Qt::Key_O){
+			}else if (event->key() == Qt::Key_O) {
 				executeNormalAct(QTextCursor::EndOfLine, event);
-				QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier, "");
-				QCoreApplication::postEvent(this, event);
-			}else if (event->key() == Qt::Key_S){ // surround
+			}else if (event->key() == Qt::Key_S) { // surround
 				QTextCursor cursor = textCursor();
 				QString text = toPlainText();
 				
@@ -504,6 +583,8 @@ bool MyTextEdit::runForCursor(QKeyEvent *event) {
 void MyTextEdit::keyPressEvent(QKeyEvent *event) {
 	bool ourPurpCtrl = event->modifiers() & Qt::ControlModifier || currentVimMode == "n";
 	
+	int strtvmrptr = vimRepeater;
+	
 	if (currentVimMode == "i" && useVIM){
 		if (event->key() == Qt::Key_Escape){
 			currentVimMode = "n";
@@ -540,14 +621,26 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event) {
 		}
 	}
 	
+	if (currentVimMode == "n"){
+		QString keyText = event->text();
+		
+		if (keyText.length() == 1 && keyText[0].isDigit()){
+			vimRepeater = vimRepeater*10 + keyText[0].digitValue();
+			return;
+		}
+	}
+	
 	QTextCursor maincurs = textCursor();
 	bool diddoit = runForCursor(event);
 	if (!diddoit) {
 		QTextEdit::keyPressEvent(event);
 	}
+	
 	maincurs = textCursor();
 	
 	for (int i = 0; i < additionalCursors.length(); i++) {
+		vimRepeater = strtvmrptr; // reset before next call
+		
 		QTextCursor c = additionalCursors[i];
 		setTextCursor(c);
 		bool diddoit = runForCursor(event);
@@ -562,14 +655,17 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event) {
 	
 	handleDuplicateCursors();
 	
-	if (useVIM) {
-		if (currentVimMode == "n") {
-			if (event->key() == Qt::Key_O || event->key() == Qt::Key_A || event->key() == Qt::Key_I) {
-				currentVimMode = "i";
-				setCursorWidth(1);
-				updateViewport();
-				vimRepeater = 0;
-			}
+	if (currentVimMode == "n") {
+		if (event->key() == Qt::Key_O || event->key() == Qt::Key_A || event->key() == Qt::Key_I) {
+			currentVimMode = "i";
+			setCursorWidth(1);
+			updateViewport();
+			vimRepeater = 0;
+		}
+		
+		if (event->key() == Qt::Key_O) {
+			QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier, "");
+			QCoreApplication::postEvent(this, event);
 		}
 	}
 	
