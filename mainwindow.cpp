@@ -89,6 +89,7 @@ QTextEdit *taglineEdit;
 MyTextEdit *lineNumberTextEdit;
 MyTextEdit *findTextEdit;
 MyTextEdit *replaceTextEdit;
+QCheckBox *caseSensitive;
 QTextEdit *builtinTerminalTextEdit;
 QTextEdit *builtinTerminalTextEditHORZ;
 MyTextEdit *terminalInputLine;
@@ -656,7 +657,9 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	nextButton = ui->pushButton_3;
 	replaceButton = ui->pushButton_2;
 	replaceAllButton = ui->pushButton;
-
+	
+	caseSensitive = ui->checkBox;
+	
 	findTextEdit = ui->textEdit_2;
 	replaceTextEdit = ui->textEdit_3;
 	builtinTerminalTextEdit = ui->textEdit_6;
@@ -4943,6 +4946,15 @@ void MainWindow::updateFonts() {
 	searchBar->setFont(font);
 	QApplication::processEvents(); //Lets the menubar resize
 	repositionSearchBar();
+	
+	QString sz = QString::number(findTextEdit->height());
+	
+	caseSensitive->setStyleSheet(R"(
+			QCheckBox::indicator {
+				width: )"+sz+R"(px;
+				height: )"+sz+R"(px;
+			}
+		)");
 }
 
 void MainWindow::setupCompleter() {
@@ -5573,10 +5585,14 @@ void MainWindow::findTriggered() {
 	if (find == "") {
 		return;
 	}
+	
+	auto casesensitivite = Qt::CaseInsensitive;
+	if (caseSensitive->isChecked()) {
+		casesensitivite = Qt::CaseSensitive;
+	}
 
-	int position = text.indexOf(find, 0, Qt::CaseInsensitive);
-	if (position != -1)
-	{
+	int position = text.indexOf(find, 0, casesensitivite);
+	if (position != -1) {
 		cursor.setPosition(position);
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, find.length());
 		textEdit->setTextCursor(cursor);
@@ -5612,12 +5628,17 @@ void MainWindow::previousTriggered() {
 	if (find.isEmpty()) {
 		return;
 	}
+	
+	auto casesensitivite = Qt::CaseInsensitive;
+	if (caseSensitive->isChecked()) {
+		casesensitivite = Qt::CaseSensitive;
+	}
 
 	int startPosition = cursor.position();
-	int position = text.lastIndexOf(find, startPosition - find.length() - 1, Qt::CaseInsensitive);
+	int position = text.lastIndexOf(find, startPosition - find.length() - 1, casesensitivite);
 
 	if (position == -1) {
-		position = text.lastIndexOf(find, text.length() - 1, Qt::CaseInsensitive);
+		position = text.lastIndexOf(find, text.length() - 1, casesensitivite);
 	}
 
 	if (position != -1)
@@ -5641,13 +5662,18 @@ void MainWindow::nextTriggered(bool dontRecurse) {
 	if (find == "") {
 		return;
 	}
+	
+	auto casesensitivite = Qt::CaseInsensitive;
+	if (caseSensitive->isChecked()) {
+		casesensitivite = Qt::CaseSensitive;
+	}
 
 	int startPosition = cursor.position();
 	int startAnchor = cursor.anchor();
-	int position = text.indexOf(find, startPosition, Qt::CaseInsensitive);
+	int position = text.indexOf(find, startPosition, casesensitivite);
 
 	if (position == -1) {
-		position = text.indexOf(find, 0, Qt::CaseInsensitive);
+		position = text.indexOf(find, 0, casesensitivite);
 	}
 
 	if (position != -1)
@@ -5675,14 +5701,19 @@ void MainWindow::replaceTriggered() {
 	if (find == "" || selectedText == "") {
 		return;
 	}
+	
+	auto casesensitivite = Qt::CaseInsensitive;
+	if (caseSensitive->isChecked()) {
+		casesensitivite = Qt::CaseSensitive;
+	}
 
-	if (selectedText.compare(find, Qt::CaseInsensitive) == 0)
-	{
+	if (selectedText.compare(find, casesensitivite) == 0) {
 		cursor.insertText(replace);
 		textEdit->setTextCursor(cursor);
 		nextTriggered();
 	}
 }
+
 
 void MainWindow::replaceAllTriggered() {
 	qDebug() << "replaceAllTriggered";
@@ -5693,11 +5724,16 @@ void MainWindow::replaceAllTriggered() {
 	if (find.isEmpty()) {
 		return;
 	}
+	
+	
+	auto flag = QTextDocument::FindFlags();
+	if (caseSensitive->isChecked()) {
+		flag = QTextDocument::FindCaseSensitively;
+	}
 
-	QRegularExpression re(QRegularExpression::escape(find), QRegularExpression::CaseInsensitiveOption);
 	QTextCursor docCursor(textDocument);
 
-	docCursor = textDocument->find(re, docCursor);
+	docCursor = textDocument->find(find, docCursor, flag);
 	if (docCursor.isNull()) {
 		return;
 	}
@@ -5705,7 +5741,7 @@ void MainWindow::replaceAllTriggered() {
 	docCursor.insertText(replace);
 
 	while (!docCursor.isNull() && !docCursor.atEnd()) {
-		auto c = textDocument->find(re, docCursor);
+		auto c = textDocument->find(find, docCursor, flag);
 
 		if (c.isNull()) {
 			break;
@@ -5719,6 +5755,7 @@ void MainWindow::replaceAllTriggered() {
 
 	docCursor.endEditBlock();
 }
+
 
 void MainWindow::on_actionExit_triggered() {
 	qDebug() << "on_actionExit_triggered";
@@ -7316,6 +7353,22 @@ void MainWindow::changeFindSectionVisibility(bool visible) {
 						widget2->show();
 					}else {
 						widget2->hide();
+					}
+				}
+				
+				auto* layoutItm2 = layoutItm->itemAt(j)->layout();
+				
+				if (layoutItm2) {
+					for (int x = 0; x < layoutItm2->count(); ++x) {
+						QWidget* widget3 = layoutItm2->itemAt(x)->widget();
+		
+						if (widget3) {
+							if (visible) {
+								widget3->show();
+							}else {
+								widget3->hide();
+							}
+						}
 					}
 				}
 			}
@@ -9024,6 +9077,10 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode) {
 	palette.setColor(QPalette::Base, color2);
 	findTextEdit->setPalette(palette);
 
+	palette = caseSensitive->palette();
+	palette.setColor(QPalette::Base, color2);
+	caseSensitive->setPalette(palette);
+
 	palette = taglineEdit->palette();
 	palette.setColor(QPalette::Base, color2);
 	taglineEdit->setPalette(palette);
@@ -9234,7 +9291,7 @@ void MainWindow::changeTheme(bool darkMode) {
 
 		textEdit->setContextMenuStyle(contextMenuLightSheet);
 		fileTreeContextMenu->setStyleSheet(contextMenuLightSheet);
-
+		
 		qApp->setPalette(lightPalette);
 		normalColor = QColor(0, 0, 0);
 	}
