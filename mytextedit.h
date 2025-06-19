@@ -8,6 +8,7 @@
 #include <QAction>
 #include <QContextMenuEvent>
 #include <QDebug>
+#include <qlabel.h>
 #include <qpainter.h>
 #include <QTextCursor>
 #include <QList>
@@ -38,6 +39,9 @@ public:
 	QStringList errMessages;
 	QList<int> errTypes;
 	int findMatchingBracket(int direction);
+	
+	void displayImage(const QPixmap& pixmap);
+	bool isimage;
 
 protected:
 	QString changeToTabs(QString text);
@@ -109,6 +113,21 @@ protected:
 	
 	void resizeEvent(QResizeEvent* event) override {
 		QTextEdit::resizeEvent(event);
+		
+		if (imagedisplay->isVisible()) {
+			imagedisplay->setGeometry(this->rect());
+			
+			QSize labelSize = imagedisplay->size();
+			QSize pixmapSize = pm.size();
+			auto pm2 = pm;
+			
+			if (pixmapSize.width() > labelSize.width() || pixmapSize.height() > labelSize.height()) {
+				pm2 = pm.scaled(labelSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+			}
+			
+			imagedisplay->setPixmap(pm2);
+		}
+		
 		// Call your function here
 		emit handleSizeChange(false);
 		emit anyGeometryChange();
@@ -146,6 +165,8 @@ private:
 	void executeNormalAct(QTextCursor::MoveOperation move, QKeyEvent *key_event);
 	int getCharType(QString c);
 	bool runForCursor(QKeyEvent *event);
+	QLabel *imagedisplay;
+	QPixmap pm;
 
 signals:
 	void wheelSignal(QWheelEvent* event);

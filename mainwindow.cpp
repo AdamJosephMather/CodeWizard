@@ -412,6 +412,8 @@ QPushButton *prevWebButton;
 QLineEdit *urlBar;
 
 MyTextEdit *searchBar;
+int startedPosSearchBar = -1;
+int startedAnchSearchBar = -1;
 int correctSearchBarWidth = 600; // will be multiplied by .__ so... Whatevs yo.
 QListWidget *searchMenu;
 QStringList allIndexedFiles;
@@ -443,39 +445,39 @@ QStringList previousFiles;
 
 MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
 	qDebug() << "MainWindow";
-	
+
 	firstStartup = true;
 
 	ui->setupUi(this);
-	
+
 	closeWinButton = new QPushButton(this);
 	closeWinButton->setText("X");
 	closeWinButton->hide();
-	
+
 	minWinButton = new QPushButton(this);
 	minWinButton->setText("-");
 	minWinButton->hide();
-	
+
 	windowWinButton = new QPushButton(this);
 	windowWinButton->setText("🗗");
 	windowWinButton->hide();
-	
+
 	searchBar = new MyTextEdit(this); //the size will be set by another process
 	searchBar->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	searchBar->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	searchBar->setPlaceholderText("New File");
 	searchBar->setPlainText(searchBar->placeholderText());
 	searchBar->setAlignment(Qt::AlignCenter);
-	
+
 	searchMenu = new QListWidget(this);
 	searchMenu->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	searchMenu->hide();
-	
+	hide_search_menu();
+
 	connect(searchBar, &QTextEdit::textChanged, this, [this]() {
 		narrowDownSearchFiles();
 		fillSearchMenu();
 	});
-	
+
 	connect(searchBar, &MyTextEdit::focusChange, this, [this](bool isFocused) {
 		qDebug() << "searchBar focus: " << isFocused;
 		if (isFocused) {
@@ -488,13 +490,13 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 			if (focusedWidget != searchMenu) {
 				searchBar->setPlainText(searchBar->placeholderText());
 				searchBar->setAlignment(Qt::AlignCenter);
-				searchMenu->hide();
+				hide_search_menu();
 			}
 		}
 	});
-	
+
 	connect(searchBar, &MyTextEdit::executedNormalAct, this, &MainWindow::searchNormalAct);
-	
+
 	connect(closeWinButton, &QPushButton::clicked, this, &MainWindow::on_actionExit_triggered);
 	connect(minWinButton, &QPushButton::clicked, this, [this]{
 		this->showMinimized();
@@ -503,14 +505,14 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		if (currentlyCustom) {
 			toggleDefaultTitleBar(true);
 			showNormal();
-			
+
 			QScreen *screen = this->screen();
 			QRect screenGeometry = screen->geometry();
-			
+
 			setGeometry(screenGeometry.width()+screenGeometry.x()-1230, 60, 1200, 750);
 		}
 	});
-	
+
 	// Replace with new splitters
 
 	QWidget *placeholderWidget = ui->horizontalLayout_4;  // Get the widget holding the layout
@@ -722,7 +724,6 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	menuSubLight = ui->menuLight;
 
-
 	menuSubFonts = menuFonts->addMenu("Browse Installed Fonts");
 
 	fontFamilies = QFontDatabase::families();;
@@ -747,7 +748,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	menuSubFonts->addAction(fontAction);
 
 	useTabs = ui->actionUse_File_Tabs;
-	
+
 	useRelativeLineNumbers = ui->actionUse_Relative_Line_Numbers;
 
 	useWebView = ui->actionUse_Web_View_Crtl_K;
@@ -803,7 +804,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	fileTabBar->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	fileTabBar->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	
+
 	showWarnings = ui->actionShow_Warnings;
 	showErrors = ui->actionShow_Errors;
 	showOther = ui->actionShow_Other;
@@ -1100,7 +1101,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	javaLang.defWordList = defWordListJava;
 	javaLang.fileExtensions = QStringList() << ".java" << ".xml";
 	javaLang.colorMapTS = colormapJavaTS;
-	
+
 	tsLang.name = "TS";
 	tsLang.strings = QStringList() << "\"" << "\'";
 	tsLang.stringExtensions = QStringList() << "\\" << "\\";
@@ -1176,9 +1177,9 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	codeWizForm.setForeground(codeWizCol);
 
 	setupSyntaxTreeOnOpen("");
-	
+
 	prevLineNumberForRelativity = -1;
-	
+
 	lineNumberTextEdit->setReadOnly(true);
 	lineNumberTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
 	lineNumberTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -1195,7 +1196,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 
 	connect(textEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, &MainWindow::updateScrollBarValue);
 	connect(lineNumberTextEdit, &MyTextEdit::dragEvent, this, &MainWindow::lineDragEvent);
-	
+
 	textEdit->installEventFilter(this);
 	findTextEdit->installEventFilter(this);
 	replaceTextEdit->installEventFilter(this);
@@ -1264,11 +1265,11 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(suggestionBox, &QListWidget::itemClicked, this, &MainWindow::onSuggestionItemClicked);
 	connect(actionBox, &QListWidget::itemClicked, this, &MainWindow::onActionsItemClicked);
 	connect(searchMenu, &QListWidget::itemClicked, this, &MainWindow::onSearchItemClicked);
-	
+
 	connect(lineNumberTextEdit, &MyTextEdit::handleSizeChange, this, [this](bool force) {
 		updateLineNumbers(globalLineCount);
 	});
-	
+
 	connect(textEdit, &MyTextEdit::mousePositionChanged, this, &MainWindow::handleMouseMoved);
 	connect(textEdit, &MyTextEdit::gotoDefinitionActionTriggered, this, &MainWindow::gotoDefinitionActionTriggered);
 	connect(textEdit, &MyTextEdit::renameActionTriggered, this, &MainWindow::renameActionTriggered);
@@ -1310,7 +1311,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 		c.insertText(changeToTabs(response));
 		textEdit->setTextCursor(c);
 	});
-	
+
 	updateLineNumbers(1);
 
 	//autosave
@@ -1343,18 +1344,18 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(prevWebButton, &QPushButton::clicked, this, &MainWindow::backWebView);
 
 	connect(webView, &QWebEngineView::urlChanged, this, &MainWindow::urlChanged);
-	
+
 	connect(qApp, &QApplication::aboutToQuit, [this]() {
 		qDebug() << "Application is quitting.";
-		
+
 		for (int indx = 0; indx < activeTerminals.length(); indx++) {
 			currentTerminalIndex = indx;
 			Ctrl_C();
 		}
-	
+
 		QSettings settings("FoundationTechnologies", "CodeWizard");
 		settings.setValue("wasFullScreened", (isFullScreen() || isMaximized()));
-	
+
 		lspMutex.lock();
 		if (client) {
 			client->shutdown();
@@ -1362,7 +1363,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 			client = nullptr;
 		}
 		lspMutex.unlock();
-	
+
 		if (unsaved && fileName != "") {
 			pullUpSaveDialogue();
 		}
@@ -1442,57 +1443,57 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	}
 
 	webView->setMaximumHeight(textEdit->height()-urlBar->height());
-	
+
 	textEdit->setVIM(useVimMode->isChecked());
 	searchBar->setVIM(useVimMode->isChecked());
 	findTextEdit->setVIM(useVimMode->isChecked());
 	replaceTextEdit->setVIM(useVimMode->isChecked());
 	terminalInputLine->setVIM(useVimMode->isChecked());
 	terminalInputLineHORZ->setVIM(useVimMode->isChecked());
-	
+
 	firstStartup = false;
 }
 
 void MainWindow::repositionSearchBar() {
 	qDebug() << "repositionTextEdit";
-	
+
 	if (searchBar->hasFocus()) {
 		searchBar->setAlignment(Qt::AlignLeft);
 	}else {
 		searchBar->setAlignment(Qt::AlignCenter);
 	}
-	
+
 	QMenuBar *bar = menuBar();
-	
+
 	QAction *lastAction = bar->actions().last();
 	QRect lastMenuRect = bar->actionGeometry(lastAction);  // Get menu position
 
 	int menuBarHeight = bar->height();
 	int endPos = ui->menuBar->width();
-	
+
 	int startPos = lastMenuRect.right();  // Right edge of last menu
-	
+
 	int correctWidth = correctSearchBarWidth;
 	if (endPos-startPos < correctWidth) {
 		correctWidth = endPos-startPos;
 	}
-	
+
 	int singleButtonWidth = menuBarHeight*1.5;
 	int controlButtonsWidth = singleButtonWidth*3;
-	
+
 	if (currentlyCustom) {
 		if (startPos+correctWidth > endPos-controlButtonsWidth) { // realistically, this code will _never_ be run. That's because the width of a monitor should determine codewizard's size here. (Much larger than the box thing)
 			correctWidth = endPos - (startPos+correctWidth);
 		}
-		
+
 		closeWinButton->setFixedSize(singleButtonWidth, menuBarHeight);
 		closeWinButton->move(endPos-singleButtonWidth, 0);
 		closeWinButton->show();
-		
+
 		windowWinButton->setFixedSize(singleButtonWidth, menuBarHeight);
 		windowWinButton->move(endPos-singleButtonWidth*2, 0);
 		windowWinButton->show();
-		
+
 		minWinButton->setFixedSize(singleButtonWidth, menuBarHeight);
 		minWinButton->move(endPos-singleButtonWidth*3, 0);
 		minWinButton->show();
@@ -1501,48 +1502,47 @@ void MainWindow::repositionSearchBar() {
 		windowWinButton->hide();
 		minWinButton->hide();
 	}
-	
+
 	int leftPad = correctWidth*.025;
 	correctWidth = correctWidth*.95;
-	
+
 	searchBar->setFixedSize(correctWidth, menuBar()->height());
-	
+
 	int center = (endPos+startPos)/2;
 	int searchStart = startPos+leftPad;//center-correctWidth/2;
-	
+
 	int prefferedStart = bar->width()/2-correctWidth/2;
 	if (prefferedStart >= searchStart) {
 		searchStart = prefferedStart;
 	}
-	
+
 	searchBar->move(searchStart, menuBarHeight / 2 - searchBar->height() / 2);
-	
+
 	QFontMetrics metrics(textEdit->font());
-	
+
 	searchMenu->resize(correctWidth, metrics.height()*12);
 	searchMenu->move(searchStart, menuBarHeight / 2 + searchBar->height() / 2);
 }
 
 void MainWindow::onSearchItemClicked(QListWidgetItem *item) {
 	qDebug() << "onSearchItemClicked";
-	
+
 	searchMenu->show();
 	selectedSearchFile = searchMenu->row(item);
 	searchBar->setAlignment(Qt::AlignCenter);
-	searchMenu->hide();
 	
 	runSearchItem();
 }
 
 void MainWindow::fillSearchMenu() {
 	qDebug() << "fillSearchMenu";
-	
+
 	searchMenu->clear();
-		
+
 	for (int i = 0; i < indexedFiles.length(); i++) {
 		searchMenu->addItem(displayPaths[i]);
 	}
-	
+
 	if (selectedSearchFile >= indexedFiles.length() || selectedSearchFile >= 0) {
 		selectedSearchFile = 0;
 	}
@@ -1554,11 +1554,11 @@ void MainWindow::fillSearchMenu() {
 
 QStringList MainWindow::extractStringWords(QString word) {
 	qDebug() << "extractStringWords";
-	
+
 	QStringList wordsRaw = {""};
-	
+
 	QString keepers = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0987654321.";
-	
+
 	for (QChar c : word) {
 		if (!keepers.contains(c)) {
 			wordsRaw.push_back(c);
@@ -1567,35 +1567,35 @@ QStringList MainWindow::extractStringWords(QString word) {
 			wordsRaw[wordsRaw.length()-1] += c;
 		}
 	}
-	
+
 	QStringList words;
-	
+
 	for (QString word : wordsRaw) {
 		if (!word.isEmpty() && word != " ") {
 			words.push_back(word);
 		}
 	}
-	
+
 	return words;
 }
 
 std::pair<bool, double> MainWindow::calcExpression(QString expression) { // we are going to recurse on brackets...
 	if (expression == "") return {false, 0.0};
-	
+
 	expression.replace(" ", "");
 	expression.replace(",", "");
 	expression.replace(")(", ")*(");
-	
+
 	QString allowed = "0987654321+-/*()%^.";
-	
+
 	QString newExpression = "";
-	
+
 	int openedBrackets = 0;
 	QString subExpression = "";
-	
+
 	for (QChar c : expression) {
 		if (!allowed.contains(c)) return {false, 0.0};
-		
+
 		if (c == '(') {
 			openedBrackets += 1;
 			if (openedBrackets == 1) {
@@ -1608,7 +1608,7 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression) { // we a
 			}else if (openedBrackets == 0) {
 				auto [isValid, result] = calcExpression(subExpression);
 				if (!isValid) return {false, 0.0};
-				
+
 				newExpression += QString::number(result);
 			}
 		}else if (openedBrackets != 0) {
@@ -1617,29 +1617,29 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression) { // we a
 			newExpression += c;
 		}
 	}
-	
+
 	if (openedBrackets != 0) return {false, 0.0};
-	
+
 	// our resulting expression will no longer contain brackets. They have been recursively removed. And replaced with numbers. (note they are decimal numbers)
 	// thus we just need to do a work from left to right where we find the ops in "b e dm as" order.
-	
+
 	// the plan is to itterate over the expression 3 times, we already did b. So we'll do exponents, dm, and as.
-	
+
 	QString val1;
 	QString val2;
-	
+
 	QString afterItterationExpression = "";
-	
+
 	QString partsOfDigit = "0987654321.";
-	
+
 	while (newExpression.contains("^")) {
 		QStringList parts = newExpression.split("^");
 		QString p1 = parts[0];
 		QString p2 = parts[1];
-		
+
 		QString trueDig1 = "";
 		QString trueDig2 = "";
-		
+
 		bool seenDot = false;
 		for (int i = p1.length()-1; i >= 0; i--) {
 			QChar c = p1.at(i);
@@ -1650,10 +1650,10 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression) { // we a
 				trueDig1 = c + trueDig1;
 				break;
 			}else if (!c.isDigit()) break;
-			
+
 			trueDig1 = c + trueDig1;
 		}
-		
+
 		seenDot = false;
 		bool added = false;
 		for (int i = 0; i < p2.length(); i++) {
@@ -1663,37 +1663,37 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression) { // we a
 				seenDot = true;
 			}else if (c == '-' && !added) {
 			}else if (!c.isDigit()) break;
-			
+
 			trueDig2 += c;
 			if (c != '-') {
 				added = true;
 			}
 		}
-		
+
 		bool ok;
 		double v1 = trueDig1.toDouble(&ok);
 		if (!ok) return {false, 0.0};
 		double v2 = trueDig2.toDouble(&ok);
 		if (!ok) return {false, 0.0};
-		
+
 		double res = pow(v1, v2);
-		
+
 		QString startedWith = trueDig1+"^"+trueDig2;
-		
+
 		int index = newExpression.indexOf(startedWith);
 		if (index != -1) {
 			newExpression = newExpression.left(index) + QString::number(res, 'f', 2) + newExpression.mid(index + startedWith.length());
 		}
 	}
-	
+
 	while (newExpression.contains("*")) {
 		QStringList parts = newExpression.split("*");
 		QString p1 = parts[0];
 		QString p2 = parts[1];
-		
+
 		QString trueDig1 = "";
 		QString trueDig2 = "";
-		
+
 		bool seenDot = false;
 		for (int i = p1.length()-1; i >= 0; i--) {
 			QChar c = p1.at(i);
@@ -1701,10 +1701,10 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression) { // we a
 				if (seenDot) return {false, 0.0};
 				seenDot = true;
 			}else if (!c.isDigit()) break;
-			
+
 			trueDig1 = c + trueDig1;
 		}
-		
+
 		seenDot = false;
 		bool added = false;
 		for (int i = 0; i < p2.length(); i++) {
@@ -1714,37 +1714,37 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression) { // we a
 				seenDot = true;
 			}else if (c == '-' && !added) {
 			}else if (!c.isDigit()) break;
-			
+
 			trueDig2 += c;
 			if (c != '-') {
 				added = true;
 			}
 		}
-		
+
 		bool ok;
 		double v1 = trueDig1.toDouble(&ok);
 		if (!ok) return {false, 0.0};
 		double v2 = trueDig2.toDouble(&ok);
 		if (!ok) return {false, 0.0};
-		
+
 		double res = v1*v2;
-		
+
 		QString startedWith = trueDig1+"*"+trueDig2;
-		
+
 		int index = newExpression.indexOf(startedWith);
 		if (index != -1) {
 			newExpression = newExpression.left(index) + QString::number(res, 'f', 2) + newExpression.mid(index + startedWith.length());
 		}
 	}
-	
+
 	while (newExpression.contains("/")) {
 		QStringList parts = newExpression.split("/");
 		QString p1 = parts[0];
 		QString p2 = parts[1];
-		
+
 		QString trueDig1 = "";
 		QString trueDig2 = "";
-		
+
 		bool seenDot = false;
 		for (int i = p1.length()-1; i >= 0; i--) {
 			QChar c = p1.at(i);
@@ -1752,10 +1752,10 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression) { // we a
 				if (seenDot) return {false, 0.0};
 				seenDot = true;
 			}else if (!c.isDigit()) break;
-			
+
 			trueDig1 = c + trueDig1;
 		}
-		
+
 		seenDot = false;
 		bool added = false;
 		for (int i = 0; i < p2.length(); i++) {
@@ -1765,39 +1765,39 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression) { // we a
 				seenDot = true;
 			}else if (c == '-' && !added) {
 			}else if (!c.isDigit()) break;
-			
+
 			trueDig2 += c;
 			if (c != '-') {
 				added = true;
 			}
 		}
-		
+
 		bool ok;
 		double v1 = trueDig1.toDouble(&ok);
 		if (!ok) return {false, 0.0};
 		double v2 = trueDig2.toDouble(&ok);
 		if (!ok) return {false, 0.0};
-		
+
 		if (v2 == 0) return {false, 0.0};
-		
+
 		double res = v1/v2;
-		
+
 		QString startedWith = trueDig1+"/"+trueDig2;
-		
+
 		int index = newExpression.indexOf(startedWith);
 		if (index != -1) {
 			newExpression = newExpression.left(index) + QString::number(res, 'f', 2) + newExpression.mid(index + startedWith.length());
 		}
 	}
-	
+
 	while (newExpression.contains("%")) {
 		QStringList parts = newExpression.split("%");
 		QString p1 = parts[0];
 		QString p2 = parts[1];
-		
+
 		QString trueDig1 = "";
 		QString trueDig2 = "";
-		
+
 		bool seenDot = false;
 		for (int i = p1.length()-1; i >= 0; i--) {
 			QChar c = p1.at(i);
@@ -1805,10 +1805,10 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression) { // we a
 				if (seenDot) return {false, 0.0};
 				seenDot = true;
 			}else if (!c.isDigit()) break;
-			
+
 			trueDig1 = c + trueDig1;
 		}
-		
+
 		seenDot = false;
 		bool added = false;
 		for (int i = 0; i < p2.length(); i++) {
@@ -1818,44 +1818,44 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression) { // we a
 				seenDot = true;
 			}else if (c == '-' && !added) {
 			}else if (!c.isDigit()) break;
-			
+
 			trueDig2 += c;
 			if (c != '-') {
 				added = true;
 			}
 		}
-		
+
 		bool ok;
 		double v1 = trueDig1.toDouble(&ok);
 		if (!ok) return {false, 0.0};
 		double v2 = trueDig2.toDouble(&ok);
 		if (!ok) return {false, 0.0};
-		
+
 		if (v2 == 0) return {false, 0.0};
-		
+
 		double res = std::fmod(v1, v2);
-		
+
 		QString startedWith = trueDig1+"%"+trueDig2;
-		
+
 		int index = newExpression.indexOf(startedWith);
 		if (index != -1) {
 			newExpression = newExpression.left(index) + QString::number(res, 'f', 2) + newExpression.mid(index + startedWith.length());
 		}
 	}
-	
+
 	while (newExpression.contains("--") || newExpression.contains("++") || newExpression.contains("+-")) {
 		if (newExpression.contains("--")) newExpression.replace("--", "+");
 		if (newExpression.contains("++")) newExpression.replace("++", "+");
 		if (newExpression.contains("+-")) newExpression.replace("+-", "-");
 	}
-	
+
 	double runningTotal = 0.0;
 	QString next;
 	QString op;
-	
+
 	for (int i = 0; i < newExpression.length(); i++) {
 		QChar c = newExpression[i];
-		
+
 		if (c.isDigit() || c == '.') {
 			next += c;
 		}
@@ -1865,7 +1865,7 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression) { // we a
 			if (next == "") {
 				nextDub = 0;
 			}else if (!ok) return {false, 0.0};
-			
+
 			if (op == "") {
 				runningTotal = nextDub;
 				next = "";
@@ -1875,14 +1875,14 @@ std::pair<bool, double> MainWindow::calcExpression(QString expression) { // we a
 				}else {
 					runningTotal -= nextDub;
 				}
-				
+
 				next = "";
 			}
-			
+
 			op = c;
 		}
 	}
-	
+
 	return {true, runningTotal};
 }
 
@@ -1890,25 +1890,25 @@ void MainWindow::narrowDownSearchFiles() {
 	indexedFiles.clear();
 	indexedFilesPath.clear();
 	displayPaths.clear();
-	
+
 	int currentCount = 0;
 	int maxCount = 500;
-	
+
 	QString starterText = searchBar->toPlainText().toLower();
-	
+
 	auto [isValid, result] = calcExpression(starterText);
-	
+
 	QString cpy = starterText;
 	cpy.replace(" ", "");
-	
+
 	if (isValid && QString::number(result, 'f', 2) != cpy) {
 		indexedFilesPath.push_back("/.CodeWiz./MoveResultToTop");
 		displayPaths.push_back(cpy + " = " + QString::number(result));
 		indexedFiles.push_back(QString::number(result));
 	}
-	
+
 	QStringList words = extractStringWords(starterText);
-	
+
 	for (int i = 0; i < allIndexedFiles.length(); i++) {
 		bool works = true;
 		QString lowered = allIndexedFiles[i].toLower();
@@ -1928,33 +1928,82 @@ void MainWindow::narrowDownSearchFiles() {
 			}
 		}
 	}
+	
+	if (starterText.startsWith("*") && starterText.length() != 1) {
+		QString text = textEdit->toPlainText();
+		QTextCursor cursor = textEdit->textCursor();
+		QString find = starterText.mid(1);
+		
+		if (startedPosSearchBar == -1) {
+			startedPosSearchBar = cursor.position();
+			startedAnchSearchBar = cursor.anchor();
+		}
+		
+		int startPosition = cursor.anchor();
+		int position = text.indexOf(find, startPosition, Qt::CaseInsensitive);
+		
+		if (position == -1) {
+			position = text.indexOf(find, 0, Qt::CaseInsensitive);
+		}
+	
+		if (position != -1) {
+			textEdit->setUpdatesEnabled(false);
+			textEdit->horizontalScrollBar()->setValue(0);
+			
+			cursor.setPosition(position);
+			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, find.length());
+			
+			textEdit->setTextCursor(cursor);
+			textEdit->setUpdatesEnabled(true);
+			
+			indexedFilesPath.push_back("/.CodeWiz./DropCursor");
+			displayPaths.push_back(starterText);
+			indexedFiles.push_back(starterText);
+		}else { // couldn't find new place to put the cursor so let's put it where it started.
+			auto curs = textEdit->textCursor();
+			
+			if (curs.position() != startedPosSearchBar || curs.anchor() != startedAnchSearchBar){
+				curs.setPosition(startedAnchSearchBar);
+				curs.setPosition(startedPosSearchBar, QTextCursor::KeepAnchor);
+				textEdit->setTextCursor(curs);
+			}
+		}
+	}else if (startedPosSearchBar != -1) {
+		auto curs = textEdit->textCursor();
+		
+		if (curs.position() != startedPosSearchBar || curs.anchor() != startedAnchSearchBar){
+			curs.setPosition(startedAnchSearchBar);
+			curs.setPosition(startedPosSearchBar, QTextCursor::KeepAnchor);
+			textEdit->setTextCursor(curs);
+		}
+	}
 }
 
 void MainWindow::indexFiles() {
 	qDebug() << "indexFiles";
-	
+
 	allIndexedFiles.clear();
 	allDisplayPaths.clear();
 	allIndexedFilesPath.clear();
-	
+
 	QStringList files;
 	QQueue<QString> queue;
 	QString rootPath = fileModel->rootPath();
 	int starterPathLen = rootPath.length()+1;
 	queue.enqueue(rootPath);
-	
+
 	int maxFiles = 3000; // rough max number of files to see, prevents C:/ from breaking it
 	int seen = 0;
-	
+
 	QFontMetrics metrics(textEdit->font());
-	
+
 	int maxLen = searchMenu->width()/metrics.horizontalAdvance("M") - 1;
-	
+
 	searchMenu->clear();
 	searchMenu->show();
 	searchBar->setPlainText("");
 	searchBar->setAlignment(Qt::AlignLeft);
-	
+
 	bool notDoneAdding = true;
 
 	while (!queue.isEmpty()) { // very nice - bfs
@@ -1967,7 +2016,7 @@ void MainWindow::indexFiles() {
 				queue.enqueue(entry.absoluteFilePath());
 			}else {
 				allIndexedFilesPath.append(entry.absoluteFilePath());
-				
+
 				QString relativePath = entry.absoluteFilePath().mid(starterPathLen).trimmed();
 				if (relativePath.length() > maxLen) {
 					relativePath = relativePath.mid(relativePath.length()-maxLen);
@@ -1976,9 +2025,9 @@ void MainWindow::indexFiles() {
 						relativePath = relativePath.mid(indx);
 					}
 				}
-				
+
 				allDisplayPaths.append(relativePath);
-				
+
 				if (seen < 30) {
 					searchMenu->addItem(relativePath); // this here is a way to fill the menu really fast, for large file systems. Makes it feel instantanous.
 				}else if (notDoneAdding) {
@@ -1986,28 +2035,27 @@ void MainWindow::indexFiles() {
 					QApplication::processEvents();
 					notDoneAdding = false;
 				}
-				
+
 				allIndexedFiles.append(entry.fileName());
 				seen ++;
 			}
 		}
-		
+
 		if (seen >= maxFiles) {
 			break;
 		}
 	}
-	
+
 	QStringList commands = {"Dark Mode", "Light Mode", "Increase Text Size", "Decrease Text Size", "Reset Text Size", "Set Syntax Colors", "Set Tint Colors", "Toggle Use File Tabs", "Toggle Use Vim Mode", "Toggle Use Builtin Terminal", "Toggle Terminal Positioning", "Toggle Auto Add Brackets", "Fix It", "Convert To Spaces", "Toggle Vim Mode", "Reset LSP", "Quit", "Toggle No Autocomplete", "Toggle Only CodeWizard Autocomplete", "Toggle LSP Show Errors", "Toggle LSP Show Other", "Toggle LSP Show Warnings", "Lang: Python", "Lang: C", "Lang: C#", "Lang: C++", "Lang: JS", "Lang: TS", "Lang: CSS", "Lang: HTML", "Lang: Go", "Lang: Rust", "Lang: Lua", "Lang: Plaintext", "Lang: Cobol", "Lang: GLSL", "Lang: WGSL", "Lang: Java", "Git Push", "Git Pull", "Git Force Pull", "Toggle Use Relative Line Numbers", "Set Project Specific Settings", "Set CodeWizard UUID"};
-	
+
 	for (QString cmd : commands) {
 		allIndexedFilesPath << ":"+cmd;
 		allIndexedFiles << ":"+cmd;
 		allDisplayPaths << ":"+cmd;
 	}
-	
-	
+
 	selectedSearchFile = 0;
-	
+
 	narrowDownSearchFiles();
 	fillSearchMenu();
 }
@@ -2028,11 +2076,11 @@ void MainWindow::on_actionSet_CodeWizard_UUID_triggered() {
 
 QString MainWindow::getProjectSettingsPath() {
 	qDebug() << "getProjectSettingsPath";
-	
+
 	if (!fileModel) {
 		return "";
 	}
-	
+
 	QString starterpath = fileModel->rootPath();
 	QString fileName = CODEWIZARD_UUID+".cdwzrd";
 	QString joined = starterpath + QDir::separator() + fileName;
@@ -2041,17 +2089,17 @@ QString MainWindow::getProjectSettingsPath() {
 
 QString MainWindow::getProjectDataFrom(QString file_path, QString key) {
 	qDebug() << "getProjectDataFrom";
-	
+
 	if (file_path == "") {
 		return "";
 	}
-	
+
 	QFile file(file_path);
 	if (file.open(QFile::ReadOnly | QFile::Text)) {
 		QTextStream in(&file);
 		QString contents = in.readAll();
 		file.close();
-		
+
 		QStringList data = contents.split("\n");
 		for (QString line : data) {
 			if (line.startsWith(key + ": ")) {
@@ -2059,17 +2107,17 @@ QString MainWindow::getProjectDataFrom(QString file_path, QString key) {
 			}
 		}
 	}
-	
+
 	return "";
 }
 
 void MainWindow::setProjectData(QString path, QStringList names, QStringList values) {
 	qDebug() << "setProjectData";
-	
+
 	if (path == "") {
 		return;
 	}
-	
+
 	QFile file(path);
 	if (file.open(QFile::WriteOnly | QFile::Text)) {
 		QTextStream out(&file);
@@ -2084,55 +2132,55 @@ void MainWindow::setProjectData(QString path, QStringList names, QStringList val
 
 void MainWindow::on_actionProject_Specific_Settings_triggered() {
 	qDebug() << "actionProject_Specific_Settings_triggered";
-	
+
 	QString project_settings_path = getProjectSettingsPath();
-	
+
 	QString current_tagline_proj = getProjectDataFrom(project_settings_path, "tagline");
 	QString current_lspline_proj = getProjectDataFrom(project_settings_path, "lspline");
-	
+
 	QDialog diag = QDialog(this);
 	QVBoxLayout *layout = new QVBoxLayout(this);
-	
+
 	// tag line
 	QLabel *label = new QLabel(this);
 	label->setText("Tagline (build command - empty is default):");
 	label->setFont(textEdit->font());
-	
+
 	QTextEdit *tagline_textedit = new QTextEdit(this);
 	tagline_textedit->setPlaceholderText("");
 	tagline_textedit->setText(current_tagline_proj);
 	tagline_textedit->setFont(textEdit->font());
-	
+
 	layout->addWidget(label);
 	layout->addWidget(tagline_textedit);
-	
+
 	// lsp
 	QLabel *label2 = new QLabel(this);
 	label2->setText("LSP (start command - empty is default):");
 	label2->setFont(textEdit->font());
-	
+
 	QTextEdit *lsp_textedit = new QTextEdit(this);
 	lsp_textedit->setPlaceholderText("");
 	lsp_textedit->setText(current_lspline_proj);
 	lsp_textedit->setFont(textEdit->font());
-	
+
 	layout->addWidget(label2);
 	layout->addWidget(lsp_textedit);
-	
+
 	// Create a QPushButton
 	QPushButton *saveButton = new QPushButton("Save Project Settings", this);
 	saveButton->setFont(textEdit->font());
-	
+
 	connect(saveButton, &QPushButton::clicked, this, [this, tagline_textedit, lsp_textedit, project_settings_path]() {
 		qDebug() << "saveButton lambda called";
-		
+
 		setProjectData(project_settings_path, QStringList() << "tagline" << "lspline", QStringList() << tagline_textedit->toPlainText() << lsp_textedit->toPlainText());
 	});
-	
+
 	wantedTheme();
-	
+
 	layout->addWidget(saveButton);
-	
+
 	diag.setLayout(layout);
 	diag.exec();
 }
@@ -2140,14 +2188,19 @@ void MainWindow::on_actionProject_Specific_Settings_triggered() {
 void MainWindow::runSearchItem() {
 	qDebug() << "runSearchItem";
 	QString cmd = indexedFilesPath[selectedSearchFile];
-	
+
 	if (cmd == "") {
+		hide_search_menu();
 		return;
 	}else if(cmd == "/.CodeWiz./MoveResultToTop") {
 		QTextCursor cursor = searchBar->textCursor();
 		cursor.select(QTextCursor::Document);
 		cursor.insertText(indexedFiles[selectedSearchFile]);
 		searchBar->setTextCursor(cursor);
+		hide_search_menu();
+		return;
+	}else if (cmd == "/.CodeWiz./DropCursor"){
+		hide_search_menu(false);
 		return;
 	}
 	
@@ -2195,12 +2248,14 @@ void MainWindow::runSearchItem() {
 		if (cmd == ":Git Force Pull") on_actionDiscard_Local_Changes_triggered();
 		if (cmd == ":Set Project Specific Settings") on_actionProject_Specific_Settings_triggered();
 		if (cmd == ":Set CodeWizard UUID") on_actionSet_CodeWizard_UUID_triggered();
-		
+		hide_search_menu();
+		return;
 	}else {
 		globalArgFileName = cmd;
 		textEdit->setFocus();
 		searchBar->setPlainText("");
 		on_actionOpen_triggered();
+		hide_search_menu();
 	}
 }
 
@@ -2211,21 +2266,21 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 
 void MainWindow::lineDragEvent(QPoint start, QPoint end, bool startODrag, bool endODrag) {
 	qDebug() << "lineDragEvent";
-	
+
 	QTextCursor sCur = lineNumberTextEdit->cursorForPosition(start);
 	QTextCursor eCur = lineNumberTextEdit->cursorForPosition(end);
-	
+
 	QFontMetrics fm(lineNumberTextEdit->font());
 	int lineHeight = fm.lineSpacing();
 	int numberOfLinesNeeded = floor(lineNumberTextEdit->height()/lineHeight)+2;
-	
+
 	int textEditScrolledTo = textEdit->verticalScrollBar()->value();
 	int topLine = floor(textEditScrolledTo/lineHeight); // 0 based
-	
+
 	if (startODrag) {
 		startLineDrag = sCur.blockNumber()+topLine;
 	}
-	
+
 	int sLine = startLineDrag;
 	int eLine = eCur.blockNumber()+topLine;
 
@@ -2317,22 +2372,22 @@ QColor MainWindow::getTintedColor(int r, int g, int b) {
 	if (tintColor == "255,255,255") {
 		return QColor(r,g,b);
 	}
-	
+
 	float brightness = 0.299*(r/255.0)+0.587*(g/255.0)+0.114*(b/255.0);
-	
+
 	QStringList clrs = tintColor.split(",");
 	int r2 = clrs[0].toInt();
 	int g2 = clrs[1].toInt();
 	int b2 = clrs[2].toInt();
-	
+
 	float brightnes2 = 0.299*(r2/255.0)+0.587*(g2/255.0)+0.114*(b2/255.0);
-	
+
 	float scale = (brightness/brightnes2+brightness*2)/3; // stagger it closer to the first meassurement because it looks better.
-	
+
 	int newR = fmin(255, r2*scale);
 	int newG = fmin(255, g2*scale);
 	int newB = fmin(255, b2*scale);
-	
+
 	return QColor(newR, newG, newB);
 }
 
@@ -2569,7 +2624,7 @@ void MainWindow::moveWidgetsToSplitter(QLayout *layout, QWidget *toWidget) {
 
 void MainWindow::changeEvent(QEvent *event) {
 	qDebug() << "changeEvent";
-	
+
 	if (event->type() == QEvent::ActivationChange) {
 		if (this->isActiveWindow()) {
 			qDebug() << "returnedToCodeWizard";
@@ -2595,7 +2650,7 @@ void MainWindow::changeEvent(QEvent *event) {
 			QTextStream in(&file);
 			QString fileContent = in.readAll();
 
-			if (fileContent != toCompareTo && toCompareTo != "NOCOMPARISONYET_CODEWIZARD_WARNING - <THEENDISNIGH>") {
+			if (fileContent != toCompareTo && toCompareTo != "NOCOMPARISONYET_CODEWIZARD_WARNING - <THEENDISNIGH>" && !textEdit->isimage) {
 				if (useSpeakerAction->isChecked()) {
 					#ifdef _WIN32
 						speech->say("Detected change in file, reload?");
@@ -2607,7 +2662,7 @@ void MainWindow::changeEvent(QEvent *event) {
 			handlingReopen = false;
 		}else {
 			qDebug() << "leftCodeWizard";
-			if (fileName.isEmpty()) {
+			if (fileName.isEmpty() || textEdit->isimage) {
 				handlingReopen = false;
 				return;
 			}
@@ -2623,21 +2678,21 @@ void MainWindow::changeEvent(QEvent *event) {
 			toCompareTo = in.readAll();
 		}
 	}
-	
+
 	if (event->type() == QEvent::WindowStateChange) {
 		auto *stateEvt = static_cast<QWindowStateChangeEvent*>(event);
 		Qt::WindowStates newState = windowState();
 		Qt::WindowStates oldState = stateEvt->oldState();
-		
+
 		if (currentlyCustom && !actionUseCustomBar->isChecked()) {
 			toggleDefaultTitleBar(true);
 			showNormal();
 			repositionSearchBar();
 		}
-		
+
 		if (actionUseCustomBar->isChecked()) {
 			bool becomingFullScreen =  (newState & (Qt::WindowFullScreen | Qt::WindowMaximized)) && !(oldState & (Qt::WindowFullScreen | Qt::WindowMaximized));
-			
+
 			if (!currentlyCustom && becomingFullScreen) {
 				toggleDefaultTitleBar(false); // rid us of that awful default one...
 				showMaximized();
@@ -2645,13 +2700,13 @@ void MainWindow::changeEvent(QEvent *event) {
 			}
 		}
 	}
-	
+
 	QMainWindow::changeEvent(event);
 }
 
 void MainWindow::toggleDefaultTitleBar(bool show) {
 	qDebug() << "toggleTitleBar " << show << currentlyCustom;
-	
+
 	Qt::WindowFlags currentFlags = windowFlags();
 
 	if (show) {
@@ -2667,7 +2722,7 @@ void MainWindow::toggleDefaultTitleBar(bool show) {
 
 void MainWindow::useCustomBarTriggered() {
 	qDebug() << "useCustomBarTriggered";
-	
+
 	if (!actionUseCustomBar->isChecked()) {
 		if (currentlyCustom) {
 			toggleDefaultTitleBar(true);
@@ -2677,9 +2732,9 @@ void MainWindow::useCustomBarTriggered() {
 		toggleDefaultTitleBar(false);
 		showMaximized();
 	}
-	
+
 	repositionSearchBar();
-	
+
 	saveWantedTheme();
 }
 
@@ -2698,7 +2753,7 @@ void MainWindow::pullUpReloadDialogue(QString message, QString content) {
 		globalArgFileName = fileName;
 		auto value = textEdit->verticalScrollBar()->value();
 		auto cursorPos = textEdit->textCursor().position();
-		
+
 		textEdit->setPlainText(content);
 		textEdit->verticalScrollBar()->setValue(value);
 		auto crsr = textEdit->textCursor();
@@ -2794,7 +2849,7 @@ void MainWindow::handleTerminalStdout(int index) {
 
 void MainWindow::useVimModesTriggered() {
 	qDebug() << "useVimModesTriggered";
-	
+
 	textEdit->setVIM(useVimMode->isChecked());
 	searchBar->setVIM(useVimMode->isChecked());
 	findTextEdit->setVIM(useVimMode->isChecked());
@@ -2887,6 +2942,31 @@ void MainWindow::useBuiltinTerminalTriggered() {
 
 	updateTermimalViews();
 	saveWantedTheme();
+}
+
+void MainWindow::hide_search_menu(bool resetpos) {
+	qDebug() << "hide_search_menu " << resetpos;
+	
+	searchMenu->hide();
+	
+	if(!textEdit){
+		startedAnchSearchBar = -1;
+		startedPosSearchBar = -1;
+		return;
+	}
+	
+	if (resetpos && startedPosSearchBar != -1 && startedAnchSearchBar != -1) {
+		qDebug() << "resetting pos";
+		auto curs = textEdit->textCursor();
+		curs.setPosition(startedAnchSearchBar);
+		curs.setPosition(startedPosSearchBar, QTextCursor::KeepAnchor);
+		textEdit->setTextCursor(curs);
+	}
+	
+	startedAnchSearchBar = -1;
+	startedPosSearchBar = -1;
+	
+	textEdit->setFocus();
 }
 
 void MainWindow::on_actionDiscard_Local_Changes_triggered() {
@@ -3124,7 +3204,7 @@ void MainWindow::on_actionCompare_2_Files_triggered() {
 	setupSyntaxTreeOnOpen(fileContent); // must be before setPlainText - don't ask why - I could tell you though...
 
 	highlightDiagnostics(true);
-	
+
 	textEdit->setPlainText(fileContent);
 	toCompareTo = fileContent;
 	textEdit->additionalCursors.clear();
@@ -3216,7 +3296,7 @@ void MainWindow::updateMargins(bool force) {
 
 void MainWindow::on_actionSet_Tint_Color_triggered() {
 	qDebug() << "on_actionSet_Tint_Color_triggered";
-	
+
 	QInputDialog dialog;
 	dialog.setFont(textEdit->font());  // Set the font to match textEdit's font
 	dialog.setWindowTitle("Set Tint Color");
@@ -3231,17 +3311,17 @@ void MainWindow::on_actionSet_Tint_Color_triggered() {
 
 	QString newcolor = dialog.textValue();
 	newcolor = newcolor.replace(" ", "");
-	
+
 	if (newcolor == "") {
 		newcolor = "255,255,255";
 	}
-	
+
 	QStringList lst = newcolor.split(',');
 	if (lst.count() != 3) {
 		openHelpMenu("Did not find 3 values");
 		return;
 	}
-	
+
 	for (QString j : lst) {
 		try {
 			int num = j.toInt();
@@ -3254,7 +3334,7 @@ void MainWindow::on_actionSet_Tint_Color_triggered() {
 			return;
 		}
 	}
-	
+
 	tintColor = newcolor;
 	saveWantedTheme();
 	changeTheme(darkmode);
@@ -3531,7 +3611,7 @@ void MainWindow::setFormatsFromMyList(QString str) {
 
 	coloredFormats = {};
 	coloredFormats.append(QTextCharFormat());
-	
+
 	int i = 0;
 	for(const QString color : str.split("|")) {
 		QStringList nums = color.split(",");
@@ -3593,7 +3673,7 @@ void MainWindow::validateAndConvert() {
 		form.setForeground(QColor(hex));
 		coloredFormats.append(form);
 	}
-	
+
 	treeParserSyntaxHighlighter.setFormats(coloredFormats);
 	saveWantedTheme();
 	rehighlightFullDoc();
@@ -3686,7 +3766,7 @@ void MainWindow::onContentsChange(int position, int charsRemoved, int charsAdded
 void MainWindow::printTree(TSNode node, int depth) {
 	// Indent based on depth
 	QString indent = QString(depth * 2, ' ');
-	
+
 	// Get the node type and text range
 	const char* nodeType = ts_node_type(node);
 	uint32_t startByte = ts_node_start_byte(node);
@@ -3781,7 +3861,7 @@ void MainWindow::openFileTreeContextMenu(const QPoint &pos) {
 
 void MainWindow::onWindowStateChanged() {
 	qDebug() << "onWindowStateChanged";
-	
+
 	if (useFileTree->isChecked() || useFileTreeIfFullscreen->isChecked() && (isFullScreen() || isMaximized())) {
 		fileTree->show();
 	}else {
@@ -4079,16 +4159,16 @@ void MainWindow::handleMouseMoved(QPoint pos) {
 
 void MainWindow::onSuggestionItemClicked(QListWidgetItem* item) {
 	qDebug() << "onSuggestionItemClicked";
-	
+
 	currentSelection = suggestionBox->row(item);
-	
+
 	insertCompletion();
 	fillSuggestions();
 }
 
 void MainWindow::onActionsItemClicked(QListWidgetItem* item) {
 	qDebug() << "onActionsItemClicked";
-	
+
 	currentSelectionAction = actionBox->row(item);
 	fillActionsBox();
 	activateCodeAction();
@@ -4269,7 +4349,7 @@ void MainWindow::setupLSP(QString oldFile) {
 	}else if (currentLang.name == "Css") {
 		lspPath = cssLSP;
 	}
-	
+
 	QString settings_path = getProjectSettingsPath();
 	QString proj_lsp = getProjectDataFrom(settings_path, "lspline");
 	if (proj_lsp != "") {
@@ -4327,13 +4407,13 @@ void MainWindow::setupLSP(QString oldFile) {
 		errMenu.UpdateErrors(startL, messages, severity);
 
 		highlightDiagnostics(false);
-		
+
 		textEdit->errLineNums.clear();
 		textEdit->errMessages.clear();
 		textEdit->errTypes.clear();
-		
+
 		QList<int> seenLineNums;
-		
+
 		QList<int> allowedSeverities;
 		if (showErrors->isChecked()) {
 			allowedSeverities.append(1);
@@ -4345,20 +4425,20 @@ void MainWindow::setupLSP(QString oldFile) {
 			allowedSeverities.append(3);
 			allowedSeverities.append(4);
 		}
-		
+
 		for (int i = messages.length()-1; i >= 0; i--) { // we go backwards so that the errors are hit first, we sorted them in the languageserverclient.
 			if (seenLineNums.contains(errStartL[i]) || !allowedSeverities.contains(errSeverity[i])) {
 				continue;
 			}
-			
+
 			seenLineNums.push_back(errStartL[i]);
 			QString msg = messages[i];
-			
+
 			textEdit->errMessages.push_back(msg.split("\n")[0]);
 			textEdit->errLineNums.push_back(errStartL[i]);
 			textEdit->errTypes.push_back(errSeverity[i]);
 		}
-		
+
 		isErrorHighlighted = true;
 	});
 
@@ -4507,7 +4587,7 @@ void MainWindow::fillActionsBox() {
 		QString copiedString = codeActions[i].toObject()["title"].toString();
 		actionBox->addItem(copiedString);
 	}
-	
+
 	if (currentSelectionAction >= codeActions.count() || currentSelectionAction >= 0) {
 		currentSelectionAction = 0;
 	}
@@ -4736,7 +4816,7 @@ void MainWindow::updateFonts() {
 	replaceTextEdit->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
 	replaceTextEdit->setMinimumHeight(adjustedHeight);
 	replaceTextEdit->setMaximumHeight(adjustedHeight);
-	
+
 	terminalInputLine->setFont(font);
 	terminalInputLine->setTabStopDistance(tabWidth * metrics.horizontalAdvance(' '));
 	terminalInputLine->setMinimumHeight(adjustedHeight);
@@ -4802,13 +4882,13 @@ void MainWindow::updateFonts() {
 	actionBox->setFont(font);
 	hoverBox->setFont(font);
 	searchMenu->setFont(font);
-	
+
 	closeWinButton->setFont(font);
 	minWinButton->setFont(font);
 	windowWinButton->setFont(font);
 
 	fileTree->setFont(font);
-	
+
 	fontList->setFont(font);
 
 	//I hate this
@@ -4830,22 +4910,22 @@ void MainWindow::updateFonts() {
 	for (TabWidget *tab : tabs) {
 		tab->stFnt(font);
 	}
-	
+
 	fileTabBar->setFixedHeight(metrics.height()+6);
-	
+
 	nextWebButton->setFont(font);
 	prevWebButton->setFont(font);
 	reloadButton->setFont(font);
-	
+
 	nextWebButton->setFixedWidth(reloadButton->height());
 	prevWebButton->setFixedWidth(reloadButton->height());
 	reloadButton->setFixedWidth(reloadButton->height());
-	
+
 	nextWebButton->setFixedHeight(reloadButton->height());
 	prevWebButton->setFixedHeight(reloadButton->height());
 	reloadButton->setFixedHeight(reloadButton->height());
 	urlBar->setFixedHeight(reloadButton->height());
-	
+
 	prevTerm1->setFont(font);
 	nextTerm1->setFont(font);
 	addTerm1->setFont(font);
@@ -4859,7 +4939,7 @@ void MainWindow::updateFonts() {
 	prevTerm2->setFixedWidth(prevTerm1->height());
 	nextTerm2->setFixedWidth(prevTerm1->height());
 	addTerm2->setFixedWidth(prevTerm1->height());
-	
+
 	searchBar->setFont(font);
 	QApplication::processEvents(); //Lets the menubar resize
 	repositionSearchBar();
@@ -4951,11 +5031,11 @@ void MainWindow::fillSuggestions() {
 		copiedString.replace("\n", " ");
 		suggestionBox->addItem(copiedString);
 	}
-	
+
 	if (currentSelection < suggestion.length() && currentSelection >= 0) {
 		currentSelection = 0;
 	}
-	
+
 	suggestionBox->setCurrentRow(currentSelection);
 	suggestionBox->update();
 }
@@ -5093,7 +5173,7 @@ void MainWindow::saveWantedTheme() {
 	if (coloredFormats.length() == 9) {
 		settings.setValue("syntaxColors", str);
 	}
-	
+
 	settings.setValue("tintColor", tintColor);
 	settings.setValue("groqApiKey", groqApiKey);
 	settings.setValue("fontSize", fontSize);
@@ -5140,9 +5220,9 @@ bool MainWindow::wantedTheme() {
 
 	QSettings settings("FoundationTechnologies", "CodeWizard");
 	bool exists = settings.value("variablesSet", false).toBool();
-	
+
 	CODEWIZARD_UUID = settings.value( "UUID", QUuid::createUuid().toString() ).toString();
-	
+
 	if (exists) {
 		QString existingVersion = settings.value("codewizard_version", "prior 6.0.0").toString();
 
@@ -5185,11 +5265,10 @@ bool MainWindow::wantedTheme() {
 		cLSP = settings.value("cLSP", "").toString();
 		cobolLSP = settings.value("cobolLSP", "").toString();
 		cssLSP = settings.value("cssLSP", "").toString();
-		
+
 		QString proj_set_path = getProjectSettingsPath();
 		proj_tagline = getProjectDataFrom(proj_set_path, "tagline");
 		proj_lspline = getProjectDataFrom(proj_set_path, "lspline");
-		
 
 		groqApiKey = settings.value("groqApiKey", "").toString();
 		groq->setApiKey(groqApiKey);
@@ -5203,7 +5282,7 @@ bool MainWindow::wantedTheme() {
 		}
 
 		setFormatsFromMyList(numbers);
-		
+
 		tintColor = settings.value("tintColor", "255,255,255").toString();
 
 		showWarnings->setChecked(settings.value("showWarnings", true).toBool());
@@ -5519,7 +5598,7 @@ void MainWindow::findTextEditChanged() {
 	cursor.mergeCharFormat(format);
 	cursor.setPosition(cursorPosition);
 	cursor.setPosition(currentAnchor, QTextCursor::KeepAnchor); // that's it you can look back now
-	
+
 	connect(findTextEdit, &QTextEdit::textChanged, this, &MainWindow::findTextEditChanged);
 }
 
@@ -5748,9 +5827,9 @@ void MainWindow::setupSyntaxTreeOnOpen(QString code, bool doHighlight) {
 
 void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 	qDebug() << "on_actionOpen_triggered";
-	
+
 	storedTextEdits[fileName] = textEdit;
-	
+
 	if (isSettingUpLSP) {
 		showWeDontFuckWithTheLSP();
 		return;
@@ -5763,13 +5842,13 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 
 	isOpeningFile = true;
 	QString oldFile = fileName;
-	
+
 	QString tempDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
 	QDir tempDir(tempDirPath);
 	QString absoluteTempPath = tempDir.absolutePath();
 	QString curAbsPath = QFileInfo(fileName).absoluteFilePath();
-	
-	if (unsaved && curAbsPath.startsWith(absoluteTempPath, Qt::CaseInsensitive)) {
+
+	if (unsaved && curAbsPath.startsWith(absoluteTempPath, Qt::CaseInsensitive) && !textEdit->isimage) {
 		saveToFile(textEdit->toPlainText());
 	}else if (unsaved && fileName != "") {
 		pullUpSaveDialogue();
@@ -5809,10 +5888,10 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 
 	for (int i = 0; i < tabs.length(); i++) {
 		TabWidget *tab = tabs[i];
-		
+
 		if (tab->extraText.startsWith(absoluteTempPath, Qt::CaseInsensitive)) {
 			QFile existingFile(tab->extraText);
-			
+
 			bool del = false;
 			if (existingFile.open(QIODevice::ReadOnly)) {
 				if (existingFile.size() == 0) {
@@ -5820,20 +5899,29 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 				}
 				existingFile.close();
 			}
-			
+
 			if (del) {
 				closeTab(tab->m_index);
 			}
 		}
 	}
-
-	bool ret = checkForLargeFile(&file);
-
-	if (!ret) {
-		isOpeningFile = false;
-		return;
-	}
 	
+	QString suffix = fileInfo.suffix().toLower();
+	QList<QByteArray> formats = QImageReader::supportedImageFormats();
+	
+	bool isSupportedImage = std::any_of(formats.begin(), formats.end(), [&](const QByteArray& format) {
+		return format == suffix.toLatin1();
+	});
+	
+	if (!isSupportedImage) {
+		bool ret = checkForLargeFile(&file);
+		
+		if (!ret) {
+			isOpeningFile = false;
+			return;
+		}
+	}
+
 	fileName = newFile;
 
 	setLangOffFilename(fileName, false);
@@ -5851,9 +5939,9 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 
 	setupSyntaxTreeOnOpen(fileContent); // must be before setPlainText - don't ask why - I could tell you though...
 	addTab(fileNameName, fileName);
-	
+
 	highlightDiagnostics(true);
-	
+
 	disconnect(textEdit, &MyTextEdit::mousePositionChanged, this, &MainWindow::handleMouseMoved);
 	disconnect(textEdit, &MyTextEdit::gotoDefinitionActionTriggered, this, &MainWindow::gotoDefinitionActionTriggered);
 	disconnect(textEdit, &MyTextEdit::renameActionTriggered, this, &MainWindow::renameActionTriggered);
@@ -5864,15 +5952,15 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 	disconnect(textEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, &MainWindow::updateScrollBarValue);
 	disconnect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
 	textEdit->removeEventFilter(this);
-	
+
 	auto layout = textEdit->parentWidget()->layout();
-	
+
 	auto it0 = storedTextEdits.find(fileName);
 	bool needsHighlighting = true;
 	bool isNewTextEdit = true;
-	
+
 	MyTextEdit *newTextEdit;
-	
+
 	if (it0 != storedTextEdits.end()) {
 		newTextEdit = it0->second;
 		needsHighlighting = false;
@@ -5882,18 +5970,18 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 		needsHighlighting = true;
 		isNewTextEdit = true;
 	}
-	
+
 	needsHighlighting = needsHighlighting || newTextEdit->toPlainText() != fileContent;
-	
+
 	newTextEdit->setFont(textEdit->font());
-	
+
 	layout->replaceWidget(textEdit, newTextEdit);
 	textEdit->hide();
 	newTextEdit->show();
-	
+
 	textEdit = newTextEdit;
 	textDocument = textEdit->document();
-	
+
 	connect(textEdit, &MyTextEdit::mousePositionChanged, this, &MainWindow::handleMouseMoved);
 	connect(textEdit, &MyTextEdit::gotoDefinitionActionTriggered, this, &MainWindow::gotoDefinitionActionTriggered);
 	connect(textEdit, &MyTextEdit::renameActionTriggered, this, &MainWindow::renameActionTriggered);
@@ -5904,7 +5992,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 	textEdit->installEventFilter(this);
 	connect(textEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, &MainWindow::updateScrollBarValue);
 	connect(textEdit, &QTextEdit::textChanged, this, &MainWindow::updateSyntax);
-	
+
 	if (isNewTextEdit) {
 		connect(textEdit, &QTextEdit::cursorPositionChanged, [=]() {
 			qDebug() << "lamda textEdit cursorPositionChanged1.1";
@@ -5912,39 +6000,55 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 		});
 		setupCompleter();
 	}
-	
+
 	groq->setTextEdit(textEdit);
 	errMenu.Setup(textEdit);
-	
+
 	delete recordingLight;
 	recordingLight = new RecordingLight(textEdit);
 	recordingLight->hide();
-	
+
 	suggestionBox->setParent(textEdit);
 	actionBox->setParent(textEdit);
 	hoverBox->setParent(textEdit);
-	
+
 	textEdit->setWordWrapMode(QTextOption::NoWrap);
 	textEdit->useMultiCursors = true;
 	textEdit->useVIM = useVimMode->isChecked();
 	textEdit->setTabStopDistance(tabWidth * QFontMetrics(textEdit->font()).horizontalAdvance(' '));
 	textEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-	
+
 	textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-	
+
 	if (needsHighlighting) {
-		qDebug() << "SETTING THE TEXTEDIT IN NEEDS HIGHLIGHTING ##################################### " << fileName;
-		textEdit->setPlainText(fileContent);
-		toCompareTo = fileContent;
+		if (isSupportedImage) {
+			qDebug() << "Detectd png";
+
+			QPixmap mp;
+			bool success = mp.load(fileName);
+			qDebug() << success;
+
+			if (success){
+				textEdit->displayImage(mp);
+			}else{
+				textEdit->setPlainText("Could not load image");
+				toCompareTo = "Could not load image";
+			}
+			textEdit->isimage = true;
+		}else{
+			textEdit->setPlainText(fileContent);
+			toCompareTo = fileContent;
+			textEdit->isimage = false;
+		}
 	}
-	
+
 	changeTheme(darkmode);
-	
+
 	previousLineCount = fileContent.count('\xa')+1;
 	file.close();
-	
+
 	differences.clear();
-	
+
 	int cnt = fileContent.count('\n') + 1;
 	updateLineNumbers(cnt);
 
@@ -5961,7 +6065,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 			fileModel->setRootPath(fileInfo.absolutePath());
 			QSettings settings("FoundationTechnologies", "CodeWizard");
 			settings.setValue("mostRecentFolder", fileInfo.absolutePath());
-	
+
 			fileTree->setRootIndex(fileModel->index(fileModel->rootPath()));
 		}
 	}
@@ -5988,7 +6092,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 
 	checkForFixitDialogue();
 	textEdit->setFocus();
-	
+
 	if (previousFiles.contains(fileName)) {
 		previousFiles.removeOne(fileName);
 	}
@@ -6090,7 +6194,7 @@ void MainWindow::updateExtraWordsList() {
 void MainWindow::pullUpSaveDialogue() {
 	qDebug() << "pullUpSaveDialogue";
 
-	if (handlingReopen) {return;}
+	if (handlingReopen || textEdit->isimage) {return;}
 
 	if (autoSaveAct->isChecked()) {
 		doTrueSaveAction();
@@ -6121,9 +6225,9 @@ void MainWindow::on_actionNew_triggered() {
 
 	QString tempDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
 	QDir tempDir(tempDirPath);
-	
+
 	QString curPath = QFileInfo(fileName).absoluteFilePath();
-	if (unsaved && curPath.startsWith(tempDirPath)) {
+	if (unsaved && curPath.startsWith(tempDirPath) && !textEdit->isimage) {
 		saveToFile(textEdit->toPlainText());
 	}
 
@@ -6134,10 +6238,10 @@ void MainWindow::on_actionNew_triggered() {
 
 	while (tempDir.exists(fileName)) {
 		bool use = false;
-		
+
 		QString fullPathCheck = tempDir.filePath(fileName);
 		QFile existingFile(fullPathCheck);
-	
+
 		if (existingFile.open(QIODevice::ReadOnly)) {
 			if (existingFile.size() == 0) {
 				// Found an empty untitled file, reuse it
@@ -6147,15 +6251,15 @@ void MainWindow::on_actionNew_triggered() {
 			}
 			existingFile.close();
 		}
-		
+
 		if (use) {
 			break;
 		}
-	
+
 		++counter;
 		fileName = baseName + QString::number(counter) + extension;
 	}
-	
+
 	QString fullPath = tempDir.filePath(fileName);
 
 	QFile file(fullPath);
@@ -6164,7 +6268,7 @@ void MainWindow::on_actionNew_triggered() {
 	}else {
 		openHelpMenu("Failed to create the new file in a temporary directory!");
 	}
-	
+
 	globalArgFileName = fullPath;
 	on_actionOpen_triggered();
 }
@@ -6198,7 +6302,7 @@ void MainWindow::on_actionRun_Module_F5_triggered() {
 	if (unsaved) {
 		doTrueSaveAction();
 	}
-	
+
 	Ctrl_C();
 
 	activeTerminals[currentTerminalIndex] = new QProcess(this);
@@ -6305,7 +6409,7 @@ void MainWindow::on_actionRun_Module_F5_triggered() {
 		}else if (currentLang.name == "Css") {
 			intermediateTag = cssTag;
 		}
-		
+
 		QString proj_set_path = getProjectSettingsPath();
 		QString proj_tagline = getProjectDataFrom(proj_set_path, "tagline");
 		if (proj_tagline != "") {
@@ -6372,7 +6476,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 			QDir tempDir(tempDirPath);
 			QString absoluteTempPath = tempDir.absolutePath();
 			QString curAbsPath = QFileInfo(fileName).absoluteFilePath();
-			
+
 			if (event->modifiers() & Qt::ShiftModifier || curAbsPath.startsWith(absoluteTempPath, Qt::CaseInsensitive)) {
 				on_actionSave_As_triggered();
 			}else {
@@ -6430,14 +6534,14 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 				showHoldYourHorses();
 				return;
 			}
-			
+
 			qDebug() << "Backpedal";
-			
+
 			if (previousFiles.length() < 2) { // current file and prev file.
 				 return;
 			}
 			previousFiles.pop_back();
-			
+
 			globalArgFileName = previousFiles[previousFiles.length()-1];
 			on_actionOpen_triggered();
 		}
@@ -6613,7 +6717,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 	if (event->type()==QEvent::WindowStateChange) {
 		onWindowStateChanged();
 	}
-	
+
 	if (watched == lineNumberTextEdit && event->type() == QEvent::Wheel) {
 		QWheelEvent* wheelEvent = static_cast<QWheelEvent*>(event);
 		int delta = wheelEvent->angleDelta().y();
@@ -6786,7 +6890,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 
 	QKeyEvent *key_event = dynamic_cast<QKeyEvent*>(event);
 	QKeySequence key_sequence{static_cast<int>(key_event->modifiers()) + key_event->key()};
-	
+
 	if (watched == searchBar) {
 		if (key_event->key() == Qt::Key_Escape) {
 			if (useVimMode->isChecked()) {
@@ -6833,7 +6937,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 		}
 
 		bool isACtrl = key_event->modifiers() & Qt::ControlModifier || key_event->modifiers() & Qt::AltModifier;
-		
+
 		if (!isACtrl && textEdit->currentVimMode == "n") {
 			if (key_event->key() == Qt::Key_G && textEdit->vimRepeater == 0) {
 				QTextCursor cursor = textEdit->textCursor();
@@ -6882,12 +6986,19 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 			}else if (key_event->key() == Qt::Key_Colon || key_event->key() == Qt::Key_Semicolon) {
 				searchBar->setCurrentVim("i");
 				searchBar->setFocus();
-                return true;
+				return true;
+			}else if (key_event->key() == Qt::Key_Y) {
+				searchBar->setCurrentVim("i");
+				searchBar->setFocus();
+				auto curs = searchBar->textCursor();
+				curs.insertText("*");
+				searchBar->setTextCursor(curs);
+				return true;
 			}else if (!actionBox->isVisible() && (key_event->key() == Qt::Key_Return || key_event->key() == Qt::Key_Enter)) {
 				handleTabs();
 				handleBracketsOnEnter();
 			}
-			
+
 			if ((key_event->key() != Qt::Key_Tab || !suggestionBox->isVisible()) && (key_event->key() != Qt::Key_Enter && key_event->key() != Qt::Key_Return || !actionBox->isVisible())) {
 				return false;
 			}
@@ -7008,14 +7119,13 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 			QString textCopied = textEdit->toPlainText();
 			QTextCursor c = textEdit->textCursor();
 			int pos = c.position();
-			
+
 			int start = qMax(0, pos - 600);
 			int end = qMin(textCopied.length(), pos + 600);
-			
+
 			QString trimmed = textCopied.mid(start, end - start);
 			int markerPos = pos - start;
 			trimmed.insert(markerPos, "[INSERT_CODE_HERE]");
-			
 
 			QList<QPair<QString, QString>> conversation = {
 				{"user", "Please create just the code which should be inserted at the specified point (the specified point is '[INSERT_CODE_HERE]'). Do not include any other text with you response. Just pick up exactly where was left off. If there is no code which makes sense to insert at that point, just do your best to create code which could fit there, never include text other than the code in your response. Also your response should be plaintext, not markdown. Do not include the name of the language you are writing. ONLY the text to insert at that position. Here's the current code:\n\n"+trimmed}
@@ -7175,7 +7285,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -7631,21 +7741,28 @@ bool MainWindow::insertCompletion() {
 void MainWindow::on_actionSave_triggered() {
 	qDebug() << "on_actionSave_triggered";
 	
+	if (textEdit->isimage) {
+		return;
+	}
+	
 	QString tempDirPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
 	QDir tempDir(tempDirPath);
 	QString absoluteTempPath = tempDir.absolutePath();
 	QString curAbsPath = QFileInfo(fileName).absoluteFilePath();
-	
+
 	if (curAbsPath.startsWith(absoluteTempPath)) {
 		on_actionSave_As_triggered();
-	}else {	
+	}else {
 		doTrueSaveAction();
 	}
 }
 
 void MainWindow::doTrueSaveAction() {
 	qDebug() << "doTrueSaveAction";
-
+	if (textEdit->isimage) {
+		return;
+	}
+	
 	if (isSettingUpLSP) {
 		showWeDontFuckWithTheLSP();
 		return;
@@ -7656,12 +7773,12 @@ void MainWindow::doTrueSaveAction() {
 		setupLSP("");
 	}
 	lspMutex.unlock();
-	
+
 	if (fileName.isEmpty()) {
 		on_actionSave_As_triggered();
 		return;
 	}
-	
+
 	saveToFile(textEdit->toPlainText());
 	savedText = textEdit->toPlainText();
 	setWindowTitle(windowName);
@@ -8061,7 +8178,11 @@ void MainWindow::on_actionTab_Width_triggered() {
 
 void MainWindow::on_actionSave_As_triggered() {
 	qDebug() << "on_actionSave_As_triggered";
-
+	
+	if (textEdit->isimage) {
+		return;
+	}
+	
 	if (isSettingUpLSP) {
 		showWeDontFuckWithTheLSP();
 		return;
@@ -8094,10 +8215,10 @@ void MainWindow::on_actionSave_As_triggered() {
 			fileNameName += ".py";
 		}
 	}
-	
+
 	saveToFile(textEdit->toPlainText());
 	savedText = textEdit->toPlainText();
-	
+
 	globalArgFileName = fileName;
 	on_actionOpen_triggered();
 }
@@ -8290,7 +8411,7 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) {// this hurt to g
 
 	if (reverseTheProcess) {
 		isErrorHighlighted = false;
-		
+
 		textEdit->errLineNums.clear();
 		textEdit->errMessages.clear();
 		textEdit->errTypes.clear();
@@ -8421,50 +8542,50 @@ void MainWindow::highlightDiagnostics(bool reverseTheProcess) {// this hurt to g
 
 void MainWindow::updateLineNumbers(int count) { // good enough
 	qDebug() << "updateLineNumbers";
-	
+
 	int countDigits = std::to_string(count).length();
-	
+
 	if (!differences.isEmpty()) {
 		countDigits += 2;
 	}
-	
+
 	globalLineCount = count;
-	
+
 	if (globalDigits != countDigits) {
 		globalDigits = countDigits;
 		updateFonts();
 	}
-	
+
 	if (!differences.isEmpty()) {
 		countDigits -= 2; // we do this so that the spaces don't take up the space for the +-=
 	}
-	
+
 	lineNumberTextEdit->blockSignals(true);
 	lineNumberTextEdit->verticalScrollBar()->blockSignals(true);
-	
+
 	//calculate number of rows to fill
 	QFontMetrics fm(lineNumberTextEdit->font());
 	int lineHeight = fm.lineSpacing();
 	int numberOfLinesNeeded = floor(lineNumberTextEdit->height()/lineHeight)+2;
-	
+
 	if (firstStartup) {
 		numberOfLinesNeeded = 600; // the initial size of the element is not set properly on startup, so we'll just draw 600 lines to ensure we cover the screen.
 	}
-	
+
 	int textEditScrolledTo = textEdit->verticalScrollBar()->value();
 	int modulos = textEditScrolledTo%lineHeight;
 	int topLine = floor(textEditScrolledTo/lineHeight)+1; // +1 for 0 based indexing...
-	
+
 	//fill the rows now.
-	
+
 	QStringList lineNumbers;
 	int numDiffs = differences.length();
 	int lnNum = -1; // this is the line number of the cursor in the linenumbertextedit
 	QTextCursor cursor = textEdit->textCursor();
 	int lineNum = cursor.blockNumber()+1;
-	
+
 	if (!useRelativeLineNumbers->isChecked()) {
-		
+
 		for (int i = 0; i < numberOfLinesNeeded; i++) {
 			int number = topLine+i;
 			if (number > count) {
@@ -8472,23 +8593,23 @@ void MainWindow::updateLineNumbers(int count) { // good enough
 			}else {
 				QString nm = QString::number(number);
 				int spaces = countDigits-nm.length();
-				
+
 				QString addon = "";
 				if (numDiffs >= number) {
 					addon = " "+differences[number-1][0];
 				}
-				
+
 				if (number == lineNum) { // have we found the cursor? Then store it.
 					lnNum = i;
 				}
-				
+
 				lineNumbers << QString(spaces, ' ')+nm+addon;
 			}
 		}
 	}else {
 		for (int i = 0; i < numberOfLinesNeeded; i++) {
 			int number = topLine+i;
-			
+
 			if (number > count) {
 				lineNumbers << ""; // we can't break here glhf trying to find out why
 			}else {
@@ -8496,28 +8617,28 @@ void MainWindow::updateLineNumbers(int count) { // good enough
 				if (numDiffs >= number) {
 					addon = " "+differences[number-1][0];
 				}
-				
+
 				int value = lineNum-number;
 				if (value == 0) { // have we found the cursor? Then store it. and also the spaces don't go or whatever
 					lineNumbers << QString::number(lineNum)+addon; // we don't put spaces so it's clearer
 					lnNum = i;
 					continue;
 				}
-				
+
 				QString nm = QString::number(abs(value));
 				int spaces = countDigits-nm.length();
-				
+
 				lineNumbers << QString(spaces, ' ')+nm + addon;
 			}
 		}
 	}
-	
+
 	QString text = lineNumbers.join("\n");
 	lineNumberTextEdit->setPlainText(text);
-	
+
 	auto pallete = lineNumberTextEdit->palette();
 	QColor cur_line_color;
-	
+
 	if (darkmode) {
 		pallete.setColor(QPalette::Text, getTintedColor(100, 100, 100));
 		cur_line_color = getTintedColor(255, 255, 255);
@@ -8525,13 +8646,13 @@ void MainWindow::updateLineNumbers(int count) { // good enough
 		cur_line_color = getTintedColor(30, 30, 30);
 	pallete.setColor(QPalette::Text, getTintedColor(150, 150, 150));
 	}
-	
+
 	lineNumberTextEdit->setPalette(pallete);
-	
+
 	if (lnNum != -1) {
 		auto block = lineNumberTextEdit->document()->findBlockByLineNumber(lnNum);
 		QTextCursor cursor(lineNumberTextEdit->document());
-		
+
 		if (block.isValid()) {
 			cursor.setPosition(block.position());
 			cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
@@ -8540,20 +8661,20 @@ void MainWindow::updateLineNumbers(int count) { // good enough
 			cursor.mergeCharFormat(format);
 		}
 	}
-	
+
 	if (!differences.isEmpty()) {
 		QTextCursor cursor(lineNumberTextEdit->document());
 		cursor.movePosition(QTextCursor::Start);
-		
+
 		QTextBlock block = lineNumberTextEdit->document()->begin();
 		int lineNumber = 0;
-		
+
 		while (block.isValid()) {
 			cursor.setPosition(block.position());
 			cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
-			
+
 			QTextCharFormat format;
-			
+
 			if (block.text().contains("-")) {
 				format.setForeground(Qt::red);
 			}else if (block.text().contains("+")) {
@@ -8561,16 +8682,16 @@ void MainWindow::updateLineNumbers(int count) { // good enough
 			}else if (block.text().contains("=")) {
 				format.setForeground(Qt::blue);
 			}
-			
+
 			cursor.mergeCharFormat(format);
-			
+
 			block = block.next();
 			lineNumber++;
 		}
 	}
-	
+
 	lineNumberTextEdit->verticalScrollBar()->setValue(modulos);
-	
+
 	lineNumberTextEdit->verticalScrollBar()->blockSignals(false);
 	lineNumberTextEdit->blockSignals(false);
 }
@@ -8789,7 +8910,7 @@ void MainWindow::changeHighlightColors(bool darkmode) {
 	qDebug() << "changeHighlightColors";
 
 	QPalette lightPalette = qApp->palette();
-	
+
 	if (darkmode) {
 		lightPalette.setColor(QPalette::Inactive, QPalette::Highlight, getTintedColor(255, 255, 255));
 		lightPalette.setColor(QPalette::Inactive, QPalette::HighlightedText, QColor("#000000"));
@@ -8822,7 +8943,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode) {
 		color2 = getTintedColor(42, 42, 42);
 		color3 = getTintedColor(25, 25, 25);
 		placeholdertext = getTintedColor(150, 150, 150);
-		
+
 		QColor colHover = getTintedColor(52, 52, 52);
 		QColor colHoverMore = getTintedColor(62, 62, 62);
 		QColor colPressed = getTintedColor(32, 32, 32);
@@ -8835,7 +8956,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode) {
 		color2 = getTintedColor(235, 235, 235);
 		color3 = getTintedColor(245, 245, 245);
 		placeholdertext = getTintedColor(100, 100, 100);
-		
+
 		QColor colHover = getTintedColor(220, 220, 220);
 		QColor colHoverMore = getTintedColor(210, 210, 210);
 		QColor colPressed = getTintedColor(255, 255, 255);
@@ -8844,17 +8965,17 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode) {
 		globalColsPressed = getStringOfColor(colPressed);
 		globalColsText = getStringOfColor(getTintedColor(20, 20, 20));
 	}
-	
+
 	globalCols1 = getStringOfColor(color1);
 	globalCols2 = getStringOfColor(color2);
 	globalCols3 = getStringOfColor(color3);
 
 	errMenu.recolor(color2);
-	
+
 	QPalette palette = textEdit->palette();
 	palette.setColor(QPalette::Base, color1);
 	textEdit->setPalette(palette);
-	
+
 	palette = lineNumberTextEdit->palette();
 	palette.setColor(QPalette::Base, color2);
 	lineNumberTextEdit->setPalette(palette);
@@ -8866,7 +8987,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode) {
 	palette = actionBox->palette();
 	palette.setColor(QPalette::Base, color2);
 	actionBox->setPalette(palette);
-	
+
 	palette = searchMenu->palette();
 	palette.setColor(QPalette::Base, color2);
 	searchMenu->setPalette(palette);
@@ -8906,7 +9027,7 @@ void MainWindow::changeOnlyEditsTheme(bool darkmode) {
 	palette = taglineEdit->palette();
 	palette.setColor(QPalette::Base, color2);
 	taglineEdit->setPalette(palette);
-	
+
 	palette = searchBar->palette();
 	palette.setColor(QPalette::Base, color2);
 	palette.setColor(QPalette::PlaceholderText, placeholdertext);
@@ -8940,7 +9061,7 @@ void MainWindow::changeTheme(bool darkMode) {
 	for (TabWidget *tab : tabs) {
 		tab->updateStyles(darkmode);
 	}
-	
+
 	QString c20 = getStringOfColor(getTintedColor(20, 20, 20));
 	QString c30 = getStringOfColor(getTintedColor(30, 30, 30));
 	QString c70 = getStringOfColor(getTintedColor(70, 70, 70));
@@ -8954,13 +9075,13 @@ void MainWindow::changeTheme(bool darkMode) {
 	QString c245 = getStringOfColor(getTintedColor(245, 245, 245));
 	QString c251 = getStringOfColor(getTintedColor(251, 251, 251));
 	QString c255 = getStringOfColor(getTintedColor(251, 251, 251));
-	
+
 	if (darkmode) {
 		globalColsFullBack = c25;
 	}else {
 		globalColsFullBack = c245;
 	}
-	
+
 	// Dark theme style
 	QString contextMenuSheet = R"(
 		QMenu {
@@ -9020,12 +9141,12 @@ void MainWindow::changeTheme(bool darkMode) {
 			margin: 2px 4px;
 		}
 	)";
-	
+
 	qApp->setStyle(QStyleFactory::create("Fusion"));
-	
+
 	if (darkMode) {
 		QPalette lightPalette = qApp->palette();
-		
+
 		lightPalette.setColor(QPalette::Window,        getTintedColor(25, 25, 25));
 		lightPalette.setColor(QPalette::WindowText,    getTintedColor(255, 255, 255));
 		lightPalette.setColor(QPalette::Base,          getTintedColor(45, 45, 45));
@@ -9123,13 +9244,13 @@ void MainWindow::changeTheme(bool darkMode) {
 
 	updateSyntax();
 	centerCursor();
-	
+
 	applyStylesToAllScrollBars();
-	
+
 	prevTerm1->parentWidget()->layout()->setSpacing(3);
 	prevTerm2->parentWidget()->layout()->setSpacing(3);
 	urlBar->parentWidget()->layout()->setSpacing(3);
-	
+
 	updateLineNumbers(globalLineCount);
 }
 
@@ -9165,7 +9286,7 @@ void MainWindow::applyScrollBarStyles(QWidget *widget) {
 			}
 			)");
 	}
-	
+
 	if (auto *button = qobject_cast<QPushButton *>(widget)) {
 		if (widget != closeWinButton && widget != minWinButton && widget != windowWinButton) {
 			button->setStyleSheet(R"(
@@ -9399,7 +9520,7 @@ void MainWindow::on_actionKeybindings_triggered() {
 
 void MainWindow::on_actionProject_Settings_triggered() {
 	qDebug() << "on_actionProject_Settings_triggered";
-	
+
 	openHelpMenu("Project Settings:\n\
 \n\
 CodeWizard now supports project specific build commands and lsp. After opening a project folder (Ctrl+Shift+O), you can go to `Edit->Project Specific Settings`. Then one can write out the commands for the run/build/compile/whatever (tagline) which is specific to that folder, and the command to start the lsp specific to the project. A blank entry for either will go to defaults. CodeWizard will then provide a file in that directory using this name: UUID.cdwzrd, where the UUID is specific to that CodeWizard install, and can be changed under `Edit->Set CodeWizard UUID`\n\
@@ -9643,11 +9764,11 @@ void MainWindow::openRecentFile(QString newFile) {
 
 void MainWindow::on_actionVSCode_triggered() {
 	qDebug() << "on_actionVSCode_triggered";
-	
+
 	tintColor = "255,255,255"; // grey
 	darkmode = true;
 	defaultSyntaxNumbers = "206,145,120|106,153,85|156,220,254|78,201,176|220,220,170|86,156,214|212,212,212|181,206,168";
-	
+
 	setFormatsFromMyList(defaultSyntaxNumbers);
 	treeParserSyntaxHighlighter.setFormats(coloredFormats);
 	rehighlightFullDoc();
@@ -9657,11 +9778,11 @@ void MainWindow::on_actionVSCode_triggered() {
 
 void MainWindow::on_actionDefault_Dark_triggered() {
 	qDebug() << "on_actionDefault_Dark_triggered";
-	
+
 	tintColor = "111,171,209"; // blue nice
 	darkmode = true;
 	defaultSyntaxNumbers = "127,173,94|127,132,142|245,91,102|85,169,237|199,157,78|176,95,199|127,132,142|194,127,64";
-	
+
 	setFormatsFromMyList(defaultSyntaxNumbers);
 	treeParserSyntaxHighlighter.setFormats(coloredFormats);
 	rehighlightFullDoc();
@@ -9671,11 +9792,11 @@ void MainWindow::on_actionDefault_Dark_triggered() {
 
 void MainWindow::on_actionOcean_triggered() {
 	qDebug() << "on_actionOcean_triggered";
-	
+
 	tintColor = "111,171,209";
 	darkmode = true;
 	defaultSyntaxNumbers = "100,190,255|90,115,140|205,235,255|90,170,255|130,200,255|50,145,255|190,200,220|70,210,255";
-	
+
 	setFormatsFromMyList(defaultSyntaxNumbers);
 	treeParserSyntaxHighlighter.setFormats(coloredFormats);
 	rehighlightFullDoc();
@@ -9685,11 +9806,11 @@ void MainWindow::on_actionOcean_triggered() {
 
 void MainWindow::on_actionApricot_triggered() {
 	qDebug() << "on_actionApricot_triggered";
-	
+
 	tintColor = "255,199,167";
 	darkmode = true;
 	defaultSyntaxNumbers = "255,155,100|145,120,100|255,225,190|255,135,85|255,170,120|245,120,80|230,210,190|255,180,110";
-	
+
 	setFormatsFromMyList(defaultSyntaxNumbers);
 	treeParserSyntaxHighlighter.setFormats(coloredFormats);
 	rehighlightFullDoc();
@@ -9699,11 +9820,11 @@ void MainWindow::on_actionApricot_triggered() {
 
 void MainWindow::on_actionDefault_Light_triggered() {
 	qDebug() << "on_actionDefault_Light_triggered";
-	
+
 	tintColor = "255,255,255";
 	darkmode = false;
 	defaultSyntaxNumbers = "36,104,160|128,128,128|82,82,82|45,94,150|79,158,154|196,53,53|70,70,70|255,140,30";
-	
+
 	setFormatsFromMyList(defaultSyntaxNumbers);
 	treeParserSyntaxHighlighter.setFormats(coloredFormats);
 	rehighlightFullDoc();

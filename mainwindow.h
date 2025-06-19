@@ -26,6 +26,7 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
+	void hide_search_menu(bool resetpos = true);
 	void on_actionDefault_Light_triggered();
 	void on_actionOcean_triggered();
 	void on_actionApricot_triggered();

@@ -26,6 +26,29 @@ MyTextEdit::MyTextEdit(QWidget *parent) : QTextEdit(parent) {
 	cursorBlinkTimer.setInterval(blinkRate / 2);
 	connect(&cursorBlinkTimer, &QTimer::timeout, this, &MyTextEdit::toggleCursorVisibility);
 	cursorBlinkTimer.start();
+	
+	imagedisplay = new QLabel(this);
+	imagedisplay->setScaledContents(false);
+	imagedisplay->setAlignment(Qt::AlignCenter);
+	imagedisplay->hide();
+}
+
+void MyTextEdit::displayImage(const QPixmap& pixmap) {
+	imagedisplay->setGeometry(this->rect());
+	
+	pm = pixmap;
+	
+	auto pm2 = pm;
+	
+	QSize labelSize = imagedisplay->size();
+	QSize pixmapSize = pm.size();
+	if (pixmapSize.width() > labelSize.width() || pixmapSize.height() > labelSize.height()) {
+		pm2 = pm.scaled(labelSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+	}
+	
+	imagedisplay->setPixmap(pm2);
+	imagedisplay->show();
+	isimage = true;
 }
 
 void MyTextEdit::focusInEvent(QFocusEvent *event) {
@@ -144,7 +167,7 @@ void MyTextEdit::wheelEvent(QWheelEvent *event) {
 void MyTextEdit::drawSelection(QPainter &painter, QTextCursor cursor, bool onEnd) {
 	qreal extra = 0;
 	if (onEnd){
-		extra = 4;
+		extra = 4; // this is actually a constant (for whatever reason)
 	}
 	
 	// Get the rectangle for the selection
