@@ -4663,13 +4663,13 @@ void MainWindow::ShowSuggestionsWithSuperSet(QStringList completions) {
 		}else {
 			height = metrics.height() * (suggestion.length()+1);
 		}
-
+		
 		QRect cursorRect = textEdit->cursorRect();
 		QPoint suggestedPosition = cursorRect.bottomLeft();
 
 		// Get the geometry of the parent window
 		QWidget* parentWindow = textEdit->window(); // Ensure the parent is the main window
-		QRect parentGeometry = parentWindow->rect(); // Geometry relative to the parent
+		QRect parentGeometry = textEdit->rect(); // Geometry relative to the parent
 
 		// Adjust the suggestion box position to prevent overflow
 		int boxWidth = 300; // Width of the suggestion box
@@ -4678,7 +4678,7 @@ void MainWindow::ShowSuggestionsWithSuperSet(QStringList completions) {
 		}
 
 		if (suggestedPosition.y() + height > parentGeometry.height()) {
-			suggestedPosition.setY(parentGeometry.height() - height);
+			suggestedPosition.setY(parentGeometry.height() - height - metrics.height()*2);
 		}
 
 		// Apply the adjusted position and dimensions

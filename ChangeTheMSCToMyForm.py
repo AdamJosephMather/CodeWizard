@@ -45,6 +45,7 @@ for i, line in enumerate(lines):
 	unknownYet += [i for i in matches if i not in unknownYet]
 	
 	match = re.search(pattern5, line)
+	m
 	if match:
 		if "|" in match.group(1):
 			bigMatch = True
