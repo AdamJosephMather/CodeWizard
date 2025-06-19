@@ -1281,7 +1281,7 @@ MainWindow::MainWindow(const QString &argFileName, QWidget *parent) : QMainWindo
 	connect(textEdit, &MyTextEdit::handleSizeChange, this, &MainWindow::updateMargins);
 	connect(textDocument, &QTextDocument::contentsChange, this, &MainWindow::onContentsChange);
 	connect(textEdit, &QTextEdit::cursorPositionChanged, [=]() {
-		qDebug() << "lamda textEdit cursorPositionChanged1";
+//		qDebug() << "lamda textEdit cursorPositionChanged1";
 		updateLineNumbers(globalLineCount);
 	});
 
@@ -1523,17 +1523,15 @@ void MainWindow::repositionSearchBar() {
 
 	QFontMetrics metrics(textEdit->font());
 
-	searchMenu->resize(correctWidth, metrics.height()*12);
+	searchMenu->resize(correctWidth, metrics.height()*18);
 	searchMenu->move(searchStart, menuBarHeight / 2 + searchBar->height() / 2);
 }
 
 void MainWindow::onSearchItemClicked(QListWidgetItem *item) {
 	qDebug() << "onSearchItemClicked";
-
-	searchMenu->show();
+	
 	selectedSearchFile = searchMenu->row(item);
-	searchBar->setAlignment(Qt::AlignCenter);
-
+	
 	runSearchItem();
 }
 
@@ -2281,8 +2279,13 @@ void MainWindow::on_actionProject_Specific_Settings_triggered() {
 
 void MainWindow::runSearchItem() {
 	qDebug() << "runSearchItem";
+	
+	qDebug() << "Opening for: " << selectedSearchFile;
+	
 	QString cmd = indexedFilesPath[selectedSearchFile];
-
+	
+	qDebug() << "Opening for: " << cmd;
+	
 	if (cmd == "") {
 		hide_search_menu();
 		return;
@@ -2306,6 +2309,7 @@ void MainWindow::runSearchItem() {
 		if (pathAndLnnum.length() == 2 && ok && num != 0) {
 			QString path = pathAndLnnum[0];
 			
+			hide_search_menu();
 			gotoDefinitionReceived(num-1, 0, num-1, 0, QUrl::fromLocalFile(path).toString());
 			return;
 		}
@@ -3055,6 +3059,8 @@ void MainWindow::hide_search_menu(bool resetpos) {
 	qDebug() << "hide_search_menu " << resetpos;
 
 	searchMenu->hide();
+	searchBar->setText(searchBar->placeholderText());
+	searchBar->setAlignment(Qt::AlignCenter);
 
 	if(!textEdit){
 		startedAnchSearchBar = -1;
@@ -5065,7 +5071,7 @@ void MainWindow::setupCompleter() {
 	qDebug() << "setupCompleter";
 
 	QObject::connect(textEdit, &QTextEdit::cursorPositionChanged, [=]() {
-		qDebug() << "lamda textEdit cursorPositionChanged";
+//		qDebug() << "lamda textEdit cursorPositionChanged";
 		suggestionBox->hide();
 		actionBox->hide();
 		hoverBox->hide();
@@ -6133,7 +6139,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 
 	if (isNewTextEdit) {
 		connect(textEdit, &QTextEdit::cursorPositionChanged, [=]() {
-			qDebug() << "lamda textEdit cursorPositionChanged1.1";
+//			qDebug() << "lamda textEdit cursorPositionChanged1.1";
 			updateLineNumbers(globalLineCount);
 		});
 		setupCompleter();
@@ -9619,7 +9625,7 @@ void MainWindow::on_actionCodeWizard_triggered() {
 void MainWindow::on_actionCommand_Palette_triggered() {
 	qDebug() << "on_actionCommand_Palette_triggered";
 
-	openHelpMenu("Command Palette:\n\nThe command palette is the bar at the top of the window. It is most useful for hopping between files, executing commands in CodeWizard, or doing math.\n\nTo quickly access it, use Ctrl+Shift+P.\n\nBy the way, I put a lot of work into the math calculator (you will like it or else...).");
+	openHelpMenu("Command Palette:\n\nThe command palette is the bar at the top of the window. It is most useful for hopping between files, executing commands in CodeWizard, or doing math.\n\nTo quickly access it, use Ctrl+Shift+P. Also, to start a full text search hit Ctrl+Shift+U. You'll figure it out.\n\nBy the way, I put a lot of work into the math calculator (you will like it or else...).");
 }
 
 void MainWindow::on_actionSettings_triggered() {
