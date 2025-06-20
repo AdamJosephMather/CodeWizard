@@ -2294,7 +2294,6 @@ void MainWindow::runSearchItem() {
 		cursor.select(QTextCursor::Document);
 		cursor.insertText(indexedFiles[selectedSearchFile]);
 		searchBar->setTextCursor(cursor);
-		hide_search_menu();
 		return;
 	}else if (cmd == "/.CodeWiz./DropCursor"){
 		hide_search_menu(false);
