@@ -7903,6 +7903,7 @@ void MainWindow::on_actionSave_triggered() {
 	QString curAbsPath = QFileInfo(fileName).absoluteFilePath();
 
 	if (curAbsPath.startsWith(absoluteTempPath)) {
+		doTrueSaveAction();
 		on_actionSave_As_triggered();
 	}else {
 		doTrueSaveAction();
