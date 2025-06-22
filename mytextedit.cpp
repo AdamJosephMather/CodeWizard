@@ -433,7 +433,6 @@ int MyTextEdit::findMatchingBracket(int direction) {
 }
 
 bool MyTextEdit::runForCursor(QKeyEvent *event) {
-	
 	if (event->modifiers() & Qt::ControlModifier || currentVimMode == "n") {
 			if (event->key() == Qt::Key_Less || event->key() == Qt::Key_Comma) {
 				QTextCursor cursor = textCursor();
@@ -671,7 +670,9 @@ void MyTextEdit::keyPressEvent(QKeyEvent *event) {
 		additionalCursors[i] = c1;
 	}
 	
-	setTextCursor(maincurs);
+	if (!additionalCursors.isEmpty()) {
+		setTextCursor(maincurs);
+	}
 	
 	handleDuplicateCursors();
 	
