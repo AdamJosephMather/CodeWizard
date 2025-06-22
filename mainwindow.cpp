@@ -3256,7 +3256,8 @@ void MainWindow::on_actionCompare_2_Files_triggered() {
 	fileName = "";
 	searchBar->setPlaceholderText("Comparison");
 	searchBar->setPlainText(searchBar->placeholderText());
-
+	searchBar->setAlignment(Qt::AlignCenter);
+	
 	isOpeningFile = true;
 
 	QTextStream in(&file);
@@ -6057,6 +6058,7 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 	windowName = fileNameName+" - CodeWizard V"+versionNumber+" - "+fileName;
 	searchBar->setPlaceholderText(fileNameName);
 	searchBar->setPlainText(searchBar->placeholderText());
+	searchBar->setAlignment(Qt::AlignCenter);
 
 	QTextStream in(&file);
 	QString fileContent = in.readAll();
