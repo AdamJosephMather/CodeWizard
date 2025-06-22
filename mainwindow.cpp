@@ -57,7 +57,7 @@ extern "C" {
 	TSLanguage* tree_sitter_css(void);
 }
 
-QString versionNumber = "9.6.0";
+QString versionNumber = "9.6.1";
 
 QList<QLineEdit*> hexColorsList;
 
@@ -1969,14 +1969,6 @@ void MainWindow::narrowDownSearchFiles() {
 				textEdit->setTextCursor(curs);
 			}
 		}
-	}else if (startedPosSearchBar != -1) {
-		auto curs = textEdit->textCursor();
-
-		if (curs.position() != startedPosSearchBar || curs.anchor() != startedAnchSearchBar){
-			curs.setPosition(startedAnchSearchBar);
-			curs.setPosition(startedPosSearchBar, QTextCursor::KeepAnchor);
-			textEdit->setTextCursor(curs);
-		}
 	}
 
 	if (starterText.startsWith("&") && starterText.length() > 1) {
@@ -3066,6 +3058,8 @@ void MainWindow::hide_search_menu(bool resetpos) {
 		startedPosSearchBar = -1;
 		return;
 	}
+	
+	qDebug() << "hsm" << startedPosSearchBar << startedAnchSearchBar;
 
 	if (resetpos && startedPosSearchBar != -1 && startedAnchSearchBar != -1) {
 		qDebug() << "resetting pos";
