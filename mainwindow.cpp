@@ -2006,15 +2006,10 @@ bool MainWindow::isBinaryFile(const QString& path) {
 
 QMap<QPair<QString, QString>, QList<QPair<int, QString>>> MainWindow::searchAcrossFiles(QString searchterm) {
 	qDebug() << "searchAcrossFiles";
-//	allDisplayPaths; // displayname
-//	allIndexedFilesPath; // fullpath
-//	allIndexedFiles; // name
-	
+
 	int totalmatches = 0;
 
 	QMap<QPair<QString, QString>, QList<QPair<int, QString>>> out;
-	
-	qDebug() << allIndexedFilesPath.length();
 	
 	int maxlen = 300;
 	if (allIndexedFilesPath.length() < maxlen) {
@@ -2210,7 +2205,7 @@ void MainWindow::setProjectData(QString path, QStringList names, QStringList val
 		}
 		file.close();
 	}else {
-		qDebug() << "Error writing to file: " << path;
+		openHelpMenu("Error writing to file: " + path);
 	}
 }
 
@@ -2272,11 +2267,7 @@ void MainWindow::on_actionProject_Specific_Settings_triggered() {
 void MainWindow::runSearchItem() {
 	qDebug() << "runSearchItem";
 	
-	qDebug() << "Opening for: " << selectedSearchFile;
-	
 	QString cmd = indexedFilesPath[selectedSearchFile];
-	
-	qDebug() << "Opening for: " << cmd;
 	
 	if (cmd == "") {
 		hide_search_menu();
@@ -3059,8 +3050,6 @@ void MainWindow::hide_search_menu(bool resetpos) {
 		return;
 	}
 	
-	qDebug() << "hsm" << startedPosSearchBar << startedAnchSearchBar;
-
 	if (resetpos && startedPosSearchBar != -1 && startedAnchSearchBar != -1) {
 		qDebug() << "resetting pos";
 		auto curs = textEdit->textCursor();
@@ -6159,11 +6148,8 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 
 	if (needsHighlighting) {
 		if (isSupportedImage) {
-			qDebug() << "Detectd png";
-
 			QPixmap mp;
 			bool success = mp.load(fileName);
-			qDebug() << success;
 
 			if (success){
 				textEdit->displayImage(mp);
