@@ -6065,7 +6065,12 @@ void MainWindow::on_actionOpen_triggered(bool dontUpdateFileTree) {
 	previousLineCount = 1;
 	savedText = fileContent;
 
-	setupSyntaxTreeOnOpen(fileContent); // must be before setPlainText - don't ask why - I could tell you though...
+	if (!isSupportedImage){
+		setupSyntaxTreeOnOpen(fileContent); // must be before setPlainText - don't ask why - I could tell you though...
+	}else{
+		setupSyntaxTreeOnOpen(""); // must be before setPlainText - don't ask why - I could tell you though...
+	}
+	
 	addTab(fileNameName, fileName);
 
 	highlightDiagnostics(true);
